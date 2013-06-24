@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -6,13 +6,13 @@
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>fcmd</RootNamespace>
     <AssemblyName>fcmd</AssemblyName>
     <CodePage>65001</CodePage>
     <newfilesearch>OnLoadAutoInsert</newfilesearch>
     <StartupObject>fcmd.frmMain</StartupObject>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,16 +41,37 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="frmMain.cs" />
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmMain.Designer.cs" />
+    <Compile Include="ListPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ListPanel.Designer.cs">
+      <DependentUpon>ListPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fcmd.userprefs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ListPanel.resx">
+      <DependentUpon>ListPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
