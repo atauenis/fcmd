@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -12,7 +12,6 @@
     <CodePage>65001</CodePage>
     <newfilesearch>OnLoadAutoInsert</newfilesearch>
     <StartupObject>fcmd.frmMain</StartupObject>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,11 +57,14 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fcmd.userprefs" />
+    <None Include="ListPanel.resources" />
+    <None Include="README" />
+    <None Include="README.md" />
+    <None Include="frmMain.resources" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frmMain.resx">

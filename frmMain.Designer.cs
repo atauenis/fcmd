@@ -31,20 +31,8 @@ namespace fcmd
             this.Name = "frmMain";
             this.Text = "File Commander";
             this.Load += new System.EventHandler(this.frmMain_Load);
+			this.Resize += new System.EventHandler(this.frmMain_Resize);
             this.ResumeLayout(false);
-
-            // 
-            // listPanel1
-            // 
-            this.listPanel1 = new fcmd.ListPanel();
-            this.listPanel1.Location = new System.Drawing.Point(0, 30);
-            this.listPanel1.Name = "listPanel1";
-            this.listPanel1.Size = new System.Drawing.Size(300, 300);
-            this.listPanel1.BackColor = System.Drawing.Color.FromName("yellow");
-            this.listPanel1.TabIndex = 0;
-            this.listPanel1.DoubleClick += new System.EventHandler(this.Panel_DblClick);
-            this.Controls.Add(this.listPanel1);
-
         }
 
     }

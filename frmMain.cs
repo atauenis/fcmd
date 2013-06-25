@@ -6,7 +6,6 @@
  */
 using System;
 using System.Collections.Generic;
-//using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
@@ -17,8 +16,13 @@ namespace fcmd
 {
 	public partial class frmMain : Form 
 	{
-        private ListPanel listPanel1;
-    
+		//Внутренние переменные
+		private List<ListPanel> lplLeft = new List<ListPanel>();
+		private List<ListPanel> lplRight = new List<ListPanel>();
+		private ListPanel ActivePanel; //текущая активная панель (на которой стоит фокус)
+		private ListPanel PassivePanel; //текущая пассивная панель (панель-получатель)
+
+		//Подпрограммы
 		static void Main(){ //Иницализация программы
 			Application.Run(new frmMain());
 		}
@@ -32,30 +36,44 @@ namespace fcmd
 				MessageBox.Show ("File commander, версия " + Application.ProductVersion);
 			#endif
 
+			//Формирую панели
+			//Левая
+			this.lplLeft.Add (new ListPanel()); //добавление в коллекцию левых панелей
+            this.lplLeft[0].Location = new System.Drawing.Point(0, 30);
+            this.lplLeft[0].Name = "lplLeft";
+            this.lplLeft[0].Size = new System.Drawing.Size(300, 300);
+            this.lplLeft[0].BackColor = System.Drawing.Color.FromName("yellow");
+            this.lplLeft[0].TabIndex = 0;
+            this.lplLeft[0].DoubleClick += new System.EventHandler(this.Panel_DblClick);
+            this.Controls.Add(this.lplLeft[0]); //ввожу панель в форму
+			ActivePanel = this.lplLeft[0]; //и делаю её активной
+			//Правая
+			//TODO: правая панель
+
+
+			string startupDir = Directory.GetLogicalDrives()[0];
 			//формирую список
 			string[] dirList; string[] fileList;
-			dirList = Directory.GetDirectories("C:\\WINDOWS\\");
-			fileList = Directory.GetFiles ("C:\\WINDOWS\\");
+			dirList = Directory.GetDirectories(startupDir);
+			fileList = Directory.GetFiles (startupDir);
 
             foreach (string curItem in dirList)
             { //директории
-                listPanel1.AddItem(curItem + "/");
+                lplLeft[0].AddItem(curItem + "/");
             }
             foreach (string curItem in fileList)
             { //файлы
-                listPanel1.AddItem(curItem);
+                lplLeft[0].AddItem(curItem);
             }
 		}
 
-        //private void lstFiles_DblClick(object sender, EventArgs e){
-        //    int RowId = lstFiles.SelectedIndex;
-        //    string RowText = lstFiles.Items[RowId].ToString();
-        //    MessageBox.Show (RowText,"В выделенной строке...");
-        //}
+		public void frmMain_Resize(object sender, EventArgs e){ //Деформация формы
+			ActivePanel.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top);
+		}
 
         private void Panel_DblClick(object sender, EventArgs e)
         {
-            MessageBox.Show((string)listPanel1.GetCurrentItem().ToString() );
+            MessageBox.Show(lplLeft[0].GetSelectedItem().ToString() );
         }
 
 	}
