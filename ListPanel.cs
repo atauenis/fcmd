@@ -16,6 +16,7 @@ namespace fcmd
 {
     public partial class ListPanel : UserControl
     {
+		//TODO:убрать ListBox и заменить на более кустомизируемый аналог с колонками и иконками
 		//Типы
 		public struct OptSel{ //тип для панели optionbox'ов ввверху listpanel'и
 			int Count;
@@ -55,9 +56,9 @@ namespace fcmd
         /// Добавить пункт в список.
 		/// Add a item into the list.
         /// </summary>
-        /// <param name="item">Аналогично listbox.Items.Add(item)</param>
-        public void AddItem(object item)
-        {
+        /// <para
+		/// m name="item">Аналогично listbox.Items.Add(item)</param>
+        public void AddItem(object item){
             lbx.Items.Add(item);
         }
 
@@ -69,11 +70,12 @@ namespace fcmd
 		/// Выбранная строка.
 		/// The selected item.
 		/// </returns>
-        public object GetSelectedItem()
-        {
-            int RowId = lbx.SelectedIndex;
-            string RowText = lbx.Items[RowId].ToString();
-            return RowText;
+		public object GetSelectedItem(){
+				int RowId;
+				RowId = (int)lbx.SelectedIndex;
+				string RowText;
+				RowText = (string)lbx.Items[RowId].ToString();
+            	return RowText;
         }
 		//TODO: RemoveItem(id), GetItem(id), EditItem(id), а также перечень из checkbox'ов вверху
 
