@@ -16,76 +16,39 @@ namespace fcmd
 {
     public partial class ListPanel : UserControl
     {
-		//TODO:убрать ListBox и заменить на более кустомизируемый аналог с колонками и иконками
 		//Типы
-		public struct OptSel{ //тип для панели optionbox'ов ввверху listpanel'и
-			int Count;
-			string[] Name;
-			string[] Value;
-
-		}
 
 		//Внутренние переменные
-		OptSel _os;
-
+        private object Vnutr;
 
 		//Подпрограммы
-        public ListPanel()
-		{//Ну, за инициализацию!
+        /// <summary>
+        /// Конструктор лист-панели
+        /// </summary>
+        /// <param name="Tip">Тип объекта, который будет внутри</param>
+        public ListPanel(object Tip){//Ну, за инициализацию!
             InitializeComponent();
+            this.Vnutr = new Tip();
+            this.Controls.Add(this.Vnutr);
         }
 
-        private void ListPanel_Load(object sender, EventArgs e)
-		{//Ну, за загрузку!
-            lbx.Location = new Point(0, 0);
+        private void ListPanel_Load(object sender, EventArgs e){//Ну, за загрузку!
+            Vnutr.Location = new Point(0, 0);
         }
 
-        private void ListPanel_Resize(object sender, EventArgs e)
-		{//Ну, за деформацию!
-            lbx.Size = this.Size;
+        private void ListPanel_Resize(object sender, EventArgs e){//Ну, за деформацию!
+            Vnutr.Size = this.Size;
         }
 
-        private void lbx_DblClick(object sender, EventArgs e)
-		{//Доублклик по списку
+        private void lbx_DblClick(object sender, EventArgs e){//Доублклик по списку
             OnDoubleClick(e);
         }
 
 
         //Методы
-        /// <summary>
-        /// Добавить пункт в список.
-		/// Add a item into the list.
-        /// </summary>
-        /// <para
-		/// m name="item">Аналогично listbox.Items.Add(item)</param>
-        public void AddItem(object item){
-            lbx.Items.Add(item);
-        }
-
-		/// <summary>
-		/// Возвращает выбранную строку.
-		/// Gets the selected item.
-		/// </summary>
-		/// <returns>
-		/// Выбранная строка.
-		/// The selected item.
-		/// </returns>
-		public object GetSelectedItem(){
-				int RowId;
-				RowId = (int)lbx.SelectedIndex;
-				string RowText;
-				RowText = (string)lbx.Items[RowId].ToString();
-            	return RowText;
-        }
-		//TODO: RemoveItem(id), GetItem(id), EditItem(id), а также перечень из checkbox'ов вверху
-
-
 
         //Свойства
-        //TODO: цветовые качества листпанели (после обратной разработки listbox)
-		public OptSel OptionSelector{
-			get{return _os;}
-			set{_os = value;}
-		}
+        //TODO: контекст, вложенный контрол
+        string[] Context;
     }
 }
