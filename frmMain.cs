@@ -46,6 +46,7 @@ namespace fcmd
             this.lplLeft[0].TabIndex = 0;
             this.lplLeft[0].DoubleClick += new System.EventHandler(this.Panel_DblClick);
 			this.lplLeft[0].GotFocus += new System.EventHandler(this.Panel_Focus);
+			this.lplLeft[0].BorderStyle = BorderStyle.Fixed3D;
             this.Controls.Add(this.lplLeft[0]); //ввожу панель в форму
 			ActivePanel = this.lplLeft[0]; //и делаю её активной
 			//Правая
@@ -57,6 +58,7 @@ namespace fcmd
             this.lplRight[0].TabIndex = 0;
             this.lplRight[0].DoubleClick += new System.EventHandler(this.Panel_DblClick);
 			this.lplRight[0].GotFocus += new System.EventHandler(this.Panel_Focus);
+			this.lplRight[0].BorderStyle = BorderStyle.Fixed3D;
             this.Controls.Add(this.lplRight[0]); //ввожу панель в форму
 			ActivePanel = this.lplRight[0]; //и делаю её активной
 
@@ -69,14 +71,21 @@ namespace fcmd
 
             foreach (string curItem in dirList)
             { //директории
-                lplLeft[0].AddItem(curItem + "/");
+                //lplLeft[0].AddItem(curItem + "/");
+				ListPanel.ItemDescription NewItem;
+				NewItem = new ListPanel.ItemDescription();
+				NewItem.Text.Add (curItem + "/");
+				lplLeft[0].Items.Add (NewItem);
             }
             foreach (string curItem in fileList)
             { //файлы
-                lplLeft[0].AddItem(curItem);
+				ListPanel.ItemDescription NewItem;
+				NewItem = new ListPanel.ItemDescription();
+				NewItem.Text.Add (curItem + "/");
+				lplLeft[0].Items.Add (NewItem);
             }
 
-			lplRight[0].AddItem("Test");
+			//lplRight[0].AddItem("Test");
 		}
 
 		public void frmMain_Resize(object sender, EventArgs e){ //Деформация формы
@@ -98,7 +107,7 @@ namespace fcmd
 
         private void Panel_DblClick(object sender, EventArgs e){
 			ListPanel lp = (ListPanel)sender;
-            MessageBox.Show(lp.GetSelectedItem().ToString() );
+            //MessageBox.Show(lp.GetSelectedItem().ToString() );
         }
 
 	}
