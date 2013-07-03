@@ -42,7 +42,9 @@ namespace fcmd
             this.lplLeft[0].Location = new System.Drawing.Point(0, 30);
             this.lplLeft[0].Name = "lplLeft";
             this.lplLeft[0].Size = new System.Drawing.Size(300, 300);
-            this.lplLeft[0].BackColor = System.Drawing.Color.FromName("yellow");
+#if DEBUG
+			this.lplLeft[0].BackColor = System.Drawing.Color.FromName("yellow");
+#endif
             this.lplLeft[0].TabIndex = 0;
             this.lplLeft[0].DoubleClick += new System.EventHandler(this.Panel_DblClick);
 			this.lplLeft[0].GotFocus += new System.EventHandler(this.Panel_Focus);
@@ -54,14 +56,16 @@ namespace fcmd
             this.lplRight[0].Location = new System.Drawing.Point(0, 30);
             this.lplRight[0].Name = "lplRight";
             this.lplRight[0].Size = new System.Drawing.Size(300, 300);
-            this.lplRight[0].BackColor = System.Drawing.Color.FromName("yellow");
+#if DEBUG
+			this.lplRight[0].BackColor = System.Drawing.Color.FromName("yellow");
+#endif
             this.lplRight[0].TabIndex = 0;
             this.lplRight[0].DoubleClick += new System.EventHandler(this.Panel_DblClick);
 			this.lplRight[0].GotFocus += new System.EventHandler(this.Panel_Focus);
 			this.lplRight[0].BorderStyle = BorderStyle.Fixed3D;
             this.Controls.Add(this.lplRight[0]); //ввожу панель в форму
-			ActivePanel = this.lplRight[0]; //и делаю её активной
 
+			//TODO:подумать над слежением за панелями (активная-пассивная)
 
 			string startupDir = Directory.GetLogicalDrives()[0];
 			//формирую список
@@ -85,7 +89,7 @@ namespace fcmd
 				lplLeft[0].Items.Add (NewItem);
             }
 
-			//lplRight[0].AddItem("Test");
+			this.OnSizeChanged (new EventArgs()); //обновляю панели (Raiseevent form.resize)
 		}
 
 		public void frmMain_Resize(object sender, EventArgs e){ //Деформация формы

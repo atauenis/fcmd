@@ -1,9 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="frmMain.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="ListPanel.cs">
     <Files>
-      <File FileName="frmMain.cs" Line="77" Column="36" />
-      <File FileName="ListPanel.cs" Line="20" Column="16" />
+      <File FileName="frmMain.cs" Line="42" Column="22" />
+      <File FileName="ListPanel.cs" Line="31" Column="28" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,8 +11,7 @@
           <Option id="ShowAllFiles" value="True" />
           <Node name="fcmd" expanded="True">
             <Node name="References" expanded="True" />
-            <Node name="frmMain.cs" selected="True" />
-            <Node name="ListPanel.cs" expanded="True" />
+            <Node name="ListPanel.cs" expanded="True" selected="True" />
           </Node>
         </State>
       </Pad>
