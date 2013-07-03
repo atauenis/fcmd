@@ -24,7 +24,7 @@ namespace fcmd
 
 		//Подпрограммы
 		static void Main(){ //Иницализация программы
-			Application.Run(new frmMain());
+			Application.Run(new frmMain());//BUG: github issue #2
 		}
 
 		public frmMain() { //Инициализация элементов управления
@@ -46,7 +46,7 @@ namespace fcmd
 			this.lplLeft[0].BackColor = System.Drawing.Color.FromName("yellow");
 #endif
             this.lplLeft[0].TabIndex = 0;
-            this.lplLeft[0].DoubleClick += new System.EventHandler(this.Panel_DblClick);
+			this.lplLeft[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplLeft[0].GotFocus += new System.EventHandler(this.Panel_Focus);
 			this.lplLeft[0].BorderStyle = BorderStyle.Fixed3D;
             this.Controls.Add(this.lplLeft[0]); //ввожу панель в форму
@@ -60,7 +60,7 @@ namespace fcmd
 			this.lplRight[0].BackColor = System.Drawing.Color.FromName("yellow");
 #endif
             this.lplRight[0].TabIndex = 0;
-            this.lplRight[0].DoubleClick += new System.EventHandler(this.Panel_DblClick);
+            this.lplRight[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplRight[0].GotFocus += new System.EventHandler(this.Panel_Focus);
 			this.lplRight[0].BorderStyle = BorderStyle.Fixed3D;
             this.Controls.Add(this.lplRight[0]); //ввожу панель в форму
@@ -79,13 +79,15 @@ namespace fcmd
 				ListPanel.ItemDescription NewItem;
 				NewItem = new ListPanel.ItemDescription();
 				NewItem.Text.Add (curItem + "/");
+				NewItem.Value = curItem + "/";
 				lplLeft[0].Items.Add (NewItem);
             }
             foreach (string curItem in fileList)
             { //файлы
 				ListPanel.ItemDescription NewItem;
 				NewItem = new ListPanel.ItemDescription();
-				NewItem.Text.Add (curItem + "/");
+				NewItem.Text.Add (curItem);
+				NewItem.Value = curItem;
 				lplLeft[0].Items.Add (NewItem);
             }
 
@@ -109,10 +111,26 @@ namespace fcmd
 			//PassivePanel = (ListPanel)sender;
 		}
 
-        private void Panel_DblClick(object sender, EventArgs e){
-			ListPanel lp = (ListPanel)sender;
+        private void Panel_DblClick(object sender, EventArgs<String> e){
+			//ListPanel lp = (ListPanel)sender;
+			MessageBox.Show (e.Data);
             //MessageBox.Show(lp.GetSelectedItem().ToString() );
         }
 
+	}
+
+	public delegate void StringEvent(object sender, EventArgs<String> e);
+	public class EventArgs<T> : EventArgs
+		//http://www.gotdotnet.ru/forums/2/51331/
+	{
+		private T _data;
+		public EventArgs(T data)
+		{
+		_data = data;
+		}
+		public T Data
+		{
+		get { return _data; }
+		}
 	}
 }
