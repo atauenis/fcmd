@@ -2,8 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="ListPanel.cs">
     <Files>
-      <File FileName="frmMain.cs" Line="42" Column="22" />
-      <File FileName="ListPanel.cs" Line="31" Column="28" />
+      <File FileName="frmMain.cs" Line="28" Column="1" />
+      <File FileName="ListPanel.cs" Line="220" Column="10" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -31,7 +31,6 @@
       <Catchpoint exceptionName="Mono.Xml.XPath.yyParser.yyUnexpectedEof" />
       <Catchpoint exceptionName="Mono.Xml.Xsl.yyParser.yyException" />
       <Catchpoint exceptionName="Mono.Xml.Xsl.yyParser.yyUnexpectedEof" />
-      <Catchpoint exceptionName="System.AccessViolationException" />
       <Catchpoint exceptionName="System.AppDomainUnloadedException" />
       <Catchpoint exceptionName="System.ApplicationException" />
       <Catchpoint exceptionName="System.ArgumentException" />
@@ -98,7 +97,6 @@
       <Catchpoint exceptionName="System.IO.DriveNotFoundException" />
       <Catchpoint exceptionName="System.IO.EndOfStreamException" />
       <Catchpoint exceptionName="System.IO.FileLoadException" />
-      <Catchpoint exceptionName="System.IO.FileNotFoundException" />
       <Catchpoint exceptionName="System.IO.InternalBufferOverflowException" />
       <Catchpoint exceptionName="System.IO.InvalidDataException" />
       <Catchpoint exceptionName="System.IO.IOException" />

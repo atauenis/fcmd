@@ -24,11 +24,26 @@ namespace fcmd
 			public short Selection = 0;
 			public Image Icon;
 		}
+		public struct CollumnOptions{//параметры столбца
+			/// <summary>
+			/// Заголовок столбца ///
+			/// The collumn's caption.
+			/// </summary>
+			public string Caption;
 
-		///<summary>
-		/// Возможные состояния выделения строки
-		/// Row selection statuses
-		/// </summary>
+			/// <summary>
+			/// Метка слобца (для определения что это такое) ///
+			/// The collumn's tag.
+			/// </summary>
+			public string Tag;
+
+			/// <summary>
+			/// Ширина и высота столбца ///
+			/// The collumn's size.
+			/// </summary>
+			public System.Drawing.Size Size;
+		}
+
 		public struct SelectionStatuses{//перечень состояний выделений строки
 			/// <summary>
 			/// Строка никак не выделена ///
@@ -62,9 +77,10 @@ namespace fcmd
 		}
 
 		//Внутренние переменные
-		string[] _collumns;//заголовки столбцов //TODO: столбцы
+		List<CollumnOptions> _collumns = new List<CollumnOptions>();//заголовки столбцов //TODO: столбцы
 		List<ItemDescription> _items = new List<ItemDescription>(); //элементы списка
-		List<Label> Nadpis = new List<Label>(); //элемент списка (пункт)
+		List<Label> lblNadpis = new List<Label>(); //элемент списка (пункт)
+		List<Label> lblCaption = new List<Label>(); //заголовки столбцов
 
 		//Подпрограммы
         public ListPanel(){//Ну, за инициализацию!
@@ -82,48 +98,80 @@ namespace fcmd
 
 		//Отрисовка
 		private void _AddItem(string Txt, int Offset, int Context){//добавление пункта
+			_collumns = Collumns; //ибо коллекции в свойствах работают иногда через анус
 			Label Lbl;
 			Lbl = new Label();
-//#if DEBUG
-//			Lbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-//#endif
 			Lbl.Left = Offset;
-			if (Nadpis.Count > 0){ //если есть пункты
-				Lbl.Top = Nadpis[Nadpis.Count-1].Top + Nadpis[Nadpis.Count-1].Height;
-			}else{ //если их нет
-				Lbl.Top = 0;
+			if (lblNadpis.Count > 0){ //если есть какие-то пункты
+				Lbl.Top = lblNadpis[lblNadpis.Count-1].Top + lblNadpis[lblNadpis.Count-1].Height;
+			}else{ //если пунктов нет вообще
+				if(_collumns.Count != 0){ //если есть столбцы
+					Lbl.Top = lblCaption[0].Height;
+				}else{
+					Lbl.Top = 0;
+				}
 			}
 			if(Offset!=0) Lbl.AutoSize = true; else Lbl.AutoSize = false; Lbl.Width = this.Width;
 			Lbl.Text = Txt;
 			Lbl.Tag = Context;
 
-			Nadpis.Add (Lbl);
-			this.Controls.Add (Nadpis[Nadpis.Count -1]);
-			Nadpis[Nadpis.Count -1].DoubleClick += _DblClick;
-			Nadpis[Nadpis.Count -1].Click += _OneClick;
-			Nadpis[Nadpis.Count -1].KeyDown += _KeyDown;
+			lblNadpis.Add (Lbl);
+			this.Controls.Add (lblNadpis[lblNadpis.Count -1]);
+			lblNadpis[lblNadpis.Count -1].DoubleClick += _DblClick;
+			lblNadpis[lblNadpis.Count -1].Click += _OneClick;
+			lblNadpis[lblNadpis.Count -1].KeyDown += _KeyDown;
 		}
 		private void _Clear(){//очистка формы
-			Nadpis.Clear();
+			lblNadpis.Clear();
 			this.Controls.Clear();
 		}
 		private void _Repaint(){ //перерисовка экрана
 			_Clear();
+			if(_collumns.Count != 0){ //если есть столбцы
+				//Отрисовка заголовков столбцов
+				int ColNo = 0; //номер текущего столбца
+				foreach (CollumnOptions Col in _collumns) {
+
+					string Cap = Col.Caption;//Cap=the CAPtion of the collumn
+					Label Collbl = new Label();
+					Collbl.Text = Cap;
+					Collbl.BackColor = SystemColors.ButtonFace;
+					Collbl.BorderStyle = BorderStyle.Fixed3D;
+
+					//Вычисляю отступ
+					int Offset = 0;
+					if(ColNo != 0){
+						for (int ccic = 0; ccic < ColNo; ccic++) { ///ccic=current collumn in cycle
+							Offset+=_collumns[ccic].Size.Width;
+						}
+					}else Offset = 0;
+
+					Collbl.Left = Offset;
+					lblCaption.Add (Collbl);
+					this.Controls.Add (lblCaption[lblCaption.Count -1]);
+
+					ColNo++;
+				}
+
+			}
+
 			int i = 0; //номер текущего элемента в БД
 			foreach (ItemDescription x in _items){
 				_AddItem (x.Text[0],0, i);
 
 				//Обработка выделения
-				switch (x.Selection) { //todo:нормальные цвета
+				switch (x.Selection) { //TODO:нормальные цвета
 				case SelectionStatuses.NotSelected:
-					Nadpis[Nadpis.Count -1].BackColor = System.Drawing.SystemColors.Window;
+					lblNadpis[lblNadpis.Count -1].BackColor = SystemColors.Window;
+					lblNadpis[lblNadpis.Count -1].ForeColor = SystemColors.ControlText;
 					break;
 				case SelectionStatuses.Selected:
-					Nadpis[Nadpis.Count -1].BackColor = System.Drawing.SystemColors.Window;
+					lblNadpis[lblNadpis.Count -1].BackColor = SystemColors.Window;
+					lblNadpis[lblNadpis.Count -1].ForeColor = SystemColors.Highlight;
 					break;
-					//undone: дописать forecolor
 				case SelectionStatuses.Highlighted:
-					Nadpis[Nadpis.Count -1].BackColor = System.Drawing.SystemColors.MenuHighlight;
+					lblNadpis[lblNadpis.Count -1].BackColor = SystemColors.HotTrack;
+					lblNadpis[lblNadpis.Count -1].ForeColor = SystemColors.HighlightText;
 					break;
 				}
 
@@ -133,7 +181,7 @@ namespace fcmd
 
 		private void _DblClick(object sender, EventArgs e){//обработчик двойного щелчка
 			Label l = (Label)sender;
-			EventArgs<string> ea = new EventArgs<string>(_items[Convert.ToInt32 (l.Tag)].Text[0]);
+			EventArgs<string> ea = new EventArgs<string>(_items[Convert.ToInt32 (l.Tag)].Value);
 			DoubleClick(sender,ea);
 		}
 
@@ -142,13 +190,34 @@ namespace fcmd
 				Item.Selection = SelectionStatuses.NotSelected;
 			}
 			Label l = (Label)sender;
+			//MessageBox.Show(l.Tag.ToString());
 			_items[(int)l.Tag].Selection = SelectionStatuses.Highlighted;
 			_Repaint();
 		}
 
 		private void _KeyDown(object sender, KeyEventArgs e){//обработчик нажатия клавиши
-			//undone
+			//UNDONE (под моно не фурычит, а под дотнетом не тестировал)
 			MessageBox.Show (e.KeyData.ToString());
+			switch (e.KeyCode) {
+			case Keys.Up:
+				//стрелка вверх
+				foreach (ItemDescription id in _items){
+					id.Selection = SelectionStatuses.NotSelected;
+				}
+				Label lup = (Label)sender;
+				_items[(int)lup.Tag - 1].Selection = SelectionStatuses.Highlighted;
+				_Repaint();
+				break;
+			case Keys.Down:
+				//стрелка вниз
+				foreach (ItemDescription id in _items){
+					id.Selection = SelectionStatuses.NotSelected;
+				}
+				Label ldn = (Label)sender;
+				_items[(int)ldn.Tag + 1].Selection = SelectionStatuses.Highlighted;
+				_Repaint();
+				break;
+			}
 		}
 
 		//Методы
@@ -164,6 +233,11 @@ namespace fcmd
 				_Clear();
 				_Repaint();
 			}
+		}
+
+		public List<CollumnOptions> Collumns{
+			get{return _collumns;}
+			set{_collumns = value;}
 		}
     }
 }
