@@ -127,6 +127,7 @@ namespace fcmd
 		}
 		private void _Repaint(){ //перерисовка экрана
 			_Clear();
+
 			if(_collumns.Count != 0){ //если есть столбцы
 				//Отрисовка заголовков столбцов
 				int ColNo = 0; //номер текущего столбца
@@ -139,14 +140,14 @@ namespace fcmd
 					Collbl.BorderStyle = BorderStyle.Fixed3D;
 
 					//Вычисляю отступ
-					int Offset = 0;
+					int ColOffset = 0;
 					if(ColNo != 0){
 						for (int ccic = 0; ccic < ColNo; ccic++) { ///ccic=current collumn in cycle
-							Offset+=_collumns[ccic].Size.Width;
+							ColOffset+=_collumns[ccic].Size.Width;
 						}
-					}else Offset = 0;
+					}else ColOffset = 0;
 
-					Collbl.Left = Offset;
+					Collbl.Left = ColOffset;
 					lblCaption.Add (Collbl);
 					this.Controls.Add (lblCaption[lblCaption.Count -1]);
 
@@ -155,9 +156,26 @@ namespace fcmd
 
 			}
 
+			//отрисовка элементов
 			int i = 0; //номер текущего элемента в БД
-			foreach (ItemDescription x in _items){
-				_AddItem (x.Text[0],0, i);
+			foreach (ItemDescription x in _items){ //цикл по массиву элементов (_items[])
+
+				if(_collumns.Count != 0){
+					int ColNo2 = 0; //лучше ничего не придумал
+					foreach (CollumnOptions ThisCollumn in _collumns) {
+						//Вычисляю отступ
+						int ItOffset = 0;
+						if(ColNo2 != 0){
+							for (int ccic = 0; ccic < ColNo2; ccic++) { ///ccic=current collumn in cycle
+								ItOffset+=_collumns[ccic].Size.Width;
+							}
+						}else ItOffset = 0;
+						_AddItem(x.Text[ColNo2],ItOffset,i);
+						ColNo2++;
+					}
+				}else{
+					_AddItem (x.Text[0],0, i);
+				}
 
 				//Обработка выделения
 				switch (x.Selection) { //TODO:нормальные цвета

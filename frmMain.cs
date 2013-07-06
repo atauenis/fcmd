@@ -53,7 +53,11 @@ namespace fcmd
 			this.lplLeft[0].BorderStyle = BorderStyle.Fixed3D;
 			ListPanel.CollumnOptions colopt = new ListPanel.CollumnOptions();
 			colopt.Caption = "Имя";
-			colopt.Size=new Size(100,0);
+			colopt.Size=new Size(300,0);
+			colopt.Tag = "Name";
+			this.lplLeft[0].Collumns.Add (colopt);
+			colopt.Caption = "Размер";
+			colopt.Tag = "Size";
 			this.lplLeft[0].Collumns.Add (colopt);
             this.Controls.Add(this.lplLeft[0]); //ввожу панель в форму
 			ActivePanel = this.lplLeft[0]; //и делаю её активной
@@ -95,6 +99,7 @@ namespace fcmd
 				ListPanel.ItemDescription NewItem;
 				NewItem = new ListPanel.ItemDescription();
 				NewItem.Text.Add (curItem + "/");
+				NewItem.Text.Add ("<DIR>");
 				NewItem.Value = curItem + "/";
 				lplLeft[0].Items.Add (NewItem);
             }
@@ -103,6 +108,8 @@ namespace fcmd
 				ListPanel.ItemDescription NewItem;
 				NewItem = new ListPanel.ItemDescription();
 				NewItem.Text.Add (curItem);
+				FileInfo fi = new FileInfo(curItem);
+				NewItem.Text.Add (fi.Length.ToString());
 				NewItem.Value = curItem;
 				lplLeft[0].Items.Add (NewItem);
             }
