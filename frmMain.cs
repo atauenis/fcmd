@@ -47,6 +47,7 @@ namespace fcmd
 #if DEBUG
 			this.lplLeft[0].BackColor = System.Drawing.Color.FromName("yellow");
 #endif
+			this.lplLeft[0].BackColor = SystemColors.Window;
             this.lplLeft[0].TabIndex = 0;
 			this.lplLeft[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplLeft[0].GotFocus += new System.EventHandler(this.Panel_Focus);
@@ -58,7 +59,13 @@ namespace fcmd
 			this.lplLeft[0].Collumns.Add (colopt);
 			colopt.Caption = "Размер";
 			colopt.Tag = "Size";
+			colopt.Size = new Size(50,0);
 			this.lplLeft[0].Collumns.Add (colopt);
+			colopt.Caption = "Дата";
+			colopt.Tag = "Date";
+			colopt.Size = new Size(100,0);
+			this.lplLeft[0].Collumns.Add(colopt);
+			this.lplLeft[0].ShowCollumnTitles = true;
             this.Controls.Add(this.lplLeft[0]); //ввожу панель в форму
 			ActivePanel = this.lplLeft[0]; //и делаю её активной
 			//Правая
@@ -82,6 +89,8 @@ namespace fcmd
 			txtURL[1] = new TextBox();
 			txtURL[0].Tag = 0;
 			txtURL[1].Tag = 1;
+			txtURL[0].KeyUp += txtURL_KeyUp;
+			txtURL[0].DoubleClick += ForceGo;
 			this.Controls.Add (txtURL[0]);
 			this.Controls.Add (txtURL[1]);
 			this.txtURL[0].Text = Directory.GetLogicalDrives()[0];
@@ -100,6 +109,7 @@ namespace fcmd
 				NewItem = new ListPanel.ItemDescription();
 				NewItem.Text.Add (curItem + "/");
 				NewItem.Text.Add ("<DIR>");
+				NewItem.Text.Add ("");
 				NewItem.Value = curItem + "/";
 				lplLeft[0].Items.Add (NewItem);
             }
@@ -109,12 +119,13 @@ namespace fcmd
 				NewItem = new ListPanel.ItemDescription();
 				NewItem.Text.Add (curItem);
 				FileInfo fi = new FileInfo(curItem);
-				NewItem.Text.Add (fi.Length.ToString());
+				NewItem.Text.Add (fi.Length / 1024 + "КБ");
+				NewItem.Text.Add (fi.CreationTime.Date.ToShortDateString());
 				NewItem.Value = curItem;
 				lplLeft[0].Items.Add (NewItem);
             }
 
-			this.OnSizeChanged (new EventArgs()); //обновляю панели
+			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
 		}
 
 		public void frmMain_Resize(object sender, EventArgs e){ //Деформация формы
@@ -148,6 +159,11 @@ namespace fcmd
 			}else MessageBox.Show(e.Data,"это файл");
         }
 
+		private void ForceGo(object sender, EventArgs e){ //hack //убрать
+			txtURL_KeyUp(txtURL[0],new KeyEventArgs(Keys.Enter));
+			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
+		}
+
 		private void txtURL_KeyUp(object sender, KeyEventArgs e){ //отпускание клавиши в поле адреса
 			if(e.KeyCode == Keys.Enter){
 				TextBox tb = (TextBox) sender;
@@ -166,19 +182,24 @@ namespace fcmd
 					ListPanel.ItemDescription NewItem;
 					NewItem = new ListPanel.ItemDescription();
 					NewItem.Text.Add (curItem + "/");
+					NewItem.Text.Add ("<DIR>");
+					NewItem.Text.Add ("");
 					NewItem.Value = curItem + "/";
-					ActivePanel.Items.Add (NewItem);
+					lplLeft[0].Items.Add (NewItem);
 	            }
 	            foreach (string curItem in fileList)
 	            { //файлы
 					ListPanel.ItemDescription NewItem;
 					NewItem = new ListPanel.ItemDescription();
 					NewItem.Text.Add (curItem);
+					FileInfo fi = new FileInfo(curItem);
+					NewItem.Text.Add (fi.Length / 1024 + "КБ");
+					NewItem.Text.Add (fi.CreationTime.Date.ToShortDateString());
 					NewItem.Value = curItem;
-					ActivePanel.Items.Add (NewItem);
+					lplLeft[0].Items.Add (NewItem);
 	            }
 
-				this.OnSizeChanged (new EventArgs()); //обновляю панели
+					lplLeft[0].Redraw();
 				}catch(Exception ex){
 				MessageBox.Show(ex.StackTrace,ex.Message,MessageBoxButtons.OK,MessageBoxIcon.Stop);
 				}
