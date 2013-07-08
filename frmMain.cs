@@ -37,13 +37,27 @@ namespace fcmd
 				MessageBox.Show ("File commander, версия " + Application.ProductVersion);
 			#endif
 
+			#region txtURL[x]
+			//формирую поля ввода пути
+			txtURL[0] = new TextBox();
+			txtURL[1] = new TextBox();
+			txtURL[0].Tag = 0;
+			txtURL[1].Tag = 1;
+			txtURL[0].Top = mstMenu.Height;
+			txtURL[1].Top = mstMenu.Height;
+			txtURL[0].KeyUp += txtURL_KeyUp;
+			txtURL[0].DoubleClick += ForceGo;
+			this.Controls.Add (txtURL[0]);
+			this.Controls.Add (txtURL[1]);
+			this.txtURL[0].Text = Directory.GetLogicalDrives()[0];
+			#endregion
 
+			#region Панели
 			//Формирую панели
 			//Левая
 			this.lplLeft.Add (new ListPanel()); //добавление в коллекцию левых панелей
-            this.lplLeft[0].Location = new System.Drawing.Point(0, 30);
+			this.lplLeft[0].Location = new System.Drawing.Point(0, mstMenu.Height+txtURL[0].Height);
             this.lplLeft[0].Name = "lplLeft";
-            this.lplLeft[0].Size = new System.Drawing.Size(300, 300);
 #if DEBUG
 			this.lplLeft[0].BackColor = System.Drawing.Color.FromName("yellow");
 #endif
@@ -51,10 +65,10 @@ namespace fcmd
             this.lplLeft[0].TabIndex = 0;
 			this.lplLeft[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplLeft[0].GotFocus += new System.EventHandler(this.Panel_Focus);
-			this.lplLeft[0].BorderStyle = BorderStyle.Fixed3D;
+			this.lplLeft[0].BorderStyle = BorderStyle.FixedSingle;
 			ListPanel.CollumnOptions colopt = new ListPanel.CollumnOptions();
 			colopt.Caption = "Имя";
-			colopt.Size=new Size(300,0);
+			colopt.Size=new Size(200,0);
 			colopt.Tag = "Name";
 			this.lplLeft[0].Collumns.Add (colopt);
 			colopt.Caption = "Размер";
@@ -70,32 +84,23 @@ namespace fcmd
 			ActivePanel = this.lplLeft[0]; //и делаю её активной
 			//Правая
 			this.lplRight.Add (new ListPanel()); //добавление в коллекцию правых панелей
-            this.lplRight[0].Location = new System.Drawing.Point(0, 30);
+            this.lplRight[0].Location = new System.Drawing.Point(0, mstMenu.Height+txtURL[0].Height);
             this.lplRight[0].Name = "lplRight";
-            this.lplRight[0].Size = new System.Drawing.Size(300, 300);
 #if DEBUG
 			this.lplRight[0].BackColor = System.Drawing.Color.FromName("yellow");
 #endif
             this.lplRight[0].TabIndex = 0;
             this.lplRight[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplRight[0].GotFocus += new System.EventHandler(this.Panel_Focus);
-			this.lplRight[0].BorderStyle = BorderStyle.Fixed3D;
+			this.lplRight[0].BorderStyle = BorderStyle.FixedSingle;
             this.Controls.Add(this.lplRight[0]); //ввожу панель в форму
 
 			//TODO:подумать над слежением за панелями (активная-пассивная)
-
-			//формирую поля ввода пути
-			txtURL[0] = new TextBox();
-			txtURL[1] = new TextBox();
-			txtURL[0].Tag = 0;
-			txtURL[1].Tag = 1;
-			txtURL[0].KeyUp += txtURL_KeyUp;
-			txtURL[0].DoubleClick += ForceGo;
-			this.Controls.Add (txtURL[0]);
-			this.Controls.Add (txtURL[1]);
-			this.txtURL[0].Text = Directory.GetLogicalDrives()[0];
+			#endregion
 
 
+
+			#region Изначальный перечень файлов
 			string startupDir = Directory.GetLogicalDrives()[0];
 			//формирую список
 			string[] dirList; string[] fileList;
@@ -104,12 +109,12 @@ namespace fcmd
 
             foreach (string curItem in dirList)
             { //директории
-                //lplLeft[0].AddItem(curItem + "/");
 				ListPanel.ItemDescription NewItem;
 				NewItem = new ListPanel.ItemDescription();
-				NewItem.Text.Add (curItem + "/");
+				DirectoryInfo di = new DirectoryInfo(curItem);
+				NewItem.Text.Add (di.Name);
 				NewItem.Text.Add ("<DIR>");
-				NewItem.Text.Add ("");
+				NewItem.Text.Add (di.LastWriteTime.ToShortDateString());
 				NewItem.Value = curItem + "/";
 				lplLeft[0].Items.Add (NewItem);
             }
@@ -117,26 +122,27 @@ namespace fcmd
             { //файлы
 				ListPanel.ItemDescription NewItem;
 				NewItem = new ListPanel.ItemDescription();
-				NewItem.Text.Add (curItem);
 				FileInfo fi = new FileInfo(curItem);
+				NewItem.Text.Add (fi.Name);
 				NewItem.Text.Add (fi.Length / 1024 + "КБ");
 				NewItem.Text.Add (fi.CreationTime.Date.ToShortDateString());
 				NewItem.Value = curItem;
 				lplLeft[0].Items.Add (NewItem);
             }
+			#endregion
 
 			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
 		}
 
 		public void frmMain_Resize(object sender, EventArgs e){ //Деформация формы
 			foreach (ListPanel llp in this.lplLeft){
-				llp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top);
+				llp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstKeyboard.Height);
 			}
 			foreach(ListPanel rlp in this.lplRight){
-				rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top);
+				rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstKeyboard.Height);
 				rlp.Left = this.Width / 2;
 			}
-			txtURL[0].Location = new Point(0,0);
+			txtURL[0].Location = new Point(0,mstMenu.Height);
 			txtURL[0].Width = lplLeft[0].Width;
 			txtURL[1].Left = lplRight[0].Left;
 			txtURL[1].Width = lplRight[0].Width;
@@ -178,12 +184,12 @@ namespace fcmd
 
 	            foreach (string curItem in dirList)
 	            { //директории
-	                //lplLeft[0].AddItem(curItem + "/");
 					ListPanel.ItemDescription NewItem;
 					NewItem = new ListPanel.ItemDescription();
-					NewItem.Text.Add (curItem + "/");
+					DirectoryInfo di = new DirectoryInfo(curItem);
+					NewItem.Text.Add (di.Name);
 					NewItem.Text.Add ("<DIR>");
-					NewItem.Text.Add ("");
+					NewItem.Text.Add (di.LastWriteTime.ToShortDateString());
 					NewItem.Value = curItem + "/";
 					lplLeft[0].Items.Add (NewItem);
 	            }
@@ -191,8 +197,8 @@ namespace fcmd
 	            { //файлы
 					ListPanel.ItemDescription NewItem;
 					NewItem = new ListPanel.ItemDescription();
-					NewItem.Text.Add (curItem);
 					FileInfo fi = new FileInfo(curItem);
+					NewItem.Text.Add (fi.Name);
 					NewItem.Text.Add (fi.Length / 1024 + "КБ");
 					NewItem.Text.Add (fi.CreationTime.Date.ToShortDateString());
 					NewItem.Value = curItem;
@@ -206,6 +212,9 @@ namespace fcmd
 			}
 		}
 
+		private void mstMenu_ItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e){
+			
+		}
 	}
 
 	public delegate void StringEvent(object sender, EventArgs<String> e);

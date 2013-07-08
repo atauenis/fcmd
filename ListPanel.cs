@@ -79,9 +79,9 @@ namespace fcmd
 		List<CollumnOptions> _collumns = new List<CollumnOptions>();//заголовки столбцов //TODO: столбцы
 		List<ItemDescription> _items = new List<ItemDescription>(); //элементы списка
 		List<Label> lblCaption = new List<Label>(); //заголовки столбцов
-		List<List<Label>> Stroki = new List<List<Label>>(); //список строк //undone: с чистого листа! :-)
+		List<List<Object>> Stroki = new List<List<Object>>(); //список строк
+		Panel ScrollPanel = new Panel();
 		bool showColTitles = false; //отображать ли заголовки столбцов?
-		int VerticalOffset = 0; //отступ по-вертикали (для прокрутки и неналазанья на заголовки столбцов)
 
 		//Подпрограммы
         public ListPanel(){//Ну, за инициализацию!
@@ -89,13 +89,32 @@ namespace fcmd
         }
 
 		public new event StringEvent DoubleClick;
+
         private void ListPanel_Load(object sender, EventArgs e){//Ну, за загрузку!
 			_Repaint();
+			ScrollPanel.Width = this.Width;
+			ScrollPanel.Height = this.Height;
+			ScrollPanel.Location = new Point(0,0);
+			ScrollPanel.AutoScroll = true;
+			this.Controls.Add (ScrollPanel);
         }
 
         private void ListPanel_Resize(object sender, EventArgs e){//Ну, за деформацию!
 			_Repaint ();
+			if(showColTitles){
+				ScrollPanel.Top = lblCaption[0].Height;
+				ScrollPanel.Height = this.Height - lblCaption[0].Height;
+			}else{
+				ScrollPanel.Top = 0;
+				ScrollPanel.Height = this.Height;
+			}
+			ScrollPanel.Width = this.Width;
         }
+
+		private int GetPercents(int Input, int Percents){//высчитать Percents % от Input
+			int OnePercent = Input / 100;
+			return OnePercent * Percents;
+		}
 
 		//Отрисовка
 		private void _AddItem(string Txt, int Row, int Collumn, short Selection){//добавление пункта в Stroki[][] и Controls[]
@@ -109,13 +128,8 @@ namespace fcmd
 				Offset += _collumns[i].Size.Width;
 			}
 			Lbl.Left = Offset;
-			//MessageBox.Show(showColTitles.ToString());
-			if(!showColTitles){
-				Lbl.Top = Lbl.Height * Row + 1; //todo:заменить на цикл, суммирующий высоту всех строк
-			}else{
-				//столбцы есть
-				Lbl.Top = VerticalOffset + Lbl.Height * Row; 
-			}
+
+			Lbl.Top = Lbl.Height * Row + 1; //todo:заменить на цикл, суммирующий высоту всех строк
 			Lbl.Width = _collumns[Collumn].Size.Width;
 
 			//Обрабатываю выделение
@@ -123,15 +137,15 @@ namespace fcmd
 				Lbl.BackColor = SystemColors.HotTrack;
 				Lbl.ForeColor = SystemColors.HighlightText;
 			}else{
-				Lbl.ForeColor = SystemColors.Window;
-				Lbl.ForeColor = SystemColors.WindowText;
+				Lbl.BackColor = this.BackColor;
+				Lbl.ForeColor = this.ForeColor;
 			}
 
 			//Вношу в форму
 			Lbl.Click += _OneClick;
 			Lbl.DoubleClick += _DblClick;
 			Lbl.KeyDown += _KeyDown;
-			this.Controls.Add(Lbl);
+			ScrollPanel.Controls.Add(Lbl);
 
 			//undone
 //			lblNadpis.Add (Lbl);
@@ -143,12 +157,12 @@ namespace fcmd
 		private void _Clear(){//очистка формы
 			//undone
 			Stroki.Clear ();
-			this.Controls.Clear();
+			ScrollPanel.Controls.Clear();
 		}
 		private void _Repaint(){ //перерисовка экрана
 			_Clear();
 
-			if(_collumns.Count != 0){ //если есть столбцы
+			if(showColTitles){ //если столбцы рисовать надо
 				//Отрисовка заголовков столбцов
 				int ColNo = 0; //номер текущего столбца
 				foreach (CollumnOptions Col in _collumns) {
@@ -174,7 +188,6 @@ namespace fcmd
 
 					ColNo++;
 				}
-				VerticalOffset = lblCaption[0].Height; //todo:добавить прокрутку
 			}
 
 			//отрисовка элемнтов
