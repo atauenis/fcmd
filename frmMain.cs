@@ -11,6 +11,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace fcmd
 {
@@ -98,7 +100,21 @@ namespace fcmd
 			//TODO:подумать над слежением за панелями (активная-пассивная)
 			#endregion
 
+			List<pluginner.IPlugin> plugins = new List<pluginner.IPlugin>();
+			string file = Application.StartupPath + "/../../base-plugins/localfs/bin/Debug/localfs.dll";
+            Assembly assembly = Assembly.LoadFile(file);
 
+            foreach (Type type in assembly.GetTypes()) {
+				Type iface = type.GetInterface("pluginner.IPlugin");
+
+				if (iface != null)	{
+					pluginner.IPlugin plugin = (pluginner.IPlugin)Activator.CreateInstance(type); //BUG: InvalidCastException: Cannot cast from source type to destination type.
+					plugins.Add(plugin); 
+				}
+			}
+
+			//todo: выкинуть plugins[] и привязать к listpanel'ям
+			//todo: написать API плагинов доступа к файловым системам
 
 			#region Изначальный перечень файлов
 			string startupDir = Directory.GetLogicalDrives()[0];
@@ -136,7 +152,7 @@ namespace fcmd
 
 		public void frmMain_Resize(object sender, EventArgs e){ //Деформация формы
 			foreach (ListPanel llp in this.lplLeft){
-				llp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstKeyboard.Height);
+				llp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - mstKeyboard.Height); 
 			}
 			foreach(ListPanel rlp in this.lplRight){
 				rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstKeyboard.Height);
