@@ -2,19 +2,20 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="frmMain.cs">
     <Files>
-      <File FileName="ListPanel.cs" Line="120" Column="104" />
-      <File FileName="frmMain.cs" Line="113" Column="49" />
+      <File FileName="ListPanel.cs" Line="299" Column="25" />
+      <File FileName="frmMain.cs" Line="122" Column="57" />
       <File FileName="frmMain.Designer.cs" Line="45" Column="68" />
-      <File FileName="../../../filecommander/fcmd/base-plugins/localfs/MyClass.cs" Line="5" Column="24" />
+      <File FileName="../../../filecommander/fcmd/pluginner/MyClass.cs" Line="42" Column="3" />
+      <File FileName="localFileSystem.cs" Line="25" Column="3" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="fcmd" expanded="True">
-            <Node name="References" expanded="True" />
-            <Node name="Properties" expanded="True" />
+            <Node name="frmMain.cs" selected="True" />
+            <Node name="ListPanel.cs" expanded="True" />
           </Node>
-          <Node name="localfs" expanded="True" selected="True" />
+          <Node name="pluginner" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
@@ -24,7 +25,6 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/home/atauenis/dev/filecommander/fcmd/frmMain.cs" line="104" />
       <Catchpoint exceptionName="System.InvalidCastException" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

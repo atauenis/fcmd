@@ -68,6 +68,7 @@ namespace fcmd
 			this.lplLeft[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplLeft[0].GotFocus += new System.EventHandler(this.Panel_Focus);
 			this.lplLeft[0].BorderStyle = BorderStyle.FixedSingle;
+			this.lplLeft[0].FSProvider = new localFileSystem();
 			ListPanel.CollumnOptions colopt = new ListPanel.CollumnOptions();
 			colopt.Caption = "Имя";
 			colopt.Size=new Size(200,0);
@@ -100,51 +101,35 @@ namespace fcmd
 			//TODO:подумать над слежением за панелями (активная-пассивная)
 			#endregion
 
-			List<pluginner.IPlugin> plugins = new List<pluginner.IPlugin>();
-			string file = Application.StartupPath + "/../../base-plugins/localfs/bin/Debug/localfs.dll";
-            Assembly assembly = Assembly.LoadFile(file);
-
-            foreach (Type type in assembly.GetTypes()) {
-				Type iface = type.GetInterface("pluginner.IPlugin");
-
-				if (iface != null)	{
-					pluginner.IPlugin plugin = (pluginner.IPlugin)Activator.CreateInstance(type); //BUG: InvalidCastException: Cannot cast from source type to destination type.
-					plugins.Add(plugin); 
-				}
-			}
-
-			//todo: выкинуть plugins[] и привязать к listpanel'ям
-			//todo: написать API плагинов доступа к файловым системам
+//			List<pluginner.IPlugin> plugins = new List<pluginner.IPlugin>();
+//			string file = Application.StartupPath + "/../../base-plugins/localfs/bin/Debug/localfs.dll";
+//            Assembly assembly = Assembly.LoadFile(file);
+//
+//            foreach (Type type in assembly.GetTypes()) {
+//				Type iface = type.GetInterface("pluginner.IPlugin");
+//
+//				if (iface != null)	{
+//					pluginner.IPlugin plugin = (pluginner.IPlugin)Activator.CreateInstance(type); //BUG: InvalidCastException: Cannot cast from source type to destination type.
+//					plugins.Add(plugin); 
+//				}
+//			}
+//
+//			//todo: выкинуть plugins[] и привязать к listpanel'ям
+//			//todo: написать API плагинов доступа к файловым системам
 
 			#region Изначальный перечень файлов
 			string startupDir = Directory.GetLogicalDrives()[0];
-			//формирую список
-			string[] dirList; string[] fileList;
-			dirList = Directory.GetDirectories(startupDir);
-			fileList = Directory.GetFiles (startupDir);
-
-            foreach (string curItem in dirList)
-            { //директории
+			pluginner.IFSPlugin fsp = this.lplLeft[0].FSProvider;
+			fsp.ReadDirectory(startupDir);
+			foreach(pluginner.DirItem di in fsp.DirectoryContent){ //перебираю файлы, найденные провайдером ФС
 				ListPanel.ItemDescription NewItem;
 				NewItem = new ListPanel.ItemDescription();
-				DirectoryInfo di = new DirectoryInfo(curItem);
-				NewItem.Text.Add (di.Name);
-				NewItem.Text.Add ("<DIR>");
-				NewItem.Text.Add (di.LastWriteTime.ToShortDateString());
-				NewItem.Value = curItem + "/";
+				NewItem.Text.Add (di.TextToShow);
+				NewItem.Text.Add (Convert.ToString (di.Size / 1024));
+				NewItem.Text.Add (di.Date.ToShortDateString());
+				NewItem.Value = di.Path;
 				lplLeft[0].Items.Add (NewItem);
-            }
-            foreach (string curItem in fileList)
-            { //файлы
-				ListPanel.ItemDescription NewItem;
-				NewItem = new ListPanel.ItemDescription();
-				FileInfo fi = new FileInfo(curItem);
-				NewItem.Text.Add (fi.Name);
-				NewItem.Text.Add (fi.Length / 1024 + "КБ");
-				NewItem.Text.Add (fi.CreationTime.Date.ToShortDateString());
-				NewItem.Value = curItem;
-				lplLeft[0].Items.Add (NewItem);
-            }
+			}
 			#endregion
 
 			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
@@ -170,6 +155,13 @@ namespace fcmd
 
 		private void Panel_LostFocus(object sender, EventArgs e){ //панель лишилась фокуса
 			//PassivePanel = (ListPanel)sender;
+			ListPanel lp = (ListPanel)sender;
+			switch (lp.Name){
+			case "lplLeft":
+				break;
+			case "lplRight":
+				break;
+			}
 		}
 
         private void Panel_DblClick(object sender, EventArgs<String> e){ //двойной щелчок по панели
@@ -190,41 +182,25 @@ namespace fcmd
 			if(e.KeyCode == Keys.Enter){
 				TextBox tb = (TextBox) sender;
 				if(!Directory.Exists (tb.Text)){return;} //проверка наличия каталога
-				try{
+
 				ActivePanel.Items.Clear();
 
-				//todo:вынести в плагин localfs.dll
-				string[] dirList; string[] fileList;
-				dirList = Directory.GetDirectories(tb.Text);
-				fileList = Directory.GetFiles (tb.Text);
-
-	            foreach (string curItem in dirList)
-	            { //директории
-					ListPanel.ItemDescription NewItem;
-					NewItem = new ListPanel.ItemDescription();
-					DirectoryInfo di = new DirectoryInfo(curItem);
-					NewItem.Text.Add (di.Name);
-					NewItem.Text.Add ("<DIR>");
-					NewItem.Text.Add (di.LastWriteTime.ToShortDateString());
-					NewItem.Value = curItem + "/";
-					lplLeft[0].Items.Add (NewItem);
-	            }
-	            foreach (string curItem in fileList)
-	            { //файлы
-					ListPanel.ItemDescription NewItem;
-					NewItem = new ListPanel.ItemDescription();
-					FileInfo fi = new FileInfo(curItem);
-					NewItem.Text.Add (fi.Name);
-					NewItem.Text.Add (fi.Length / 1024 + "КБ");
-					NewItem.Text.Add (fi.CreationTime.Date.ToShortDateString());
-					NewItem.Value = curItem;
-					lplLeft[0].Items.Add (NewItem);
-	            }
-
-					lplLeft[0].Redraw();
-				}catch(Exception ex){
-				MessageBox.Show(ex.StackTrace,ex.Message,MessageBoxButtons.OK,MessageBoxIcon.Stop);
+				//гружу директорию
+				pluginner.IFSPlugin fsp = this.ActivePanel.FSProvider;
+				fsp.ReadDirectory(tb.Text);
+				foreach(pluginner.DirItem di in fsp.DirectoryContent){ //перебираю файлы, найденные провайдером ФС
+					if(di.Hidden == false){
+						ListPanel.ItemDescription NewItem;
+						NewItem = new ListPanel.ItemDescription();
+						NewItem.Text.Add (di.TextToShow);
+						NewItem.Text.Add (Convert.ToString (di.Size / 1024));
+						NewItem.Text.Add (di.Date.ToShortDateString());
+						NewItem.Value = di.Path;
+						ActivePanel.Items.Add (NewItem);
+					}
 				}
+				ActivePanel.Redraw();
+
 			}
 		}
 

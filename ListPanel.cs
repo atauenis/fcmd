@@ -82,6 +82,7 @@ namespace fcmd
 		List<List<Object>> Stroki = new List<List<Object>>(); //список строк
 		Panel ScrollPanel = new Panel();
 		bool showColTitles = false; //отображать ли заголовки столбцов?
+		pluginner.IFSPlugin FsPlugin;
 
 		//Подпрограммы
         public ListPanel(){//Ну, за инициализацию!
@@ -288,13 +289,24 @@ namespace fcmd
 
         //Свойства
 		/// <summary>
+		/// Gets or sets the file system driver.
+		/// </summary>
+		/// <value>
+		/// The file system driver.
+		/// </value>
+		public pluginner.IFSPlugin FSProvider{
+			get{return FsPlugin;}
+			set{FsPlugin = value;}
+		}
+
+		/// <summary>
 		/// Список элементов лист-панели ///
 		/// Gets or sets the items.
 		/// </summary>
 		/// <value>
 		/// The items.
 		/// </value>
-        public List<ItemDescription> Items{
+		public List<ItemDescription> Items{
 			get{
 			return _items;
 			

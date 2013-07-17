@@ -51,9 +51,9 @@
       <DependentUpon>ListPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="localFileSystem.cs" />
+    <Compile Include="base-plugins\localfs\AssemblyInfo.cs" />
     <Compile Include="base-plugins\localfs\MyClass.cs" />
-    <Compile Include="pluginner\AssemblyInfo.cs" />
-    <Compile Include="pluginner\MyClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -71,7 +71,7 @@
     <None Include="README" />
     <None Include="README.md" />
     <None Include="frmMain.resources" />
-    <None Include="base-plugins\localfs\localfs.userprefs" />
+    <None Include="base-plugins\base-plugins.userprefs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frmMain.resx">
@@ -82,8 +82,5 @@
       <DependentUpon>ListPanel.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="base-plugins\" />
   </ItemGroup>
 </Project>

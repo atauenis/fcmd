@@ -5,10 +5,10 @@ using System.Runtime.CompilerServices;
 // Change them to the values specific to your project.
 
 [assembly: AssemblyTitle("pluginner")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("File Commander plugining enabler")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
+[assembly: AssemblyProduct("File Commander by Alexander Tauens")]
 [assembly: AssemblyCopyright("А.Т.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
