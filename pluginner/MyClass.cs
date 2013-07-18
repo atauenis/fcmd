@@ -39,24 +39,37 @@ namespace pluginner{
 		/// </value>
 		List<DirItem> DirectoryContent {get;}
 
-		void ReadDirectory(string url);
+		/// <summary>
+		/// Gets or sets the current directory.
+		/// </summary>
+		/// <value>
+		/// The current directory URL.
+		/// </value>
+		string CurrentDirectory {get; set;}
 
-//		/// <summary>
-//		/// Gets or sets the current directory.
-//		/// </summary>
-//		/// <value>
-//		/// The current directory URL.
-//		/// </value>
-//		string CurrentDirectory {get; set;}
+		/// <summary>
+		/// Determines whether at the specified URL exists a file
+		/// </summary>
+		/// <returns>
+		/// <c>true</c> if the file really present; else, retruns <c>false</c>.
+		/// </returns>
+		/// <param name='URL'>
+		/// The file location (URL)
+		/// </param>
+		bool IsFilePresent(string URL);
 
-//		/// <summary>
-//		/// Reads a directory (folder).
-//		/// </summary>
-//		/// <param name='url'>
-//		/// The directory's URL.
-//		/// </param>
-//		void ReadDirectory(string url);
-//
+		/// <summary>
+		/// Determines whether at the specified URL exists a directory
+		/// </summary>
+		/// <returns>
+		/// <c>true</c> if the directory really present; else, retruns <c>false</c>.
+		/// </returns>
+		/// <param name='URL'>
+		/// The directory location (URL)
+		/// </param>
+		bool IsDirPresent(string URL);
+
+
 //		/// <summary>
 //		/// Reads a file.
 //		/// </summary>

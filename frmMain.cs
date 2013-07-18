@@ -118,9 +118,9 @@ namespace fcmd
 //			//todo: написать API плагинов доступа к файловым системам
 
 			#region Изначальный перечень файлов
-			string startupDir = Directory.GetLogicalDrives()[0];
+			string startupDir = "file://" + Directory.GetLogicalDrives()[0];
 			pluginner.IFSPlugin fsp = this.lplLeft[0].FSProvider;
-			fsp.ReadDirectory(startupDir);
+			fsp.CurrentDirectory = startupDir;
 			foreach(pluginner.DirItem di in fsp.DirectoryContent){ //перебираю файлы, найденные провайдером ФС
 				ListPanel.ItemDescription NewItem;
 				NewItem = new ListPanel.ItemDescription();
@@ -181,13 +181,14 @@ namespace fcmd
 		private void txtURL_KeyUp(object sender, KeyEventArgs e){ //отпускание клавиши в поле адреса
 			if(e.KeyCode == Keys.Enter){
 				TextBox tb = (TextBox) sender;
-				if(!Directory.Exists (tb.Text)){return;} //проверка наличия каталога
+				//if(!Directory.Exists (tb.Text)){return;} //проверка наличия каталога
+				if(!ActivePanel.FSProvider.IsDirPresent(tb.Text)) return; //проверка наличия каталога
 
 				ActivePanel.Items.Clear();
 
 				//гружу директорию
 				pluginner.IFSPlugin fsp = this.ActivePanel.FSProvider;
-				fsp.ReadDirectory(tb.Text);
+				fsp.CurrentDirectory = tb.Text;
 				foreach(pluginner.DirItem di in fsp.DirectoryContent){ //перебираю файлы, найденные провайдером ФС
 					if(di.Hidden == false){
 						ListPanel.ItemDescription NewItem;

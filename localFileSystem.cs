@@ -21,10 +21,24 @@ namespace fcmd
 		public List<DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
 
 		List<pluginner.DirItem> DirContent = new List<DirItem>();
+		string CurDir;
 
+		public string CurrentDirectory {get{return CurDir;} set{CurDir = value; ReadDirectory(value);}}
+
+		public bool IsFilePresent(string URL){//проверить наличие файла
+			string InternalURL = URL.Replace("file://","");
+			if(File.Exists(InternalURL)) return true; //файл е?
+			return false; //та ничого нэма! [не забываем, что return xxx прекращает выполнение подпрограммы]
+		}
+
+		public bool IsDirPresent(string URL){//проверить наличие папки
+			string InternalURL = URL.Replace("file://","");
+			if(Directory.Exists(InternalURL)) return true; //каталох е?
+			return false; //та ничого нэма! [не забываем, что return xxx прекращает выполнение подпрограммы]
+		}
 
 		public void ReadDirectory(string url){//прочитать каталог и загнать в DirectoryContent
-			DirContent.Clear();
+			DirContent.Clear();		
 			string InternalURL = url.Replace("file://","");
 
 			pluginner.DirItem tmpVar = new pluginner.DirItem();
