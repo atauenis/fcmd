@@ -240,13 +240,13 @@ namespace fcmd
 			_items[Row].Selection = SelectionStatuses.Highlighted;
 		}
 
-		private void _DblClick(object sender, EventArgs e){//обработчик двойного щелчка
+		private void _DblClick(object sender, EventArgs e){//обработчик двойного щелчка по надписи
 			Label l = (Label)sender;
 			EventArgs<string> ea = new EventArgs<string>(_items[Convert.ToInt32 (l.Tag)].Value);
-			DoubleClick(sender,ea);
+			DoubleClick(this,ea);
 		}
 
-		private void _OneClick(object sender, EventArgs e){//обработчик одинарного щелчка
+		private void _OneClick(object sender, EventArgs e){//обработчик одинарного щелчка по надписи
 			_Unhighlight(); //снимаю выделение со всех.
 			Label l = (Label)sender;
 			_Highlight((int)l.Tag);

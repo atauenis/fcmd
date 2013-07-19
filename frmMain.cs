@@ -49,6 +49,8 @@ namespace fcmd
 			txtURL[1].Top = mstMenu.Height;
 			txtURL[0].KeyUp += txtURL_KeyUp;
 			txtURL[0].DoubleClick += ForceGo;
+			txtURL[1].KeyUp += txtURL_KeyUp;
+			txtURL[1].DoubleClick += ForceGo;
 			this.Controls.Add (txtURL[0]);
 			this.Controls.Add (txtURL[1]);
 			this.txtURL[0].Text = Directory.GetLogicalDrives()[0];
@@ -60,9 +62,6 @@ namespace fcmd
 			this.lplLeft.Add (new ListPanel()); //добавление в коллекцию левых панелей
 			this.lplLeft[0].Location = new System.Drawing.Point(0, mstMenu.Height+txtURL[0].Height);
             this.lplLeft[0].Name = "lplLeft";
-#if DEBUG
-			this.lplLeft[0].BackColor = System.Drawing.Color.FromName("yellow");
-#endif
 			this.lplLeft[0].BackColor = SystemColors.Window;
             this.lplLeft[0].TabIndex = 0;
 			this.lplLeft[0].DoubleClick += new StringEvent(this.Panel_DblClick);
@@ -90,13 +89,28 @@ namespace fcmd
             this.lplRight[0].Location = new System.Drawing.Point(0, mstMenu.Height+txtURL[0].Height);
             this.lplRight[0].Name = "lplRight";
 #if DEBUG
-			this.lplRight[0].BackColor = System.Drawing.Color.FromName("yellow");
+			this.lplRight[0].BackColor = SystemColors.Window;
 #endif
             this.lplRight[0].TabIndex = 0;
             this.lplRight[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplRight[0].GotFocus += new System.EventHandler(this.Panel_Focus);
 			this.lplRight[0].BorderStyle = BorderStyle.FixedSingle;
+			this.lplRight[0].FSProvider = new localFileSystem();
+			colopt.Caption = "Имя";
+			colopt.Size=new Size(200,0);
+			colopt.Tag = "Name";
+			this.lplRight[0].Collumns.Add (colopt);
+			colopt.Caption = "Размер";
+			colopt.Tag = "Size";
+			colopt.Size = new Size(50,0);
+			this.lplRight[0].Collumns.Add (colopt);
+			colopt.Caption = "Дата";
+			colopt.Tag = "Date";
+			colopt.Size = new Size(100,0);
+			this.lplRight[0].Collumns.Add(colopt);
+			this.lplRight[0].ShowCollumnTitles = true;
             this.Controls.Add(this.lplRight[0]); //ввожу панель в форму
+			PassivePanel = this.lplRight[0];
 
 			//TODO:подумать над слежением за панелями (активная-пассивная)
 			#endregion
@@ -119,17 +133,8 @@ namespace fcmd
 
 			#region Изначальный перечень файлов
 			string startupDir = "file://" + Directory.GetLogicalDrives()[0];
-			pluginner.IFSPlugin fsp = this.lplLeft[0].FSProvider;
-			fsp.CurrentDirectory = startupDir;
-			foreach(pluginner.DirItem di in fsp.DirectoryContent){ //перебираю файлы, найденные провайдером ФС
-				ListPanel.ItemDescription NewItem;
-				NewItem = new ListPanel.ItemDescription();
-				NewItem.Text.Add (di.TextToShow);
-				NewItem.Text.Add (Convert.ToString (di.Size / 1024));
-				NewItem.Text.Add (di.Date.ToShortDateString());
-				NewItem.Value = di.Path;
-				lplLeft[0].Items.Add (NewItem);
-			}
+			LoadDir(startupDir,lplLeft[0]);
+			LoadDir(Application.StartupPath + "/../../" ,lplRight[0]);
 			#endregion
 
 			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
@@ -150,26 +155,30 @@ namespace fcmd
 		}
 
 		private void Panel_Focus(object sender, EventArgs e){ //панель получила фокус
+			ListPanel lp = (ListPanel) sender;
+			if(lp.Name != ActivePanel.Name){
+				PassivePanel = ActivePanel;
+				ActivePanel = lp;
+			}
 			ActivePanel = (ListPanel)sender;
 		}
 
 		private void Panel_LostFocus(object sender, EventArgs e){ //панель лишилась фокуса
-			//PassivePanel = (ListPanel)sender;
-			ListPanel lp = (ListPanel)sender;
-			switch (lp.Name){
-			case "lplLeft":
-				break;
-			case "lplRight":
-				break;
-			}
+			//undone: а надо ли?
 		}
 
         private void Panel_DblClick(object sender, EventArgs<String> e){ //двойной щелчок по панели
-			if (Directory.Exists (e.Data)){
+			ListPanel lp = (ListPanel)sender;
+			if (lp.FSProvider.IsDirPresent (e.Data)){
 				//это - каталог
-				txtURL[0].Text = e.Data;
+
+				int NeededTextbox = 0; //нужный текстбокс //remove govnokod!!!
+				if(lp.Name == "lplLeft") NeededTextbox = 0;
+				else NeededTextbox = 1;
+
+				txtURL[NeededTextbox].Text = e.Data;
 				KeyEventArgs kea = new KeyEventArgs(Keys.Enter);
-				txtURL_KeyUp(txtURL[0],kea);
+				txtURL_KeyUp(txtURL[NeededTextbox],kea);
 			}else MessageBox.Show(e.Data,"это файл");
         }
 
@@ -181,14 +190,47 @@ namespace fcmd
 		private void txtURL_KeyUp(object sender, KeyEventArgs e){ //отпускание клавиши в поле адреса
 			if(e.KeyCode == Keys.Enter){
 				TextBox tb = (TextBox) sender;
-				//if(!Directory.Exists (tb.Text)){return;} //проверка наличия каталога
-				if(!ActivePanel.FSProvider.IsDirPresent(tb.Text)) return; //проверка наличия каталога
+				string txt = "";
 
-				ActivePanel.Items.Clear();
+				switch((int)tb.Tag){
+				case 0://левый
+					txt = "lplLeft";
+					break;
+				case 1://правый
+					txt = "lplRight";
+					break;
+				}
+
+				if(ActivePanel.Name == txt){
+					if(!ActivePanel.FSProvider.IsDirPresent(tb.Text)) return; //проверка наличия каталога
+					LoadDir(tb.Text,ActivePanel);
+				}else{
+					if(!PassivePanel.FSProvider.IsDirPresent(tb.Text)) return; //проверка наличия каталога
+					LoadDir(tb.Text,PassivePanel);
+				}
+
+			}
+		}
+
+		private void mstMenu_ItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e){
+		
+		}
+
+		/// <summary>
+		/// Loads the directory.
+		/// </summary>
+		/// <param name='url'>
+		/// URL.
+		/// </param>
+		/// <param name='lp'>
+		/// ListPanel, в которую надобно захуячить директорию
+		/// </param>
+		private void LoadDir(string url, ListPanel lp){
+				lp.Items.Clear();
 
 				//гружу директорию
-				pluginner.IFSPlugin fsp = this.ActivePanel.FSProvider;
-				fsp.CurrentDirectory = tb.Text;
+				pluginner.IFSPlugin fsp = lp.FSProvider;
+				fsp.CurrentDirectory = url;
 				foreach(pluginner.DirItem di in fsp.DirectoryContent){ //перебираю файлы, найденные провайдером ФС
 					if(di.Hidden == false){
 						ListPanel.ItemDescription NewItem;
@@ -197,17 +239,12 @@ namespace fcmd
 						NewItem.Text.Add (Convert.ToString (di.Size / 1024));
 						NewItem.Text.Add (di.Date.ToShortDateString());
 						NewItem.Value = di.Path;
-						ActivePanel.Items.Add (NewItem);
+						lp.Items.Add (NewItem);
 					}
 				}
-				ActivePanel.Redraw();
-
-			}
+				lp.Redraw();
 		}
 
-		private void mstMenu_ItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e){
-			
-		}
 	}
 
 	public delegate void StringEvent(object sender, EventArgs<String> e);
