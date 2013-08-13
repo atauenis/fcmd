@@ -236,7 +236,7 @@ namespace fcmd
 						ListPanel.ItemDescription NewItem;
 						NewItem = new ListPanel.ItemDescription();
 						NewItem.Text.Add (di.TextToShow);
-						NewItem.Text.Add (Convert.ToString (di.Size / 1024));
+						NewItem.Text.Add (Convert.ToString (di.Size / 1024) + "KB");
 						NewItem.Text.Add (di.Date.ToShortDateString());
 						NewItem.Value = di.Path;
 						lp.Items.Add (NewItem);

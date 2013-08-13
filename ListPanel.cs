@@ -76,7 +76,7 @@ namespace fcmd
 		}
 
 		//Внутренние переменные
-		List<CollumnOptions> _collumns = new List<CollumnOptions>();//заголовки столбцов //TODO: столбцы
+		List<CollumnOptions> _collumns = new List<CollumnOptions>();//заголовки столбцов
 		List<ItemDescription> _items = new List<ItemDescription>(); //элементы списка
 		List<Label> lblCaption = new List<Label>(); //заголовки столбцов
 		List<List<Object>> Stroki = new List<List<Object>>(); //список строк
@@ -92,6 +92,10 @@ namespace fcmd
 		public new event StringEvent DoubleClick;
 
         private void ListPanel_Load(object sender, EventArgs e){//Ну, за загрузку!
+			this.GotFocus += ListPanel_GotFocus;
+			this.LostFocus += ListPanel_LostFocus;
+			this.MouseClick += (snd, ea) => this.Focus();
+
 			_Repaint();
 			ScrollPanel.Width = this.Width;
 			ScrollPanel.Height = this.Height;
@@ -276,6 +280,14 @@ namespace fcmd
 				_Repaint();
 				break;
 			}
+		}
+
+		//для обеспечения фокусировки
+		void ListPanel_LostFocus(object sender, EventArgs e){ //потеря фокуса
+			Invalidate();
+		}
+		void ListPanel_GotFocus(object sender, EventArgs e){
+			//do nothing
 		}
 
 		//Методы
