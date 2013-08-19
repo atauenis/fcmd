@@ -131,6 +131,8 @@ namespace fcmd
 //			//todo: выкинуть plugins[] и привязать к listpanel'ям
 //			//todo: написать API плагинов доступа к файловым системам
 
+			MessageBox.Show("CanFocus=" + lplLeft[0].CanFocus.ToString() + "\nCanSelect=" + lplLeft[0].CanSelect.ToString(),"debug");
+
 			#region Изначальный перечень файлов
 			string startupDir = "file://" + Directory.GetLogicalDrives()[0];
 			LoadDir(startupDir,lplLeft[0]);

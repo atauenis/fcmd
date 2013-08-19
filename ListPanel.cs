@@ -80,20 +80,24 @@ namespace fcmd
 		List<ItemDescription> _items = new List<ItemDescription>(); //элементы списка
 		List<Label> lblCaption = new List<Label>(); //заголовки столбцов
 		List<List<Object>> Stroki = new List<List<Object>>(); //список строк
-		Panel ScrollPanel = new Panel();
+		SelectablePanel ScrollPanel = new SelectablePanel();
 		bool showColTitles = false; //отображать ли заголовки столбцов?
+		int HighlightedRow = 0;
 		pluginner.IFSPlugin FsPlugin;
 
 		//Подпрограммы
         public ListPanel(){//Ну, за инициализацию!
-            InitializeComponent();
+			InitializeComponent();
+			ScrollPanel.ShowBorder = false;
+			ScrollPanel.KeyDown += _KeyDown;
+			this.Paint += ListPanel_Paint;
         }
 
 		public new event StringEvent DoubleClick;
 
         private void ListPanel_Load(object sender, EventArgs e){//Ну, за загрузку!
-			this.GotFocus += ListPanel_GotFocus;
-			this.LostFocus += ListPanel_LostFocus;
+//			this.GotFocus += ListPanel_GotFocus;
+//			this.LostFocus += ListPanel_LostFocus;
 			this.MouseClick += (snd, ea) => this.Focus();
 
 			_Repaint();
@@ -115,6 +119,14 @@ namespace fcmd
 			}
 			ScrollPanel.Width = this.Width;
         }
+
+		private void ListPanel_Paint(object sender, EventArgs e){//перерисовка контрола вообще
+			if(ScrollPanel.Focused){
+				this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			}else{
+				this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			}
+		}
 
 		private int GetPercents(int Input, int Percents){//высчитать Percents % от Input
 			int OnePercent = Input / 100;
@@ -167,8 +179,8 @@ namespace fcmd
 		private void _Repaint(){ //перерисовка экрана
 			_Clear();
 
+			//Отрисовка заголовков столбцов
 			if(showColTitles){ //если столбцы рисовать надо
-				//Отрисовка заголовков столбцов
 				int ColNo = 0; //номер текущего столбца
 				foreach (CollumnOptions Col in _collumns) {
 
@@ -245,8 +257,7 @@ namespace fcmd
 		}
 
 		private void _DblClick(object sender, EventArgs e){//обработчик двойного щелчка по надписи
-			Label l = (Label)sender;
-			EventArgs<string> ea = new EventArgs<string>(_items[Convert.ToInt32 (l.Tag)].Value);
+			EventArgs<string> ea = new EventArgs<string>(_items[Convert.ToInt32 ((sender as Label).Tag)].Value);
 			DoubleClick(this,ea);
 		}
 
@@ -254,40 +265,37 @@ namespace fcmd
 			_Unhighlight(); //снимаю выделение со всех.
 			Label l = (Label)sender;
 			_Highlight((int)l.Tag);
+			HighlightedRow = (int)l.Tag;
+			this.ScrollPanel.Focus();
 			_Repaint();
 		}
 
 		private void _KeyDown(object sender, KeyEventArgs e){//обработчик нажатия клавиши
-			//UNDONE (под моно не вызывается, а под дотнетом не тестировал)
-			MessageBox.Show (e.KeyData.ToString()); //убрать!!!
 			switch (e.KeyCode) {
 			case Keys.Up:
 				//стрелка вверх
-				foreach (ItemDescription id in _items){
-					id.Selection = SelectionStatuses.NotSelected;
-				}
-				Label lup = (Label)sender;
-				_items[(int)lup.Tag - 1].Selection = SelectionStatuses.Highlighted;
+				if(HighlightedRow == 0) break;
+				_Unhighlight();
+				HighlightedRow--;
+				_Highlight(HighlightedRow);
+				this.ScrollPanel.Focus();
 				_Repaint();
 				break;
 			case Keys.Down:
 				//стрелка вниз
-				foreach (ItemDescription id in _items){
-					id.Selection = SelectionStatuses.NotSelected;
-				}
-				Label ldn = (Label)sender;
-				_items[(int)ldn.Tag + 1].Selection = SelectionStatuses.Highlighted;
+				if(HighlightedRow == Stroki.Count) break;
+				_Unhighlight();
+				HighlightedRow++;
+				_Highlight(HighlightedRow);
+				this.ScrollPanel.Focus();
 				_Repaint();
 				break;
+			case Keys.Enter:
+				//Клавиша "ввод"
+				EventArgs<string> ea = new EventArgs<string>(_items[HighlightedRow].Value);
+				DoubleClick(this,ea);
+				break;
 			}
-		}
-
-		//для обеспечения фокусировки
-		void ListPanel_LostFocus(object sender, EventArgs e){ //потеря фокуса
-			Invalidate();
-		}
-		void ListPanel_GotFocus(object sender, EventArgs e){
-			//do nothing
 		}
 
 		//Методы
