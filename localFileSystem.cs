@@ -50,7 +50,7 @@ namespace fcmd
 				//перебираю каталоги
 				DirectoryInfo di = new DirectoryInfo(curDir);
 				tmpVar.IsDirectory = true;
-				tmpVar.Path = curDir;
+				tmpVar.Path = "file://" + curDir;
 				tmpVar.TextToShow = di.Name;
 				tmpVar.Date = di.CreationTime;
 				if (di.Name.StartsWith(".")) {
@@ -65,7 +65,7 @@ namespace fcmd
 			foreach(string curFile in files){
 				FileInfo fi = new FileInfo(curFile);
 				tmpVar.IsDirectory = false;
-				tmpVar.Path = curFile;
+				tmpVar.Path = "file://" + curFile;
 				tmpVar.TextToShow = fi.Name;
 				tmpVar.Date = fi.LastWriteTime;
 				tmpVar.Size = fi.Length;

@@ -53,6 +53,7 @@ namespace fcmd
             this.Controls.Add(this.mstMenu);
             this.Controls.Add(this.mstKeyboard);
             this.Text = "File Commander";
+			this.KeyPreview = true;
             this.Resize += new System.EventHandler(this.frmMain_Resize);
             this.Load += new System.EventHandler(this.frmMain_Load);
         }

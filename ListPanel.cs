@@ -90,6 +90,8 @@ namespace fcmd
 			InitializeComponent();
 			ScrollPanel.ShowBorder = false;
 			ScrollPanel.KeyDown += _KeyDown;
+			ScrollPanel.GotFocus += (sender, e) => OnGotFocus(e);
+			ScrollPanel.LostFocus += (sender, e) => OnLostFocus(e);
 			this.Paint += ListPanel_Paint;
         }
 

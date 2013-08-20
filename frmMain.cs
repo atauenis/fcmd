@@ -39,6 +39,8 @@ namespace fcmd
 				MessageBox.Show ("File commander, версия " + Application.ProductVersion);
 			#endif
 
+			this.KeyDown += frmMain_KeyDown;
+
 			#region txtURL[x]
 			//формирую поля ввода пути
 			txtURL[0] = new TextBox();
@@ -65,7 +67,7 @@ namespace fcmd
 			this.lplLeft[0].BackColor = SystemColors.Window;
             this.lplLeft[0].TabIndex = 0;
 			this.lplLeft[0].DoubleClick += new StringEvent(this.Panel_DblClick);
-			this.lplLeft[0].GotFocus += new System.EventHandler(this.Panel_Focus);
+			this.lplLeft[0].GotFocus += this.Panel_Focus;
 			this.lplLeft[0].BorderStyle = BorderStyle.FixedSingle;
 			this.lplLeft[0].FSProvider = new localFileSystem();
 			ListPanel.CollumnOptions colopt = new ListPanel.CollumnOptions();
@@ -93,7 +95,7 @@ namespace fcmd
 #endif
             this.lplRight[0].TabIndex = 0;
             this.lplRight[0].DoubleClick += new StringEvent(this.Panel_DblClick);
-			this.lplRight[0].GotFocus += new System.EventHandler(this.Panel_Focus);
+			this.lplRight[0].GotFocus += this.Panel_Focus;
 			this.lplRight[0].BorderStyle = BorderStyle.FixedSingle;
 			this.lplRight[0].FSProvider = new localFileSystem();
 			colopt.Caption = "Имя";
@@ -111,8 +113,6 @@ namespace fcmd
 			this.lplRight[0].ShowCollumnTitles = true;
             this.Controls.Add(this.lplRight[0]); //ввожу панель в форму
 			PassivePanel = this.lplRight[0];
-
-			//TODO:подумать над слежением за панелями (активная-пассивная)
 			#endregion
 
 //			List<pluginner.IPlugin> plugins = new List<pluginner.IPlugin>();
@@ -145,13 +145,28 @@ namespace fcmd
 				llp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - mstKeyboard.Height); 
 			}
 			foreach(ListPanel rlp in this.lplRight){
-				rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstKeyboard.Height);
+				rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - mstKeyboard.Height); 
+				//rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstKeyboard.Height);
 				rlp.Left = this.Width / 2;
 			}
 			txtURL[0].Location = new Point(0,mstMenu.Height);
 			txtURL[0].Width = lplLeft[0].Width;
 			txtURL[1].Left = lplRight[0].Left;
 			txtURL[1].Width = lplRight[0].Width;
+		}
+
+		private void frmMain_KeyDown(object sender, KeyEventArgs e){//нажатие клавиши клавиатуры
+#if DEBUG
+			string DebugText = "Отладка клавиатуры: нажата и отпущена клавиша " + e.KeyCode.ToString();
+			DebugText += ", модификаторы: Ctrl=" + e.Control.ToString();
+			DebugText += " Alt=" + e.Alt.ToString();
+			DebugText += " Shift=" + e.Shift.ToString();
+			Console.WriteLine(DebugText);
+#endif
+			string Modificator = "None"; //на будущее
+			if(e.Alt) Modificator = "Alt";
+			if(e.Control) Modificator = "Ctrl";
+			if(e.Shift) Modificator = "Shift";
 		}
 
 		private void Panel_Focus(object sender, EventArgs e){ //панель получила фокус
@@ -161,10 +176,9 @@ namespace fcmd
 				ActivePanel = lp;
 			}
 			ActivePanel = (ListPanel)sender;
-		}
-
-		private void Panel_LostFocus(object sender, EventArgs e){ //панель лишилась фокуса
-			//undone: а надо ли?
+#if DEBUG
+			Console.WriteLine("Отладка слежения за панелями: " + ActivePanel.Name + " <активная~~~пассивная> " + PassivePanel.Name);
+#endif
 		}
 
         private void Panel_DblClick(object sender, EventArgs<String> e){ //двойной щелчок по панели
@@ -180,9 +194,10 @@ namespace fcmd
 				KeyEventArgs kea = new KeyEventArgs(Keys.Enter);
 				txtURL_KeyUp(txtURL[NeededTextbox],kea);
 			}else MessageBox.Show(e.Data,"это файл");
+			//todo:добавить вызов lister'а (FCView)
         }
 
-		private void ForceGo(object sender, EventArgs e){ //hack //убрать
+		private void ForceGo(object sender, EventArgs e){ //hack //убрать и заменить на нормальное решение!!!
 			txtURL_KeyUp(txtURL[0],new KeyEventArgs(Keys.Enter));
 			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
 		}
