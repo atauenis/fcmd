@@ -17,6 +17,8 @@ TestResults
 *.sln.docstates
 *.userprefs
 
+Дизайнер WinForms.lnk
+
 # Build results
 [Dd]ebug/
 [Rr]elease/

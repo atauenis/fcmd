@@ -69,6 +69,12 @@ namespace pluginner{
 		/// </param>
 		bool IsDirPresent(string URL);
 
+        /// <summary>
+        /// Tries to read the file or directory <paramref name="URL"/> and determines whether it can be read without access errors.
+        /// </summary>
+        /// <param name="URL">The uniform resource locator for the requested file</param>
+        /// <returns></returns>
+        bool CanBeRead(string URL);
 
 //		/// <summary>
 //		/// Reads a file.

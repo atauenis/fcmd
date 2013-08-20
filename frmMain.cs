@@ -68,7 +68,7 @@ namespace fcmd
             this.lplLeft[0].TabIndex = 0;
 			this.lplLeft[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplLeft[0].GotFocus += this.Panel_Focus;
-			this.lplLeft[0].BorderStyle = BorderStyle.FixedSingle;
+			this.lplLeft[0].BorderStyle = BorderStyle.Fixed3D;
 			this.lplLeft[0].FSProvider = new localFileSystem();
 			ListPanel.CollumnOptions colopt = new ListPanel.CollumnOptions();
 			colopt.Caption = "Имя";
@@ -96,7 +96,7 @@ namespace fcmd
             this.lplRight[0].TabIndex = 0;
             this.lplRight[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplRight[0].GotFocus += this.Panel_Focus;
-			this.lplRight[0].BorderStyle = BorderStyle.FixedSingle;
+			this.lplRight[0].BorderStyle = BorderStyle.Fixed3D;
 			this.lplRight[0].FSProvider = new localFileSystem();
 			colopt.Caption = "Имя";
 			colopt.Size=new Size(200,0);
@@ -146,7 +146,6 @@ namespace fcmd
 			}
 			foreach(ListPanel rlp in this.lplRight){
 				rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - mstKeyboard.Height); 
-				//rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstKeyboard.Height);
 				rlp.Left = this.Width / 2;
 			}
 			txtURL[0].Location = new Point(0,mstMenu.Height);
@@ -218,9 +217,11 @@ namespace fcmd
 
 				if(ActivePanel.Name == txt){
 					if(!ActivePanel.FSProvider.IsDirPresent(tb.Text)) return; //проверка наличия каталога
+                    if (!ActivePanel.FSProvider.CanBeRead(tb.Text)) { MessageBox.Show("Нет доступа"); return; } //проверка наличия доступа
 					LoadDir(tb.Text,ActivePanel);
 				}else{
 					if(!PassivePanel.FSProvider.IsDirPresent(tb.Text)) return; //проверка наличия каталога
+                    if (!PassivePanel.FSProvider.CanBeRead(tb.Text)) { MessageBox.Show("Нет доступа"); return; } //проверка наличия доступа
 					LoadDir(tb.Text,PassivePanel);
 				}
 
@@ -254,6 +255,8 @@ namespace fcmd
 						NewItem.Text.Add (Convert.ToString (di.Size / 1024) + "KB");
 						NewItem.Text.Add (di.Date.ToShortDateString());
 						NewItem.Value = di.Path;
+                        NewItem.Selection = 0;
+                        NewItem.Selected = false;
 						lp.Items.Add (NewItem);
 					}
 				}

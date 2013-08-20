@@ -111,7 +111,7 @@ namespace fcmd
         }
 
         private void ListPanel_Resize(object sender, EventArgs e){//Ну, за деформацию!
-			_Repaint ();
+			_Repaint ();//убрать
 			if(showColTitles){
 				ScrollPanel.Top = lblCaption[0].Height;
 				ScrollPanel.Height = this.Height - lblCaption[0].Height;
@@ -164,14 +164,7 @@ namespace fcmd
 			Lbl.Click += _OneClick;
 			Lbl.DoubleClick += _DblClick;
 			Lbl.KeyDown += _KeyDown;
-			ScrollPanel.Controls.Add(Lbl);
-
-			//undone
-//			lblNadpis.Add (Lbl);
-//			this.Controls.Add (lblNadpis[lblNadpis.Count -1]);
-//			lblNadpis[lblNadpis.Count -1].DoubleClick += _DblClick;
-//			lblNadpis[lblNadpis.Count -1].Click += _OneClick;
-//			lblNadpis[lblNadpis.Count -1].KeyDown += _KeyDown;
+            ScrollPanel.Controls.Add(Lbl);
 		}
 		private void _Clear(){//очистка формы
 			//undone
@@ -285,7 +278,7 @@ namespace fcmd
 				break;
 			case Keys.Down:
 				//стрелка вниз
-				if(HighlightedRow == Stroki.Count) break;
+				if(HighlightedRow == _items.Count - 1) break;
 				_Unhighlight();
 				HighlightedRow++;
 				_Highlight(HighlightedRow);
@@ -297,6 +290,18 @@ namespace fcmd
 				EventArgs<string> ea = new EventArgs<string>(_items[HighlightedRow].Value);
 				DoubleClick(this,ea);
 				break;
+            case Keys.Home:
+                //Домо-ооой! Сердце северных гор за спиной...
+                HighlightedRow = 0;
+                _Highlight(0);
+                _Repaint();
+                break;
+            case Keys.End:
+                //клавиша "End"
+                HighlightedRow = _items.Count - 1;
+                _Highlight(HighlightedRow);
+                _Repaint();
+                break;
 			}
 		}
 
@@ -306,7 +311,9 @@ namespace fcmd
 		/// Update this panel
 		/// </summary>
 		public void Redraw(){ //HACK: должно само обновляться
+            HighlightedRow = 0;
 			_Repaint();
+            _Highlight(0);
 		}
 
         //Свойства

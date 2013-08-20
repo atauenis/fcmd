@@ -1,6 +1,6 @@
 /* The File Commander
  * Модуль доступа к локальным ФС
- * В будущем должен быть выделен в отдельный плагин (хотя, а надо ли?)
+ * Единственный плагин, не вынесенный во внешнюю dll (из соображений компактности)
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
  * Копирование кода разрешается только с письменного согласия
  * разработчика (А.Т.).
@@ -46,6 +46,14 @@ namespace fcmd
 			string[] files = System.IO.Directory.GetFiles(InternalURL);
 			string[] dirs = System.IO.Directory.GetDirectories (InternalURL);
 
+            //элемент "вверх по древу"
+            DirectoryInfo curdir = new DirectoryInfo(InternalURL);
+            if (curdir.Parent != null){
+                tmpVar.Path = curdir.Parent.FullName;
+                tmpVar.TextToShow = "..";
+                DirContent.Add(tmpVar);
+            }
+
 			foreach(string curDir in dirs){
 				//перебираю каталоги
 				DirectoryInfo di = new DirectoryInfo(curDir);
@@ -78,6 +86,28 @@ namespace fcmd
 				DirContent.Add(tmpVar);
 			}
 		}
+
+        public bool CanBeRead(string url){ //проверить файл/папку "URL" на читаемость
+            string InternalURL = url.Replace("file://","");
+
+            try{
+                bool IsDir = Directory.Exists(InternalURL);
+                if (IsDir)
+                {//проверка читаемости каталога
+                    System.IO.Directory.GetFiles(InternalURL);
+                }
+                else
+                {//проверка читаемости файла
+                    File.ReadAllBytes(InternalURL);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Can't get access to " + InternalURL + "\nThe blocking reason is: " + ex.Message);
+                return false;
+            }
+        }
 
 		public string ReadFile(string url){ //чтение файла
 			return "work in progress :-)";
