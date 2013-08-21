@@ -347,6 +347,15 @@ namespace fcmd
 			}
 		}
 
+        /// <summary>
+        /// Возвращает подсвеченный пункт
+        /// </summary>
+        public ItemDescription HighlightedItem{
+            get{
+                return _items[HighlightedRow];
+            }
+        }
+
 		/// <summary>
 		/// Столбцы лист-панли ///
 		/// Gets or sets the collumns.

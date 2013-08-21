@@ -76,34 +76,34 @@ namespace pluginner{
         /// <returns></returns>
         bool CanBeRead(string URL);
 
-//		/// <summary>
-//		/// Reads a file.
-//		/// </summary>
-//		/// <returns>
-//		/// The file content.
-//		/// </returns>
-//		/// <param name='url'>
-//		/// URL of the file (with plugin prefix)
-//		/// </param>
-//		string ReadFile(string url);
-//
-//		//todo: byte[] ReadFileHex(string url);
-//
-//		/// <summary>
-//		/// Writes the file.
-//		/// </summary>
-//		/// <returns>
-//		/// The return code (0=ok, 1=no permission, TODO)
-//		/// </returns>
-//		/// <param name='url'>
-//		/// The file's URL
-//		/// </param>
-//		/// <param name='content'>
-//		/// The file's new content.
-//		/// </param>
-//		int WriteFile(string url, string content);
-//
-//		//todo:работа с аттрибутами файлов и правами доступа
+        /// <summary>
+        /// Reads a file.
+        /// </summary>
+        /// <returns>
+        /// The file content.
+        /// </returns>
+        /// <param name='url'>
+        /// URL of the file (with plugin prefix)
+        /// </param>
+        string ReadFile(string url);
+
+        //todo: byte[] ReadFileHex(string url);
+
+        /// <summary>
+        /// Writes the file.
+        /// </summary>
+        /// <returns>
+        /// The return code (0=ok, 1=no permission, TODO)
+        /// </returns>
+        /// <param name='url'>
+        /// The file's URL
+        /// </param>
+        /// <param name='content'>
+        /// The file's new content.
+        /// </param>
+        int WriteFile(string url, string content);
+
+        //todo:работа с аттрибутами файлов и правами доступа
 	}
 	//todo: IViewerPlugin, IEditorPlugin, IUIPlugin (плагины к интерфейсу File Commander)
 
@@ -146,5 +146,21 @@ namespace pluginner{
 		/// </summary>
 		public bool Hidden;
 	}
+
+    /// <summary>
+    /// Interface for FCView plugins
+    /// </summary>
+    public interface IViewerPlugin : IPlugin{
+        /// <summary>
+        /// The control to be displayed in FCView window
+        /// </summary>
+        System.Windows.Forms.Control DisplayBox();
+
+        /// <summary>
+        /// Loads & shows a file into the File Commander Viewer
+        /// </summary>
+        /// <param name="url"></param>
+        void LoadFile(string url);
+    }
 }
 

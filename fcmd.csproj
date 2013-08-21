@@ -40,6 +40,13 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="base-plugins\viewer\TxtViewer.cs" />
+    <Compile Include="fcview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fcview.Designer.cs">
+      <DependentUpon>fcview.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -50,13 +57,17 @@
     <Compile Include="ListPanel.Designer.cs">
       <DependentUpon>ListPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="pluginfinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="localFileSystem.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SelectablePanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="base-plugins\localfs\AssemblyInfo.cs" />
-    <Compile Include="base-plugins\localfs\MyClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -74,15 +85,22 @@
     <None Include="README" />
     <None Include="README.md" />
     <None Include="frmMain.resources" />
-    <None Include="base-plugins\base-plugins.userprefs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="fcview.resx">
+      <DependentUpon>fcview.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ListPanel.resx">
       <DependentUpon>ListPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

@@ -166,6 +166,18 @@ namespace fcmd
 			if(e.Alt) Modificator = "Alt";
 			if(e.Control) Modificator = "Ctrl";
 			if(e.Shift) Modificator = "Shift";
+
+            switch (e.KeyData)
+            {
+                case Keys.F3://просмотр
+                    //todo: определение типа файла (txt/bin/рисунок/ plugin), принуд. вызов fcview loadfile(byte[],srting) по Shift+F3
+
+                    fcview fcv = new fcview();
+                    ListPanel.ItemDescription curItem = ActivePanel.HighlightedItem;
+                    string FileContent = "Не забудь закоммитить с ноутбука рабочую версию fsplugin с readfile и объединить с fcview";//todo
+                    fcv.LoadFile(FileContent, curItem.Value);
+                    break;
+            }
 		}
 
 		private void Panel_Focus(object sender, EventArgs e){ //панель получила фокус
