@@ -1,19 +1,20 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="frmMain.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="localFileSystem.cs">
     <Files>
-      <File FileName="frmMain.cs" Line="134" Column="1" />
-      <File FileName="../../../filecommander/fcmd/pluginner/MyClass.cs" Line="2" Column="33" />
-      <File FileName="localFileSystem.cs" Line="27" Column="1" />
-      <File FileName="ListPanel.cs" Line="306" Column="25" />
+      <File FileName="frmMain.cs" Line="178" Column="12" />
+      <File FileName="../../../filecommander/fcmd/pluginner/MyClass.cs" Line="104" Column="1" />
+      <File FileName="localFileSystem.cs" Line="129" Column="1" />
+      <File FileName="ListPanel.cs" Line="203" Column="5" />
       <File FileName="SelectablePanel.cs" Line="34" Column="1" />
+      <File FileName="base-plugins/localfs/AssemblyInfo.cs" Line="7" Column="12" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="fcmd" expanded="True">
-            <Node name="frmMain.cs" selected="True" />
             <Node name="ListPanel.cs" expanded="True" />
+            <Node name="localFileSystem.cs" selected="True" />
           </Node>
           <Node name="pluginner" expanded="True" />
         </State>

@@ -34,7 +34,7 @@ namespace fcmd
 			InitializeComponent();
 		}
 		
-		public void frmMain_Load(object sender, EventArgs e){ //функция Form_Load()
+		private void frmMain_Load(object sender, EventArgs e){ //функция Form_Load()
 			#if DEBUG
 				MessageBox.Show ("File commander, версия " + Application.ProductVersion);
 			#endif
@@ -140,7 +140,7 @@ namespace fcmd
 			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
 		}
 
-		public void frmMain_Resize(object sender, EventArgs e){ //Деформация формы
+		private void frmMain_Resize(object sender, EventArgs e){ //Деформация формы
 			foreach (ListPanel llp in this.lplLeft){
 				llp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - mstKeyboard.Height); 
 			}
@@ -166,6 +166,19 @@ namespace fcmd
 			if(e.Alt) Modificator = "Alt";
 			if(e.Control) Modificator = "Ctrl";
 			if(e.Shift) Modificator = "Shift";
+
+			switch(e.KeyData){
+			case Keys.F3:
+				//todo:запустить просмоторщик FCView
+				break;
+			case Keys.F4:
+				//todo:запустить редактор FCEdit
+				break;
+			case Keys.F10:
+				//выход
+				Application.Exit();
+				break;
+			}
 		}
 
 		private void Panel_Focus(object sender, EventArgs e){ //панель получила фокус

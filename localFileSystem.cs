@@ -110,14 +110,18 @@ namespace fcmd
         }
 
 		public string ReadFile(string url){ //чтение файла
-			return "work in progress :-)";
-			//todo
+			string InternalURL = url.Replace("file://","");
+			return File.ReadAllText(InternalURL);
 		}
 
-		public int WriteFile(string url, string content){//запись файла
+		public byte[] ReadFileHex(string url){//чтение файла в побайтовом режиме
 			string InternalURL = url.Replace("file://","");
-			return 0;
-			//todo
+			return File.ReadAllBytes(InternalURL);
+		}
+
+		public void WriteFile(string url, string content){//запись файла
+			string InternalURL = url.Replace("file://","");
+			File.WriteAllText(InternalURL,content);
 		}
 	}
 }

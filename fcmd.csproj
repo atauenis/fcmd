@@ -10,7 +10,6 @@
     <RootNamespace>fcmd</RootNamespace>
     <AssemblyName>fcmd</AssemblyName>
     <CodePage>65001</CodePage>
-    <newfilesearch>OnLoadAutoInsert</newfilesearch>
     <StartupObject>fcmd.frmMain</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -55,8 +54,8 @@
     <Compile Include="SelectablePanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="base-plugins\localfs\AssemblyInfo.cs" />
-    <Compile Include="base-plugins\localfs\MyClass.cs" />
+    <Compile Include="pluginner\AssemblyInfo.cs" />
+    <Compile Include="pluginner\MyClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -74,7 +73,7 @@
     <None Include="README" />
     <None Include="README.md" />
     <None Include="frmMain.resources" />
-    <None Include="base-plugins\base-plugins.userprefs" />
+    <None Include="pluginner\pluginner.userprefs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frmMain.resx">
