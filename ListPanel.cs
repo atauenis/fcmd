@@ -111,7 +111,7 @@ namespace fcmd
         }
 
         private void ListPanel_Resize(object sender, EventArgs e){//Ну, за деформацию!
-			_Repaint ();//убрать
+			_Repaint ();
 			if(showColTitles){
 				ScrollPanel.Top = lblCaption[0].Height;
 				ScrollPanel.Height = this.Height - lblCaption[0].Height;
@@ -346,6 +346,15 @@ namespace fcmd
 				_Repaint();
 			}
 		}
+
+        /// <summary>
+        /// Возвращает подсвеченный пункт
+        /// </summary>
+        public ItemDescription HighlightedItem{
+            get{
+                return _items[HighlightedRow];
+            }
+        }
 
 		/// <summary>
 		/// Столбцы лист-панли ///

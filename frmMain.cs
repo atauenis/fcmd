@@ -134,7 +134,7 @@ namespace fcmd
 			#region Изначальный перечень файлов
 			string startupDir = "file://" + Directory.GetLogicalDrives()[0];
 			LoadDir(startupDir,lplLeft[0]);
-			LoadDir(Application.StartupPath + "/../../" ,lplRight[0]);
+			LoadDir("file://" + Application.StartupPath + "/../../" ,lplRight[0]);
 			#endregion
 
 			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
@@ -162,23 +162,21 @@ namespace fcmd
 			DebugText += " Shift=" + e.Shift.ToString();
 			Console.WriteLine(DebugText);
 #endif
-			string Modificator = "None"; //на будущее
-			if(e.Alt) Modificator = "Alt";
-			if(e.Control) Modificator = "Ctrl";
-			if(e.Shift) Modificator = "Shift";
+            switch (e.KeyData){
+                case Keys.F3: //просмотр
+                    //todo:принуд. вызов fcview с плагином TxtViewer по Shift+F3
 
-			switch(e.KeyData){
-			case Keys.F3:
-				//todo:запустить просмоторщик FCView
-				break;
-			case Keys.F4:
-				//todo:запустить редактор FCEdit
-				break;
-			case Keys.F10:
-				//выход
-				Application.Exit();
-				break;
-			}
+                    fcview fcv = new fcview();
+                    ListPanel.ItemDescription curItem = ActivePanel.HighlightedItem;
+					pluginner.IFSPlugin fs = ActivePanel.FSProvider;
+					if(!fs.IsFilePresent(curItem.Value)) return; //todo: выругаться
+					string FileContent = Encoding.ASCII.GetString(fs.ReadFile(curItem.Value));
+                    fcv.LoadFile(FileContent, curItem.Value);
+                    break;
+				case Keys.F10: //выход
+					Application.Exit();
+					break;
+            }
 		}
 
 		private void Panel_Focus(object sender, EventArgs e){ //панель получила фокус

@@ -25,19 +25,26 @@ namespace fcmd
 
 		public string CurrentDirectory {get{return CurDir;} set{CurDir = value; ReadDirectory(value);}}
 
+		private void _CheckProtocol(string url){
+			if(!url.StartsWith("file:")) throw new pluginner.PleaseSwitchPluginException();
+		}
+
 		public bool IsFilePresent(string URL){//проверить наличие файла
+			_CheckProtocol(URL);
 			string InternalURL = URL.Replace("file://","");
 			if(File.Exists(InternalURL)) return true; //файл е?
 			return false; //та ничого нэма! [не забываем, что return xxx прекращает выполнение подпрограммы]
 		}
 
 		public bool IsDirPresent(string URL){//проверить наличие папки
+			_CheckProtocol(URL);
 			string InternalURL = URL.Replace("file://","");
 			if(Directory.Exists(InternalURL)) return true; //каталох е?
 			return false; //та ничого нэма! [не забываем, что return xxx прекращает выполнение подпрограммы]
 		}
 
 		public void ReadDirectory(string url){//прочитать каталог и загнать в DirectoryContent
+			_CheckProtocol(url);
 			DirContent.Clear();		
 			string InternalURL = url.Replace("file://","");
 
@@ -88,6 +95,7 @@ namespace fcmd
 		}
 
         public bool CanBeRead(string url){ //проверить файл/папку "URL" на читаемость
+			_CheckProtocol(url);
             string InternalURL = url.Replace("file://","");
 
             try{
@@ -109,19 +117,17 @@ namespace fcmd
             }
         }
 
-		public string ReadFile(string url){ //чтение файла
-			string InternalURL = url.Replace("file://","");
-			return File.ReadAllText(InternalURL);
-		}
-
-		public byte[] ReadFileHex(string url){//чтение файла в побайтовом режиме
+		public byte[] ReadFile(string url){ //чтение файла
+			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://","");
 			return File.ReadAllBytes(InternalURL);
 		}
 
-		public void WriteFile(string url, string content){//запись файла
+		public int WriteFile(string url, string content){//запись файла
+			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://","");
 			File.WriteAllText(InternalURL,content);
+			return 0; //todo: обработка ошибок
 		}
 	}
 }

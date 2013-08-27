@@ -76,40 +76,34 @@ namespace pluginner{
         /// <returns></returns>
         bool CanBeRead(string URL);
 
-		/// <summary>
-		/// Reads a file.
-		/// </summary>
-		/// <returns>
-		/// The file content.
-		/// </returns>
-		/// <param name='url'>
-		/// URL of the file.
-		/// </param>
-		string ReadFile(string url);
+        /// <summary>
+        /// Reads a file.
+        /// </summary>
+        /// <returns>
+        /// The file content.
+        /// </returns>
+        /// <param name='url'>
+        /// URL of the file (with plugin prefix)
+        /// </param>
+        byte[] ReadFile(string url);
 
-		/// <summary>
-		/// Reads the file as byte array.
-		/// </summary>
-		/// <returns>
-		/// The file bytes.
-		/// </returns>
-		/// <param name='url'>
-		/// URL of the file.
-		/// </param>
-		byte[] ReadFileHex(string url);
+        //todo: byte[] ReadFileHex(string url);
 
-		/// <summary>
-		/// Writes the file.
-		/// </summary>
-		/// <param name='url'>
-		/// The file's URL
-		/// </param>
-		/// <param name='content'>
-		/// The file's new content.
-		/// </param>
-		void WriteFile(string url, string content);
+        /// <summary>
+        /// Writes the file.
+        /// </summary>
+        /// <returns>
+        /// The return code (0=ok, 1=no permission, TODO)
+        /// </returns>
+        /// <param name='url'>
+        /// The file's URL
+        /// </param>
+        /// <param name='content'>
+        /// The file's new content.
+        /// </param>
+        int WriteFile(string url, string content);
 
-//		//todo:работа с аттрибутами файлов и правами доступа
+        //todo:работа с аттрибутами файлов и правами доступа
 	}
 	//todo: IViewerPlugin, IEditorPlugin, IUIPlugin (плагины к интерфейсу File Commander)
 
@@ -151,6 +145,107 @@ namespace pluginner{
 		/// Is the file/directory hidden. 0=maybe showed, 1=dont show
 		/// </summary>
 		public bool Hidden;
+	}
+
+    /// <summary>
+    /// Interface for FCView plugins
+    /// </summary>
+    public interface IViewerPlugin : IPlugin{
+        /// <summary>
+        /// The control to be displayed in FCView window
+        /// </summary>
+        System.Windows.Forms.Control DisplayBox();
+
+        /// <summary>
+        /// Loads & shows a file into the File Commander Viewer
+        /// </summary>
+        /// <param name="url"></param>
+        void LoadFile(string url);
+
+		/// <summary>
+		/// Gets a value indicating whether this plugin can copy content into system clipboard.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this instance can use clipboard; otherwise, <c>false</c>.
+		/// </value>
+		bool CanCopy{get;}
+
+		/// <summary>
+		/// Copy selected content into the system clipboard.
+		/// </summary>
+		void Copy();
+
+		/// <summary>
+		/// Gets a value indicating whether this plugin can select all content.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this instance can select all content; otherwise, <c>false</c>.
+		/// </value>
+		bool CanSelectAll{get;}
+
+		/// <summary>
+		/// Selects all content inside this plugin.
+		/// </summary>
+		void SelectAll();
+
+		/// <summary>
+		/// Gets a value indicating whether this plugin can print content.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this plugin can print; otherwise, <c>false</c>.
+		/// </value>
+		bool CanPrint{get;}
+
+		/// <summary>
+		/// Print content in this instance.
+		/// </summary>
+		void Print();
+
+		/// <summary>
+		/// Shows print settngs dialog window.
+		/// </summary>
+		void PrintSettings();
+    }
+
+	/// <summary>
+	/// Exception, which fires when the plugin module needs to be changed to an other plugin module.
+	/// For example, when a filesystem plugin tried to be used with uncompatible filesystem or a image viewer plugin tried to show a text file.
+	/// </summary>
+	[System.Serializable]
+	public class PleaseSwitchPluginException : System.Exception
+	{
+		/// <summary>
+		/// Informs the File Commander that the plugin cannot be used now and must be changed
+		/// </summary>
+		public PleaseSwitchPluginException ()
+		{
+		}
+		
+		/// <summary>
+		/// Informs the File Commander that the plugin cannot be used now and must be changed
+		/// </summary>
+		/// <param name="message">A <see cref="T:System.String"/> that describes the exception reason. </param>
+		public PleaseSwitchPluginException (string message) : base (message)
+		{
+		}
+		
+		/// <summary>
+		/// Informs the File Commander that the plugin cannot be used now and must be changed. The reason should be showed in the <see cref="inner"/>.
+		/// </summary>
+		/// <param name="message">A <see cref="T:System.String"/> that describes the exception. </param>
+		/// <param name="inner">The exception that is the cause of the current exception. </param>
+		public PleaseSwitchPluginException (string message, System.Exception inner) : base (message, inner)
+		{
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:PleaseSwitchPluginException"/> class
+		/// </summary>
+		/// <param name="context">The contextual information about the source or destination.</param>
+		/// <param name="info">The object that holds the serialized object data.</param>
+		protected PleaseSwitchPluginException (System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		{
+		}
 	}
 }
 

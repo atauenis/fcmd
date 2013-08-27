@@ -1,26 +1,32 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="localFileSystem.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../../filecommander/fcmd/pluginner/MyClass.cs">
     <Files>
-      <File FileName="frmMain.cs" Line="178" Column="12" />
-      <File FileName="../../../filecommander/fcmd/pluginner/MyClass.cs" Line="104" Column="1" />
-      <File FileName="localFileSystem.cs" Line="129" Column="1" />
-      <File FileName="ListPanel.cs" Line="203" Column="5" />
+      <File FileName="frmMain.cs" Line="167" Column="69" />
+      <File FileName="../../../filecommander/fcmd/pluginner/MyClass.cs" Line="170" Column="23" />
+      <File FileName="localFileSystem.cs" Line="29" Column="52" />
+      <File FileName="ListPanel.cs" Line="114" Column="16" />
       <File FileName="SelectablePanel.cs" Line="34" Column="1" />
-      <File FileName="base-plugins/localfs/AssemblyInfo.cs" Line="7" Column="12" />
+      <File FileName="base-plugins/viewer/TxtViewer.cs" Line="31" Column="57" />
+      <File FileName="fcview.cs" Line="32" Column="96" />
+      <File FileName="pluginfinder.cs" Line="69" Column="116" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="fcmd" expanded="True">
-            <Node name="ListPanel.cs" expanded="True" />
+            <Node name="base-plugins" expanded="True">
+              <Node name="viewer" expanded="True" />
+            </Node>
+            <Node name="pluginner" expanded="True" />
+            <Node name="fcview.cs" expanded="True" />
             <Node name="localFileSystem.cs" selected="True" />
           </Node>
           <Node name="pluginner" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
-        <State expanded="True" selected="True" />
+        <State selected="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
