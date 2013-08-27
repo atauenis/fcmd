@@ -65,5 +65,9 @@ namespace fcmd.base_plugins.viewer
 		public void PrintSettings(){ //Параметры страницы
 			//todo
 		}
+
+        public void ShowSettings(){ //параметры плагина
+            MessageBox.Show("У плагина для просмотра *.txt нет настроек");
+        }
     }
 }

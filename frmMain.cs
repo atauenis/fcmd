@@ -22,7 +22,21 @@ namespace fcmd
 		private List<ListPanel> lplLeft = new List<ListPanel>();
 		private List<ListPanel> lplRight = new List<ListPanel>();
 		private ListPanel ActivePanel; //текущая активная панель (на которой стоит фокус)
-		private ListPanel PassivePanel; //текущая пассивная панель (панель-получатель)
+		private ListPanel PassivePanel;
+        private MenuStrip mstMenu;
+        private ToolStrip tsKeyboard;
+        private ToolStripButton tsbHelpF1;
+        private ToolStripButton tsbHelpF2;
+        private ToolStripButton tsbHelpF3;
+        private ToolStripButton tsbHelpF4;
+        private ToolStripButton tsbHelpF5;
+        private ToolStripButton tsbHelpF6;
+        private ToolStripButton tsbHelpF7;
+        private ToolStripButton tsbHelpF8;
+        private ToolStripButton tsbHelpF9;
+        private ToolStripButton tsbHelpF10;
+        private ToolStripMenuItem менюВПроцессеРазработкиToolStripMenuItem;
+        private ToolStripMenuItem даНичегоТутНетToolStripMenuItem; //текущая пассивная панель (панель-получатель)
 		private TextBox[] txtURL = new TextBox[2];
 
 		//Подпрограммы
@@ -35,11 +49,10 @@ namespace fcmd
 		}
 		
 		private void frmMain_Load(object sender, EventArgs e){ //функция Form_Load()
+            Application.EnableVisualStyles();
 			#if DEBUG
 				MessageBox.Show ("File commander, версия " + Application.ProductVersion);
 			#endif
-
-			this.KeyDown += frmMain_KeyDown;
 
 			#region txtURL[x]
 			//формирую поля ввода пути
@@ -142,10 +155,10 @@ namespace fcmd
 
 		private void frmMain_Resize(object sender, EventArgs e){ //Деформация формы
 			foreach (ListPanel llp in this.lplLeft){
-				llp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - mstKeyboard.Height); 
+				llp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - tsKeyboard.Height); 
 			}
 			foreach(ListPanel rlp in this.lplRight){
-				rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - mstKeyboard.Height); 
+				rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - tsKeyboard.Height); 
 				rlp.Left = this.Width / 2;
 			}
 			txtURL[0].Location = new Point(0,mstMenu.Height);
@@ -273,6 +286,210 @@ namespace fcmd
 				}
 				lp.Redraw();
 		}
+
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+            this.mstMenu = new System.Windows.Forms.MenuStrip();
+            this.tsKeyboard = new System.Windows.Forms.ToolStrip();
+            this.tsbHelpF1 = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelpF2 = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelpF3 = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelpF4 = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelpF5 = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelpF6 = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelpF7 = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelpF8 = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelpF9 = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelpF10 = new System.Windows.Forms.ToolStripButton();
+            this.менюВПроцессеРазработкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.даНичегоТутНетToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mstMenu.SuspendLayout();
+            this.tsKeyboard.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // mstMenu
+            // 
+            this.mstMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.менюВПроцессеРазработкиToolStripMenuItem});
+            this.mstMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.mstMenu.Location = new System.Drawing.Point(0, 0);
+            this.mstMenu.Name = "mstMenu";
+            this.mstMenu.Size = new System.Drawing.Size(618, 23);
+            this.mstMenu.TabIndex = 0;
+            this.mstMenu.Text = "menuStrip1";
+            // 
+            // tsKeyboard
+            // 
+            this.tsKeyboard.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tsKeyboard.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.tsKeyboard.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbHelpF1,
+            this.tsbHelpF2,
+            this.tsbHelpF3,
+            this.tsbHelpF4,
+            this.tsbHelpF5,
+            this.tsbHelpF6,
+            this.tsbHelpF7,
+            this.tsbHelpF8,
+            this.tsbHelpF9,
+            this.tsbHelpF10});
+            this.tsKeyboard.Location = new System.Drawing.Point(0, 332);
+            this.tsKeyboard.Name = "tsKeyboard";
+            this.tsKeyboard.Size = new System.Drawing.Size(618, 25);
+            this.tsKeyboard.TabIndex = 1;
+            this.tsKeyboard.Text = "toolStrip1";
+            this.tsKeyboard.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsKeyboard_ItemClicked);
+            // 
+            // tsbHelpF1
+            // 
+            this.tsbHelpF1.AutoToolTip = false;
+            this.tsbHelpF1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbHelpF1.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelpF1.Image")));
+            this.tsbHelpF1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelpF1.Name = "tsbHelpF1";
+            this.tsbHelpF1.Size = new System.Drawing.Size(72, 22);
+            this.tsbHelpF1.Text = "F1 Справка";
+            // 
+            // tsbHelpF2
+            // 
+            this.tsbHelpF2.AutoToolTip = false;
+            this.tsbHelpF2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbHelpF2.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelpF2.Image")));
+            this.tsbHelpF2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelpF2.Name = "tsbHelpF2";
+            this.tsbHelpF2.Size = new System.Drawing.Size(60, 22);
+            this.tsbHelpF2.Text = "F2 Вызов";
+            // 
+            // tsbHelpF3
+            // 
+            this.tsbHelpF3.AutoToolTip = false;
+            this.tsbHelpF3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbHelpF3.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelpF3.Image")));
+            this.tsbHelpF3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelpF3.Name = "tsbHelpF3";
+            this.tsbHelpF3.Size = new System.Drawing.Size(65, 22);
+            this.tsbHelpF3.Text = "F3 Чтение";
+            // 
+            // tsbHelpF4
+            // 
+            this.tsbHelpF4.AutoToolTip = false;
+            this.tsbHelpF4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbHelpF4.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelpF4.Image")));
+            this.tsbHelpF4.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelpF4.Name = "tsbHelpF4";
+            this.tsbHelpF4.Size = new System.Drawing.Size(66, 22);
+            this.tsbHelpF4.Text = "F4 Правка";
+            // 
+            // tsbHelpF5
+            // 
+            this.tsbHelpF5.AutoToolTip = false;
+            this.tsbHelpF5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbHelpF5.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelpF5.Image")));
+            this.tsbHelpF5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelpF5.Name = "tsbHelpF5";
+            this.tsbHelpF5.Size = new System.Drawing.Size(60, 22);
+            this.tsbHelpF5.Text = "F5 Копия";
+            // 
+            // tsbHelpF6
+            // 
+            this.tsbHelpF6.AutoToolTip = false;
+            this.tsbHelpF6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbHelpF6.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelpF6.Image")));
+            this.tsbHelpF6.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelpF6.Name = "tsbHelpF6";
+            this.tsbHelpF6.Size = new System.Drawing.Size(50, 22);
+            this.tsbHelpF6.Text = "F6 Имя";
+            // 
+            // tsbHelpF7
+            // 
+            this.tsbHelpF7.AutoToolTip = false;
+            this.tsbHelpF7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbHelpF7.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelpF7.Image")));
+            this.tsbHelpF7.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelpF7.Name = "tsbHelpF7";
+            this.tsbHelpF7.Size = new System.Drawing.Size(64, 22);
+            this.tsbHelpF7.Text = "F7 Новый";
+            // 
+            // tsbHelpF8
+            // 
+            this.tsbHelpF8.AutoToolTip = false;
+            this.tsbHelpF8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbHelpF8.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelpF8.Image")));
+            this.tsbHelpF8.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelpF8.Name = "tsbHelpF8";
+            this.tsbHelpF8.Size = new System.Drawing.Size(63, 22);
+            this.tsbHelpF8.Text = "F8 Удал-е";
+            // 
+            // tsbHelpF9
+            // 
+            this.tsbHelpF9.AutoToolTip = false;
+            this.tsbHelpF9.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbHelpF9.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelpF9.Image")));
+            this.tsbHelpF9.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelpF9.Name = "tsbHelpF9";
+            this.tsbHelpF9.Size = new System.Drawing.Size(60, 22);
+            this.tsbHelpF9.Text = "F9 Меню";
+            // 
+            // tsbHelpF10
+            // 
+            this.tsbHelpF10.AutoToolTip = false;
+            this.tsbHelpF10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbHelpF10.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelpF10.Image")));
+            this.tsbHelpF10.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelpF10.Name = "tsbHelpF10";
+            this.tsbHelpF10.Size = new System.Drawing.Size(66, 19);
+            this.tsbHelpF10.Text = "F10 Выход";
+            // 
+            // менюВПроцессеРазработкиToolStripMenuItem
+            // 
+            this.менюВПроцессеРазработкиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.даНичегоТутНетToolStripMenuItem});
+            this.менюВПроцессеРазработкиToolStripMenuItem.Name = "менюВПроцессеРазработкиToolStripMenuItem";
+            this.менюВПроцессеРазработкиToolStripMenuItem.Size = new System.Drawing.Size(186, 19);
+            this.менюВПроцессеРазработкиToolStripMenuItem.Text = "Меню в процессе разработки!";
+            // 
+            // даНичегоТутНетToolStripMenuItem
+            // 
+            this.даНичегоТутНетToolStripMenuItem.Name = "даНичегоТутНетToolStripMenuItem";
+            this.даНичегоТутНетToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.даНичегоТутНетToolStripMenuItem.Text = "Да, ничего тут нет.";
+            // 
+            // frmMain
+            // 
+            this.ClientSize = new System.Drawing.Size(618, 357);
+            this.Controls.Add(this.tsKeyboard);
+            this.Controls.Add(this.mstMenu);
+            this.KeyPreview = true;
+            this.MainMenuStrip = this.mstMenu;
+            this.Name = "frmMain";
+            this.Text = "File Commander";
+            this.Load += new System.EventHandler(this.frmMain_Load);
+            this.Resize += new System.EventHandler(this.frmMain_Resize);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMain_KeyDown);
+            this.mstMenu.ResumeLayout(false);
+            this.mstMenu.PerformLayout();
+            this.tsKeyboard.ResumeLayout(false);
+            this.tsKeyboard.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        private void tsKeyboard_ItemClicked(object sender, ToolStripItemClickedEventArgs e){
+            switch (e.ClickedItem.Name){
+                case "tsbHelpF1": this.OnKeyDown(new KeyEventArgs(Keys.F1)); break;
+                case "tsbHelpF2": this.OnKeyDown(new KeyEventArgs(Keys.F2)); break;
+                case "tsbHelpF3": this.OnKeyDown(new KeyEventArgs(Keys.F3)); break;
+                case "tsbHelpF4": this.OnKeyDown(new KeyEventArgs(Keys.F4)); break;
+                case "tsbHelpF5": this.OnKeyDown(new KeyEventArgs(Keys.F5)); break;
+                case "tsbHelpF6": this.OnKeyDown(new KeyEventArgs(Keys.F6)); break;
+                case "tsbHelpF7": this.OnKeyDown(new KeyEventArgs(Keys.F7)); break;
+                case "tsbHelpF8": this.OnKeyDown(new KeyEventArgs(Keys.F8)); break;
+                case "tsbHelpF9": this.OnKeyDown(new KeyEventArgs(Keys.F9)); break;
+                case "tsbHelpF10": this.OnKeyDown(new KeyEventArgs(Keys.F10)); break;
+            }
+        }
 
 	}
 

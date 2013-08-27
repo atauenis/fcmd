@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Reflection;
 using fcmd.base_plugins;
 using fcmd.base_plugins.viewer;
 
@@ -70,7 +71,7 @@ namespace fcmd
             }
         }
 
-        public pluginner.IViewerPlugin GetFCVplugin(string content){
+        public pluginner.IViewerPlugin GetFCVplugin(string content){ //поиск плагина FCView
             foreach (string CurDescription in ViewPlugins){
                 string[] Parts = CurDescription.Split(";".ToCharArray());
                 if(System.Text.RegularExpressions.Regex.IsMatch(content, Parts[0])){
@@ -84,7 +85,18 @@ namespace fcmd
                                 throw new PluginNotFoundException("Зырилка на базе picturebox пока что в планах"); //убрать
                         }
                     }else{//плагин внешний
-                        //todo: добавить загрузку плагинов
+                        List<pluginner.IViewerPlugin> plugins = new List<pluginner.IViewerPlugin>();
+                        string file = Parts[1];
+                        Assembly assembly = Assembly.LoadFile(file);
+
+                        foreach (Type type in assembly.GetTypes()){
+                            Type iface = type.GetInterface("pluginner.IViewerPlugin");
+
+                            if (iface != null){
+                                pluginner.IViewerPlugin plugin = (pluginner.IViewerPlugin)Activator.CreateInstance(type);
+                                return plugin;
+                            }
+                        }    
                     }
                 }
             }

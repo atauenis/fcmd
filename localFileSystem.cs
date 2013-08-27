@@ -25,7 +25,7 @@ namespace fcmd
 
 		public string CurrentDirectory {get{return CurDir;} set{CurDir = value; ReadDirectory(value);}}
 
-		private void _CheckProtocol(string url){
+		private void _CheckProtocol(string url){ //проверка на то, чтобы нечаянно через localfs не попытались зайти в ftp, webdav, реестр и т.п. :-)
 			if(!url.StartsWith("file:")) throw new pluginner.PleaseSwitchPluginException();
 		}
 
@@ -56,7 +56,7 @@ namespace fcmd
             //элемент "вверх по древу"
             DirectoryInfo curdir = new DirectoryInfo(InternalURL);
             if (curdir.Parent != null){
-                tmpVar.Path = curdir.Parent.FullName;
+                tmpVar.Path = "file://" + curdir.Parent.FullName;
                 tmpVar.TextToShow = "..";
                 DirContent.Add(tmpVar);
             }

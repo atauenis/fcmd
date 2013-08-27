@@ -205,6 +205,11 @@ namespace pluginner{
 		/// Shows print settngs dialog window.
 		/// </summary>
 		void PrintSettings();
+
+        /// <summary>
+        /// Shows plugin settings dialog window
+        /// </summary>
+        void ShowSettings();
     }
 
 	/// <summary>

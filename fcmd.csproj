@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -49,7 +49,6 @@
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain.Designer.cs" />
     <Compile Include="ListPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -67,8 +66,6 @@
     <Compile Include="SelectablePanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="pluginner\AssemblyInfo.cs" />
-    <Compile Include="pluginner\MyClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -86,7 +83,6 @@
     <None Include="README" />
     <None Include="README.md" />
     <None Include="frmMain.resources" />
-    <None Include="pluginner\pluginner.userprefs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="fcview.resx">
