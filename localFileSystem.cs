@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using pluginner;
 
 namespace fcmd
 {
@@ -18,9 +17,9 @@ namespace fcmd
 		public string Name { get{return "Local filesystem plugin [internal]";} }
 		public string Version { get{return "1.0";} }
 		public string Author { get{return "A.T.";} }
-		public List<DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
+		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
 
-		List<pluginner.DirItem> DirContent = new List<DirItem>();
+		List<pluginner.DirItem> DirContent = new List<pluginner.DirItem>();
 		string CurDir;
 
 		public string CurrentDirectory {get{return CurDir;} set{CurDir = value; ReadDirectory(value);}}
@@ -117,18 +116,26 @@ namespace fcmd
             }
         }
 
-		public byte[] ReadFile(string url){ //чтение файла
+		public pluginner.File GetFile(string url){ //чтение файла
 			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://","");
-			return File.ReadAllBytes(InternalURL);
+
+			pluginner.File fsf = new pluginner.File(); //fsf=filesystem file
+			fsf.Path = InternalURL;
+			fsf.Metadata = new FileInfo(InternalURL);
+			fsf.Content = File.ReadAllBytes(InternalURL);
+			return fsf;
 		}
 
-		public int WriteFile(string url, string content){//запись файла
-			_CheckProtocol(url);
-			string InternalURL = url.Replace("file://","");
-			File.WriteAllText(InternalURL,content);
-			return 0; //todo: обработка ошибок
+		public void WriteFile(pluginner.File NewFile){ //запись файла
+			//UNDONE
+			throw new InvalidOperationException("Функция в разработке");
 		}
+
+		public void RemoveFile(string url){//удалить файл
+			//todo
+		}
+
 	}
 }
 

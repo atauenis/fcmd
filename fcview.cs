@@ -30,9 +30,14 @@ namespace fcmd
             Content = content;
 
             pluginfinder pf = new pluginfinder();
-            
-            vp = pf.GetFCVplugin(content); //определяю плагин просмоторщика по заголовкам (MZ, RAR, <?xml, <!doctype и т.п.)
-            vp.LoadFile(URL);
+			try {
+            	vp = pf.GetFCVplugin(content); //определяю плагин просмоторщика по заголовкам (MZ, RAR, <?xml, <!doctype и т.п.)
+            	vp.LoadFile(URL, pf.GetFSplugin(URL)); //загрузка файла + определение плагина ФС для его загрузки
+			} catch (Exception ex) {
+				MessageBox.Show(ex.Message,"Ошибка просмотра",MessageBoxButtons.OK,MessageBoxIcon.Error);
+				return;
+			}
+
 			if(vp.DisplayBox().BackColor != SystemColors.Window) pnlContainer.BorderStyle = BorderStyle.Fixed3D;
 			// ^- если цвет фона плагина не оконный, рисовать рамку. Это выверт для подавления XP-стилей
             this.pnlContainer.Controls.Add(vp.DisplayBox());

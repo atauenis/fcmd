@@ -76,36 +76,54 @@ namespace pluginner{
         /// <returns></returns>
         bool CanBeRead(string URL);
 
-        /// <summary>
-        /// Reads a file.
-        /// </summary>
-        /// <returns>
-        /// The file content.
-        /// </returns>
-        /// <param name='url'>
-        /// URL of the file (with plugin prefix)
-        /// </param>
-        byte[] ReadFile(string url);
+		/// <summary>
+		/// Reads the file and returns both file content and it's metadata.
+		/// </summary>
+		/// <returns>
+		/// The file.
+		/// </returns>
+		/// <param name='URL'>
+		/// URL of the file.
+		/// </param>
+		File GetFile(string URL);
 
-        //todo: byte[] ReadFileHex(string url);
+		/// <summary>
+		/// Writes the file.
+		/// </summary>
+		/// <param name='NewFile'>
+		/// New file's content.
+		/// </param>
+		void WriteFile(File NewFile);
 
-        /// <summary>
-        /// Writes the file.
-        /// </summary>
-        /// <returns>
-        /// The return code (0=ok, 1=no permission, TODO)
-        /// </returns>
-        /// <param name='url'>
-        /// The file's URL
-        /// </param>
-        /// <param name='content'>
-        /// The file's new content.
-        /// </param>
-        int WriteFile(string url, string content);
-
-        //todo:работа с аттрибутами файлов и правами доступа
+		/// <summary>
+		/// Removes the file <paramref name="URL"/>.
+		/// </summary>
+		/// <param name='URL'>
+		/// URL of the file.
+		/// </param>
+		void RemoveFile(string URL);
 	}
-	//todo: IViewerPlugin, IEditorPlugin, IUIPlugin (плагины к интерфейсу File Commander)
+	//todo: IEditorPlugin, IUIPlugin (плагины к интерфейсу File Commander)
+
+	/// <summary>
+	/// File provider.
+	/// </summary>
+	public struct File{
+		/// <summary>
+		/// The file's metadata (date, size, etc).
+		/// </summary>
+		public System.IO.FileInfo Metadata;
+
+		/// <summary>
+		/// The file's full path.
+		/// </summary>
+		public string Path;
+
+		/// <summary>
+		/// The file's content.
+		/// </summary>
+		public byte[] Content;
+	}
 
 	/// <summary>
 	/// Directory item info (structure).
@@ -160,7 +178,7 @@ namespace pluginner{
         /// Loads & shows a file into the File Commander Viewer
         /// </summary>
         /// <param name="url"></param>
-        void LoadFile(string url);
+		void LoadFile(string url, pluginner.IFSPlugin fsplugin);
 
 		/// <summary>
 		/// Gets a value indicating whether this plugin can copy content into system clipboard.

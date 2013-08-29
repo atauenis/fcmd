@@ -16,16 +16,24 @@ using fcmd.base_plugins.viewer;
 namespace fcmd
 {
     class pluginfinder{
-        string[] FSPlugins = new string[1];
+        List<string> FSPlugins = new List<string>();
 		List<string> ViewPlugins = new List<string>();
-        string[] EditPlugins;
+        string[] EditPlugins; //todo
 
         public pluginfinder(){//конструктор
-            FSPlugins[0] = "file;(internal)LocalFS";//протокол file://
-            //ViewPlugins[0] = ".*;(internal)TxtViewer";//маска "усё"
-            //todo: чтение из файла настроек
+			//загрузка списка плагинов ФС из файла
+			if(File.Exists(Application.StartupPath + "/fsplugins.conf")){
+				string[] fsplist = File.ReadAllLines(Application.StartupPath + "/fsplugins.conf");
+				int rowCounter = 0;
+				foreach(string fsp in fsplist){
+					rowCounter ++;
+					if(fsp.Split(";".ToCharArray()).Length != 2) {Console.WriteLine("Ошибка в файле fsplugins.conf на строке " + rowCounter); break;}
+					FSPlugins.Add (fsp);
+				}
+			}
+			FSPlugins.Add("file;(internal)LocalFS"); //фсплагин по-умолчанию в конец списка
 
-			//загрузка списка плагинов из файла
+			//загрузка списка плагинов просмоторщика из файла
 			if(File.Exists(Application.StartupPath + "/fcviewplugins.conf")){
 				string[] vplist = File.ReadAllLines(Application.StartupPath + "/fcviewplugins.conf");
 				int rowCounter = 0;
@@ -58,19 +66,41 @@ namespace fcmd
         /// </summary>
         /// <param name="url">The uniform resource locator for the requested file</param>
         /// <returns>The good filesystem plugin (IFSPlugin-based class) or an exception if no plugins found</returns>
-        public pluginner.IFSPlugin GetFSplugin(string url){ //todo!!!
-            string[] Parts = url.Split("://".ToCharArray());
-            if (Parts[0] == "file")
-            {
-                return new localFileSystem();
-                //todo: определение
+        public pluginner.IFSPlugin GetFSplugin(string url){
+            string[] UrlParts = url.Split("://".ToCharArray());
+            foreach (string CurDescription in FSPlugins){
+                string[] Parts = CurDescription.Split(";".ToCharArray());
+                if(System.Text.RegularExpressions.Regex.IsMatch(UrlParts[0], Parts[0])){
+                    //оно!
+                    if(Parts[1].StartsWith("(internal)")){//плагин встроенный
+                        switch(Parts[1]){
+                            case "(internal)LocalFS":
+							return new localFileSystem();
+                        }
+                    }else{//плагин внешний
+                        string file = Parts[1];
+                        Assembly assembly = Assembly.LoadFile(file);
+
+                        foreach (Type type in assembly.GetTypes()){
+                            Type iface = type.GetInterface("pluginner.IFSPlugin");
+
+                            if (iface != null){
+                                pluginner.IFSPlugin plugin = (pluginner.IFSPlugin)Activator.CreateInstance(type);
+                                return plugin;
+                            }
+                        }    
+                    }
+                }
             }
-            else
-            {
-                throw new PluginNotFoundException("Плагин для ФС " + Parts[0] + " не найден");
-            }
+			throw new PluginNotFoundException("Не найден плагин ФС для протокола " + UrlParts[0]);
         }
 
+        /// <summary>
+        /// Searches for the good FCView plugin to work with the file, which starts with <paramref name="content"/> headers
+        /// </summary>
+		/// <param name='content'>
+		/// The file full content or headers (last is better, because finding will be faster and RAM wasteless).
+		/// </param>
         public pluginner.IViewerPlugin GetFCVplugin(string content){ //поиск плагина FCView
             foreach (string CurDescription in ViewPlugins){
                 string[] Parts = CurDescription.Split(";".ToCharArray());
@@ -85,7 +115,6 @@ namespace fcmd
                                 throw new PluginNotFoundException("Зырилка на базе picturebox пока что в планах"); //убрать
                         }
                     }else{//плагин внешний
-                        List<pluginner.IViewerPlugin> plugins = new List<pluginner.IViewerPlugin>();
                         string file = Parts[1];
                         Assembly assembly = Assembly.LoadFile(file);
 

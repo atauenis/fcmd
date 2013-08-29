@@ -73,9 +73,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="pluginner">
-      <HintPath>pluginner\bin\Debug\pluginner.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="fcmd.userprefs" />
@@ -101,5 +98,11 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="pluginner\pluginner.csproj">
+      <Project>{88785B26-D617-4BE9-B449-F7CE77444794}</Project>
+      <Name>pluginner</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

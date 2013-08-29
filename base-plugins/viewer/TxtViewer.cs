@@ -36,12 +36,9 @@ namespace fcmd.base_plugins.viewer
             return txtBox;
         }
 
-        public void LoadFile(string url)
-        {
-            pluginfinder pf = new pluginfinder();
-            pluginner.IFSPlugin fsp = pf.GetFSplugin(url);
-            Content = Encoding.UTF8.GetString(fsp.ReadFile(url));
-        }
+		public void LoadFile(string url, pluginner.IFSPlugin fsplugin){
+            Content = Encoding.UTF8.GetString(fsplugin.GetFile (url).Content);
+		}
 
 		public bool CanCopy{get{return true;}}
 

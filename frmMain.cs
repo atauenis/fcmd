@@ -128,22 +128,6 @@ namespace fcmd
 			PassivePanel = this.lplRight[0];
 			#endregion
 
-//			List<pluginner.IPlugin> plugins = new List<pluginner.IPlugin>();
-//			string file = Application.StartupPath + "/../../base-plugins/localfs/bin/Debug/localfs.dll";
-//            Assembly assembly = Assembly.LoadFile(file);
-//
-//            foreach (Type type in assembly.GetTypes()) {
-//				Type iface = type.GetInterface("pluginner.IPlugin");
-//
-//				if (iface != null)	{
-//					pluginner.IPlugin plugin = (pluginner.IPlugin)Activator.CreateInstance(type); //BUG: InvalidCastException: Cannot cast from source type to destination type.
-//					plugins.Add(plugin); 
-//				}
-//			}
-//
-//			//todo: выкинуть plugins[] и привязать к listpanel'ям
-//			//todo: написать API плагинов доступа к файловым системам
-
 			#region Изначальный перечень файлов
 			string startupDir = "file://" + Directory.GetLogicalDrives()[0];
 			LoadDir(startupDir,lplLeft[0]);
@@ -183,7 +167,9 @@ namespace fcmd
                     ListPanel.ItemDescription curItem = ActivePanel.HighlightedItem;
 					pluginner.IFSPlugin fs = ActivePanel.FSProvider;
 					if(!fs.IsFilePresent(curItem.Value)) return; //todo: выругаться
-					string FileContent = Encoding.ASCII.GetString(fs.ReadFile(curItem.Value));
+
+					pluginner.File SelectedFile = fs.GetFile(curItem.Value);
+					string FileContent = Encoding.ASCII.GetString(SelectedFile.Content);
                     fcv.LoadFile(FileContent, curItem.Value);
                     break;
 				case Keys.F10: //выход
