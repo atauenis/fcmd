@@ -7,31 +7,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pluginner", "pluginner\plug
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|x86 = Debug|x86
-		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}.Debug|x86.ActiveCfg = Debug|x86
 		{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}.Debug|x86.Build.0 = Debug|x86
-		{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}.Release|Mixed Platforms.Build.0 = Release|x86
 		{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}.Release|x86.ActiveCfg = Release|x86
 		{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}.Release|x86.Build.0 = Release|x86
-		{88785B26-D617-4BE9-B449-F7CE77444794}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{88785B26-D617-4BE9-B449-F7CE77444794}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{88785B26-D617-4BE9-B449-F7CE77444794}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{88785B26-D617-4BE9-B449-F7CE77444794}.Debug|x86.Build.0 = Debug|Any CPU
-		{88785B26-D617-4BE9-B449-F7CE77444794}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{88785B26-D617-4BE9-B449-F7CE77444794}.Release|x86.ActiveCfg = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = fcmd.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = fcmd.csproj
 	EndGlobalSection
 EndGlobal

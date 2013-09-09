@@ -102,6 +102,12 @@ namespace pluginner{
 		/// URL of the file.
 		/// </param>
 		void RemoveFile(string URL);
+
+        /// <summary>
+        /// Creates a new directory
+        /// </summary>
+        /// <param name="URL"></param>
+        void MakeDir(string URL);
 	}
 	//todo: IEditorPlugin, IUIPlugin (плагины к интерфейсу File Commander)
 
@@ -123,6 +129,11 @@ namespace pluginner{
 		/// The file's content.
 		/// </summary>
 		public byte[] Content;
+
+        /// <summary>
+        /// Returns the file's name
+        /// </summary>
+        public string Name;
 	}
 
 	/// <summary>

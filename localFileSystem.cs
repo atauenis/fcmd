@@ -124,17 +124,34 @@ namespace fcmd
 			fsf.Path = InternalURL;
 			fsf.Metadata = new FileInfo(InternalURL);
 			fsf.Content = File.ReadAllBytes(InternalURL);
+            fsf.Name = new FileInfo(InternalURL).Name;
 			return fsf;
 		}
 
 		public void WriteFile(pluginner.File NewFile){ //запись файла
-			//UNDONE
-			throw new InvalidOperationException("Функция в разработке");
+            _CheckProtocol(NewFile.Path);
+            string InternalURL = NewFile.Path.Replace("file://", "");
+
+            pluginner.File f = NewFile;
+            File.WriteAllBytes(InternalURL, f.Content);
+            File.SetAttributes(InternalURL, f.Metadata.Attributes);
+            File.SetCreationTime(InternalURL, f.Metadata.CreationTime);
+            File.SetLastWriteTime(InternalURL, DateTime.Now);
 		}
 
 		public void RemoveFile(string url){//удалить файл
-			//todo
+			_CheckProtocol(url);
+			string InternalURL = url.Replace("file://","");
+
+            File.Delete(InternalURL);
 		}
+
+        public void MakeDir(string url){//создать каталог
+            _CheckProtocol(url);
+            string InternalURL = url.Replace("file://", "");
+
+            Directory.CreateDirectory(InternalURL);
+        }
 
 	}
 }

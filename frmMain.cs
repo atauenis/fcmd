@@ -164,13 +164,36 @@ namespace fcmd
                     //todo:принуд. вызов fcview с плагином TxtViewer по Shift+F3
 
                     fcview fcv = new fcview();
-                    ListPanel.ItemDescription curItem = ActivePanel.HighlightedItem;
+                    ListPanel.ItemDescription curItemView = ActivePanel.HighlightedItem;
 					pluginner.IFSPlugin fs = ActivePanel.FSProvider;
-					if(!fs.IsFilePresent(curItem.Value)) return; //todo: выругаться
+					if(!fs.IsFilePresent(curItemView.Value)) return; //todo: выругаться
 
-					pluginner.File SelectedFile = fs.GetFile(curItem.Value);
+					pluginner.File SelectedFile = fs.GetFile(curItemView.Value);
 					string FileContent = Encoding.ASCII.GetString(SelectedFile.Content);
-                    fcv.LoadFile(FileContent, curItem.Value);
+                    fcv.LoadFile(FileContent, curItemView.Value);
+                    break;
+                case Keys.F5: //копировать
+                    ListPanel.ItemDescription curItemCopy = ActivePanel.HighlightedItem;
+                    pluginner.IFSPlugin fs1 = ActivePanel.FSProvider;
+                    pluginner.IFSPlugin fs2 = PassivePanel.FSProvider;
+                    if (!fs1.IsFilePresent(curItemCopy.Value)) return; //todo: выругаться
+
+                    pluginner.File sourceFile = fs1.GetFile(curItemCopy.Value);
+                    string newName = fs2.CurrentDirectory + "/" +sourceFile.Name;
+                    pluginner.File newFile = sourceFile;
+                    newFile.Path = newName;
+
+                    fs2.WriteFile(newFile);
+                    break;
+                case Keys.F8: //удалить
+                    DialogResult DoYouWantToDo = MessageBox.Show("Вы правда хотите сделать это? :-(", "", MessageBoxButtons.YesNo);
+                    if (DoYouWantToDo == DialogResult.No) break;
+
+                    ListPanel.ItemDescription curItemDel = ActivePanel.HighlightedItem;
+                    pluginner.IFSPlugin fsdel = ActivePanel.FSProvider;
+                    if (!fsdel.IsFilePresent(curItemDel.Value)) return; //todo: выругаться
+                    fsdel.RemoveFile(curItemDel.Value);
+
                     break;
 				case Keys.F10: //выход
 					Application.Exit();
