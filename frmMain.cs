@@ -18,6 +18,7 @@ namespace fcmd
 {
 	public partial class frmMain : Form 
 	{
+        //todo: поддержка локализации и замена временных фраз на серьёзные из файла
 		//Внутренние переменные
 		private List<ListPanel> lplLeft = new List<ListPanel>();
 		private List<ListPanel> lplRight = new List<ListPanel>();
@@ -130,8 +131,10 @@ namespace fcmd
 
 			#region Изначальный перечень файлов
 			string startupDir = "file://" + Directory.GetLogicalDrives()[0];
-			LoadDir(startupDir,lplLeft[0]);
-			LoadDir("file://" + Application.StartupPath + "/../../" ,lplRight[0]);
+            ActivePanel = lplRight[0];
+            Ls(startupDir);
+            ActivePanel = lplLeft[0];
+            Ls("file://" + Application.StartupPath + "/../../");
 			#endregion
 
 			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
@@ -167,33 +170,21 @@ namespace fcmd
                     ListPanel.ItemDescription curItemView = ActivePanel.HighlightedItem;
 					pluginner.IFSPlugin fs = ActivePanel.FSProvider;
 					if(!fs.IsFilePresent(curItemView.Value)) return; //todo: выругаться
-
-					pluginner.File SelectedFile = fs.GetFile(curItemView.Value);
-					string FileContent = Encoding.ASCII.GetString(SelectedFile.Content);
-                    fcv.LoadFile(FileContent, curItemView.Value);
+                    
+                    FCView(curItemView.Value);
                     break;
                 case Keys.F5: //копировать
-                    ListPanel.ItemDescription curItemCopy = ActivePanel.HighlightedItem;
-                    pluginner.IFSPlugin fs1 = ActivePanel.FSProvider;
-                    pluginner.IFSPlugin fs2 = PassivePanel.FSProvider;
-                    if (!fs1.IsFilePresent(curItemCopy.Value)) return; //todo: выругаться
-
-                    pluginner.File sourceFile = fs1.GetFile(curItemCopy.Value);
-                    string newName = fs2.CurrentDirectory + "/" +sourceFile.Name;
-                    pluginner.File newFile = sourceFile;
-                    newFile.Path = newName;
-
-                    fs2.WriteFile(newFile);
+                    Cp();
                     break;
                 case Keys.F8: //удалить
-                    DialogResult DoYouWantToDo = MessageBox.Show("Вы правда хотите сделать это? :-(", "", MessageBoxButtons.YesNo);
-                    if (DoYouWantToDo == DialogResult.No) break;
-
                     ListPanel.ItemDescription curItemDel = ActivePanel.HighlightedItem;
-                    pluginner.IFSPlugin fsdel = ActivePanel.FSProvider;
-                    if (!fsdel.IsFilePresent(curItemDel.Value)) return; //todo: выругаться
-                    fsdel.RemoveFile(curItemDel.Value);
-
+                    Rm(curItemDel.Value);
+                    break;
+                case Keys.F7: //новый каталог
+                    InputBox ibx = new InputBox("Как записать младенца?");
+                    if (ibx.ShowDialog() == DialogResult.OK){
+                        MkDir(ibx.Result);
+                    }
                     break;
 				case Keys.F10: //выход
 					Application.Exit();
