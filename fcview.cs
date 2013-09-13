@@ -48,6 +48,12 @@ namespace fcmd
 			mnuEditCopy.Enabled = vp.CanCopy;
 			mnuEditSelectAll.Enabled = vp.CanSelectAll;
 
+            if (vp.SettingsMenu.Length > 0)
+            {
+                mnuView.DropDownItems.Add(new ToolStripSeparator());
+                mnuView.DropDownItems.AddRange(vp.SettingsMenu);
+            }
+
             this.Show();
         }
 
@@ -92,11 +98,14 @@ namespace fcmd
             Console.WriteLine(DebugText);
 #endif
             switch (e.KeyData){
+                case Keys.F4://вид
+                    mnuView.ShowDropDown();
+                    break;
                 case Keys.F7: //поиск
                     mnuEditFind_Click(new object(),new EventArgs());
                     break;
-                case Keys.F8: //плагин
-                    mnuViewMode.ShowDropDown();
+                case Keys.F8: //формат (параметры плагина)
+                    new ToolStripMenuItem(null, null, vp.SettingsMenu).ShowDropDown();
                     break;
                 case Keys.F10:
                     this.Close();
@@ -105,11 +114,6 @@ namespace fcmd
                     this.Close();
                     break;
             }
-        }
-
-        private void mnuToolsPluginSettings_Click(object sender, EventArgs e)
-        {
-            vp.ShowSettings();
         }
 
         private void mnuFileReload_Click(object sender, EventArgs e){

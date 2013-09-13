@@ -50,7 +50,6 @@
             this.mnuViewModeImage = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewModePlugin = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuToolsPluginSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.contentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -222,49 +221,39 @@
             this.mnuViewModeImage,
             this.mnuViewModePlugin});
             this.mnuViewMode.Name = "mnuViewMode";
-            this.mnuViewMode.Size = new System.Drawing.Size(112, 22);
+            this.mnuViewMode.Size = new System.Drawing.Size(152, 22);
             this.mnuViewMode.Text = "Режим";
             // 
             // mnuViewModeText
             // 
             this.mnuViewModeText.Name = "mnuViewModeText";
-            this.mnuViewModeText.Size = new System.Drawing.Size(150, 22);
+            this.mnuViewModeText.Size = new System.Drawing.Size(152, 22);
             this.mnuViewModeText.Text = "Текст";
             // 
             // mnuViewModeImage
             // 
             this.mnuViewModeImage.Name = "mnuViewModeImage";
-            this.mnuViewModeImage.Size = new System.Drawing.Size(150, 22);
+            this.mnuViewModeImage.Size = new System.Drawing.Size(152, 22);
             this.mnuViewModeImage.Text = "Изображения";
             // 
             // mnuViewModePlugin
             // 
             this.mnuViewModePlugin.Name = "mnuViewModePlugin";
-            this.mnuViewModePlugin.Size = new System.Drawing.Size(150, 22);
+            this.mnuViewModePlugin.Size = new System.Drawing.Size(152, 22);
             this.mnuViewModePlugin.Text = "Плагин...";
             // 
             // mnuTools
             // 
             this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuToolsPluginSettings,
             this.mnuOptions});
             this.mnuTools.Name = "mnuTools";
             this.mnuTools.Size = new System.Drawing.Size(83, 19);
             this.mnuTools.Text = "Параметры";
             // 
-            // mnuToolsPluginSettings
-            // 
-            this.mnuToolsPluginSettings.Image = ((System.Drawing.Image)(resources.GetObject("mnuToolsPluginSettings.Image")));
-            this.mnuToolsPluginSettings.Name = "mnuToolsPluginSettings";
-            this.mnuToolsPluginSettings.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.mnuToolsPluginSettings.Size = new System.Drawing.Size(252, 22);
-            this.mnuToolsPluginSettings.Text = "Настройка плагина вывода...";
-            this.mnuToolsPluginSettings.Click += new System.EventHandler(this.mnuToolsPluginSettings_Click);
-            // 
             // mnuOptions
             // 
             this.mnuOptions.Name = "mnuOptions";
-            this.mnuOptions.Size = new System.Drawing.Size(252, 22);
+            this.mnuOptions.Size = new System.Drawing.Size(152, 22);
             this.mnuOptions.Text = "Параметры...";
             // 
             // mnuHelp
@@ -505,7 +494,6 @@
         private System.Windows.Forms.ToolStripSeparator mnuEditS1;
         private System.Windows.Forms.ToolStripMenuItem mnuEditSelectAll;
         private System.Windows.Forms.ToolStripMenuItem mnuTools;
-        private System.Windows.Forms.ToolStripMenuItem mnuToolsPluginSettings;
         private System.Windows.Forms.ToolStripMenuItem mnuOptions;
         private System.Windows.Forms.ToolStripMenuItem mnuHelp;
         private System.Windows.Forms.ToolStripMenuItem contentsToolStripMenuItem;

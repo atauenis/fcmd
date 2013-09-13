@@ -5,6 +5,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace pluginner{
 	/// <summary>
@@ -236,9 +237,9 @@ namespace pluginner{
 		void PrintSettings();
 
         /// <summary>
-        /// Shows plugin settings dialog window
+        /// An array of ToolStripMenuItems for FCView's menu of plugin's settings
         /// </summary>
-        void ShowSettings();
+        System.Windows.Forms.ToolStripMenuItem[] SettingsMenu { get; }
     }
 
 	/// <summary>

@@ -63,8 +63,16 @@ namespace fcmd.base_plugins.viewer
 			//todo
 		}
 
-        public void ShowSettings(){ //параметры плагина
-            MessageBox.Show("У плагина для просмотра *.txt нет настроек");
+        public ToolStripMenuItem[] SettingsMenu{//(под)меню настроек
+            get{
+                List<ToolStripMenuItem> Options = new List<ToolStripMenuItem>();
+                Options.Add(new ToolStripMenuItem("У плагина нет настроек",null,this.Test));
+                return Options.ToArray();
+            }
+        }
+
+        public void Test(object sender, EventArgs e){
+            MessageBox.Show("У плагина нет настроек...пока что.");
         }
     }
 }
