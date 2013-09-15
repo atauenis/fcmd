@@ -242,7 +242,7 @@ namespace fcmd
 				if(ActivePanel.Name == txt){
 					if(!ActivePanel.FSProvider.IsDirPresent(tb.Text)) return; //проверка наличия каталога
                     if (!ActivePanel.FSProvider.CanBeRead(tb.Text)) { MessageBox.Show("Нет доступа"); return; } //проверка наличия доступа
-					LoadDir(tb.Text,ActivePanel);
+					Ls(tb.Text);
 				}else{
 					if(!PassivePanel.FSProvider.IsDirPresent(tb.Text)) return; //проверка наличия каталога
                     if (!PassivePanel.FSProvider.CanBeRead(tb.Text)) { MessageBox.Show("Нет доступа"); return; } //проверка наличия доступа

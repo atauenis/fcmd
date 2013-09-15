@@ -212,25 +212,6 @@ namespace fcmd
 
 				CurRowNo ++;
 			}
-//Обработка выделения
-//				switch (x.Selection) { //TODO:нормальные цвета
-//					//undone
-//				case SelectionStatuses.NotSelected:
-//					lblNadpis[lblNadpis.Count -1].BackColor = SystemColors.Window;
-//					lblNadpis[lblNadpis.Count -1].ForeColor = SystemColors.ControlText;
-//					break;
-//				case SelectionStatuses.Selected:
-//					lblNadpis[lblNadpis.Count -1].BackColor = SystemColors.Window;
-//					lblNadpis[lblNadpis.Count -1].ForeColor = SystemColors.Highlight;
-//					break;
-//				case SelectionStatuses.Highlighted:
-//					lblNadpis[lblNadpis.Count -1].BackColor = SystemColors.HotTrack;
-//					lblNadpis[lblNadpis.Count -1].ForeColor = SystemColors.HighlightText;
-//					break;
-//				}
-//				i++;
-//			}
-
 		}
 
 		private void _Unhighlight(int Row){ //снять подсветку со строки

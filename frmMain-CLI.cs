@@ -8,6 +8,7 @@ using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace fcmd
 {
@@ -28,28 +29,19 @@ namespace fcmd
         /// </summary>
         /// <param name="url"></param>
         public void Ls(string url){
-            ListPanel lp = ActivePanel;
-            lp.Items.Clear();
+            Thread LsThread = new Thread(delegate() { DoLs(url, ActivePanel); });
+            FileProcessDialog fpd = new FileProcessDialog();
+            fpd.Top = this.Top + ActivePanel.Top;
+            fpd.Left = this.Left + ActivePanel.Left;
+            fpd.lblStatus.Text = "Загружаю содержимое каталога " + url;
+            
+            fpd.Show();
+            LsThread.Start();
 
-            //гружу директорию
-            pluginner.IFSPlugin fsp = lp.FSProvider;
-            fsp.CurrentDirectory = url;
-            foreach (pluginner.DirItem di in fsp.DirectoryContent)
-            { //перебираю файлы, найденные провайдером ФС
-                if (di.Hidden == false)
-                {
-                    ListPanel.ItemDescription NewItem;
-                    NewItem = new ListPanel.ItemDescription();
-                    NewItem.Text.Add(di.TextToShow);
-                    NewItem.Text.Add(Convert.ToString(di.Size / 1024) + "KB");
-                    NewItem.Text.Add(di.Date.ToShortDateString());
-                    NewItem.Value = di.Path;
-                    NewItem.Selection = 0;
-                    NewItem.Selected = false;
-                    lp.Items.Add(NewItem);
-                }
-            }
-            lp.Redraw();
+            do{Application.DoEvents();}
+            while (LsThread.ThreadState == ThreadState.Running);
+            ActivePanel.Redraw();
+            fpd.Hide();
         }
 
         /// <summary>
@@ -117,15 +109,26 @@ namespace fcmd
             if (!SourceFS.IsFilePresent(SourceURL)) return; //todo: выругаться
 
             InputBox ibx = new InputBox("Куда копировать?", PassivePanel.FSProvider.CurrentDirectory + "/" + SourceFile.Name);
-            if (ibx.ShowDialog() == DialogResult.OK){
-                string DestinationURL = ibx.Result;
-                pluginner.IFSPlugin DestinationFS = PassivePanel.FSProvider;
+            if (ibx.ShowDialog() == DialogResult.OK)
+            {
 
-                pluginner.File NewFile = SourceFile;
-                NewFile.Path = DestinationURL;
+                Thread CpThread = new Thread(delegate() { DoCp(ActivePanel, PassivePanel, ibx.Result, SourceFile); });
+                FileProcessDialog fpd = new FileProcessDialog();
+                fpd.Top = this.Top + ActivePanel.Top;
+                fpd.Left = this.Left + ActivePanel.Left;
+                fpd.lblStatus.Text = "Выполняется копирование:\n" + ActivePanel.HighlightedItem.Value + "\nВ " + ibx.Result;
+                fpd.cmdCancel.Click += (object s, EventArgs e) => { CpThread.Abort(); MessageBox.Show("Отменено"); };
 
-                DestinationFS.WriteFile(NewFile);
-            } else return;
+                CpThread.Start();
+                fpd.Show();
+
+                do{Application.DoEvents();}
+                while (CpThread.ThreadState == ThreadState.Running);
+
+                LoadDir(PassivePanel.FSProvider.CurrentDirectory, PassivePanel); //обновление пассивной панели
+                fpd.Hide();
+            }
+            else return;
         }
     }
 }

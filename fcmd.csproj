@@ -46,7 +46,16 @@
     <Compile Include="fcview.Designer.cs">
       <DependentUpon>fcview.cs</DependentUpon>
     </Compile>
+    <Compile Include="FileProcessDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileProcessDialog.Designer.cs">
+      <DependentUpon>FileProcessDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmMain-CLI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain-Workers.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmMain.cs">
@@ -93,6 +102,10 @@
   <ItemGroup>
     <EmbeddedResource Include="fcview.resx">
       <DependentUpon>fcview.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileProcessDialog.resx">
+      <DependentUpon>FileProcessDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">

@@ -132,11 +132,16 @@ namespace fcmd
             _CheckProtocol(NewFile.Path);
             string InternalURL = NewFile.Path.Replace("file://", "");
 
-            pluginner.File f = NewFile;
-            File.WriteAllBytes(InternalURL, f.Content);
-            File.SetAttributes(InternalURL, f.Metadata.Attributes);
-            File.SetCreationTime(InternalURL, f.Metadata.CreationTime);
-            File.SetLastWriteTime(InternalURL, DateTime.Now);
+            try{
+                pluginner.File f = NewFile;
+                File.WriteAllBytes(InternalURL, f.Content);
+                File.SetAttributes(InternalURL, f.Metadata.Attributes);
+                File.SetCreationTime(InternalURL, f.Metadata.CreationTime);
+                File.SetLastWriteTime(InternalURL, DateTime.Now);
+            }
+            catch (Exception ex){
+                System.Windows.Forms.MessageBox.Show(ex.Message,"Ошибка",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Stop);
+            }
 		}
 
 		public void RemoveFile(string url){//удалить файл
