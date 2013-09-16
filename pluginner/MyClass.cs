@@ -86,7 +86,7 @@ namespace pluginner{
 		/// <param name='URL'>
 		/// URL of the file.
 		/// </param>
-		File GetFile(string URL);
+		File GetFile(string URL, int Progress);
 
 		/// <summary>
 		/// Writes the file.
@@ -94,7 +94,7 @@ namespace pluginner{
 		/// <param name='NewFile'>
 		/// New file's content.
 		/// </param>
-		void WriteFile(File NewFile);
+		void WriteFile(File NewFile, int Progress);
 
 		/// <summary>
 		/// Removes the file <paramref name="URL"/>.
@@ -103,6 +103,14 @@ namespace pluginner{
 		/// URL of the file.
 		/// </param>
 		void RemoveFile(string URL);
+
+	    /// <summary>
+		/// Removes the directory <paramref name="URL"/>.
+		/// </summary>
+		/// <param name='URL'>
+		/// URL of the dir.
+		/// </param>
+		void RemoveDir(string URL);
 
         /// <summary>
         /// Creates a new directory

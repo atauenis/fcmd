@@ -181,7 +181,7 @@ namespace fcmd
                     Rm(curItemDel.Value);
                     break;
                 case Keys.F7: //новый каталог
-                    InputBox ibx = new InputBox("Как записать младенца?");
+                    InputBox ibx = new InputBox("Как записать младенца?",ActivePanel.FSProvider.CurrentDirectory + @"\НОВЫЙ КАТАЛОГ");
                     if (ibx.ShowDialog() == DialogResult.OK){
                         MkDir(ibx.Result);
                     }

@@ -29,7 +29,8 @@ namespace fcmd
         /// </summary>
         /// <param name="url"></param>
         public void Ls(string url){
-            Thread LsThread = new Thread(delegate() { DoLs(url, ActivePanel); });
+            int Status = 0;
+            Thread LsThread = new Thread(delegate() { DoLs(url, ActivePanel, ref Status); });
             FileProcessDialog fpd = new FileProcessDialog();
             fpd.Top = this.Top + ActivePanel.Top;
             fpd.Left = this.Left + ActivePanel.Left;
@@ -38,7 +39,7 @@ namespace fcmd
             fpd.Show();
             LsThread.Start();
 
-            do{Application.DoEvents();}
+            do { Application.DoEvents(); fpd.pbrProgress.Value = Status; fpd.Refresh(); }
             while (LsThread.ThreadState == ThreadState.Running);
             ActivePanel.Redraw();
             fpd.Hide();
@@ -53,7 +54,7 @@ namespace fcmd
             pluginner.IFSPlugin fs = ActivePanel.FSProvider;
             if (!fs.IsFilePresent(url)) return; //todo: выругаться
 
-            pluginner.File SelectedFile = fs.GetFile(url);
+            pluginner.File SelectedFile = fs.GetFile(url, new int());
             string FileContent = Encoding.ASCII.GetString(SelectedFile.Content);
             fcv.LoadFile(FileContent, url);
         }
@@ -69,7 +70,7 @@ namespace fcmd
             pluginner.IFSPlugin fs = ActivePanel.FSProvider;
             if (!fs.IsFilePresent(url)) return "Файл не найден\n";
 
-            pluginner.File SelectedFile = fs.GetFile(url);
+            pluginner.File SelectedFile = fs.GetFile(url, new int());
             return Encoding.ASCII.GetString(SelectedFile.Content);
         }
 
@@ -78,7 +79,21 @@ namespace fcmd
         /// </summary>
         /// <param name="url"></param>
         public void MkDir(string url){
-            ActivePanel.FSProvider.MakeDir(url);
+            FileProcessDialog fpd = new FileProcessDialog();
+            fpd.lblStatus.Text = "Создание каталога:\n" + url;
+            fpd.Show();
+
+            Thread MkDirThread = new Thread(delegate() { ActivePanel.FSProvider.MakeDir(url); });
+            MkDirThread.Start();
+
+            LoadDir(ActivePanel.FSProvider.CurrentDirectory, ActivePanel);
+
+            do { Application.DoEvents();}
+            while (MkDirThread.ThreadState == ThreadState.Running);
+
+            fpd.pbrProgress.Value = 100;
+            LoadDir(ActivePanel.FSProvider.CurrentDirectory, ActivePanel);
+            fpd.Hide();
         }
 
         /// <summary>
@@ -89,12 +104,43 @@ namespace fcmd
             DialogResult DoYouWantToDo = MessageBox.Show("Вы правда хотите сделать это? :-(", "", MessageBoxButtons.YesNo);
             if (DoYouWantToDo == DialogResult.No) return "Отменено пользователем\n";
 
+            FileProcessDialog fpd = new FileProcessDialog();
+            fpd.lblStatus.Text = "Выполняется удаление:\n" + url;
+            fpd.cmdCancel.Enabled = false;
+            fpd.Show();
+
             ListPanel.ItemDescription curItemDel = ActivePanel.HighlightedItem;
             pluginner.IFSPlugin fsdel = ActivePanel.FSProvider;
-            if (!fsdel.IsFilePresent(curItemDel.Value)) return "Файл не найден\n"; //todo: выругаться
-            fsdel.RemoveFile(curItemDel.Value);
+            if (fsdel.IsFilePresent(curItemDel.Value))
+            {
+                fpd.pbrProgress.Value = 50;
+                Thread RmFileThread = new Thread(delegate() { DoRmFile(curItemDel.Value, fsdel); });
+                RmFileThread.Start();
 
-            return ""; //успех
+                do { Application.DoEvents();}
+                while (RmFileThread.ThreadState == ThreadState.Running);
+
+                fpd.pbrProgress.Value = 100;
+                LoadDir(ActivePanel.FSProvider.CurrentDirectory, ActivePanel);
+                fpd.Hide();
+                return "Файл удалён.\n";
+            }
+            if (fsdel.IsDirPresent(curItemDel.Value))
+            {
+                fpd.lblStatus.Text += "\n[КАТАЛОГ]";
+                fpd.pbrProgress.Value = 50;
+                Thread RmDirThread = new Thread(delegate() { DoRmDir(curItemDel.Value, fsdel); });
+                RmDirThread.Start();
+
+                do { Application.DoEvents(); }
+                while (RmDirThread.ThreadState == ThreadState.Running);
+
+                fpd.pbrProgress.Value = 100;
+                LoadDir(ActivePanel.FSProvider.CurrentDirectory, ActivePanel);
+                fpd.Hide();
+                return "Каталог удалён.\n";
+            }
+            return "Файл не найден"; //успех
         }
 
         /// <summary>
@@ -102,9 +148,10 @@ namespace fcmd
         /// Includes asking of the destination path.
         /// </summary>
         public void Cp(){
+            int Progress = 0;
             string SourceURL = ActivePanel.HighlightedItem.Value;
             pluginner.IFSPlugin SourceFS = ActivePanel.FSProvider;
-            pluginner.File SourceFile = SourceFS.GetFile(SourceURL);
+            pluginner.File SourceFile = SourceFS.GetFile(SourceURL, Progress);
 
             if (!SourceFS.IsFilePresent(SourceURL)) return; //todo: выругаться
 
@@ -112,7 +159,7 @@ namespace fcmd
             if (ibx.ShowDialog() == DialogResult.OK)
             {
 
-                Thread CpThread = new Thread(delegate() { DoCp(ActivePanel, PassivePanel, ibx.Result, SourceFile); });
+                Thread CpThread = new Thread(delegate() { DoCp(ActivePanel, PassivePanel, ibx.Result, SourceFile, Progress); });
                 FileProcessDialog fpd = new FileProcessDialog();
                 fpd.Top = this.Top + ActivePanel.Top;
                 fpd.Left = this.Left + ActivePanel.Left;
@@ -122,7 +169,7 @@ namespace fcmd
                 CpThread.Start();
                 fpd.Show();
 
-                do{Application.DoEvents();}
+                do { Application.DoEvents(); fpd.pbrProgress.Value = Progress; }
                 while (CpThread.ThreadState == ThreadState.Running);
 
                 LoadDir(PassivePanel.FSProvider.CurrentDirectory, PassivePanel); //обновление пассивной панели

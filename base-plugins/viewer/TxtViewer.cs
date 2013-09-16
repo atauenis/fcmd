@@ -37,7 +37,7 @@ namespace fcmd.base_plugins.viewer
         }
 
 		public void LoadFile(string url, pluginner.IFSPlugin fsplugin){
-            Content = Encoding.UTF8.GetString(fsplugin.GetFile (url).Content);
+            Content = Encoding.UTF8.GetString(fsplugin.GetFile (url, new int()).Content);
 		}
 
 		public bool CanCopy{get{return true;}}

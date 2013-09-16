@@ -116,11 +116,12 @@ namespace fcmd
             }
         }
 
-		public pluginner.File GetFile(string url){ //чтение файла
+		public pluginner.File GetFile(string url, int Progress){ //чтение файла
 			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://","");
 
 			pluginner.File fsf = new pluginner.File(); //fsf=filesystem file
+            Progress = 50;
 			fsf.Path = InternalURL;
 			fsf.Metadata = new FileInfo(InternalURL);
 			fsf.Content = File.ReadAllBytes(InternalURL);
@@ -128,16 +129,22 @@ namespace fcmd
 			return fsf;
 		}
 
-		public void WriteFile(pluginner.File NewFile){ //запись файла
+        public void WriteFile(pluginner.File NewFile, int Progress)
+        { //запись файла
             _CheckProtocol(NewFile.Path);
             string InternalURL = NewFile.Path.Replace("file://", "");
 
             try{
+                Progress = 10;
                 pluginner.File f = NewFile;
                 File.WriteAllBytes(InternalURL, f.Content);
+                Progress = 25;
                 File.SetAttributes(InternalURL, f.Metadata.Attributes);
+                Progress = 50;
                 File.SetCreationTime(InternalURL, f.Metadata.CreationTime);
+                Progress = 75;
                 File.SetLastWriteTime(InternalURL, DateTime.Now);
+                Progress = 100;
             }
             catch (Exception ex){
                 System.Windows.Forms.MessageBox.Show(ex.Message,"Ошибка",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Stop);
@@ -149,6 +156,13 @@ namespace fcmd
 			string InternalURL = url.Replace("file://","");
 
             File.Delete(InternalURL);
+		}
+
+		public void RemoveDir(string url){//удалить папку
+			_CheckProtocol(url);
+			string InternalURL = url.Replace("file://","");
+
+            Directory.Delete(InternalURL);
 		}
 
         public void MakeDir(string url){//создать каталог
