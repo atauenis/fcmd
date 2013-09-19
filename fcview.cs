@@ -18,6 +18,7 @@ namespace fcmd
     {
         pluginner.IViewerPlugin vp;
         string Path, Content;
+        Localizator locale = new Localizator();
 
         public fcview()
         {
@@ -48,10 +49,8 @@ namespace fcmd
 			mnuEditCopy.Enabled = vp.CanCopy;
 			mnuEditSelectAll.Enabled = vp.CanSelectAll;
 
-            if (vp.SettingsMenu.Length > 0)
-            {
-                mnuView.DropDownItems.Add(new ToolStripSeparator());
-                mnuView.DropDownItems.AddRange(vp.SettingsMenu);
+            if (vp.SettingsMenu.Length > 0){
+                mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
             }
 
             this.Show();
@@ -84,9 +83,10 @@ namespace fcmd
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
-            string AboutString = "FCView " + Application.ProductVersion + "\n" + "(C) 2013, Alexander Tauenis\n\n";
+            //string AboutString = "FCView " + Application.ProductVersion + "\n" + "(C) 2013, Alexander Tauenis\n\n";
+            string AboutString = String.Format(locale.GetString("FCViewVer"),Application.ProductVersion) + "\n" + "(C) 2013, Alexander Tauenis\n\n";
             AboutString += vp.Name + " " + vp.Version + "\n" + vp.Author;
-            MessageBox.Show(AboutString, "Просмоторщик файлов File Commander", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(AboutString, "File Commander Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void fcview_KeyDown(object sender, KeyEventArgs e){
@@ -123,6 +123,7 @@ namespace fcmd
         private void fcview_Load(object sender, EventArgs e)
         {
             this.OnResize(new EventArgs());
+            Localize();
         }
 
         private void tsKeyboard_ItemClicked(object sender, ToolStripItemClickedEventArgs e){
@@ -145,5 +146,49 @@ namespace fcmd
             tsKeyboard.Width = this.Width;
         }
 
+        /// <summary>
+        /// Перевести весь интерфейс на текущий язык
+        /// </summary>
+        public void Localize(){
+            tsbHelpF1.Text = locale.GetString("FCVF1");
+            tsbHelpF2.Text = locale.GetString("FCVF2");
+            tsbHelpF3.Text = locale.GetString("FCVF3");
+            tsbHelpF4.Text = locale.GetString("FCVF4");
+            tsbHelpF5.Text = locale.GetString("FCVF5");
+            tsbHelpF6.Text = locale.GetString("FCVF6");
+            tsbHelpF7.Text = locale.GetString("FCVF7");
+            tsbHelpF8.Text = locale.GetString("FCVF8");
+            tsbHelpF9.Text = locale.GetString("FCVF9");
+            tsbHelpF10.Text = locale.GetString("FCVF10");
+
+            mnuFile.Text = locale.GetString("FCVFile");
+            mnuFileOpen.Text = locale.GetString("FCVFileOpen");
+            mnuFileReload.Text = locale.GetString("FCVFileReload");
+            mnuFilePrint.Text = locale.GetString("FCVFilePrint");
+            mnuFilePrintOptions.Text = locale.GetString("FCVFilePrintOptions");
+            mnuFileExit.Text = locale.GetString("FCVFileExit");
+
+            mnuEdit.Text = locale.GetString("FCVEdit");
+            mnuEditCopy.Text = locale.GetString("FCVEditCopy");
+            mnuEditSelectAll.Text = locale.GetString("FCVEditSelAll");
+            mnuEditFind.Text = locale.GetString("FCVEditSearch");
+
+            mnuView.Text = locale.GetString("FCVView");
+            mnuViewModeText.Text = locale.GetString("FCVViewModeText");
+            mnuViewModeImage.Text = locale.GetString("FCVViewModeImage");
+
+            mnuFormat.Text = locale.GetString("FCVFormat");
+            mnuHelp.Text = locale.GetString("FCVHelpMenu");
+            mnuHelpAbout.Text = locale.GetString("FCVHelpAbout");
+        }
+
+        private void mnuFormat_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            //обновление спика параметров плагина (меню Формат)
+            if (vp.SettingsMenu.Length > 0){
+                mnuFormat.DropDownItems.Clear();
+                mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
+            }
+        }
     }
 }

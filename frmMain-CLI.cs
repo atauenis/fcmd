@@ -34,7 +34,9 @@ namespace fcmd
             FileProcessDialog fpd = new FileProcessDialog();
             fpd.Top = this.Top + ActivePanel.Top;
             fpd.Left = this.Left + ActivePanel.Left;
-            fpd.lblStatus.Text = "Загружаю содержимое каталога " + url;
+            string FPDtext = String.Format(locale.GetString("DoingListdir"), "\n" + url, "");
+            FPDtext = FPDtext.Replace("{1}", "");
+            fpd.lblStatus.Text = FPDtext;
             
             fpd.Show();
             LsThread.Start();
@@ -80,7 +82,7 @@ namespace fcmd
         /// <param name="url"></param>
         public void MkDir(string url){
             FileProcessDialog fpd = new FileProcessDialog();
-            fpd.lblStatus.Text = "Создание каталога:\n" + url;
+            fpd.lblStatus.Text = string.Format(locale.GetString("DoingMkdir"),"\n" + url,null);
             fpd.Show();
 
             Thread MkDirThread = new Thread(delegate() { ActivePanel.FSProvider.MakeDir(url); });
@@ -101,11 +103,11 @@ namespace fcmd
         /// </summary>
         /// <param name="url"></param>
         public string Rm(string url){
-            DialogResult DoYouWantToDo = MessageBox.Show("Вы правда хотите сделать это? :-(", "", MessageBoxButtons.YesNo);
-            if (DoYouWantToDo == DialogResult.No) return "Отменено пользователем\n";
+            DialogResult DoYouWantToDo = MessageBox.Show(String.Format(locale.GetString("FCDelAsk"),url, null), "", MessageBoxButtons.YesNo);
+            if (DoYouWantToDo == DialogResult.No) return locale.GetString("Canceled");
 
             FileProcessDialog fpd = new FileProcessDialog();
-            fpd.lblStatus.Text = "Выполняется удаление:\n" + url;
+            fpd.lblStatus.Text = String.Format(locale.GetString("DoingRemove"),"\n" + url,null);
             fpd.cmdCancel.Enabled = false;
             fpd.Show();
 
@@ -127,7 +129,7 @@ namespace fcmd
             }
             if (fsdel.IsDirPresent(curItemDel.Value))
             {
-                fpd.lblStatus.Text += "\n[КАТАЛОГ]";
+                fpd.lblStatus.Text = String.Format(locale.GetString("DoingRemove"), "\n" + url, "\n[" + locale.GetString("Directory").ToUpper() + "]");
                 fpd.pbrProgress.Value = 50;
                 Thread RmDirThread = new Thread(delegate() { DoRmDir(curItemDel.Value, fsdel); });
                 RmDirThread.Start();
@@ -140,7 +142,7 @@ namespace fcmd
                 fpd.Hide();
                 return "Каталог удалён.\n";
             }
-            return "Файл не найден"; //успех
+            return "Файл не найден";
         }
 
         /// <summary>
@@ -155,7 +157,7 @@ namespace fcmd
 
             if (!SourceFS.IsFilePresent(SourceURL)) return; //todo: выругаться
 
-            InputBox ibx = new InputBox("Куда копировать?", PassivePanel.FSProvider.CurrentDirectory + "/" + SourceFile.Name);
+            InputBox ibx = new InputBox(String.Format(locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FSProvider.CurrentDirectory + "/" + SourceFile.Name);
             if (ibx.ShowDialog() == DialogResult.OK)
             {
 
@@ -163,8 +165,9 @@ namespace fcmd
                 FileProcessDialog fpd = new FileProcessDialog();
                 fpd.Top = this.Top + ActivePanel.Top;
                 fpd.Left = this.Left + ActivePanel.Left;
-                fpd.lblStatus.Text = "Выполняется копирование:\n" + ActivePanel.HighlightedItem.Value + "\nВ " + ibx.Result;
-                fpd.cmdCancel.Click += (object s, EventArgs e) => { CpThread.Abort(); MessageBox.Show("Отменено"); };
+                //fpd.lblStatus.Text = "Выполняется копирование:\n" + ActivePanel.HighlightedItem.Value + "\nВ " + ibx.Result;
+                fpd.lblStatus.Text = String.Format(locale.GetString("DoingCopy"), "\n" + ActivePanel.HighlightedItem.Value + "\n", ibx.Result,null);
+                fpd.cmdCancel.Click += (object s, EventArgs e) => { CpThread.Abort(); MessageBox.Show(locale.GetString("Canceled")); };
 
                 CpThread.Start();
                 fpd.Show();

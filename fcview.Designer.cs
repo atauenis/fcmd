@@ -45,12 +45,9 @@
             this.mnuEditS2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuEditFind = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuViewMode = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewModeText = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewModeImage = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuViewModePlugin = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.contentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.indexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,7 +80,7 @@
             this.mnuFile,
             this.mnuEdit,
             this.mnuView,
-            this.mnuTools,
+            this.mnuFormat,
             this.mnuHelp});
             this.mnu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.mnu.Location = new System.Drawing.Point(0, 0);
@@ -209,52 +206,30 @@
             // mnuView
             // 
             this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuViewMode});
+            this.mnuViewModeText,
+            this.mnuViewModeImage});
             this.mnuView.Name = "mnuView";
             this.mnuView.Size = new System.Drawing.Size(39, 19);
             this.mnuView.Text = "Вид";
             // 
-            // mnuViewMode
-            // 
-            this.mnuViewMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuViewModeText,
-            this.mnuViewModeImage,
-            this.mnuViewModePlugin});
-            this.mnuViewMode.Name = "mnuViewMode";
-            this.mnuViewMode.Size = new System.Drawing.Size(152, 22);
-            this.mnuViewMode.Text = "Режим";
-            // 
             // mnuViewModeText
             // 
             this.mnuViewModeText.Name = "mnuViewModeText";
-            this.mnuViewModeText.Size = new System.Drawing.Size(152, 22);
+            this.mnuViewModeText.Size = new System.Drawing.Size(150, 22);
             this.mnuViewModeText.Text = "Текст";
             // 
             // mnuViewModeImage
             // 
             this.mnuViewModeImage.Name = "mnuViewModeImage";
-            this.mnuViewModeImage.Size = new System.Drawing.Size(152, 22);
+            this.mnuViewModeImage.Size = new System.Drawing.Size(150, 22);
             this.mnuViewModeImage.Text = "Изображения";
             // 
-            // mnuViewModePlugin
+            // mnuFormat
             // 
-            this.mnuViewModePlugin.Name = "mnuViewModePlugin";
-            this.mnuViewModePlugin.Size = new System.Drawing.Size(152, 22);
-            this.mnuViewModePlugin.Text = "Плагин...";
-            // 
-            // mnuTools
-            // 
-            this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuOptions});
-            this.mnuTools.Name = "mnuTools";
-            this.mnuTools.Size = new System.Drawing.Size(83, 19);
-            this.mnuTools.Text = "Параметры";
-            // 
-            // mnuOptions
-            // 
-            this.mnuOptions.Name = "mnuOptions";
-            this.mnuOptions.Size = new System.Drawing.Size(152, 22);
-            this.mnuOptions.Text = "Параметры...";
+            this.mnuFormat.Name = "mnuFormat";
+            this.mnuFormat.Size = new System.Drawing.Size(62, 19);
+            this.mnuFormat.Text = "Формат";
+            this.mnuFormat.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.mnuFormat_DropDownItemClicked);
             // 
             // mnuHelp
             // 
@@ -493,8 +468,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuEditCopy;
         private System.Windows.Forms.ToolStripSeparator mnuEditS1;
         private System.Windows.Forms.ToolStripMenuItem mnuEditSelectAll;
-        private System.Windows.Forms.ToolStripMenuItem mnuTools;
-        private System.Windows.Forms.ToolStripMenuItem mnuOptions;
+        private System.Windows.Forms.ToolStripMenuItem mnuFormat;
         private System.Windows.Forms.ToolStripMenuItem mnuHelp;
         private System.Windows.Forms.ToolStripMenuItem contentsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem indexToolStripMenuItem;
@@ -504,10 +478,6 @@
         private System.Windows.Forms.ToolStripSeparator mnuEditS2;
         private System.Windows.Forms.ToolStripMenuItem mnuEditFind;
         private System.Windows.Forms.ToolStripMenuItem mnuView;
-        private System.Windows.Forms.ToolStripMenuItem mnuViewMode;
-        private System.Windows.Forms.ToolStripMenuItem mnuViewModeText;
-        private System.Windows.Forms.ToolStripMenuItem mnuViewModeImage;
-        private System.Windows.Forms.ToolStripMenuItem mnuViewModePlugin;
         private System.Windows.Forms.ToolStripContainer toolStripContainer1;
         private System.Windows.Forms.Panel pnlContainer;
         private System.Windows.Forms.ToolStrip tsKeyboard;
@@ -521,5 +491,7 @@
         private System.Windows.Forms.ToolStripButton tsbHelpF8;
         private System.Windows.Forms.ToolStripButton tsbHelpF9;
         private System.Windows.Forms.ToolStripButton tsbHelpF10;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewModeText;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewModeImage;
     }
 }

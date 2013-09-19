@@ -23,7 +23,7 @@ namespace fcmd
 		private List<ListPanel> lplLeft = new List<ListPanel>();
 		private List<ListPanel> lplRight = new List<ListPanel>();
 		private ListPanel ActivePanel; //текущая активная панель (на которой стоит фокус)
-		private ListPanel PassivePanel;
+		private ListPanel PassivePanel; //текущая пассивная панель (панель-получатель)
         private MenuStrip mstMenu;
         private ToolStrip tsKeyboard;
         private ToolStripButton tsbHelpF1;
@@ -37,8 +37,9 @@ namespace fcmd
         private ToolStripButton tsbHelpF9;
         private ToolStripButton tsbHelpF10;
         private ToolStripMenuItem менюВПроцессеРазработкиToolStripMenuItem;
-        private ToolStripMenuItem даНичегоТутНетToolStripMenuItem; //текущая пассивная панель (панель-получатель)
+        private ToolStripMenuItem даНичегоТутНетToolStripMenuItem;
 		private TextBox[] txtURL = new TextBox[2];
+        Localizator locale = new Localizator(); //объект для работы с локализациями интерфейса
 
 		//Подпрограммы
 		static void Main(){ //Иницализация программы
@@ -51,6 +52,8 @@ namespace fcmd
 		
 		private void frmMain_Load(object sender, EventArgs e){ //функция Form_Load()
             Application.EnableVisualStyles();
+            Localize();
+
 			#if DEBUG
 				MessageBox.Show ("File commander, версия " + Application.ProductVersion);
 			#endif
@@ -71,8 +74,9 @@ namespace fcmd
 			this.Controls.Add (txtURL[1]);
 			this.txtURL[0].Text = Directory.GetLogicalDrives()[0];
 			#endregion
-
+            
 			#region Панели
+            //TODO: переписать на ListBox
 			//Формирую панели
 			//Левая
 			this.lplLeft.Add (new ListPanel()); //добавление в коллекцию левых панелей
@@ -85,15 +89,15 @@ namespace fcmd
 			this.lplLeft[0].BorderStyle = BorderStyle.Fixed3D;
 			this.lplLeft[0].FSProvider = new localFileSystem();
 			ListPanel.CollumnOptions colopt = new ListPanel.CollumnOptions();
-			colopt.Caption = "Имя";
+			colopt.Caption = locale.GetString("FName");
 			colopt.Size=new Size(200,0);
 			colopt.Tag = "Name";
 			this.lplLeft[0].Collumns.Add (colopt);
-			colopt.Caption = "Размер";
+            colopt.Caption = locale.GetString("FSize");
 			colopt.Tag = "Size";
 			colopt.Size = new Size(50,0);
 			this.lplLeft[0].Collumns.Add (colopt);
-			colopt.Caption = "Дата";
+            colopt.Caption = locale.GetString("FDate"); 
 			colopt.Tag = "Date";
 			colopt.Size = new Size(100,0);
 			this.lplLeft[0].Collumns.Add(colopt);
@@ -112,15 +116,15 @@ namespace fcmd
 			this.lplRight[0].GotFocus += this.Panel_Focus;
 			this.lplRight[0].BorderStyle = BorderStyle.Fixed3D;
 			this.lplRight[0].FSProvider = new localFileSystem();
-			colopt.Caption = "Имя";
+            colopt.Caption = locale.GetString("FName");
 			colopt.Size=new Size(200,0);
 			colopt.Tag = "Name";
 			this.lplRight[0].Collumns.Add (colopt);
-			colopt.Caption = "Размер";
+            colopt.Caption = locale.GetString("FSize");
 			colopt.Tag = "Size";
 			colopt.Size = new Size(50,0);
 			this.lplRight[0].Collumns.Add (colopt);
-			colopt.Caption = "Дата";
+            colopt.Caption = locale.GetString("FDate");
 			colopt.Tag = "Date";
 			colopt.Size = new Size(100,0);
 			this.lplRight[0].Collumns.Add(colopt);
@@ -489,6 +493,22 @@ namespace fcmd
                 case "tsbHelpF9": this.OnKeyDown(new KeyEventArgs(Keys.F9)); break;
                 case "tsbHelpF10": this.OnKeyDown(new KeyEventArgs(Keys.F10)); break;
             }
+        }
+
+        /// <summary>
+        /// Перевести интерфейс на язык локали
+        /// </summary>
+        private void Localize(){
+            tsbHelpF1.Text = locale.GetString("FCF1");
+            tsbHelpF2.Text = locale.GetString("FCF2");
+            tsbHelpF3.Text = locale.GetString("FCF3");
+            tsbHelpF4.Text = locale.GetString("FCF4");
+            tsbHelpF5.Text = locale.GetString("FCF5");
+            tsbHelpF6.Text = locale.GetString("FCF6");
+            tsbHelpF7.Text = locale.GetString("FCF7");
+            tsbHelpF8.Text = locale.GetString("FCF8");
+            tsbHelpF9.Text = locale.GetString("FCF9");
+            tsbHelpF10.Text = locale.GetString("FCF10");
         }
 
 	}

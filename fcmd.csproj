@@ -73,6 +73,7 @@
     <Compile Include="ListPanel.Designer.cs">
       <DependentUpon>ListPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Localizator.cs" />
     <Compile Include="pluginfinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="localFileSystem.cs" />
