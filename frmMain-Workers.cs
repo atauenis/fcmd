@@ -27,7 +27,7 @@ namespace fcmd{
         /// Background directory lister
         /// </summary>
         void DoLs(string URL, ListPanel lp, ref int StatusFeedback){
-            lp.Items.Clear();
+            lp.list.Items.Clear();
             
             //гружу директорию
             pluginner.IFSPlugin fsp = lp.FSProvider;
@@ -42,15 +42,11 @@ namespace fcmd{
                 StatusFeedback += FileWeight;
                 if (di.Hidden == false)
                 {
-                    ListPanel.ItemDescription NewItem;
-                    NewItem = new ListPanel.ItemDescription();
-                    NewItem.Text.Add(di.TextToShow);
-                    NewItem.Text.Add(Convert.ToString(di.Size / 1024) + "KB");
-                    NewItem.Text.Add(di.Date.ToShortDateString());
-                    NewItem.Value = di.Path;
-                    NewItem.Selection = 0;
-                    NewItem.Selected = false;
-                    lp.Items.Add(NewItem);
+                    ListViewItem NewItem = new ListViewItem(di.TextToShow);
+                    NewItem.Tag = di.Path; //путь будет тегом
+                    NewItem.SubItems.Add(Convert.ToString(di.Size / 1024) + "KB");
+                    NewItem.SubItems.Add(di.Date.ToShortDateString());
+                    AddItem(lp, NewItem);
                 }
             }
         }

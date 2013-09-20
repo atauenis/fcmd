@@ -88,20 +88,10 @@ namespace fcmd
 			this.lplLeft[0].GotFocus += this.Panel_Focus;
 			this.lplLeft[0].BorderStyle = BorderStyle.Fixed3D;
 			this.lplLeft[0].FSProvider = new localFileSystem();
-			ListPanel.CollumnOptions colopt = new ListPanel.CollumnOptions();
-			colopt.Caption = locale.GetString("FName");
-			colopt.Size=new Size(200,0);
-			colopt.Tag = "Name";
-			this.lplLeft[0].Collumns.Add (colopt);
-            colopt.Caption = locale.GetString("FSize");
-			colopt.Tag = "Size";
-			colopt.Size = new Size(50,0);
-			this.lplLeft[0].Collumns.Add (colopt);
-            colopt.Caption = locale.GetString("FDate"); 
-			colopt.Tag = "Date";
-			colopt.Size = new Size(100,0);
-			this.lplLeft[0].Collumns.Add(colopt);
-			this.lplLeft[0].ShowCollumnTitles = true;
+            lplLeft[0].list.Columns.Add("Name", locale.GetString("FName"));
+            lplLeft[0].list.Columns.Add("Size", locale.GetString("FSize"));
+            lplLeft[0].list.Columns.Add("Date", locale.GetString("FDate"));
+            lplLeft[0].list.DoubleClick += (object s, EventArgs ea) => { this.frmMain_KeyDown(s, new KeyEventArgs(Keys.Enter)); };
             this.Controls.Add(this.lplLeft[0]); //ввожу панель в форму
 			ActivePanel = this.lplLeft[0]; //и делаю её активной
 			//Правая
@@ -116,19 +106,9 @@ namespace fcmd
 			this.lplRight[0].GotFocus += this.Panel_Focus;
 			this.lplRight[0].BorderStyle = BorderStyle.Fixed3D;
 			this.lplRight[0].FSProvider = new localFileSystem();
-            colopt.Caption = locale.GetString("FName");
-			colopt.Size=new Size(200,0);
-			colopt.Tag = "Name";
-			this.lplRight[0].Collumns.Add (colopt);
-            colopt.Caption = locale.GetString("FSize");
-			colopt.Tag = "Size";
-			colopt.Size = new Size(50,0);
-			this.lplRight[0].Collumns.Add (colopt);
-            colopt.Caption = locale.GetString("FDate");
-			colopt.Tag = "Date";
-			colopt.Size = new Size(100,0);
-			this.lplRight[0].Collumns.Add(colopt);
-			this.lplRight[0].ShowCollumnTitles = true;
+            lplRight[0].list.Columns.Add("Name", locale.GetString("FName"));
+            lplRight[0].list.Columns.Add("Size", locale.GetString("FSize"));
+            lplRight[0].list.Columns.Add("Date", locale.GetString("FDate"));
             this.Controls.Add(this.lplRight[0]); //ввожу панель в форму
 			PassivePanel = this.lplRight[0];
 			#endregion
@@ -166,33 +146,44 @@ namespace fcmd
 			DebugText += " Shift=" + e.Shift.ToString();
 			Console.WriteLine(DebugText);
 #endif
+            if (ActivePanel.list.SelectedItems.Count == 0 || e.KeyData == Keys.F10 || e.KeyData == Keys.F1 || e.KeyData == Keys.F2)
+            {//выполняю операции, не связанные с файлами
+                switch (e.KeyData)
+                {
+                    case Keys.F7: //новый каталог
+                        InputBox ibx = new InputBox(locale.GetString("NewDirURL"), ActivePanel.FSProvider.CurrentDirectory + locale.GetString("NewDirTemplate"));
+                        if (ibx.ShowDialog() == DialogResult.OK)
+                        {
+                            MkDir(ibx.Result);
+                        }
+                        break;
+                    case Keys.F10: //выход
+                        Application.Exit();
+                        break;
+                }
+                return; //далее не выполнять код
+            }
+
             switch (e.KeyData){
+                case Keys.Enter: //переход
+                    if (!ActivePanel.FSProvider.IsDirPresent(ActivePanel.list.SelectedItems[0].Tag.ToString())) return; //todo: выругаться
+                    Ls(ActivePanel.list.SelectedItems[0].Tag.ToString());
+                    break;
                 case Keys.F3: //просмотр
                     //todo:принуд. вызов fcview с плагином TxtViewer по Shift+F3
 
                     fcview fcv = new fcview();
-                    ListPanel.ItemDescription curItemView = ActivePanel.HighlightedItem;
 					pluginner.IFSPlugin fs = ActivePanel.FSProvider;
-					if(!fs.IsFilePresent(curItemView.Value)) return; //todo: выругаться
-                    
-                    FCView(curItemView.Value);
+					if(!fs.IsFilePresent(ActivePanel.list.SelectedItems[0].Tag.ToString())) return; //todo: выругаться
+
+                    FCView(ActivePanel.list.SelectedItems[0].Tag.ToString());
                     break;
                 case Keys.F5: //копировать
                     Cp();
                     break;
                 case Keys.F8: //удалить
-                    ListPanel.ItemDescription curItemDel = ActivePanel.HighlightedItem;
-                    Rm(curItemDel.Value);
+                    Rm(ActivePanel.list.SelectedItems[0].Tag.ToString());
                     break;
-                case Keys.F7: //новый каталог
-                    InputBox ibx = new InputBox("Как записать младенца?",ActivePanel.FSProvider.CurrentDirectory + @"\НОВЫЙ КАТАЛОГ");
-                    if (ibx.ShowDialog() == DialogResult.OK){
-                        MkDir(ibx.Result);
-                    }
-                    break;
-				case Keys.F10: //выход
-					Application.Exit();
-					break;
             }
 		}
 
@@ -270,25 +261,20 @@ namespace fcmd
 		/// ListPanel, в которую надобно захуячить директорию
 		/// </param>
 		private void LoadDir(string url, ListPanel lp){
-				lp.Items.Clear();
+            lp.list.Items.Clear();
 
 				//гружу директорию
 				pluginner.IFSPlugin fsp = lp.FSProvider;
 				fsp.CurrentDirectory = url;
 				foreach(pluginner.DirItem di in fsp.DirectoryContent){ //перебираю файлы, найденные провайдером ФС
 					if(di.Hidden == false){
-						ListPanel.ItemDescription NewItem;
-						NewItem = new ListPanel.ItemDescription();
-						NewItem.Text.Add (di.TextToShow);
-						NewItem.Text.Add (Convert.ToString (di.Size / 1024) + "KB");
-						NewItem.Text.Add (di.Date.ToShortDateString());
-						NewItem.Value = di.Path;
-                        NewItem.Selection = 0;
-                        NewItem.Selected = false;
-						lp.Items.Add (NewItem);
+                        ListViewItem NewItem = new ListViewItem(di.TextToShow);
+                        NewItem.Tag = di.Path; //путь будет тегом
+                        NewItem.SubItems.Add(Convert.ToString(di.Size / 1024) + "KB");
+                        NewItem.SubItems.Add(di.Date.ToShortDateString());
+                        lp.list.Items.Add(NewItem);
 					}
 				}
-				lp.Redraw();
 		}
 
         private void InitializeComponent()
@@ -509,6 +495,11 @@ namespace fcmd
             tsbHelpF8.Text = locale.GetString("FCF8");
             tsbHelpF9.Text = locale.GetString("FCF9");
             tsbHelpF10.Text = locale.GetString("FCF10");
+        }
+
+        private void AddItem(ListPanel lp, ListViewItem NewItem){
+            CheckForIllegalCrossThreadCalls = false; //HACK: заменить на долбанные делегации и прочую нетовскую муть
+            lp.list.Items.Add(NewItem);
         }
 
 	}

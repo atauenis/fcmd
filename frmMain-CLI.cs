@@ -43,7 +43,6 @@ namespace fcmd
 
             do { Application.DoEvents(); fpd.pbrProgress.Value = Status; fpd.Refresh(); }
             while (LsThread.ThreadState == ThreadState.Running);
-            ActivePanel.Redraw();
             fpd.Hide();
         }
 
@@ -111,12 +110,12 @@ namespace fcmd
             fpd.cmdCancel.Enabled = false;
             fpd.Show();
 
-            ListPanel.ItemDescription curItemDel = ActivePanel.HighlightedItem;
+            string curItemDel = ActivePanel.list.SelectedItems[0].Tag.ToString();
             pluginner.IFSPlugin fsdel = ActivePanel.FSProvider;
-            if (fsdel.IsFilePresent(curItemDel.Value))
+            if (fsdel.IsFilePresent(curItemDel))
             {
                 fpd.pbrProgress.Value = 50;
-                Thread RmFileThread = new Thread(delegate() { DoRmFile(curItemDel.Value, fsdel); });
+                Thread RmFileThread = new Thread(delegate() { DoRmFile(curItemDel, fsdel); });
                 RmFileThread.Start();
 
                 do { Application.DoEvents();}
@@ -127,11 +126,11 @@ namespace fcmd
                 fpd.Hide();
                 return "Файл удалён.\n";
             }
-            if (fsdel.IsDirPresent(curItemDel.Value))
+            if (fsdel.IsDirPresent(curItemDel))
             {
                 fpd.lblStatus.Text = String.Format(locale.GetString("DoingRemove"), "\n" + url, "\n[" + locale.GetString("Directory").ToUpper() + "]");
                 fpd.pbrProgress.Value = 50;
-                Thread RmDirThread = new Thread(delegate() { DoRmDir(curItemDel.Value, fsdel); });
+                Thread RmDirThread = new Thread(delegate() { DoRmDir(curItemDel, fsdel); });
                 RmDirThread.Start();
 
                 do { Application.DoEvents(); }
@@ -151,7 +150,7 @@ namespace fcmd
         /// </summary>
         public void Cp(){
             int Progress = 0;
-            string SourceURL = ActivePanel.HighlightedItem.Value;
+            string SourceURL = ActivePanel.list.SelectedItems[0].Tag.ToString();
             pluginner.IFSPlugin SourceFS = ActivePanel.FSProvider;
             pluginner.File SourceFile = SourceFS.GetFile(SourceURL, Progress);
 
@@ -165,8 +164,7 @@ namespace fcmd
                 FileProcessDialog fpd = new FileProcessDialog();
                 fpd.Top = this.Top + ActivePanel.Top;
                 fpd.Left = this.Left + ActivePanel.Left;
-                //fpd.lblStatus.Text = "Выполняется копирование:\n" + ActivePanel.HighlightedItem.Value + "\nВ " + ibx.Result;
-                fpd.lblStatus.Text = String.Format(locale.GetString("DoingCopy"), "\n" + ActivePanel.HighlightedItem.Value + "\n", ibx.Result,null);
+                fpd.lblStatus.Text = String.Format(locale.GetString("DoingCopy"), "\n" + ActivePanel.list.SelectedItems[0].Tag.ToString() + "\n", ibx.Result,null);
                 fpd.cmdCancel.Click += (object s, EventArgs e) => { CpThread.Abort(); MessageBox.Show(locale.GetString("Canceled")); };
 
                 CpThread.Start();

@@ -32,12 +32,15 @@ namespace fcmd
                         "FName=Имя\nFSize=Размер\nFDate=Дата\n"+
                         "FCDelAsk=Вы действительно хотите удалить файл {0}?\n" +
                         "Canceled=Отменено пользователем\n" +
+                        "FileProgressDialogTitle=File Commander\n"+
                         "DoingRemove=Выполняется удаление:{0}{1}\n" +
                         "DoingCopy=Выполняется копирование:{0} В {1}{2}\n" +
                         "DoingMkdir=Создаётся каталог:{0}{1}\n" +
                         "DoingListdir=Чтение каталога:{0}{1}\n" +
                         "Directory=Каталог\n" +
                         "CopyTo=Введите путь для копирования {0}:\n" +
+                        "NewDirURL=Введите путь для нового каталога\n"+
+                        "NewDirTemplate=\\НОВЫЙ КАТАЛОГ\n" +
                         "FCVF1=F1 Справка\n" +
                         "FCVF2=F2\n" +
                         "FCVF3=F3\n" +

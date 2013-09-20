@@ -23,7 +23,8 @@ namespace fcmd
 
         private void FileProcessDialog_Load(object sender, EventArgs e)
         {
-
+            Localizator locale = new Localizator();
+            this.Text = locale.GetString("FileProgressDialogTitle");
         }
 
         private void FileProcessDialog_Shown(object sender, EventArgs e)
