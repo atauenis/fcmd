@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+using System.Threading;
 
 namespace fcmd
 {
@@ -38,7 +39,6 @@ namespace fcmd
         private ToolStripButton tsbHelpF10;
         private ToolStripMenuItem менюВПроцессеРазработкиToolStripMenuItem;
         private ToolStripMenuItem даНичегоТутНетToolStripMenuItem;
-		private TextBox[] txtURL = new TextBox[2];
         Localizator locale = new Localizator(); //объект для работы с локализациями интерфейса
 
 		//Подпрограммы
@@ -54,35 +54,17 @@ namespace fcmd
             Application.EnableVisualStyles();
             Localize();
 
+
 			#if DEBUG
 				MessageBox.Show ("File commander, версия " + Application.ProductVersion);
 			#endif
-
-			#region txtURL[x]
-			//формирую поля ввода пути
-			txtURL[0] = new TextBox();
-			txtURL[1] = new TextBox();
-			txtURL[0].Tag = 0;
-			txtURL[1].Tag = 1;
-			txtURL[0].Top = mstMenu.Height;
-			txtURL[1].Top = mstMenu.Height;
-			txtURL[0].KeyUp += txtURL_KeyUp;
-			txtURL[0].DoubleClick += ForceGo;
-			txtURL[1].KeyUp += txtURL_KeyUp;
-			txtURL[1].DoubleClick += ForceGo;
-			this.Controls.Add (txtURL[0]);
-			this.Controls.Add (txtURL[1]);
-			this.txtURL[0].Text = Directory.GetLogicalDrives()[0];
-			#endregion
             
 			#region Панели
-            //TODO: переписать на ListBox
 			//Формирую панели
 			//Левая
 			this.lplLeft.Add (new ListPanel()); //добавление в коллекцию левых панелей
-			this.lplLeft[0].Location = new System.Drawing.Point(0, mstMenu.Height+txtURL[0].Height);
+			this.lplLeft[0].Location = new System.Drawing.Point(0, mstMenu.Height);
             this.lplLeft[0].Name = "lplLeft";
-			this.lplLeft[0].BackColor = SystemColors.Window;
             this.lplLeft[0].TabIndex = 0;
 			this.lplLeft[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplLeft[0].GotFocus += this.Panel_Focus;
@@ -92,15 +74,13 @@ namespace fcmd
             lplLeft[0].list.Columns.Add("Size", locale.GetString("FSize"));
             lplLeft[0].list.Columns.Add("Date", locale.GetString("FDate"));
             lplLeft[0].list.DoubleClick += (object s, EventArgs ea) => { this.frmMain_KeyDown(s, new KeyEventArgs(Keys.Enter)); };
+            lplLeft[0].lblPath.DoubleClick += (object s, EventArgs ea) => {InputBox ibx = new InputBox("Go to?"); ibx.ShowDialog(); Ls(ibx.Result); }; //todo (код временный)
             this.Controls.Add(this.lplLeft[0]); //ввожу панель в форму
 			ActivePanel = this.lplLeft[0]; //и делаю её активной
 			//Правая
 			this.lplRight.Add (new ListPanel()); //добавление в коллекцию правых панелей
-            this.lplRight[0].Location = new System.Drawing.Point(0, mstMenu.Height+txtURL[0].Height);
+            this.lplRight[0].Location = new System.Drawing.Point(0, mstMenu.Height);
             this.lplRight[0].Name = "lplRight";
-#if DEBUG
-			this.lplRight[0].BackColor = SystemColors.Window;
-#endif
             this.lplRight[0].TabIndex = 0;
             this.lplRight[0].DoubleClick += new StringEvent(this.Panel_DblClick);
 			this.lplRight[0].GotFocus += this.Panel_Focus;
@@ -114,7 +94,7 @@ namespace fcmd
 			#endregion
 
 			#region Изначальный перечень файлов
-			string startupDir = "file://" + Directory.GetLogicalDrives()[0];
+			string startupDir = "file://" + Directory.GetLogicalDrives()[1];
             ActivePanel = lplRight[0];
             Ls(startupDir);
             ActivePanel = lplLeft[0];
@@ -125,17 +105,23 @@ namespace fcmd
 		}
 
 		private void frmMain_Resize(object sender, EventArgs e){ //Деформация формы
-			foreach (ListPanel llp in this.lplLeft){
-				llp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - tsKeyboard.Height); 
-			}
-			foreach(ListPanel rlp in this.lplRight){
-				rlp.Size = new Size(this.Width / 2,this.Height - ActivePanel.Top - mstMenu.Height - tsKeyboard.Height); 
-				rlp.Left = this.Width / 2;
-			}
-			txtURL[0].Location = new Point(0,mstMenu.Height);
-			txtURL[0].Width = lplLeft[0].Width;
-			txtURL[1].Left = lplRight[0].Left;
-			txtURL[1].Width = lplRight[0].Width;
+            //SEE GITHUB BUG #3 - https://github.com/atauenis/fcmd/issues/3
+            foreach (ListPanel llp in this.lplLeft)
+            {
+                int height = this.Height - ActivePanel.Top;
+                height = height - mstMenu.Height;
+                height = height - tsKeyboard.Height * 5 / 3; //hack
+                llp.Size = new Size(this.Width / 2, height);
+            }
+            foreach (ListPanel rlp in this.lplRight)
+            {
+                int height = this.Height - ActivePanel.Top;
+                height = height - mstMenu.Height;
+                height = height - tsKeyboard.Height * 5 / 3; //hack
+                rlp.Size = new Size(this.Width / 2, height);
+                rlp.Left = this.Width / 2;
+            }
+            //tsKeyboard.Visible = false; //debug
 		}
 
 		private void frmMain_KeyDown(object sender, KeyEventArgs e){//нажатие клавиши клавиатуры
@@ -202,80 +188,44 @@ namespace fcmd
         private void Panel_DblClick(object sender, EventArgs<String> e){ //двойной щелчок по панели
 			ListPanel lp = (ListPanel)sender;
 			if (lp.FSProvider.IsDirPresent (e.Data)){
-				//это - каталог
-
-				int NeededTextbox = 0; //нужный текстбокс //remove govnokod!!!
-				if(lp.Name == "lplLeft") NeededTextbox = 0;
-				else NeededTextbox = 1;
-
-				txtURL[NeededTextbox].Text = e.Data;
-				KeyEventArgs kea = new KeyEventArgs(Keys.Enter);
-				txtURL_KeyUp(txtURL[NeededTextbox],kea);
+				//это - каталог, грузить можно
+                LoadDir(e.Data, (ListPanel)sender);
 			}else MessageBox.Show(e.Data,"это файл");
 			//todo:добавить вызов lister'а (FCView)
         }
-
-		private void ForceGo(object sender, EventArgs e){ //hack //убрать и заменить на нормальное решение!!!
-			txtURL_KeyUp(txtURL[0],new KeyEventArgs(Keys.Enter));
-			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
-		}
-
-		private void txtURL_KeyUp(object sender, KeyEventArgs e){ //отпускание клавиши в поле адреса
-			if(e.KeyCode == Keys.Enter){
-				TextBox tb = (TextBox) sender;
-				string txt = "";
-
-				switch((int)tb.Tag){
-				case 0://левый
-					txt = "lplLeft";
-					break;
-				case 1://правый
-					txt = "lplRight";
-					break;
-				}
-
-				if(ActivePanel.Name == txt){
-					if(!ActivePanel.FSProvider.IsDirPresent(tb.Text)) return; //проверка наличия каталога
-                    if (!ActivePanel.FSProvider.CanBeRead(tb.Text)) { MessageBox.Show("Нет доступа"); return; } //проверка наличия доступа
-					Ls(tb.Text);
-				}else{
-					if(!PassivePanel.FSProvider.IsDirPresent(tb.Text)) return; //проверка наличия каталога
-                    if (!PassivePanel.FSProvider.CanBeRead(tb.Text)) { MessageBox.Show("Нет доступа"); return; } //проверка наличия доступа
-					LoadDir(tb.Text,PassivePanel);
-				}
-
-			}
-		}
 
 		private void mstMenu_ItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e){
 		
 		}
 
-		/// <summary>
-		/// Loads the directory.
-		/// </summary>
-		/// <param name='url'>
-		/// URL.
-		/// </param>
-		/// <param name='lp'>
-		/// ListPanel, в которую надобно захуячить директорию
-		/// </param>
-		private void LoadDir(string url, ListPanel lp){
-            lp.list.Items.Clear();
+        /// <summary>
+        /// Loads the directory.
+        /// </summary>
+        /// <param name='url'>
+        /// URL.
+        /// </param>
+        /// <param name='lp'>
+        /// ListPanel, в которую надобно захуячить директорию
+        /// </param>
+        private void LoadDir(string url, ListPanel lp)
+        {
+            lp.lblPath.Text = url;
+            int Status = 0;
+            Thread LsThread = new Thread(delegate() { DoLs(url, lp, ref Status); });
+            FileProcessDialog fpd = new FileProcessDialog();
+            fpd.Top = this.Top + ActivePanel.Top;
+            fpd.Left = this.Left + ActivePanel.Left;
+            string FPDtext = String.Format(locale.GetString("DoingListdir"), "\n" + url, "");
+            FPDtext = FPDtext.Replace("{1}", "");
+            fpd.lblStatus.Text = FPDtext;
 
-				//гружу директорию
-				pluginner.IFSPlugin fsp = lp.FSProvider;
-				fsp.CurrentDirectory = url;
-				foreach(pluginner.DirItem di in fsp.DirectoryContent){ //перебираю файлы, найденные провайдером ФС
-					if(di.Hidden == false){
-                        ListViewItem NewItem = new ListViewItem(di.TextToShow);
-                        NewItem.Tag = di.Path; //путь будет тегом
-                        NewItem.SubItems.Add(Convert.ToString(di.Size / 1024) + "KB");
-                        NewItem.SubItems.Add(di.Date.ToShortDateString());
-                        lp.list.Items.Add(NewItem);
-					}
-				}
-		}
+            fpd.Show();
+            LsThread.Start();
+
+            do { Application.DoEvents(); fpd.pbrProgress.Value = Status; fpd.Refresh(); }
+            while (LsThread.ThreadState == System.Threading.ThreadState.Running);
+            fpd.Hide();
+        }
 
         private void InitializeComponent()
         {

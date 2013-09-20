@@ -73,5 +73,19 @@ namespace fcmd
 			get{return FsPlugin;}
 			set{FsPlugin = value;}
 		}
+
+        private void list_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                lblStatus.Text = list.SelectedItems[0].Text + "      " + list.SelectedItems[0].SubItems[1].Text;
+            }
+            catch (System.ArgumentOutOfRangeException aoore)
+            {
+                //всё нормально, пользователь не выбрал никакого пункта
+                lblStatus.Text = " ";//пустая строка чтобы не было неприятностей с работой AutoSize
+            }
+            catch (Exception ex) { lblStatus.Text = ex.Message; }
+        }
     }
 }

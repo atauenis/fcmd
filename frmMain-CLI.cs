@@ -30,6 +30,7 @@ namespace fcmd
         /// <param name="url"></param>
         public void Ls(string url){
             int Status = 0;
+            ActivePanel.lblPath.Text = url;
             Thread LsThread = new Thread(delegate() { DoLs(url, ActivePanel, ref Status); });
             FileProcessDialog fpd = new FileProcessDialog();
             fpd.Top = this.Top + ActivePanel.Top;
