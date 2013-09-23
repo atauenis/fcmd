@@ -30,8 +30,10 @@ namespace fcmd
                         "FCF9=F9 Оп-ции\n" +
                        "FCF10=F10 Выход\n" +
                         "FName=Имя\nFSize=Размер\nFDate=Дата\n"+
-                        "FCDelAsk=Вы действительно хотите удалить файл {0}?\n" +
+                        "FCDelAsk=Вы действительно хотите удалить файл \"{0}\"?\n" +
                         "Canceled=Отменено пользователем\n" +
+                        "FileNotFound=Файл \"{0}\" не найден\n" +
+                        "ItsDir=\"{0}\" является каталогом\n" + 
                         "FileProgressDialogTitle=File Commander\n"+
                         "DoingRemove=Выполняется удаление:{0}{1}\n" +
                         "DoingCopy=Выполняется копирование:{0} В {1}{2}\n" +
@@ -41,6 +43,7 @@ namespace fcmd
                         "CopyTo=Введите путь для копирования {0}:\n" +
                         "NewDirURL=Введите путь для нового каталога\n"+
                         "NewDirTemplate=\\НОВЫЙ КАТАЛОГ\n" +
+                        "FCVTitle=Просмоторщик файлов - {0}\n"+
                         "FCVF1=F1 Справка\n" +
                         "FCVF2=F2\n" +
                         "FCVF3=F3\n" +

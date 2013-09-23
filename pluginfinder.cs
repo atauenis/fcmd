@@ -16,8 +16,8 @@ using fcmd.base_plugins.viewer;
 namespace fcmd
 {
     class pluginfinder{
-        List<string> FSPlugins = new List<string>();
-		List<string> ViewPlugins = new List<string>();
+        public List<string> FSPlugins = new List<string>();
+		public List<string> ViewPlugins = new List<string>();
         string[] EditPlugins; //todo
 
         public pluginfinder(){//конструктор
@@ -39,11 +39,11 @@ namespace fcmd
 				int rowCounter = 0;
 				foreach(string vp in vplist){
 					rowCounter ++;
-					if(vp.Split(";".ToCharArray()).Length != 2) {Console.WriteLine("Ошибка в файле fcviewplugins.conf на строке " + rowCounter); break;}
+					if(vp.Split(";".ToCharArray()).Length != 3) {Console.WriteLine("Ошибка в файле fcviewplugins.conf на строке " + rowCounter); break;}
 					ViewPlugins.Add (vp);
 				}
 			}
-			ViewPlugins.Add(".*;(internal)TxtViewer"); //зырилку по-умолчанию в конец списка
+            ViewPlugins.Add(".*;(internal)TxtViewer;" + new Localizator().GetString("FCVViewModeText")); //зырилку по-умолчанию в конец списка
 
         }
 
@@ -106,30 +106,42 @@ namespace fcmd
                 string[] Parts = CurDescription.Split(";".ToCharArray());
                 if(System.Text.RegularExpressions.Regex.IsMatch(content, Parts[0])){
                     //оно!
-                    if(Parts[1].StartsWith("(internal)")){//плагин встроенный
-                        switch(Parts[1]){
-                            case "(internal)TxtViewer":
-                                return new base_plugins.viewer.TxtViewer();
-                            case "(internal)ImgViewer":
-                                //todo: return простую зырилку на базе picturebox
-                                throw new PluginNotFoundException("Зырилка на базе picturebox пока что в планах"); //убрать
-                        }
-                    }else{//плагин внешний
-                        string file = Parts[1];
-                        Assembly assembly = Assembly.LoadFile(file);
-
-                        foreach (Type type in assembly.GetTypes()){
-                            Type iface = type.GetInterface("pluginner.IViewerPlugin");
-
-                            if (iface != null){
-                                pluginner.IViewerPlugin plugin = (pluginner.IViewerPlugin)Activator.CreateInstance(type);
-                                return plugin;
-                            }
-                        }    
-                    }
+                    return LoadFCVPlugin(Parts[1]);
                 }
             }
 			return new base_plugins.viewer.TxtViewer(); //если ничего лучшего не найти, тогда дать что имеется
         }
+
+        /// <summary>
+        /// Loads the requested viewer plugin
+        /// </summary>
+        /// <param name="name">The path of the plugin's DLL or internal plugin name</param>
+        /// <returns>The FCView content viewing plugin</returns>
+        public pluginner.IViewerPlugin LoadFCVPlugin(string name)
+        {
+            if(name.StartsWith("(internal)")){//плагин встроенный
+                    switch(name){
+                        case "(internal)TxtViewer":
+                            return new base_plugins.viewer.TxtViewer();
+                        case "(internal)ImgViewer":
+                            //todo: return простую зырилку на базе picturebox
+                            throw new PluginNotFoundException("Зырилка на базе picturebox пока что в планах"); //убрать
+                    }
+                }else{//плагин внешний
+                    string file = name;
+                    Assembly assembly = Assembly.LoadFile(file);
+
+                    foreach (Type type in assembly.GetTypes()){
+                        Type iface = type.GetInterface("pluginner.IViewerPlugin");
+
+                        if (iface != null){
+                            pluginner.IViewerPlugin plugin = (pluginner.IViewerPlugin)Activator.CreateInstance(type);
+                            return plugin;
+                        }
+                    }    
+                }
+
+            throw new PluginNotFoundException("Search was not ended sucscessfully");
+            }
+        }
     }
-}

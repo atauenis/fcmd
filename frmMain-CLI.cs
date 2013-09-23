@@ -54,7 +54,11 @@ namespace fcmd
         public void FCView(string url){
             fcview fcv = new fcview();
             pluginner.IFSPlugin fs = ActivePanel.FSProvider;
-            if (!fs.IsFilePresent(url)) return; //todo: выругаться
+            if (!fs.IsFilePresent(url))
+            {
+                MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
 
             pluginner.File SelectedFile = fs.GetFile(url, new int());
             string FileContent = Encoding.ASCII.GetString(SelectedFile.Content);
@@ -155,7 +159,11 @@ namespace fcmd
             pluginner.IFSPlugin SourceFS = ActivePanel.FSProvider;
             pluginner.File SourceFile = SourceFS.GetFile(SourceURL, Progress);
 
-            if (!SourceFS.IsFilePresent(SourceURL)) return; //todo: выругаться
+            if (!SourceFS.IsFilePresent(SourceURL))
+            {
+                MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
 
             InputBox ibx = new InputBox(String.Format(locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FSProvider.CurrentDirectory + "/" + SourceFile.Name);
             if (ibx.ShowDialog() == DialogResult.OK)

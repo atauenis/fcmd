@@ -19,8 +19,7 @@ namespace fcmd
 {
 	public partial class frmMain : Form 
 	{
-        //todo: поддержка локализации и замена временных фраз на серьёзные из файла
-		//Внутренние переменные
+        //Внутренние переменные
 		private List<ListPanel> lplLeft = new List<ListPanel>();
 		private List<ListPanel> lplRight = new List<ListPanel>();
 		private ListPanel ActivePanel; //текущая активная панель (на которой стоит фокус)
@@ -101,7 +100,7 @@ namespace fcmd
             Ls("file://" + Application.StartupPath + "/../../");
 			#endregion
 
-			this.OnSizeChanged (new EventArgs()); //hack: обновляю панели
+			this.OnSizeChanged (new EventArgs()); //расстановка панелей по местам
 		}
 
 		private void frmMain_Resize(object sender, EventArgs e){ //Деформация формы
@@ -152,17 +151,26 @@ namespace fcmd
 
             switch (e.KeyData){
                 case Keys.Enter: //переход
-                    if (!ActivePanel.FSProvider.IsDirPresent(ActivePanel.list.SelectedItems[0].Tag.ToString())) return; //todo: выругаться
+                    if (!ActivePanel.FSProvider.IsDirPresent(ActivePanel.list.SelectedItems[0].Tag.ToString()))
+                    {
+                        MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
                     Ls(ActivePanel.list.SelectedItems[0].Tag.ToString());
                     break;
                 case Keys.F3: //просмотр
-                    //todo:принуд. вызов fcview с плагином TxtViewer по Shift+F3
-
                     fcview fcv = new fcview();
 					pluginner.IFSPlugin fs = ActivePanel.FSProvider;
-					if(!fs.IsFilePresent(ActivePanel.list.SelectedItems[0].Tag.ToString())) return; //todo: выругаться
+                    if (fs.IsDirPresent(ActivePanel.list.SelectedItems[0].Tag.ToString()))
+                    {
+                        MessageBox.Show(string.Format(locale.GetString("ItsDir"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
 
-                    FCView(ActivePanel.list.SelectedItems[0].Tag.ToString());
+                    if (e.Shift == true)
+                    { fcv.LoadFile(ActivePanel.list.SelectedItems[0].Tag.ToString(),ActivePanel.FSProvider,new base_plugins.viewer.TxtViewer());
+                    }
+                    else FCView(ActivePanel.list.SelectedItems[0].Tag.ToString());
                     break;
                 case Keys.F5: //копировать
                     Cp();

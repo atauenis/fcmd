@@ -17,7 +17,9 @@ namespace fcmd
     public partial class fcview : Form
     {
         pluginner.IViewerPlugin vp;
-        string Path, Content;
+        pluginner.IFSPlugin fs;
+        pluginfinder pf = new pluginfinder();
+        string Path, PluginLink;
         Localizator locale = new Localizator();
 
         public fcview()
@@ -26,34 +28,69 @@ namespace fcmd
         }
 
         public void LoadFile(string content, string URL){//загрузка txt-файлов
-            this.Text = "Просмоторщик FC - " + URL;
-            Path = URL;
-            Content = content;
-
             pluginfinder pf = new pluginfinder();
+            Path = URL;
+
 			try {
-            	vp = pf.GetFCVplugin(content); //определяю плагин просмоторщика по заголовкам (MZ, RAR, <?xml, <!doctype и т.п.)
-            	vp.LoadFile(URL, pf.GetFSplugin(URL)); //загрузка файла + определение плагина ФС для его загрузки
+                LoadFile(URL,new localFileSystem(),pf.GetFCVplugin(content));
 			} catch (Exception ex) {
-				MessageBox.Show(ex.Message,"Ошибка просмотра",MessageBoxButtons.OK,MessageBoxIcon.Error);
+				MessageBox.Show(ex.Message + ex.StackTrace,URL,MessageBoxButtons.OK,MessageBoxIcon.Error);
 				return;
 			}
+        }
 
-			if(vp.DisplayBox().BackColor != SystemColors.Window) pnlContainer.BorderStyle = BorderStyle.Fixed3D;
-			// ^- если цвет фона плагина не оконный, рисовать рамку. Это выверт для подавления XP-стилей
+        /// <summary>
+        /// Loads the file with the custom FS and viewer plugins
+        /// </summary>
+        /// <param name="URL">The URL of the file</param>
+        /// <param name="fs">The filesystem plugin for this file read</param>
+        /// <param name="ViewWith">The viewer plugin</param>
+        public void LoadFile(string URL, pluginner.IFSPlugin FS, pluginner.IViewerPlugin ViewWith)
+        {
+            this.Text = string.Format(locale.GetString("FCVTitle"), URL);
+            this.UseWaitCursor = true;
+            Path = URL;
+            vp = ViewWith;
+            vp.LoadFile(URL, pf.GetFSplugin(URL));
+
+            if (vp.DisplayBox().BackColor != SystemColors.Window) pnlContainer.BorderStyle = BorderStyle.Fixed3D;
+            // ^- если цвет фона плагина не оконный, рисовать рамку. Это выверт для подавления XP-стилей
             this.pnlContainer.Controls.Add(vp.DisplayBox());
 
-			//"доработка" интерфейса fcview под текущий плагин
-			mnuFilePrint.Enabled = vp.CanPrint;
-			mnuFilePrintOptions.Enabled = vp.CanPrint;
-			mnuEditCopy.Enabled = vp.CanCopy;
-			mnuEditSelectAll.Enabled = vp.CanSelectAll;
+            //"доработка" интерфейса fcview под текущий плагин
+            mnuFilePrint.Enabled = vp.CanPrint;
+            mnuFilePrintOptions.Enabled = vp.CanPrint;
+            mnuEditCopy.Enabled = vp.CanCopy;
+            mnuEditSelectAll.Enabled = vp.CanSelectAll;
 
-            if (vp.SettingsMenu.Length > 0){
+            mnuFormat.DropDownItems.Clear();
+            if (vp.SettingsMenu.Length > 0)
+            {
                 mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
             }
 
+            //создание меню "вид" (список доступных плагинов)
+            mnuView.DropDownItems.Clear();
+            foreach (string Plugin4List in pf.ViewPlugins)
+            {
+                ToolStripMenuItem NewMenuItem = new ToolStripMenuItem(null, null,(object s, EventArgs ea) => SwitchPlugin((ToolStripMenuItem)s));
+                NewMenuItem.Tag = Plugin4List.Split(";".ToCharArray())[1];
+                NewMenuItem.Text = Plugin4List.Split(";".ToCharArray())[2];
+                if (NewMenuItem.Tag.ToString() == PluginLink) NewMenuItem.Checked = true;
+                mnuView.DropDownItems.Add(NewMenuItem);
+            }
+
             this.Show();
+            this.UseWaitCursor = false;
+        }
+
+        private void SwitchPlugin(ToolStripMenuItem SelectedByUser){
+            PluginLink = SelectedByUser.Tag.ToString();
+            foreach (ToolStripMenuItem tsmi in mnuView.DropDownItems){
+                tsmi.Checked = false;
+            }
+            LoadFile(Path, fs, pf.LoadFCVPlugin(SelectedByUser.Tag.ToString()));
+            SelectedByUser.Checked = true;
         }
 
         private void mnuFilePrint_Click(object sender, EventArgs e)
@@ -117,7 +154,7 @@ namespace fcmd
         }
 
         private void mnuFileReload_Click(object sender, EventArgs e){
-            LoadFile(Content, Path);
+            LoadFile(Path,fs,vp);
         }
 
         private void fcview_Load(object sender, EventArgs e)
@@ -174,8 +211,6 @@ namespace fcmd
             mnuEditFind.Text = locale.GetString("FCVEditSearch");
 
             mnuView.Text = locale.GetString("FCVView");
-            mnuViewModeText.Text = locale.GetString("FCVViewModeText");
-            mnuViewModeImage.Text = locale.GetString("FCVViewModeImage");
 
             mnuFormat.Text = locale.GetString("FCVFormat");
             mnuHelp.Text = locale.GetString("FCVHelpMenu");
