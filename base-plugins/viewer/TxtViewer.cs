@@ -74,5 +74,15 @@ namespace fcmd.base_plugins.viewer
         public void Test(object sender, EventArgs e){
             MessageBox.Show("У плагина нет настроек...пока что.");
         }
+
+        public void Search(){//правка-поиск
+            MessageBox.Show("Плагин не умеет искать...пока что :-)");
+        }
+
+        /* TODO-list плагина TxtViewer
+         * Вывод непечатаемых символов
+         * Переключение кодировок
+         * Настройки шрифта, и прочего
+         */
     }
 }

@@ -11,11 +11,18 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using fcmd.base_plugins.fs;
 
 namespace fcmd
 {
     public partial class fcview : Form
     {
+        /* TODO-list for FCView
+         * Вызов справки
+         * Окно с прогрессом загрузки
+         */
+
+
         pluginner.IViewerPlugin vp;
         pluginner.IFSPlugin fs;
         pluginfinder pf = new pluginfinder();
@@ -27,12 +34,19 @@ namespace fcmd
             InitializeComponent();
         }
 
-        public void LoadFile(string content, string URL){//загрузка txt-файлов
+        /// <summary>
+        /// Loads the file <paramref name="URL"/> with automatically selected plugin
+        /// </summary>
+        /// <param name="URL">The file's URL</param>
+        /// <param name="FS">The file's filesystem plugin</param>
+
+        public void LoadFile(string URL, pluginner.IFSPlugin FS){//загрузка txt-файлов
+            string content = Encoding.UTF8.GetString(FS.GetFile(URL,new int()).Content);
             pluginfinder pf = new pluginfinder();
             Path = URL;
 
 			try {
-                LoadFile(URL,new localFileSystem(),pf.GetFCVplugin(content));
+                LoadFile(URL, new localFileSystem(), pf.GetFCVplugin(content));
 			} catch (Exception ex) {
 				MessageBox.Show(ex.Message + ex.StackTrace,URL,MessageBoxButtons.OK,MessageBoxIcon.Error);
 				return;
@@ -50,6 +64,7 @@ namespace fcmd
             this.Text = string.Format(locale.GetString("FCVTitle"), URL);
             this.UseWaitCursor = true;
             Path = URL;
+            fs = FS;
             vp = ViewWith;
             vp.LoadFile(URL, pf.GetFSplugin(URL));
 
@@ -115,7 +130,7 @@ namespace fcmd
 
         private void mnuEditFind_Click(object sender, EventArgs e)
         {
-            //vp.Search()
+            vp.Search();
         }
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
@@ -142,7 +157,7 @@ namespace fcmd
                     mnuEditFind_Click(new object(),new EventArgs());
                     break;
                 case Keys.F8: //формат (параметры плагина)
-                    new ToolStripMenuItem(null, null, vp.SettingsMenu).ShowDropDown();
+                    mnuFormat.ShowDropDown();
                     break;
                 case Keys.F10:
                     this.Close();

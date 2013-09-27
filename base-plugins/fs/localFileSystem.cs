@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace fcmd
+namespace fcmd.base_plugins.fs
 {
 	public class localFileSystem : pluginner.IFSPlugin
 	{

@@ -14,6 +14,7 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using System.Threading;
+using fcmd.base_plugins.fs;
 
 namespace fcmd
 {

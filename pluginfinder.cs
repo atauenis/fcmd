@@ -75,7 +75,7 @@ namespace fcmd
                     if(Parts[1].StartsWith("(internal)")){//плагин встроенный
                         switch(Parts[1]){
                             case "(internal)LocalFS":
-							return new localFileSystem();
+							return new fcmd.base_plugins.fs.localFileSystem();
                         }
                     }else{//плагин внешний
                         string file = Parts[1];

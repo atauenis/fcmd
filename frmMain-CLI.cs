@@ -62,7 +62,7 @@ namespace fcmd
 
             pluginner.File SelectedFile = fs.GetFile(url, new int());
             string FileContent = Encoding.ASCII.GetString(SelectedFile.Content);
-            fcv.LoadFile(FileContent, url);
+            fcv.LoadFile(url,ActivePanel.FSProvider);
         }
 
         /// <summary>

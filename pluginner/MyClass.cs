@@ -226,6 +226,11 @@ namespace pluginner{
 		/// </summary>
 		void SelectAll();
 
+        /// <summary>
+        /// Shows plugin's content search dialog box
+        /// </summary>
+        void Search();
+
 		/// <summary>
 		/// Gets a value indicating whether this plugin can print content.
 		/// </summary>
