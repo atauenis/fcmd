@@ -82,7 +82,7 @@ namespace fcmd
             this.lplRight[0].Location = new System.Drawing.Point(0, mstMenu.Height);
             this.lplRight[0].Name = "lplRight";
             this.lplRight[0].TabIndex = 0;
-            this.lplRight[0].DoubleClick += new StringEvent(this.Panel_DblClick);
+            this.lplRight[0].list.DoubleClick += (object s, EventArgs ea) => { this.frmMain_KeyDown(s, new KeyEventArgs(Keys.Enter)); };
 			this.lplRight[0].GotFocus += this.Panel_Focus;
 			this.lplRight[0].BorderStyle = BorderStyle.Fixed3D;
 			this.lplRight[0].FSProvider = new localFileSystem();
@@ -152,12 +152,21 @@ namespace fcmd
 
             switch (e.KeyData){
                 case Keys.Enter: //переход
-                    if (!ActivePanel.FSProvider.IsDirPresent(ActivePanel.list.SelectedItems[0].Tag.ToString()))
-                    {
-                        MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    if (ActivePanel.FSProvider.IsFilePresent(ActivePanel.list.SelectedItems[0].Tag.ToString()))
+                    {//файл
+                        Process proc = new Process();
+                        proc.StartInfo.FileName = ActivePanel.list.SelectedItems[0].Tag.ToString();
+                        proc.StartInfo.UseShellExecute = true;
+                        proc.Start();
+                        break;
+                    }
+                    
+                    if (ActivePanel.FSProvider.IsDirPresent(ActivePanel.list.SelectedItems[0].Tag.ToString()))
+                    {//каталог
+                        Ls(ActivePanel.list.SelectedItems[0].Tag.ToString());
                         return;
                     }
-                    Ls(ActivePanel.list.SelectedItems[0].Tag.ToString());
+                    
                     break;
                 case Keys.F3: //просмотр
                     fcview fcv = new fcview();
@@ -168,7 +177,7 @@ namespace fcmd
                         return;
                     }
 
-                    if (e.Shift == true)
+                    if (e.Shift == true) //не работает. почему? разобраться!
                     { fcv.LoadFile(ActivePanel.list.SelectedItems[0].Tag.ToString(),ActivePanel.FSProvider,new base_plugins.viewer.TxtViewer());
                     }
                     else FCView(ActivePanel.list.SelectedItems[0].Tag.ToString());
@@ -196,11 +205,18 @@ namespace fcmd
 
         private void Panel_DblClick(object sender, EventArgs<String> e){ //двойной щелчок по панели
 			ListPanel lp = (ListPanel)sender;
-			if (lp.FSProvider.IsDirPresent (e.Data)){
-				//это - каталог, грузить можно
+            if (lp.FSProvider.IsDirPresent(e.Data))
+            {
+                //это - каталог, грузить можно
                 LoadDir(e.Data, (ListPanel)sender);
-			}else MessageBox.Show(e.Data,"это файл");
-			//todo:добавить вызов lister'а (FCView)
+            }
+            else
+            {
+                Process proc = new Process();
+                proc.StartInfo.FileName = e.Data;
+                proc.StartInfo.UseShellExecute = true;
+                proc.Start();
+            }
         }
 
 		private void mstMenu_ItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e){
@@ -456,11 +472,15 @@ namespace fcmd
             tsbHelpF10.Text = locale.GetString("FCF10");
         }
 
+        /// <summary>
+        /// Adds a new item <paramref name="NewItem"/> into the ListPanel <paramref name="lp"/>
+        /// </summary>
+        /// <param name="lp"></param>
+        /// <param name="NewItem"></param>
         private void AddItem(ListPanel lp, ListViewItem NewItem){
             CheckForIllegalCrossThreadCalls = false; //HACK: заменить на долбанные делегации и прочую нетовскую муть
             lp.list.Items.Add(NewItem);
         }
-
 	}
 
 	public delegate void StringEvent(object sender, EventArgs<String> e);

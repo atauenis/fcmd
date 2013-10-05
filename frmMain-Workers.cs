@@ -27,7 +27,10 @@ namespace fcmd{
         /// Background directory lister
         /// </summary>
         void DoLs(string URL, ListPanel lp, ref int StatusFeedback){
+            CheckForIllegalCrossThreadCalls = false; //HACK: заменить на долбанные делегации и прочую нетовскую муть
+            lp.list.UseWaitCursor = true;
             lp.list.Items.Clear();
+            lp.list.BeginUpdate();
             
             //гружу директорию
             pluginner.IFSPlugin fsp = lp.FSProvider;
@@ -49,6 +52,8 @@ namespace fcmd{
                     AddItem(lp, NewItem);
                 }
             }
+            lp.list.EndUpdate();
+            lp.list.UseWaitCursor = false;
         }
 
 
@@ -76,7 +81,7 @@ namespace fcmd{
                 fs.RemoveFile(url);
             }
             catch (Exception err){
-                MessageBox.Show(err.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show(err.Message, null, MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
 
@@ -86,11 +91,17 @@ namespace fcmd{
         /// <param name="url">url of the file</param>
         /// <param name="fs">filesystem of the file</param>
         void DoRmDir(string url, pluginner.IFSPlugin fs){
-            try{
-                fs.RemoveDir(url);
+            try
+            {
+                fs.RemoveDir(url, true);
             }
-            catch (Exception err){
-                MessageBox.Show(err.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            catch (pluginner.ThisDirCannotBeRemovedException nesudba)
+            {
+                MessageBox.Show(string.Format(locale.GetString("DirCantBeRemoved"),url),null,MessageBoxButtons.OK,MessageBoxIcon.Stop);
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message, null, MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
     }

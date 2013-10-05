@@ -1,9 +1,7 @@
-/* The File Commander
- * Модуль доступа к локальным ФС
- * Единственный плагин, не вынесенный во внешнюю dll (из соображений компактности)
+/* The File Commander shared (cross-platform) kernel
+ * Local filesystem adapter     Модуль доступа к локальным ФС
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
- * Копирование кода разрешается только с письменного согласия
- * разработчика (А.Т.).
+ * Contributors should place own signs here.
  */
 using System;
 using System.Collections.Generic;
@@ -13,8 +11,14 @@ namespace fcmd.base_plugins.fs
 {
 	public class localFileSystem : pluginner.IFSPlugin
 	{
-
-		public string Name { get{return "Local filesystem plugin [internal]";} }
+        /* ЗАМЕТКА РАЗРАБОТЧИКУ             DEVELOPER NOTES
+         * В данном файле содержится код    This file contanis the local filesystem
+         * плагина доступа к локальным ФС.  adapter for the File Commander kernel.
+         * Данный код используется как в    This code should be cross-platform and
+         * версии для Win (.Net), так и     should be tested on both .NET Win. Forms
+         * в версии для *nix/Android (Mono) and Linux/BSD (Mono/GTK#) envirroments.
+         */
+        public string Name { get { return new Localizator().GetString("LocalFSVer"); } }
 		public string Version { get{return "1.0";} }
 		public string Author { get{return "A.T.";} }
 		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
@@ -44,8 +48,8 @@ namespace fcmd.base_plugins.fs
 
 		public void ReadDirectory(string url){//прочитать каталог и загнать в DirectoryContent
 			_CheckProtocol(url);
-			DirContent.Clear();		
-			string InternalURL = url.Replace("file://","");
+			DirContent.Clear();
+            string InternalURL = url.Replace("file://", "");
 
 			pluginner.DirItem tmpVar = new pluginner.DirItem();
 
@@ -111,7 +115,7 @@ namespace fcmd.base_plugins.fs
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Can't get access to " + InternalURL + "\nThe blocking reason is: " + ex.Message);
+                Console.WriteLine("LocalFS: Can't get access to " + InternalURL + "\nThe blocking reason is: " + ex.Message);
                 return false;
             }
         }
@@ -147,7 +151,7 @@ namespace fcmd.base_plugins.fs
                 Progress = 100;
             }
             catch (Exception ex){
-                System.Windows.Forms.MessageBox.Show(ex.Message,"Ошибка",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Stop);
+                System.Windows.Forms.MessageBox.Show(ex.Message,"Error",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Stop);
             }
 		}
 
@@ -158,11 +162,13 @@ namespace fcmd.base_plugins.fs
             File.Delete(InternalURL);
 		}
 
-		public void RemoveDir(string url){//удалить папку
+		public void RemoveDir(string url, bool TryFirst){//удалить папку
 			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://","");
-
-            Directory.Delete(InternalURL);
+            if (TryFirst) {
+                if (!CheckForDeletePossiblity(InternalURL)) throw new pluginner.ThisDirCannotBeRemovedException();
+            }
+            Directory.Delete(InternalURL,true);//рекурсивное удаление
 		}
 
         public void MakeDir(string url){//создать каталог
@@ -172,6 +178,41 @@ namespace fcmd.base_plugins.fs
             Directory.CreateDirectory(InternalURL);
         }
 
+        /// <summary>
+        /// Check the directory "url", it is may be purged&deleted
+        /// </summary>
+        /// <param name="url"></param>
+        private bool CheckForDeletePossiblity(string url){
+            try{
+                DirectoryInfo d = new DirectoryInfo(url);
+                foreach (FileInfo file in d.GetFiles())
+                {
+                    //перебираю все файлы в каталоге
+                    string newName = file.FullName + ".fcdeltest";
+                    string oldName = file.FullName;
+                    try
+                    {
+                        file.MoveTo(newName);
+                        new FileInfo(newName).MoveTo(oldName);
+                    }
+                    catch (Exception nesudba)
+                    {
+#if DEBUG
+                        Console.WriteLine("Check for deleteability was breaked by " + oldName + ": " + nesudba.Message);
+#endif
+                        return false;
+                    }
+                }
+
+                foreach (DirectoryInfo dir in d.GetDirectories())
+                {
+                    //рекурсивно перебираю все подкаталоги в каталоге (папки хранятся в фейле, фейлы в подкаталогах, подкаталог в каталоге. Марь Иванна, правильно?)
+                    return CheckForDeletePossiblity(dir.FullName);
+                }
+                return true;
+            }
+            catch (Exception ex) { Console.WriteLine("E: CheckForDeletePossiblity failed: " + ex.Message + ex.StackTrace + "\nThe FC's crash was prevented. Please inform the program authors."); return false; }
+        }
 	}
 }
 

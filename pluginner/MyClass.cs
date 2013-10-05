@@ -110,7 +110,14 @@ namespace pluginner{
 		/// <param name='URL'>
 		/// URL of the dir.
 		/// </param>
-		void RemoveDir(string URL);
+        /// <param name="TrySafe">
+        /// When set to true, the plugin should check the possibility of deleting the directory. In case of impossibility it should throw ThisDirCannotBeRemovedException
+        /// </param>       
+		void RemoveDir(string URL, bool TrySafe);
+        /* Если булево значение = true, плагин должен сначала проверить, выйдет ли
+         * каменный цветок, если он вдруг окажется не уверен в этом, пусть кидает
+         * сразу исключение pluginner.ThisDirCannotBeRemovedException .
+         */
 
         /// <summary>
         /// Creates a new directory
@@ -255,9 +262,11 @@ namespace pluginner{
         System.Windows.Forms.ToolStripMenuItem[] SettingsMenu { get; }
     }
 
-	/// <summary>
-	/// Exception, which fires when the plugin module needs to be changed to an other plugin module.
+    #region PleaseSwitchPluginException
+    /// <summary>
+	/// This exception fires when the plugin module needs to be changed to an other plugin module.
 	/// For example, when a filesystem plugin tried to be used with uncompatible filesystem or a image viewer plugin tried to show a text file.
+    /// The File Commander should catch this exception and find a new plugin (see pluginfinder.cs file)
 	/// </summary>
 	[System.Serializable]
 	public class PleaseSwitchPluginException : System.Exception
@@ -293,7 +302,39 @@ namespace pluginner{
 		/// <param name="info">The object that holds the serialized object data.</param>
 		protected PleaseSwitchPluginException (System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-		}
-	}
+        }
+    #endregion
+    }
+
+    /* Исключение выскакивает в случае установления невозможности удаления каталога
+     * (это проверяется ДО реального удаления путём переименования или чтения прав!).
+     * Плагин должен кидать это исключение только после отмены всех действий,
+     * использовавшихся для проверки каталога на удаляемость.
+     */
+    #region ThisDirCannotBeRemovedException
+    /// <summary>
+    /// This exception fires when the FS plugin is unable to remove the requested directory.
+    /// The File Commander should catch this exception and abort the directory removal procedure.
+    /// The plugin should not throw this exception until all "rule checking" changes was undoned.
+    /// </summary>
+    [global::System.Serializable]
+    public class ThisDirCannotBeRemovedException : Exception
+    {
+        //
+        // For guidelines regarding the creation of new exception types, see
+        //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconerrorraisinghandlingguidelines.asp
+        // and
+        //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
+        //
+
+        public ThisDirCannotBeRemovedException() { }
+        public ThisDirCannotBeRemovedException(string message) : base(message) { }
+        public ThisDirCannotBeRemovedException(string message, Exception inner) : base(message, inner) { }
+        protected ThisDirCannotBeRemovedException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
+    }
+    #endregion
 }
 

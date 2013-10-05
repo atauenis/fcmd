@@ -14,12 +14,14 @@ namespace fcmd.base_plugins.viewer
     class TxtViewer : pluginner.IViewerPlugin
     {
         #region metadata
-        public string Name { get { return "Модуль вывода текстовых файлов (аналог ncview до 4 версии)"; } }
+        public string Name { get { return new Localizator().GetString("TxtViewerVer"); } }
         public string Version { get { return "1.0.0"; } }
         public string Author { get{ return "A.T."; } }
         #endregion
 
         string Content = "";
+        string URL = "";
+        pluginner.IFSPlugin FS;
 		TextBox txtBox = new TextBox();
         public System.Windows.Forms.Control DisplayBox(){
             txtBox.Name = "txtBox";
@@ -37,6 +39,7 @@ namespace fcmd.base_plugins.viewer
         }
 
 		public void LoadFile(string url, pluginner.IFSPlugin fsplugin){
+            URL = url; FS = fsplugin;
             Content = Encoding.UTF8.GetString(fsplugin.GetFile (url, new int()).Content);
 		}
 
@@ -67,8 +70,25 @@ namespace fcmd.base_plugins.viewer
             get{
                 List<ToolStripMenuItem> Options = new List<ToolStripMenuItem>();
                 Options.Add(new ToolStripMenuItem("У плагина нет настроек",null,this.Test));
+
+                EncodingInfo[] Kodirovki = Encoding.GetEncodings();
+                foreach (EncodingInfo cp in Kodirovki)
+                {//looping all available codepages and adding it into menu
+                    ToolStripMenuItem NewItem = new ToolStripMenuItem(cp.DisplayName + " (" + cp.Name + ")", null, this.ChCp);
+                    NewItem.Tag = cp.CodePage;
+                    Options.Add(NewItem);
+                }
+
                 return Options.ToArray();
             }
+        }
+
+        public void ChCp(object sender, EventArgs e)
+        {
+            ToolStripMenuItem SelItem = (ToolStripMenuItem)sender;
+            Content = Encoding.GetEncoding(Convert.ToInt32(SelItem.Tag)).GetString(FS.GetFile(URL, new int()).Content);
+            txtBox.Text = Content;
+            //todo: поставить галочку
         }
 
         public void Test(object sender, EventArgs e){
@@ -81,8 +101,8 @@ namespace fcmd.base_plugins.viewer
 
         /* TODO-list плагина TxtViewer
          * Вывод непечатаемых символов
-         * Переключение кодировок
          * Настройки шрифта, и прочего
+         * Поиск по тексту
          */
     }
 }

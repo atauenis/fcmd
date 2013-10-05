@@ -57,8 +57,7 @@ namespace fcmd
 		public new event StringEvent DoubleClick;
 
         private void ListPanel_Load(object sender, EventArgs e){//Ну, за загрузку!
-//			this.GotFocus += ListPanel_GotFocus;
-//			this.LostFocus += ListPanel_LostFocus;
+            Repaint();
 			this.MouseClick += (snd, ea) => this.Focus();
         }
 
@@ -86,6 +85,39 @@ namespace fcmd
                 lblStatus.Text = " ";//пустая строка чтобы не было неприятностей с работой AutoSize
             }
             catch (Exception ex) { lblStatus.Text = ex.Message; }
+        }
+
+        /// <summary>
+        /// Repaint the ListPanel
+        /// </summary>
+        public void Repaint()
+        {
+            lblStatus.Visible = fcmd.Properties.Settings.Default.ShowFileInfo;
+            foreach(string d in System.IO.Directory.GetLogicalDrives()){
+                ToolStripButton tsb = new ToolStripButton(d,null,(object s, EventArgs ea) => {ToolStripButton tsbn = (ToolStripButton)s; LP_goToDir("file://" + tsbn.Text);});
+                tsDisks.Items.Add(tsb);
+            }
+        }
+
+        /// <summary>
+        /// Load the directory <paramref name="url"/>. To be used only inside listpanel.cs
+        /// </summary>
+        /// <param name="url"></param>
+        private void LP_goToDir(string url)
+        {
+            FsPlugin.CurrentDirectory = url;
+            list.Items.Clear();
+            foreach (pluginner.DirItem di in FsPlugin.DirectoryContent)
+            {
+                if (di.Hidden == false)
+                {
+                    ListViewItem NewItem = new ListViewItem(di.TextToShow);
+                    NewItem.Tag = di.Path; //путь будет тегом
+                    NewItem.SubItems.Add(Convert.ToString(di.Size / 1024) + "KB");
+                    NewItem.SubItems.Add(di.Date.ToShortDateString());
+                    list.Items.Add(NewItem);
+                }
+            }
         }
     }
 }
