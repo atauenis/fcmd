@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using System.Drawing.Printing;
 
 namespace fcmd.base_plugins.viewer
 {
@@ -23,6 +24,8 @@ namespace fcmd.base_plugins.viewer
         string URL = "";
         pluginner.IFSPlugin FS;
 		TextBox txtBox = new TextBox();
+        PrintDocument Doc = new PrintDocument();
+
         public System.Windows.Forms.Control DisplayBox(){
             txtBox.Name = "txtBox";
             txtBox.Dock = DockStyle.Fill;
@@ -56,14 +59,34 @@ namespace fcmd.base_plugins.viewer
 			txtBox.SelectionLength = txtBox.Text.Length;
 		}
 
-		public bool CanPrint{get{return false;}}
+		public bool CanPrint{get{return true;}}
 
 		public void Print(){//печать на принтер
-			//todo
+			//инициализация печати
+            Doc.PrintPage += DrawTextOnPrn;
+            Doc.DocumentName = URL;
+
+            //запрашиваю параметры печати
+            PrintDialog PrnSelector = new PrintDialog();
+            PrnSelector.Document = Doc;
+            if (PrnSelector.ShowDialog() == DialogResult.Cancel) return;
+
+            //понеслась!
+            Doc.Print();
 		}
 
+        /// <summary>
+        /// Отрисовывает текст (хорошо сказал!) на принтере
+        /// </summary>
+        private void DrawTextOnPrn(object sender, PrintPageEventArgs e) //отрисовка текста, Printer.Print(string) больше нету :-(
+        {
+            e.Graphics.DrawString(txtBox.Text, txtBox.Font, System.Drawing.Brushes.Black, 10, 25);
+        }
+
 		public void PrintSettings(){ //Параметры страницы
-			//todo
+            PageSetupDialog psd = new PageSetupDialog();
+            psd.Document = Doc;
+            psd.ShowDialog();
 		}
 
         public ToolStripMenuItem[] SettingsMenu{//(под)меню настроек
