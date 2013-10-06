@@ -25,6 +25,7 @@ namespace fcmd.base_plugins.viewer
         pluginner.IFSPlugin FS;
 		TextBox txtBox = new TextBox();
         PrintDocument Doc = new PrintDocument();
+        string LastSearch = "";
 
         public System.Windows.Forms.Control DisplayBox(){
             txtBox.Name = "txtBox";
@@ -93,6 +94,10 @@ namespace fcmd.base_plugins.viewer
             get{
                 List<ToolStripMenuItem> Options = new List<ToolStripMenuItem>();
                 Options.Add(new ToolStripMenuItem("У плагина нет настроек",null,this.Test));
+                Options.Add(new ToolStripMenuItem("Шрифт...", null, this.SetFont));
+                //Options.Add(new ToolStripSeparator());//Аргумент '1': преобразование типа из 'System.Windows.Forms.ToolStripSeparator' в 'System.Windows.Forms.ToolStripMenuItem' невозможно
+
+
 
                 EncodingInfo[] Kodirovki = Encoding.GetEncodings();
                 foreach (EncodingInfo cp in Kodirovki)
@@ -118,14 +123,43 @@ namespace fcmd.base_plugins.viewer
             MessageBox.Show("У плагина нет настроек...пока что.");
         }
 
+        public void SetFont(object sender, EventArgs e){//формат-выбор шрифта
+            FontDialog fd = new FontDialog();
+            fd.AllowScriptChange = false; //.net у нас юникодовый, кодировки менять нельзя
+            fd.ShowColor = true;
+
+            fd.Font = txtBox.Font;
+            fd.Color = txtBox.ForeColor;
+
+            fd.ShowDialog();
+
+            txtBox.Font = fd.Font;
+            txtBox.ForeColor = fd.Color;
+        }
+
         public void Search(){//правка-поиск
-            MessageBox.Show("Плагин не умеет искать...пока что :-)");
+            InputBox ibx = new InputBox(new Localizator().GetString("FCVWhatFind"));
+            if (ibx.ShowDialog() == DialogResult.Cancel) return; //если нажали отмену
+            int startPos = txtBox.Text.IndexOf(ibx.Result,txtBox.SelectionStart + 1/*чтобы искать дальнейшие вхождения*/);
+
+            if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            txtBox.SelectionStart = startPos;
+            txtBox.SelectionLength = ibx.Result.Length;
+            LastSearch = ibx.Result;
+        }
+
+        public void SearchNext(){//искать дальше
+            if (LastSearch.Length == 0) { Search(); return; }
+
+            int startPos = txtBox.Text.IndexOf(LastSearch, txtBox.SelectionStart + 1);
+            if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            txtBox.SelectionStart = startPos;
+            txtBox.SelectionLength = LastSearch.Length;
         }
 
         /* TODO-list плагина TxtViewer
          * Вывод непечатаемых символов
          * Настройки шрифта, и прочего
-         * Поиск по тексту
          */
     }
 }

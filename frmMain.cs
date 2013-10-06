@@ -1,8 +1,7 @@
 /* The File Commander
- * Главное окно
+ * Главное окно (Windows)
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
- * Копирование кода разрешается только с письменного согласия
- * разработчика (А.Т.).
+ * [и Ко]
  */
 using System;
 using System.Collections.Generic;
@@ -177,7 +176,7 @@ namespace fcmd
                         return;
                     }
 
-                    if (e.Shift == true) //не работает. почему? разобраться!
+                    if (e.Shift == true) //не вызывается. почему? разобраться!
                     { fcv.LoadFile(ActivePanel.list.SelectedItems[0].Tag.ToString(),ActivePanel.FSProvider,new base_plugins.viewer.TxtViewer());
                     }
                     else FCView(ActivePanel.list.SelectedItems[0].Tag.ToString());

@@ -224,6 +224,7 @@ namespace fcmd
             mnuEditCopy.Text = locale.GetString("FCVEditCopy");
             mnuEditSelectAll.Text = locale.GetString("FCVEditSelAll");
             mnuEditFind.Text = locale.GetString("FCVEditSearch");
+            mnuEditFindNext.Text = locale.GetString("FCVEditSearchNext");
 
             mnuView.Text = locale.GetString("FCVView");
 
@@ -240,5 +241,21 @@ namespace fcmd
                 mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
             }
         }
+
+        private void mnuEditFindNext_Click(object sender, EventArgs e)
+        {
+            vp.SearchNext();
+        }
+
+        private void mnuFileExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void mnuFileOpen_Click(object sender, EventArgs e)
+        {
+            //todo
+        }
+
     }
 }

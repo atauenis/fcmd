@@ -238,6 +238,11 @@ namespace pluginner{
         /// </summary>
         void Search();
 
+        /// <summary>
+        /// Search the document with last parameters next
+        /// </summary>
+        void SearchNext();
+
 		/// <summary>
 		/// Gets a value indicating whether this plugin can print content.
 		/// </summary>

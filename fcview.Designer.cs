@@ -44,6 +44,7 @@
             this.mnuEditSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditS2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuEditFind = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditFindNext = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,6 +109,7 @@
             this.mnuFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.mnuFileOpen.Size = new System.Drawing.Size(204, 22);
             this.mnuFileOpen.Text = "Открыть...";
+            this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
             // 
             // mnuFileReload
             // 
@@ -151,6 +153,7 @@
             this.mnuFileExit.ShortcutKeys = System.Windows.Forms.Keys.F10;
             this.mnuFileExit.Size = new System.Drawing.Size(204, 22);
             this.mnuFileExit.Text = "Закрыть просмотр";
+            this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
             // 
             // mnuEdit
             // 
@@ -159,7 +162,8 @@
             this.mnuEditS1,
             this.mnuEditSelectAll,
             this.mnuEditS2,
-            this.mnuEditFind});
+            this.mnuEditFind,
+            this.mnuEditFindNext});
             this.mnuEdit.Name = "mnuEdit";
             this.mnuEdit.Size = new System.Drawing.Size(59, 19);
             this.mnuEdit.Text = "Правка";
@@ -200,6 +204,14 @@
             this.mnuEditFind.Size = new System.Drawing.Size(190, 22);
             this.mnuEditFind.Text = "Поиск...";
             this.mnuEditFind.Click += new System.EventHandler(this.mnuEditFind_Click);
+            // 
+            // mnuEditFindNext
+            // 
+            this.mnuEditFindNext.Name = "mnuEditFindNext";
+            this.mnuEditFindNext.ShortcutKeys = System.Windows.Forms.Keys.F3;
+            this.mnuEditFindNext.Size = new System.Drawing.Size(190, 22);
+            this.mnuEditFindNext.Text = "Шукать дальшее";
+            this.mnuEditFindNext.Click += new System.EventHandler(this.mnuEditFindNext_Click);
             // 
             // mnuView
             // 
@@ -474,5 +486,6 @@
         private System.Windows.Forms.ToolStripButton tsbHelpF8;
         private System.Windows.Forms.ToolStripButton tsbHelpF9;
         private System.Windows.Forms.ToolStripButton tsbHelpF10;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditFindNext;
     }
 }
