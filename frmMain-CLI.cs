@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.IO;
 
 namespace fcmd
 {
@@ -19,7 +20,7 @@ namespace fcmd
          * используются в штатных функциях файлового менеджера (навигация по каталогам).
          * Все комманды работают с активной и пассивой панелью - Active/PassivePanel.
          * FC всегда их определяет сам. Пассивая панель - всегда получатель файлов.
-         * Названия комманд - POSIX в верблюжьем регистре (Ls, Rm, MkDir, Touch и т.п.).
+         * Названия комманд - UNIX в верблюжьем регистре (Ls, Rm, MkDir, Touch и т.п.).
          * Всем коммандам параметры передаются строкой, но допускаются исключения, напр.,
          * если базовая функция "перегружена" функцией для нужд графического интерфейса.
          */
@@ -54,7 +55,7 @@ namespace fcmd
         public void FCView(string url){
             fcview fcv = new fcview();
             pluginner.IFSPlugin fs = ActivePanel.FSProvider;
-            if (!fs.IsFilePresent(url))
+            if (!fs.FileExists(url))
             {
                 MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
@@ -74,7 +75,7 @@ namespace fcmd
         public string Cat(string url){
             fcview fcv = new fcview();
             pluginner.IFSPlugin fs = ActivePanel.FSProvider;
-            if (!fs.IsFilePresent(url)) return "Файл не найден\n";
+            if (!fs.FileExists(url)) return "Файл не найден\n";
 
             pluginner.File SelectedFile = fs.GetFile(url, new int());
             return Encoding.ASCII.GetString(SelectedFile.Content);
@@ -89,7 +90,7 @@ namespace fcmd
             fpd.lblStatus.Text = string.Format(locale.GetString("DoingMkdir"),"\n" + url,null);
             fpd.Show();
 
-            Thread MkDirThread = new Thread(delegate() { ActivePanel.FSProvider.MakeDir(url); });
+            Thread MkDirThread = new Thread(delegate() { ActivePanel.FSProvider.CreateDirectory(url); });
             MkDirThread.Start();
 
             LoadDir(ActivePanel.FSProvider.CurrentDirectory, ActivePanel);
@@ -117,7 +118,7 @@ namespace fcmd
 
             string curItemDel = ActivePanel.list.SelectedItems[0].Tag.ToString();
             pluginner.IFSPlugin fsdel = ActivePanel.FSProvider;
-            if (fsdel.IsFilePresent(curItemDel))
+            if (fsdel.FileExists(curItemDel))
             {
                 fpd.pbrProgress.Value = 50;
                 Thread RmFileThread = new Thread(delegate() { DoRmFile(curItemDel, fsdel); });
@@ -131,7 +132,7 @@ namespace fcmd
                 fpd.Hide();
                 return "Файл удалён.\n";
             }
-            if (fsdel.IsDirPresent(curItemDel))
+            if (fsdel.DirectoryExists(curItemDel))
             {
                 fpd.lblStatus.Text = String.Format(locale.GetString("DoingRemove"), "\n" + url, "\n[" + locale.GetString("Directory").ToUpper() + "]");
                 fpd.pbrProgress.Value = 50;
@@ -159,8 +160,15 @@ namespace fcmd
             pluginner.IFSPlugin SourceFS = ActivePanel.FSProvider;
             pluginner.File SourceFile = SourceFS.GetFile(SourceURL, Progress);
 
-            if (!SourceFS.IsFilePresent(SourceURL))
-            {
+            if (!SourceFS.FileExists(SourceURL))
+            {//такого файла (уже?) нет
+                if (SourceFS.DirectoryExists(SourceURL))//а вдруг есть такой каталог?
+                {
+                    InputBox ibxd = new InputBox(String.Format(locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FSProvider.CurrentDirectory + "/" + SourceFile.Name);
+                    if (ibxd.ShowDialog() == DialogResult.OK) { CpDir(SourceURL, ibxd.Result); }
+                    LoadDir(PassivePanel.FSProvider.CurrentDirectory, PassivePanel); //обновление пассивной панели
+                    return;
+                }
                 MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
@@ -187,5 +195,40 @@ namespace fcmd
             }
             else return;
         }
+
+        /// <summary>
+        /// Copy the entrie directory
+        /// </summary>
+        private void CpDir(string source, string destination){
+            //todo: вынести в workers.cs и отдельный поток
+            pluginfinder pf = new pluginfinder();
+            pluginner.IFSPlugin fsa = pf.GetFSplugin(source); fsa.CurrentDirectory = source;
+            pluginner.IFSPlugin fsb = pf.GetFSplugin(destination);
+
+            if(!Directory.Exists(destination)){ fsb.CreateDirectory(destination);}
+            fsb.CurrentDirectory = destination; 
+            foreach (pluginner.DirItem di in fsa.DirectoryContent){
+                if (di.TextToShow == "..")
+                {/*не трогать, это кнопка "вверх"*/}
+                else if (!di.IsDirectory)
+                {
+                    //перебор файлов
+                    //формирование нового пути
+                    string s1 = di.Path; //старый путь
+                    pluginner.File CurFile = fsa.GetFile(s1, new int()); //исходный файл
+                    string s2 = destination + fsb.DirSeparator + CurFile.Name; //новый путь
+
+                    //запись копии
+                    CurFile.Path = s2;
+                    fsb.WriteFile(CurFile, new int());
+                }
+                else
+                {
+                    //перебор подкаталогов
+                    CpDir(di.Path, destination + fsb.DirSeparator + di.TextToShow);
+                }
+            }
+        }
+
     }
 }

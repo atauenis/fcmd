@@ -93,8 +93,26 @@ namespace fcmd
         public void Repaint()
         {
             lblStatus.Visible = fcmd.Properties.Settings.Default.ShowFileInfo;
-            foreach(string d in System.IO.Directory.GetLogicalDrives()){
+            foreach (System.IO.DriveInfo di in System.IO.DriveInfo.GetDrives()){
+                string d = di.Name;
                 ToolStripButton tsb = new ToolStripButton(d,null,(object s, EventArgs ea) => {ToolStripButton tsbn = (ToolStripButton)s; LP_goToDir("file://" + tsbn.Text);});
+                
+                switch(di.DriveType){
+                    case System.IO.DriveType.Fixed:
+                        tsb.Image = fcmd.Properties.Resources.DiskHDD.ToBitmap();
+                        break;
+                    case System.IO.DriveType.CDRom:
+                        tsb.Image = fcmd.Properties.Resources.DiskCD.ToBitmap();
+                        break;
+                    case System.IO.DriveType.Removable:
+                        tsb.Image = fcmd.Properties.Resources.DiskRemovable.ToBitmap();
+                        break;
+                    case System.IO.DriveType.Network:
+                        tsb.Image = fcmd.Properties.Resources.DiskNetwork.ToBitmap();
+                        break;
+                    //todo: запилить все System.IO.DriveTyp'ы и сделать нормальные иконки
+                }
+
                 tsDisks.Items.Add(tsb);
             }
         }

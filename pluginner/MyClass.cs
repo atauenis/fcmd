@@ -33,11 +33,8 @@ namespace pluginner{
 	/// </summary>
 	public interface IFSPlugin : IPlugin{
 		/// <summary>
-		/// Gets or sets the content of the directory.
+		/// Gets the list of the directory's subitems.
 		/// </summary>
-		/// <value>
-		/// The content of the directory.
-		/// </value>
 		List<DirItem> DirectoryContent {get;}
 
 		/// <summary>
@@ -57,7 +54,7 @@ namespace pluginner{
 		/// <param name='URL'>
 		/// The file location (URL)
 		/// </param>
-		bool IsFilePresent(string URL);
+		bool FileExists(string URL);
 
 		/// <summary>
 		/// Determines whether at the specified URL exists a directory
@@ -68,7 +65,7 @@ namespace pluginner{
 		/// <param name='URL'>
 		/// The directory location (URL)
 		/// </param>
-		bool IsDirPresent(string URL);
+		bool DirectoryExists(string URL);
 
         /// <summary>
         /// Tries to read the file or directory <paramref name="URL"/> and determines whether it can be read without access errors.
@@ -88,34 +85,40 @@ namespace pluginner{
 		/// </param>
 		File GetFile(string URL, int Progress);
 
-		/// <summary>
-		/// Writes the file.
-		/// </summary>
-		/// <param name='NewFile'>
-		/// New file's content.
-		/// </param>
-		void WriteFile(File NewFile, int Progress);
+        /// <summary>
+        /// Gets the file's attribbutes
+        /// </summary>
+        /// <param name="URL"></param>
+        FSEntryMetadata GetMetadata(string URL);
 
+		/// <summary>Writes the file.</summary>
+		/// <param name='NewFile'>New file's content.</param>
+		void WriteFile(File NewFile, int Progress);
+        //todo:void WriteFileMetadata(FileMetadata md);
+        
 		/// <summary>
-		/// Removes the file <paramref name="URL"/>.
+		/// Delete the file <paramref name="URL"/>.
 		/// </summary>
 		/// <param name='URL'>
 		/// URL of the file.
 		/// </param>
-		void RemoveFile(string URL);
+		void DeleteFile(string URL);
+        
+        /// <summary>Move the file</summary>
+        void MoveFile(string oldURL, string newURL);
 
 	    /// <summary>
-		/// Removes the directory <paramref name="URL"/>.
+		/// Delete the directory <paramref name="URL"/>.
 		/// </summary>
 		/// <param name='URL'>
 		/// URL of the dir.
 		/// </param>
         /// <param name="TrySafe">
-        /// When set to true, the plugin should check the possibility of deleting the directory. In case of impossibility it should throw ThisDirCannotBeRemovedException
+        /// When set to true, the plugin should firstly check the possibility of deleting the directory. In case of impossibility it should throw ThisDirCannotBeRemovedException
         /// </param>       
-		void RemoveDir(string URL, bool TrySafe);
+		void DeleteDirectory(string URL, bool TrySafe);
         /* Если булево значение = true, плагин должен сначала проверить, выйдет ли
-         * каменный цветок, если он вдруг окажется не уверен в этом, пусть кидает
+         * каменный цветок, если он вдруг окажется не уверен в этом, должен кинуть
          * сразу исключение pluginner.ThisDirCannotBeRemovedException .
          */
 
@@ -123,18 +126,62 @@ namespace pluginner{
         /// Creates a new directory
         /// </summary>
         /// <param name="URL"></param>
-        void MakeDir(string URL);
+        void CreateDirectory(string URL);
+
+        /// <summary>
+        /// Move or rename the directory
+        /// </summary>
+        void MoveDirectory(string OldURL, string NewURL);
+
+        /// <summary>
+        /// Separator of the directories in path
+        /// </summary>
+        string DirSeparator { get; }
 	}
 	//todo: IEditorPlugin, IUIPlugin (плагины к интерфейсу File Commander)
 
+    /// <summary>
+    /// Filesystem entry's metadata (like system.io.fileinfo/directoryinfo)
+    /// </summary>
+    public struct FSEntryMetadata
+    {
+        /// <summary>The file's short name with extension</summary>
+        public string Name;
+        /// <summary>The file's containing directory</summary>
+        public string UpperDirectory;
+        /// <summary>The file's full path</summary>
+        public string FullURL;
+
+        /// <summary>The file's attribbutes</summary>
+        public System.IO.FileAttributes Attrubutes;
+        /// <summary>The file's GMT-time of creation</summary>
+        public DateTime CreationTimeUTC;
+        /// <summary>The file's GMT-time of last modification</summary>
+        public DateTime LastWriteTimeUTC;
+        /// <summary>The file's GTM-time of last reading</summary>
+        public DateTime LastAccessTimeUTC;
+
+        /// <summary>The file's size (in bytes)</summary>
+        public long Lenght;
+
+        /// <summary>Is the file configured for read only</summary>
+        public bool IsReadOnly;
+    }
+
 	/// <summary>
-	/// File provider.
+	/// File info
 	/// </summary>
 	public struct File{
 		/// <summary>
-		/// The file's metadata (date, size, etc).
+		/// The file's or the directory's metadata (date, size, etc).
 		/// </summary>
-		public System.IO.FileInfo Metadata;
+		public FSEntryMetadata Metadata;
+
+        /// <summary>
+        /// The file's MIME type.
+        /// NOTE: if the file is a directory, it's type will be "x-fcmd/directory"
+        /// </summary>
+        public string MIMEType;
 
 		/// <summary>
 		/// The file's full path.
@@ -143,6 +190,7 @@ namespace pluginner{
 
 		/// <summary>
 		/// The file's content.
+        /// NOTE: if the 'file' is a directory, it's content will be null
 		/// </summary>
 		public byte[] Content;
 

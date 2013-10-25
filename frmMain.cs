@@ -151,7 +151,7 @@ namespace fcmd
 
             switch (e.KeyData){
                 case Keys.Enter: //переход
-                    if (ActivePanel.FSProvider.IsFilePresent(ActivePanel.list.SelectedItems[0].Tag.ToString()))
+                    if (ActivePanel.FSProvider.FileExists(ActivePanel.list.SelectedItems[0].Tag.ToString()))
                     {//файл
                         Process proc = new Process();
                         proc.StartInfo.FileName = ActivePanel.list.SelectedItems[0].Tag.ToString();
@@ -160,7 +160,7 @@ namespace fcmd
                         break;
                     }
                     
-                    if (ActivePanel.FSProvider.IsDirPresent(ActivePanel.list.SelectedItems[0].Tag.ToString()))
+                    if (ActivePanel.FSProvider.DirectoryExists(ActivePanel.list.SelectedItems[0].Tag.ToString()))
                     {//каталог
                         Ls(ActivePanel.list.SelectedItems[0].Tag.ToString());
                         return;
@@ -170,7 +170,7 @@ namespace fcmd
                 case Keys.F3: //просмотр
                     fcview fcv = new fcview();
 					pluginner.IFSPlugin fs = ActivePanel.FSProvider;
-                    if (fs.IsDirPresent(ActivePanel.list.SelectedItems[0].Tag.ToString()))
+                    if (fs.DirectoryExists(ActivePanel.list.SelectedItems[0].Tag.ToString()))
                     {
                         MessageBox.Show(string.Format(locale.GetString("ItsDir"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
@@ -204,7 +204,7 @@ namespace fcmd
 
         private void Panel_DblClick(object sender, EventArgs<String> e){ //двойной щелчок по панели
 			ListPanel lp = (ListPanel)sender;
-            if (lp.FSProvider.IsDirPresent(e.Data))
+            if (lp.FSProvider.DirectoryExists(e.Data))
             {
                 //это - каталог, грузить можно
                 LoadDir(e.Data, (ListPanel)sender);

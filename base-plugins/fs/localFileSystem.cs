@@ -32,14 +32,16 @@ namespace fcmd.base_plugins.fs
 			if(!url.StartsWith("file:")) throw new pluginner.PleaseSwitchPluginException();
 		}
 
-		public bool IsFilePresent(string URL){//проверить наличие файла
+        public string DirSeparator{get{return Path.DirectorySeparatorChar.ToString();}}
+
+		public bool FileExists(string URL){//проверить наличие файла
 			_CheckProtocol(URL);
 			string InternalURL = URL.Replace("file://","");
 			if(File.Exists(InternalURL)) return true; //файл е?
 			return false; //та ничого нэма! [не забываем, что return xxx прекращает выполнение подпрограммы]
 		}
 
-		public bool IsDirPresent(string URL){//проверить наличие папки
+		public bool DirectoryExists(string URL){//проверить наличие папки
 			_CheckProtocol(URL);
 			string InternalURL = URL.Replace("file://","");
 			if(Directory.Exists(InternalURL)) return true; //каталох е?
@@ -127,8 +129,8 @@ namespace fcmd.base_plugins.fs
 			pluginner.File fsf = new pluginner.File(); //fsf=filesystem file
             Progress = 50;
 			fsf.Path = InternalURL;
-			fsf.Metadata = new FileInfo(InternalURL);
-			fsf.Content = File.ReadAllBytes(InternalURL);
+			fsf.Metadata = GetMetadata(url);
+            try { fsf.Content = File.ReadAllBytes(InternalURL); } catch {fsf.Content = null;}
             fsf.Name = new FileInfo(InternalURL).Name;
 			return fsf;
 		}
@@ -141,28 +143,29 @@ namespace fcmd.base_plugins.fs
             try{
                 Progress = 10;
                 pluginner.File f = NewFile;
-                File.WriteAllBytes(InternalURL, f.Content);
+                if(!Directory.Exists(InternalURL)) File.WriteAllBytes(InternalURL, f.Content);
                 Progress = 25;
-                File.SetAttributes(InternalURL, f.Metadata.Attributes);
+                if (!Directory.Exists(InternalURL)) File.SetAttributes(InternalURL, f.Metadata.Attrubutes);
                 Progress = 50;
-                File.SetCreationTime(InternalURL, f.Metadata.CreationTime);
+                File.SetCreationTime(InternalURL, f.Metadata.CreationTimeUTC);
                 Progress = 75;
                 File.SetLastWriteTime(InternalURL, DateTime.Now);
                 Progress = 100;
             }
             catch (Exception ex){
-                System.Windows.Forms.MessageBox.Show(ex.Message,"Error",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Stop);
+                System.Windows.Forms.MessageBox.Show(ex.Message,"LocalFS error",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Stop);
+                Console.Write(ex.Message + "\n" + ex.StackTrace + "\n" + "Catched in local fs provider while loading " + InternalURL + "\n");
             }
 		}
 
-		public void RemoveFile(string url){//удалить файл
+		public void DeleteFile(string url){//удалить файл
 			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://","");
 
             File.Delete(InternalURL);
 		}
 
-		public void RemoveDir(string url, bool TryFirst){//удалить папку
+		public void DeleteDirectory(string url, bool TryFirst){//удалить папку
 			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://","");
             if (TryFirst) {
@@ -171,7 +174,7 @@ namespace fcmd.base_plugins.fs
             Directory.Delete(InternalURL,true);//рекурсивное удаление
 		}
 
-        public void MakeDir(string url){//создать каталог
+        public void CreateDirectory(string url){//создать каталог
             _CheckProtocol(url);
             string InternalURL = url.Replace("file://", "");
 
@@ -213,6 +216,44 @@ namespace fcmd.base_plugins.fs
             }
             catch (Exception ex) { Console.WriteLine("E: CheckForDeletePossiblity failed: " + ex.Message + ex.StackTrace + "\nThe FC's crash was prevented. Please inform the program authors."); return false; }
         }
+
+        public void MoveFile(string source, string destination){
+            _CheckProtocol(source);
+            string internalSource = source.Replace("file://", "");
+            string internalDestination = destination.Replace("file://", "");
+
+            File.Move(internalSource, internalDestination);
+        }
+
+        public void MoveDirectory(string source, string destination)
+        {
+            _CheckProtocol(source);
+            string internalSource = source.Replace("file://", "");
+            string internalDestination = destination.Replace("file://", "");
+
+            Directory.Move(internalSource, internalDestination);
+        }
+
+        public pluginner.FSEntryMetadata GetMetadata(string url)
+        {
+            _CheckProtocol(url);
+            string InternalURL = url.Replace("file://", "");
+            pluginner.FSEntryMetadata lego = new pluginner.FSEntryMetadata();
+            FileInfo metadatasource = new FileInfo(InternalURL);
+
+            lego.Attrubutes = metadatasource.Attributes;
+            lego.CreationTimeUTC = metadatasource.CreationTimeUtc;
+            lego.FullURL = url;
+            lego.IsReadOnly = metadatasource.IsReadOnly;
+            lego.LastAccessTimeUTC = metadatasource.LastAccessTimeUtc;
+            lego.LastWriteTimeUTC = metadatasource.LastWriteTimeUtc;
+            if(!Directory.Exists(InternalURL)) lego.Lenght = metadatasource.Length;
+            lego.Name = metadatasource.Name;
+            lego.UpperDirectory = metadatasource.DirectoryName;
+
+            return lego;
+        }
+
 	}
 }
 

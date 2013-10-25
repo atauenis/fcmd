@@ -104,6 +104,7 @@
             // 
             // mnuFileOpen
             // 
+            this.mnuFileOpen.Enabled = false;
             this.mnuFileOpen.Image = ((System.Drawing.Image)(resources.GetObject("mnuFileOpen.Image")));
             this.mnuFileOpen.Name = "mnuFileOpen";
             this.mnuFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));

@@ -117,4 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="DiskCD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Tango Port 1.0 042.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DiskHDD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Tango Port 1.0 038.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DiskNetwork" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Tango Port 1.0 004.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DiskRemovable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Tango Port 1.0 043.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

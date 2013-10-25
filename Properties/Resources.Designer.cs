@@ -59,5 +59,33 @@ namespace fcmd.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Icon DiskCD {
+            get {
+                object obj = ResourceManager.GetObject("DiskCD", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon DiskHDD {
+            get {
+                object obj = ResourceManager.GetObject("DiskHDD", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon DiskNetwork {
+            get {
+                object obj = ResourceManager.GetObject("DiskNetwork", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon DiskRemovable {
+            get {
+                object obj = ResourceManager.GetObject("DiskRemovable", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

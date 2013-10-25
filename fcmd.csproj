@@ -146,4 +146,19 @@
       <Name>pluginner</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tango Port 1.0 004.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tango Port 1.0 036.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tango Port 1.0 038.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tango Port 1.0 042.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tango Port 1.0 043.ico" />
+  </ItemGroup>
 </Project>

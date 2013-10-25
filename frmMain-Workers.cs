@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
+using System.Windows.Forms; //я тебе! убрать при первой возможности!
 
 namespace fcmd{
     public partial class frmMain{
@@ -78,7 +78,7 @@ namespace fcmd{
         /// <param name="fs">filesystem of the file</param>
         void DoRmFile(string url, pluginner.IFSPlugin fs){
             try{
-                fs.RemoveFile(url);
+                fs.DeleteFile(url);
             }
             catch (Exception err){
                 MessageBox.Show(err.Message, null, MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -93,7 +93,7 @@ namespace fcmd{
         void DoRmDir(string url, pluginner.IFSPlugin fs){
             try
             {
-                fs.RemoveDir(url, true);
+                fs.DeleteDirectory(url, true);
             }
             catch (pluginner.ThisDirCannotBeRemovedException nesudba)
             {
