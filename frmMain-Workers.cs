@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using System.Windows.Forms; //я тебе! убрать при первой возможности!
 
 namespace fcmd{
@@ -15,7 +16,8 @@ namespace fcmd{
          * 
          * В данном файле размещаются функции для работы с файлами и каталогами.
          * Данные функции запускаются в отдельных от UI потоках и вызваются функциями
-         * из файлов frmMain.cs и frmMain-CLI.cs .
+         * из файлов frmMain.cs и frmMain-CLI.cs . Всякая функция должна иметь
+         * префикс Do, означающий её чисто утилитарную принадлежность, без UI.
          * Крайне нежелательно обращение к элементам управления формы, поскольку
          * это требует всяких согласующих операций и прочих делегатов, что ухудшает
          * читаемость кода.
@@ -69,6 +71,42 @@ namespace fcmd{
             NewFile.Path = DestinationURL;
 
             DestinationFS.WriteFile(NewFile, Progress);
+        }
+
+        /// <summary>
+        /// Copy the entrie directory
+        /// </summary>
+        private void DoCpDir(string source, string destination)
+        {
+            //todo: вынести в workers.cs и отдельный поток
+            pluginfinder pf = new pluginfinder();
+            pluginner.IFSPlugin fsa = pf.GetFSplugin(source); fsa.CurrentDirectory = source;
+            pluginner.IFSPlugin fsb = pf.GetFSplugin(destination);
+
+            if (!Directory.Exists(destination)) { fsb.CreateDirectory(destination); }
+            fsb.CurrentDirectory = destination;
+            foreach (pluginner.DirItem di in fsa.DirectoryContent)
+            {
+                if (di.TextToShow == "..")
+                { /*не трогать, это кнопка "вверх"*/}
+                else if (!di.IsDirectory)
+                {
+                    //перебор файлов
+                    //формирование нового пути
+                    string s1 = di.Path; //старый путь
+                    pluginner.File CurFile = fsa.GetFile(s1, new int()); //исходный файл
+                    string s2 = destination + fsb.DirSeparator + CurFile.Name; //новый путь
+
+                    //запись копии
+                    CurFile.Path = s2;
+                    fsb.WriteFile(CurFile, new int());
+                }
+                else
+                {
+                    //перебор подкаталогов
+                    DoCpDir(di.Path, destination + fsb.DirSeparator + di.TextToShow);
+                }
+            }
         }
 
         /// <summary>

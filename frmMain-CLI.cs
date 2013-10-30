@@ -165,7 +165,25 @@ namespace fcmd
                 if (SourceFS.DirectoryExists(SourceURL))//а вдруг есть такой каталог?
                 {
                     InputBox ibxd = new InputBox(String.Format(locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FSProvider.CurrentDirectory + "/" + SourceFile.Name);
-                    if (ibxd.ShowDialog() == DialogResult.OK) { CpDir(SourceURL, ibxd.Result); }
+                    if (ibxd.ShowDialog() == DialogResult.OK) {
+                        //копирование каталога
+                        Thread CpDirThread = new Thread(delegate() {DoCpDir(SourceURL,ibxd.Result);});
+
+                        FileProcessDialog CpDirProgressDialog = new FileProcessDialog();
+                        CpDirProgressDialog.Top = this.Top + ActivePanel.Top;
+                        CpDirProgressDialog.Left = this.Left + ActivePanel.Left;
+                        CpDirProgressDialog.lblStatus.Text = String.Format(locale.GetString("DoingCopy"), "\n" + ActivePanel.list.SelectedItems[0].Tag.ToString() + " [" + locale.GetString("Directory") + "]\n", ibxd.Result, null);
+                        CpDirProgressDialog.cmdCancel.Click += (object s, EventArgs e) => { CpDirThread.Abort(); MessageBox.Show(locale.GetString("Canceled")); };
+
+                        CpDirProgressDialog.Show();
+                        CpDirThread.Start();
+
+                        do { Application.DoEvents();}
+                        while (CpDirThread.ThreadState == ThreadState.Running);
+
+                        LoadDir(PassivePanel.FSProvider.CurrentDirectory, PassivePanel); //обновление пассивной панели
+                        CpDirProgressDialog.Hide();
+                    }
                     LoadDir(PassivePanel.FSProvider.CurrentDirectory, PassivePanel); //обновление пассивной панели
                     return;
                 }
@@ -197,37 +215,55 @@ namespace fcmd
         }
 
         /// <summary>
-        /// Copy the entrie directory
+        /// Move the selected file or directory
         /// </summary>
-        private void CpDir(string source, string destination){
-            //todo: вынести в workers.cs и отдельный поток
-            pluginfinder pf = new pluginfinder();
-            pluginner.IFSPlugin fsa = pf.GetFSplugin(source); fsa.CurrentDirectory = source;
-            pluginner.IFSPlugin fsb = pf.GetFSplugin(destination);
+        void Mv()
+        {
+            //Getting the handles of the source and the destination filesystems
+            pluginner.IFSPlugin SourceFS = ActivePanel.FSProvider;
+            pluginner.IFSPlugin DestinationFS = PassivePanel.FSProvider;
 
-            if(!Directory.Exists(destination)){ fsb.CreateDirectory(destination);}
-            fsb.CurrentDirectory = destination; 
-            foreach (pluginner.DirItem di in fsa.DirectoryContent){
-                if (di.TextToShow == "..")
-                {/*не трогать, это кнопка "вверх"*/}
-                else if (!di.IsDirectory)
-                {
-                    //перебор файлов
-                    //формирование нового пути
-                    string s1 = di.Path; //старый путь
-                    pluginner.File CurFile = fsa.GetFile(s1, new int()); //исходный файл
-                    string s2 = destination + fsb.DirSeparator + CurFile.Name; //новый путь
+            //Getting useful URL parts
+            string SourceName = ActivePanel.list.SelectedItems[0].SubItems[0].Text;
+            string SourcePath = ActivePanel.list.SelectedItems[0].Tag.ToString();
+            string DestinationPath = DestinationFS.CurrentDirectory + SourceFS.DirSeparator + SourceName;
 
-                    //запись копии
-                    CurFile.Path = s2;
-                    fsb.WriteFile(CurFile, new int());
-                }
-                else
-                {
-                    //перебор подкаталогов
-                    CpDir(di.Path, destination + fsb.DirSeparator + di.TextToShow);
-                }
+            //Giving the user the one chance to change the destination path
+            InputBox ibx = new InputBox
+                (
+                string.Format(locale.GetString("MoveTo"), SourceName),
+                DestinationPath
+                );
+            if (ibx.ShowDialog() != DialogResult.Cancel)
+                DestinationPath = ibx.Result;
+            else return;
+
+            // Comparing the filesystems; if they is diffrent, use copy&delete
+            // instead of direct move (if anyone knows, how a file can be moved
+            // from an FTP to an ext2fs on Windows or MacOS please tell me :-) )
+            if (SourceFS.GetType() != DestinationFS.GetType())
+            {
+                //todo: копирование+удаление
+                MessageBox.Show("Cannot move between diffrent filesystems!\nНе сделана поддержка перепещения между разными ФС");
+                return;
             }
+
+            //Now, assuming that the src & dest fs is same and supports
+            //cross-disk file moving
+            if (SourceFS.DirectoryExists(SourcePath))
+            {//this is a directory
+                SourceFS.MoveDirectory(SourcePath, DestinationPath);
+            }
+            if (SourceFS.FileExists(SourcePath))
+            {//this is a file
+                SourceFS.MoveFile(SourcePath, DestinationPath);
+            }
+
+
+            //Final clean-up and UI refresh
+            GC.Collect(); //needs to find that it is really is need
+            LoadDir(ActivePanel.FSProvider.CurrentDirectory, ActivePanel);
+            LoadDir(PassivePanel.FSProvider.CurrentDirectory, PassivePanel);
         }
 
     }

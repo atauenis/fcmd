@@ -184,6 +184,9 @@ namespace fcmd
                 case Keys.F5: //копировать
                     Cp();
                     break;
+                case Keys.F6: //перенести/переименовать
+                    Mv();
+                    break;
                 case Keys.F8: //удалить
                     Rm(ActivePanel.list.SelectedItems[0].Tag.ToString());
                     break;
