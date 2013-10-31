@@ -243,7 +243,7 @@ namespace fcmd
             // from an FTP to an ext2fs on Windows or MacOS please tell me :-) )
             if (SourceFS.GetType() != DestinationFS.GetType())
             {
-                //todo: копирование+удаление
+                Cp();
                 MessageBox.Show("Cannot move between diffrent filesystems!\nНе сделана поддержка перепещения между разными ФС");
                 return;
             }

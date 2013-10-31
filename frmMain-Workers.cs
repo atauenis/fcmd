@@ -78,7 +78,6 @@ namespace fcmd{
         /// </summary>
         private void DoCpDir(string source, string destination)
         {
-            //todo: вынести в workers.cs и отдельный поток
             pluginfinder pf = new pluginfinder();
             pluginner.IFSPlugin fsa = pf.GetFSplugin(source); fsa.CurrentDirectory = source;
             pluginner.IFSPlugin fsb = pf.GetFSplugin(destination);
