@@ -46,6 +46,7 @@ namespace fcmd
 
 		//Внутренние переменные
 		pluginner.IFSPlugin FsPlugin;
+        TextBox txtPath = new TextBox();
 
 		//Подпрограммы
         public ListPanel(){//Ну, за инициализацию!
@@ -97,21 +98,33 @@ namespace fcmd
                 string d = di.Name;
                 ToolStripButton tsb = new ToolStripButton(d,null,(object s, EventArgs ea) => {ToolStripButton tsbn = (ToolStripButton)s; LP_goToDir("file://" + tsbn.Text);});
                 
+                //Painting drive icons
                 switch(di.DriveType){
                     case System.IO.DriveType.Fixed:
-                        tsb.Image = fcmd.Properties.Resources.DiskHDD.ToBitmap();
+                        tsb.Image = fcmd.Properties.Resources.DiskHDD;
                         break;
                     case System.IO.DriveType.CDRom:
-                        tsb.Image = fcmd.Properties.Resources.DiskCD.ToBitmap();
+                        tsb.Image = fcmd.Properties.Resources.DiskCD;
                         break;
                     case System.IO.DriveType.Removable:
-                        tsb.Image = fcmd.Properties.Resources.DiskRemovable.ToBitmap();
+                        tsb.Image = fcmd.Properties.Resources.DiskRemovable;
                         break;
                     case System.IO.DriveType.Network:
-                        tsb.Image = fcmd.Properties.Resources.DiskNetwork.ToBitmap();
+                        tsb.Image = fcmd.Properties.Resources.DiskNetwork;
                         break;
-                    //todo: запилить все System.IO.DriveTyp'ы и сделать нормальные иконки
+                    case System.IO.DriveType.Ram:
+                        tsb.Image = fcmd.Properties.Resources.DiskRAM;
+                        break;
+                    case System.IO.DriveType.Unknown:
+                        tsb.Image = fcmd.Properties.Resources.DiskUnknown;
+                        break;
                 }
+
+                //OS-specific icons (mono mistakes)
+                if (d.StartsWith("A:")) tsb.Image = fcmd.Properties.Resources.DiskFDD;
+                if (d.StartsWith("/dev")) tsb.Image = fcmd.Properties.Resources.DiskDevfs;
+                if (d.StartsWith("/proc")) tsb.Image = fcmd.Properties.Resources.DiskProcfs;
+                if (d == "/") tsb.Image = fcmd.Properties.Resources.DiskRootFs;
 
                 tsDisks.Items.Add(tsb);
             }
@@ -123,18 +136,67 @@ namespace fcmd
         /// <param name="url"></param>
         private void LP_goToDir(string url)
         {
-            FsPlugin.CurrentDirectory = url;
-            list.Items.Clear();
-            foreach (pluginner.DirItem di in FsPlugin.DirectoryContent)
+            //todo: переписать: убрать самодеятельность, обращаться к хозяину листпанели
+            lblPath.Text = url;
+            try
             {
-                if (di.Hidden == false)
+                FsPlugin.CurrentDirectory = url;
+                list.Items.Clear();
+                foreach (pluginner.DirItem di in FsPlugin.DirectoryContent)
                 {
-                    ListViewItem NewItem = new ListViewItem(di.TextToShow);
-                    NewItem.Tag = di.Path; //путь будет тегом
-                    NewItem.SubItems.Add(Convert.ToString(di.Size / 1024) + "KB");
-                    NewItem.SubItems.Add(di.Date.ToShortDateString());
-                    list.Items.Add(NewItem);
+                    if (di.Hidden == false)
+                    {
+                        ListViewItem NewItem = new ListViewItem(di.TextToShow);
+                        NewItem.Tag = di.Path; //путь будет тегом
+                        NewItem.SubItems.Add(Convert.ToString(di.Size / 1024) + "KB");
+                        NewItem.SubItems.Add(di.Date.ToShortDateString());
+                        list.Items.Add(NewItem);
+                    }
                 }
+            }
+            catch (pluginner.PleaseSwitchPluginException bezsilnost)
+            {
+                //todo: послать запрос хозяину, т.е. frmmain
+            }
+        }
+
+        // Processing URL-box clicks and other stuff about it
+        private void lblPath_DoubleClick(object sender, EventArgs e)
+        {
+            //preparing txtpath (url typing box)
+            txtPath.Text = lblPath.Text;
+            txtPath.Dock = DockStyle.Fill;
+            txtPath.BackColor = lblPath.BackColor;
+            txtPath.ForeColor = lblPath.ForeColor;
+            txtPath.Font = new Font(txtPath.Font, FontStyle.Bold);
+            txtPath.DoubleClick += this.txtPath_DoubleClick;
+            txtPath.KeyUp += this.txtPath_KeyUp;
+            txtPath.Focus();
+
+            //switching controls
+            tableLayoutPanel1.Controls.Remove(lblPath);
+            tableLayoutPanel1.Controls.Add(txtPath,0,1);
+        }
+
+        private void txtPath_DoubleClick(object sender, EventArgs e)
+        {
+            //switching controls, don't forgetting that the
+            //url viewing box is already ready
+            tableLayoutPanel1.Controls.Remove(txtPath);
+            tableLayoutPanel1.Controls.Add(lblPath, 0, 1);
+        }
+
+        private void txtPath_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                this.OnGotFocus(new EventArgs()); //extractly here because user should not switch focus until the panel is not used for file operations
+
+                TextBox UrlBox = sender as TextBox;
+                this.LP_goToDir(UrlBox.Text);
+
+                tableLayoutPanel1.Controls.Remove(txtPath);
+                tableLayoutPanel1.Controls.Add(lblPath, 0, 1);
             }
         }
     }

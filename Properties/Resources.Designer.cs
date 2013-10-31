@@ -60,31 +60,73 @@ namespace fcmd.Properties {
             }
         }
         
-        internal static System.Drawing.Icon DiskCD {
+        internal static System.Drawing.Bitmap DiskCD {
             get {
                 object obj = ResourceManager.GetObject("DiskCD", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Icon DiskHDD {
+        internal static System.Drawing.Bitmap DiskDevfs {
+            get {
+                object obj = ResourceManager.GetObject("DiskDevfs", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap DiskFDD {
+            get {
+                object obj = ResourceManager.GetObject("DiskFDD", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap DiskHDD {
             get {
                 object obj = ResourceManager.GetObject("DiskHDD", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Icon DiskNetwork {
+        internal static System.Drawing.Bitmap DiskNetwork {
             get {
                 object obj = ResourceManager.GetObject("DiskNetwork", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Icon DiskRemovable {
+        internal static System.Drawing.Bitmap DiskProcfs {
+            get {
+                object obj = ResourceManager.GetObject("DiskProcfs", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap DiskRAM {
+            get {
+                object obj = ResourceManager.GetObject("DiskRAM", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap DiskRemovable {
             get {
                 object obj = ResourceManager.GetObject("DiskRemovable", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap DiskRootFs {
+            get {
+                object obj = ResourceManager.GetObject("DiskRootFs", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap DiskUnknown {
+            get {
+                object obj = ResourceManager.GetObject("DiskUnknown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

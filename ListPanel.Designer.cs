@@ -91,6 +91,7 @@
             this.lblPath.Size = new System.Drawing.Size(273, 13);
             this.lblPath.TabIndex = 3;
             this.lblPath.Text = "lblPath";
+            this.lblPath.DoubleClick += new System.EventHandler(this.lblPath_DoubleClick);
             // 
             // tsDisks
             // 

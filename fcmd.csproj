@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;DEBUGLAYOUT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -147,19 +147,33 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Tango Port 1.0 004.ico" />
+    <None Include="Resources\folder.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Tango Port 1.0 036.ico" />
+    <None Include="Resources\image-missing.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Tango Port 1.0 038.ico" />
+    <None Include="Resources\media-floppy.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Tango Port 1.0 042.ico" />
+    <None Include="Resources\network-server.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
-    <None Include="Resources\Tango Port 1.0 043.ico" />
+    <None Include="Resources\preferences-desktop-peripherals.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\battery.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drive-harddisk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drive-optical.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drive-removable-media.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\emblem-system.png" />
   </ItemGroup>
 </Project>

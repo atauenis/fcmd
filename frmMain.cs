@@ -73,7 +73,6 @@ namespace fcmd
             lplLeft[0].list.Columns.Add("Size", locale.GetString("FSize"));
             lplLeft[0].list.Columns.Add("Date", locale.GetString("FDate"));
             lplLeft[0].list.DoubleClick += (object s, EventArgs ea) => { this.frmMain_KeyDown(s, new KeyEventArgs(Keys.Enter)); };
-            lplLeft[0].lblPath.DoubleClick += (object s, EventArgs ea) => {InputBox ibx = new InputBox("Go to?"); ibx.ShowDialog(); Ls(ibx.Result); }; //todo (код временный)
             this.Controls.Add(this.lplLeft[0]); //ввожу панель в форму
 			ActivePanel = this.lplLeft[0]; //и делаю её активной
 			//Правая
@@ -91,6 +90,12 @@ namespace fcmd
             this.Controls.Add(this.lplRight[0]); //ввожу панель в форму
 			PassivePanel = this.lplRight[0];
 			#endregion
+
+            #if DEBUGLAYOUT //To be used when debugging ListPanel
+                    MessageBox.Show("This build is working with hidden edge controls in the frmMain.");
+                    tsKeyboard.Visible = false;
+                    mstMenu.Visible = false;
+            #endif
 
 			#region Изначальный перечень файлов
 			string startupDir = "file://" + Directory.GetLogicalDrives()[1];
@@ -234,7 +239,7 @@ namespace fcmd
         /// <param name='lp'>
         /// ListPanel, в которую надобно захуячить директорию
         /// </param>
-        private void LoadDir(string url, ListPanel lp)
+        public void LoadDir(string url, ListPanel lp)
         {
             lp.lblPath.Text = url;
             int Status = 0;
@@ -258,6 +263,8 @@ namespace fcmd
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.mstMenu = new System.Windows.Forms.MenuStrip();
+            this.менюВПроцессеРазработкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.даНичегоТутНетToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsKeyboard = new System.Windows.Forms.ToolStrip();
             this.tsbHelpF1 = new System.Windows.Forms.ToolStripButton();
             this.tsbHelpF2 = new System.Windows.Forms.ToolStripButton();
@@ -269,8 +276,6 @@ namespace fcmd
             this.tsbHelpF8 = new System.Windows.Forms.ToolStripButton();
             this.tsbHelpF9 = new System.Windows.Forms.ToolStripButton();
             this.tsbHelpF10 = new System.Windows.Forms.ToolStripButton();
-            this.менюВПроцессеРазработкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.даНичегоТутНетToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mstMenu.SuspendLayout();
             this.tsKeyboard.SuspendLayout();
             this.SuspendLayout();
@@ -285,6 +290,20 @@ namespace fcmd
             this.mstMenu.Size = new System.Drawing.Size(618, 23);
             this.mstMenu.TabIndex = 0;
             this.mstMenu.Text = "menuStrip1";
+            // 
+            // менюВПроцессеРазработкиToolStripMenuItem
+            // 
+            this.менюВПроцессеРазработкиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.даНичегоТутНетToolStripMenuItem});
+            this.менюВПроцессеРазработкиToolStripMenuItem.Name = "менюВПроцессеРазработкиToolStripMenuItem";
+            this.менюВПроцессеРазработкиToolStripMenuItem.Size = new System.Drawing.Size(186, 19);
+            this.менюВПроцессеРазработкиToolStripMenuItem.Text = "Меню в процессе разработки!";
+            // 
+            // даНичегоТутНетToolStripMenuItem
+            // 
+            this.даНичегоТутНетToolStripMenuItem.Name = "даНичегоТутНетToolStripMenuItem";
+            this.даНичегоТутНетToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.даНичегоТутНетToolStripMenuItem.Text = "Да, ничего тут нет.";
             // 
             // tsKeyboard
             // 
@@ -407,20 +426,6 @@ namespace fcmd
             this.tsbHelpF10.Name = "tsbHelpF10";
             this.tsbHelpF10.Size = new System.Drawing.Size(66, 19);
             this.tsbHelpF10.Text = "F10 Выход";
-            // 
-            // менюВПроцессеРазработкиToolStripMenuItem
-            // 
-            this.менюВПроцессеРазработкиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.даНичегоТутНетToolStripMenuItem});
-            this.менюВПроцессеРазработкиToolStripMenuItem.Name = "менюВПроцессеРазработкиToolStripMenuItem";
-            this.менюВПроцессеРазработкиToolStripMenuItem.Size = new System.Drawing.Size(186, 19);
-            this.менюВПроцессеРазработкиToolStripMenuItem.Text = "Меню в процессе разработки!";
-            // 
-            // даНичегоТутНетToolStripMenuItem
-            // 
-            this.даНичегоТутНетToolStripMenuItem.Name = "даНичегоТутНетToolStripMenuItem";
-            this.даНичегоТутНетToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.даНичегоТутНетToolStripMenuItem.Text = "Да, ничего тут нет.";
             // 
             // frmMain
             // 
