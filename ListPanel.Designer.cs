@@ -78,7 +78,7 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(273, 13);
             this.lblStatus.TabIndex = 2;
-            this.lblStatus.Text = "lblStatus";
+            this.lblStatus.Text = " ";
             // 
             // lblPath
             // 

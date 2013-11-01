@@ -73,6 +73,7 @@ namespace fcmd
             lplLeft[0].list.Columns.Add("Size", locale.GetString("FSize"));
             lplLeft[0].list.Columns.Add("Date", locale.GetString("FDate"));
             lplLeft[0].list.DoubleClick += (object s, EventArgs ea) => { this.frmMain_KeyDown(s, new KeyEventArgs(Keys.Enter)); };
+            lplLeft[0].OnURLBoxNavigate += (object s, EventArgs<string> ea) => {LoadDir(ea.Data,lplLeft[0]) ;};
             this.Controls.Add(this.lplLeft[0]); //ввожу панель в форму
 			ActivePanel = this.lplLeft[0]; //и делаю её активной
 			//Правая
@@ -87,6 +88,7 @@ namespace fcmd
             lplRight[0].list.Columns.Add("Name", locale.GetString("FName"));
             lplRight[0].list.Columns.Add("Size", locale.GetString("FSize"));
             lplRight[0].list.Columns.Add("Date", locale.GetString("FDate"));
+            lplRight[0].OnURLBoxNavigate += (object s, EventArgs<string> ea) => { LoadDir(ea.Data, lplRight[0]); };
             this.Controls.Add(this.lplRight[0]); //ввожу панель в форму
 			PassivePanel = this.lplRight[0];
 			#endregion

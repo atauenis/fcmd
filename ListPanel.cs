@@ -55,7 +55,9 @@ namespace fcmd
 			list.LostFocus += (sender, e) => OnLostFocus(e);
         }
 
-		public new event StringEvent DoubleClick;
+        //События
+		public new event StringEvent DoubleClick; //todo: old hack for mono, needs to be confirmed and possibly removed
+        public new event StringEvent OnURLBoxNavigate; //event for urlbox-initiated navigation
 
         private void ListPanel_Load(object sender, EventArgs e){//Ну, за загрузку!
             Repaint();
@@ -78,7 +80,16 @@ namespace fcmd
         {
             try
             {
-                lblStatus.Text = list.SelectedItems[0].Text + "      " + list.SelectedItems[0].SubItems[1].Text;
+                pluginner.FSEntryMetadata Finfo = list.SelectedItems[0].Tag as pluginner.FSEntryMetadata;
+                string Text = fcmd.Properties.Settings.Default.InfoBarContent;
+
+                Text = Text.Replace("{Name}", Finfo.Name);
+                Text = Text.Replace("{Size}", Finfo.Lenght.ToString()); //todo: auto-translation between byte-kbyte-mbyte...
+                Text = Text.Replace("{ShortDate}", Finfo.LastWriteTimeUTC.ToShortDateString());
+                Text = Text.Replace("{LongDate}", Finfo.LastWriteTimeUTC.ToLongDateString());
+                //undone
+
+                lblStatus.Text = Text;
             }
             catch (System.ArgumentOutOfRangeException aoore)
             {
@@ -193,8 +204,7 @@ namespace fcmd
                 this.OnGotFocus(new EventArgs()); //extractly here because user should not switch focus until the panel is not used for file operations
 
                 TextBox UrlBox = sender as TextBox;
-                this.LP_goToDir(UrlBox.Text);
-
+                if(OnURLBoxNavigate != null) OnURLBoxNavigate(sender, new EventArgs<string>(UrlBox.Text));
                 tableLayoutPanel1.Controls.Remove(txtPath);
                 tableLayoutPanel1.Controls.Add(lblPath, 0, 1);
             }

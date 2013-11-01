@@ -55,5 +55,41 @@ namespace fcmd.Properties {
                 return ((string)(this["Language"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowHidedFiles {
+            get {
+                return ((bool)(this["ShowHidedFiles"]));
+            }
+            set {
+                this["ShowHidedFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{Disks}")]
+        public string DiskBarContent {
+            get {
+                return ((string)(this["DiskBarContent"]));
+            }
+            set {
+                this["DiskBarContent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{Name} {Size}Б; обновлено {LongDate}")]
+        public string InfoBarContent {
+            get {
+                return ((string)(this["InfoBarContent"]));
+            }
+            set {
+                this["InfoBarContent"] = value;
+            }
+        }
     }
 }

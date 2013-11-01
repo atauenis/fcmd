@@ -143,7 +143,7 @@ namespace pluginner{
     /// <summary>
     /// Filesystem entry's metadata (like system.io.fileinfo/directoryinfo)
     /// </summary>
-    public struct FSEntryMetadata
+    public class FSEntryMetadata
     {
         /// <summary>The file's short name with extension</summary>
         public string Name;
@@ -166,6 +166,10 @@ namespace pluginner{
 
         /// <summary>Is the file configured for read only</summary>
         public bool IsReadOnly;
+
+        /// <summary>Returns uniform resource locator of the file</summary>
+        public override string ToString()
+        { return this.FullURL; }
     }
 
 	/// <summary>

@@ -34,21 +34,35 @@ namespace fcmd{
             lp.list.Items.Clear();
             lp.list.BeginUpdate();
             
-            //гружу директорию
+            //load the directory
             pluginner.IFSPlugin fsp = lp.FSProvider;
             fsp.CurrentDirectory = URL;
 
-            //готовлю статистическую информацию
+            //making the statistic info
             int FileWeight = 0;
             checked { FileWeight = 100 / fsp.DirectoryContent.Count; }
 
-            foreach (pluginner.DirItem di in fsp.DirectoryContent)
-            { //перебираю файлы, найденные провайдером ФС
+            ////making file icon imagelist
+            //ImageList FIcons = new ImageList();
+            //lp.list.SmallImageList = FIcons;
+
+            for(int i = 0; i < fsp.DirectoryContent.Count; i++)
+            {
+                pluginner.DirItem di = fsp.DirectoryContent[i];
+                
+                //parsing all files, that given from the FS provider
                 StatusFeedback += FileWeight;
-                if (di.Hidden == false)
+                if (di.Hidden == false || fcmd.Properties.Settings.Default.ShowHidedFiles == true)
                 {
+                    //try
+                    //{
+                    //    //extracting & registering the icon of the file
+                    //    FIcons.Images.Add(System.Drawing.Icon.ExtractAssociatedIcon(di.Path.Replace("file://","")));//undone
+                    //}catch{}
+
+                    //creating a new listpanel's listview item
                     ListViewItem NewItem = new ListViewItem(di.TextToShow);
-                    NewItem.Tag = di.Path; //путь будет тегом
+                    NewItem.Tag = fsp.GetMetadata(di.Path); //each list item is "tagged" with the file's metadata
                     NewItem.SubItems.Add(Convert.ToString(di.Size / 1024) + "KB");
                     NewItem.SubItems.Add(di.Date.ToShortDateString());
                     AddItem(lp, NewItem);
