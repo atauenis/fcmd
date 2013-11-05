@@ -20,6 +20,10 @@ namespace fcmd.base_plugins.viewer
         public string Author { get{ return "A.T."; } }
         #endregion
 
+        public event pluginner.MsgBoxDelegate MsgBox;
+
+
+        List<ToolStripMenuItem> Options = new List<ToolStripMenuItem>();
         string Content = "";
         string URL = "";
         pluginner.IFSPlugin FS;
@@ -92,7 +96,7 @@ namespace fcmd.base_plugins.viewer
 
         public ToolStripMenuItem[] SettingsMenu{//(под)меню настроек
             get{
-                List<ToolStripMenuItem> Options = new List<ToolStripMenuItem>();
+                Options.Clear();
                 Options.Add(new ToolStripMenuItem("У плагина нет настроек",null,this.Test));
                 Options.Add(new ToolStripMenuItem("Шрифт...", null, this.SetFont));
                 //Options.Add(new ToolStripSeparator());//Аргумент '1': преобразование типа из 'System.Windows.Forms.ToolStripSeparator' в 'System.Windows.Forms.ToolStripMenuItem' невозможно
@@ -111,21 +115,33 @@ namespace fcmd.base_plugins.viewer
             }
         }
 
-        public void ChCp(object sender, EventArgs e)
+        public void ChCp(object sender, EventArgs e) //change codepage
         {
             ToolStripMenuItem SelItem = (ToolStripMenuItem)sender;
             Content = Encoding.GetEncoding(Convert.ToInt32(SelItem.Tag)).GetString(FS.GetFile(URL, new int()).Content);
             txtBox.Text = Content;
-            //todo: поставить галочку
+
+            //set a tick
+            foreach (ToolStripMenuItem stroka in Options)
+            {
+                if (Convert.ToInt32(SelItem.Tag) == Convert.ToInt32(stroka.Tag))
+                {//this is that!
+                    stroka.Checked = true;
+                }
+                else
+                {//no, removing possibly mark
+                    stroka.Checked = false;
+                }
+            }
         }
 
-        public void Test(object sender, EventArgs e){
-            MessageBox.Show("У плагина нет настроек...пока что.");
+        public void Test(object sender, EventArgs e){ //this plugin have no settings (placeholder)
+            if (MsgBox != null) MsgBox("У плагина нет настроек...пока что.","",MessageBoxButtons.OK,MessageBoxIcon.Asterisk);
         }
 
-        public void SetFont(object sender, EventArgs e){//формат-выбор шрифта
+        public void SetFont(object sender, EventArgs e){//format-font
             FontDialog fd = new FontDialog();
-            fd.AllowScriptChange = false; //.net у нас юникодовый, кодировки менять нельзя
+            fd.AllowScriptChange = false; //.net strings are unicode, need to disable changing the cp of the textbox
             fd.ShowColor = true;
 
             fd.Font = txtBox.Font;

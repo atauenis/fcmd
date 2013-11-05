@@ -99,9 +99,7 @@ namespace fcmd
                 {
                     Localization[Parts[0]] = Parts[1];
                 }
-                catch(Exception ex)
-                {
-                }
+                catch(Exception){} //почти On Error Resume Next :-)
             }
         }
     }

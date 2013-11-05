@@ -23,6 +23,10 @@ namespace fcmd.base_plugins.fs
 		public string Author { get{return "A.T.";} }
 		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
 
+#pragma warning disable //because this is not a forgetted code, it is required by the iplugin interface
+        public event pluginner.MsgBoxDelegate MsgBox;
+#pragma warning restore
+
 		List<pluginner.DirItem> DirContent = new List<pluginner.DirItem>();
 		string CurDir;
 

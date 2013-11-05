@@ -40,7 +40,7 @@ namespace fcmd
         /// <param name="URL">The file's URL</param>
         /// <param name="FS">The file's filesystem plugin</param>
 
-        public void LoadFile(string URL, pluginner.IFSPlugin FS){//загрузка txt-файлов
+        public void LoadFile(string URL, pluginner.IFSPlugin FS){// "text/plain" loading
             string content = Encoding.UTF8.GetString(FS.GetFile(URL,new int()).Content);
             pluginfinder pf = new pluginfinder();
             Path = URL;
@@ -70,9 +70,11 @@ namespace fcmd
 
             if (vp.DisplayBox().BackColor != SystemColors.Window) pnlContainer.BorderStyle = BorderStyle.Fixed3D;
             // ^- если цвет фона плагина не оконный, рисовать рамку. Это выверт для подавления XP-стилей
+            // ^- if plugin box backcolor is not windows default bgcolor then draw a border.
+            // this hack is used to dimiss xp-styles
             this.pnlContainer.Controls.Add(vp.DisplayBox());
 
-            //"доработка" интерфейса fcview под текущий плагин
+            //tuning the fcview ui for the current plugin
             mnuFilePrint.Enabled = vp.CanPrint;
             mnuFilePrintOptions.Enabled = vp.CanPrint;
             mnuEditCopy.Enabled = vp.CanCopy;
@@ -84,7 +86,7 @@ namespace fcmd
                 mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
             }
 
-            //создание меню "вид" (список доступных плагинов)
+            //building the "view" menu (the list of available plugins)
             mnuView.DropDownItems.Clear();
             foreach (string Plugin4List in pf.ViewPlugins)
             {
@@ -94,6 +96,8 @@ namespace fcmd
                 if (NewMenuItem.Tag.ToString() == PluginLink) NewMenuItem.Checked = true;
                 mnuView.DropDownItems.Add(NewMenuItem);
             }
+
+            vp.MsgBox += (string text, string header, MessageBoxButtons buttons, MessageBoxIcon icon) => { MessageBox.Show(text); return ""; };//что-то я тут нахимичил не того :-)
 
             this.Show();
             this.UseWaitCursor = false;
@@ -135,7 +139,6 @@ namespace fcmd
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
-            //string AboutString = "FCView " + Application.ProductVersion + "\n" + "(C) 2013, Alexander Tauenis\n\n";
             string AboutString = String.Format(locale.GetString("FCViewVer"),Application.ProductVersion) + "\n" + "(C) 2013, Alexander Tauenis\n\n";
             AboutString += vp.Name + " " + vp.Version + "\n" + vp.Author;
             MessageBox.Show(AboutString, "File Commander Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -200,6 +203,7 @@ namespace fcmd
 
         /// <summary>
         /// Перевести весь интерфейс на текущий язык
+        /// Translate entrie UI into the locale
         /// </summary>
         public void Localize(){
             tsbHelpF1.Text = locale.GetString("FCVF1");
@@ -236,6 +240,7 @@ namespace fcmd
         private void mnuFormat_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             //обновление спика параметров плагина (меню Формат)
+            //update plugin options list (menu "format")
             if (vp.SettingsMenu.Length > 0){
                 mnuFormat.DropDownItems.Clear();
                 mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);

@@ -82,7 +82,7 @@ namespace fcmd.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{Name} {Size}Б; обновлено {LongDate}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{Name} {AutoSize}; обновлено {LongDate}")]
         public string InfoBarContent {
             get {
                 return ((string)(this["InfoBarContent"]));

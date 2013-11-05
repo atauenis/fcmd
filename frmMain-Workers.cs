@@ -63,7 +63,7 @@ namespace fcmd{
                     //creating a new listpanel's listview item
                     ListViewItem NewItem = new ListViewItem(di.TextToShow);
                     NewItem.Tag = fsp.GetMetadata(di.Path); //each list item is "tagged" with the file's metadata
-                    NewItem.SubItems.Add(Convert.ToString(di.Size / 1024) + "KB");
+                    NewItem.SubItems.Add(KiloMegaGigabyteConvert(di.Size));
                     NewItem.SubItems.Add(di.Date.ToShortDateString());
                     AddItem(lp, NewItem);
                 }
@@ -146,7 +146,7 @@ namespace fcmd{
             {
                 fs.DeleteDirectory(url, true);
             }
-            catch (pluginner.ThisDirCannotBeRemovedException nesudba)
+            catch (pluginner.ThisDirCannotBeRemovedException)
             {
                 MessageBox.Show(string.Format(locale.GetString("DirCantBeRemoved"),url),null,MessageBoxButtons.OK,MessageBoxIcon.Stop);
             }

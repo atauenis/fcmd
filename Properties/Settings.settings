@@ -18,7 +18,7 @@
       <Value Profile="(Default)">{Disks}</Value>
     </Setting>
     <Setting Name="InfoBarContent" Type="System.String" Scope="User">
-      <Value Profile="(Default)">{Name} {Size}Б; обновлено {LongDate}</Value>
+      <Value Profile="(Default)">{Name} {AutoSize}; обновлено {LongDate}</Value>
     </Setting>
   </Settings>
 </SettingsFile>

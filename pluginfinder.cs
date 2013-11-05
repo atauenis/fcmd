@@ -18,7 +18,7 @@ namespace fcmd
     class pluginfinder{
         public List<string> FSPlugins = new List<string>();
 		public List<string> ViewPlugins = new List<string>();
-        string[] EditPlugins; //todo
+        //string[] EditPlugins; //todo
 
         public pluginfinder(){//конструктор
 			//загрузка списка плагинов ФС из файла

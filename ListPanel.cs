@@ -84,14 +84,21 @@ namespace fcmd
                 string Text = fcmd.Properties.Settings.Default.InfoBarContent;
 
                 Text = Text.Replace("{Name}", Finfo.Name);
-                Text = Text.Replace("{Size}", Finfo.Lenght.ToString()); //todo: auto-translation between byte-kbyte-mbyte...
+                Text = Text.Replace("{Size}", Finfo.Lenght.ToString());
+
+                if (Finfo.Lenght > 1099511627776) Text = Text.Replace("{AutoSize}", (Finfo.Lenght / 1099511627776).ToString() + " TB"); //terabyte
+                if (Finfo.Lenght > 1073741824) Text = Text.Replace("{AutoSize}", (Finfo.Lenght / 1073741824).ToString() + " GB"); //gigabyte
+                if (Finfo.Lenght > 1048576) Text = Text.Replace("{AutoSize}", (Finfo.Lenght / 1048576).ToString() + " MB"); //megabyte
+                if (Finfo.Lenght > 1024) Text = Text.Replace("{AutoSize}", (Finfo.Lenght / 1024).ToString() + " KB"); //kilobyte
+                if (Finfo.Lenght < 1024) Text = Text.Replace("{AutoSize}", Finfo.Lenght.ToString() + " B"); //byte
+
                 Text = Text.Replace("{ShortDate}", Finfo.LastWriteTimeUTC.ToShortDateString());
                 Text = Text.Replace("{LongDate}", Finfo.LastWriteTimeUTC.ToLongDateString());
                 //undone
 
                 lblStatus.Text = Text;
             }
-            catch (System.ArgumentOutOfRangeException aoore)
+            catch (System.ArgumentOutOfRangeException)
             {
                 //всё нормально, пользователь не выбрал никакого пункта
                 lblStatus.Text = " ";//пустая строка чтобы не было неприятностей с работой AutoSize
@@ -107,7 +114,10 @@ namespace fcmd
             lblStatus.Visible = fcmd.Properties.Settings.Default.ShowFileInfo;
             foreach (System.IO.DriveInfo di in System.IO.DriveInfo.GetDrives()){
                 string d = di.Name;
-                ToolStripButton tsb = new ToolStripButton(d,null,(object s, EventArgs ea) => {ToolStripButton tsbn = (ToolStripButton)s; LP_goToDir("file://" + tsbn.Text);});
+                ToolStripButton tsb = new ToolStripButton(d, null, (object s, EventArgs ea) =>
+                {
+                    ToolStripButton tsbn = (ToolStripButton)s; if (OnURLBoxNavigate != null) OnURLBoxNavigate(new object(), new EventArgs<string>("file://" + tsbn.Text));;
+                });
                 
                 //Painting drive icons
                 switch(di.DriveType){
@@ -138,36 +148,6 @@ namespace fcmd
                 if (d == "/") tsb.Image = fcmd.Properties.Resources.DiskRootFs;
 
                 tsDisks.Items.Add(tsb);
-            }
-        }
-
-        /// <summary>
-        /// Load the directory <paramref name="url"/>. To be used only inside listpanel.cs
-        /// </summary>
-        /// <param name="url"></param>
-        private void LP_goToDir(string url)
-        {
-            //todo: переписать: убрать самодеятельность, обращаться к хозяину листпанели
-            lblPath.Text = url;
-            try
-            {
-                FsPlugin.CurrentDirectory = url;
-                list.Items.Clear();
-                foreach (pluginner.DirItem di in FsPlugin.DirectoryContent)
-                {
-                    if (di.Hidden == false)
-                    {
-                        ListViewItem NewItem = new ListViewItem(di.TextToShow);
-                        NewItem.Tag = di.Path; //путь будет тегом
-                        NewItem.SubItems.Add(Convert.ToString(di.Size / 1024) + "KB");
-                        NewItem.SubItems.Add(di.Date.ToShortDateString());
-                        list.Items.Add(NewItem);
-                    }
-                }
-            }
-            catch (pluginner.PleaseSwitchPluginException bezsilnost)
-            {
-                //todo: послать запрос хозяину, т.е. frmmain
             }
         }
 

@@ -490,6 +490,21 @@ namespace fcmd
             CheckForIllegalCrossThreadCalls = false; //HACK: заменить на долбанные делегации и прочую нетовскую муть
             lp.list.Items.Add(NewItem);
         }
+
+        /// <summary>
+        /// Converts the file size (in bytes) to human-readable string
+        /// </summary>
+        private string KiloMegaGigabyteConvert(long Input){
+            const int Kibi = 1024; //to be used when a maths-knowledged contributor changed these "magic numbers" to equations of 1024
+            //необходимо заменить магические числа на формулы с применением константы 1024 (Kibi)
+
+            if (Input > 1099511627776) return (Input / 1099511627776).ToString() + " TB"; //terabyte
+            if (Input > 1073741824) return (Input / 1073741824).ToString() + " GB"; //gigabyte
+            if (Input > 1048576) return (Input / 1048576).ToString() + " MB"; //megabyte
+            if (Input > 1024) return (Input / Kibi).ToString() + " KB"; //kilobyte
+            
+            return Input.ToString() + " B"; //byte (if Input less than 1024)
+        }
 	}
 
 	public delegate void StringEvent(object sender, EventArgs<String> e);

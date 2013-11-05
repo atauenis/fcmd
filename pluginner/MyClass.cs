@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace pluginner{
+    public delegate string TypedEvent<T>(T data);
+    public delegate string MsgBoxDelegate(string text, string header, MessageBoxButtons buttons, MessageBoxIcon icon);
+
 	/// <summary>
 	/// Default plugin interface.
 	/// </summary>
@@ -26,6 +29,8 @@ namespace pluginner{
 		/// Gives the plugin's author.
 		/// </summary>
 		string Author { get; }
+
+        event MsgBoxDelegate MsgBox;
 	}
 
 	/// <summary>
