@@ -91,5 +91,17 @@ namespace fcmd.Properties {
                 this["InfoBarContent"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowKeybrdHelp {
+            get {
+                return ((bool)(this["ShowKeybrdHelp"]));
+            }
+            set {
+                this["ShowKeybrdHelp"] = value;
+            }
+        }
     }
 }

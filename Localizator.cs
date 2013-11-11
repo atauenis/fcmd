@@ -28,7 +28,13 @@ namespace fcmd
                         "FCF7=F7 Каталог\n" +
                         "FCF8=F8 Удал-е\n" +
                         "FCF9=F9 Оп-ции\n" +
-                       "FCF10=F10 Выход\n" +
+                       "FCF10=F10 Выход\n" + //todo: перевести в читаемый вид
+                        "FCmnuFile=&Файл\nFCmnuView=&Вид\nFCmnuNav=&Навигация\nFCmnuTools=С&ервис\nFCmnuHelp=&Справка\n"+
+                        "FCmnuFileUserMenu=Меню пользователя\nFCmnuFileView=Просмотреть файл\nFCmnuFileEdit=Редактировать файл\nFCmnuFileCopy=Копирование\nFCmnuFileMove=Перенос/переименование\nFCmnuFileNewDir=Новый каталог\nFCmnuFileRemove=Удалить\nFCmnuFileAtributes=Свойства\nFCmnuFileQuickSelect=Выбрать файл...\nFCmnuFileUnselect=Убрать синие выделения\nFCmnuFileInvertSelection=Инвертировать выделение\nFCmnuFileRevertSelection=Восстановить прежнее выделение\nFCmnuFileExit=Выxод\n" +
+                        "FCmnuViewShort=Краткий (список)\nFCmnuViewDetails=Полный (таблица)\nFCmnuViewIcons=Икноки (значки)\nFCmnuViewThumbs=Эскизы изображений\nFCmnuViewQuickView=Быстрый просмотр выделенного в сосед. панели\nFCmnuViewTree=Древо каталогов\nFCmnuViewPCPCconnect=Прямая связь ПК-ПК\nFCmnuViewPCNETPCconnect=Мини HTTP сервер\nFCmnuViewByName=По имени\nFCmnuViewByType=По расширению\nFCmnuViewByDate=По дате\nFCmnuViewBySize=По размеру\nFCmnuViewNoFilter=Без фильтра (*.*)\nFCmnuViewWithFilter=Применить фильтр имени...\nFCmnuViewToolbar=Панель инструментов\n" +
+                        "FCmnuNavigateTree=Дерево\nFCmnuNavigateFind=Розыск файла...\nFCmnuNavigateHistory=История посещений\nFCmnuNavigateReload=Перезагрузить\nFCmnuNavigateFlyTo=Быстрый переход\n" +
+                        "FCmnuToolsOptions=Настройки...\nFCmnuToolsPluginManager=Управление расширениями...\nFCmnuToolsEditUserMenu=Редактировать меню пользователя...\nFCmnuToolsKeybrdHelp=Подсказки клавиш F\nFCmnuToolsInfobar=Сводные строки\nFCmnuToolsDiskButtons=Кнопки дисков\nFCmnuToolsConfigEdit=Правка конфигурации FC\nFCmnuToolsKeychains=Учётные данные ФС\nFCmnuToolsDiskLabel=Метка диска...\nFCmnuToolsFormat=Форматировать носитель...\nFCmnuToolsSysInfo=Сведения о системе\n" +
+                        "FCmnuHelpHelpMe=Справка File Commander\nFCmnuHelpAbout=О программе...\n"+
                         "FName=Имя\nFSize=Размер\nFDate=Дата\n" +
                         "FCDelAsk=Вы действительно хотите удалить файл \"{0}\"?\n" +
                         "Canceled=Отменено пользователем\n" +
@@ -45,6 +51,7 @@ namespace fcmd
                         "MoveTo=Перенести/переименовать {0} в:\n" +
                         "NewDirURL=Введите путь для нового каталога\n" +
                         "NewDirTemplate=\\НОВЫЙ КАТАЛОГ\n" +
+                        "FileQuickSelectFileAsk=Какой файл (маску имени) нужно выделить:\n"+
                         "FCVTitle=Просмоторщик файлов - {0}\n" +
                         "FCVF1=F1 Справка\n" +
                         "FCVF2=F2\n" +
@@ -70,7 +77,10 @@ namespace fcmd
         /// <param name="Key"></param>
         /// <returns></returns>
         public string GetString(string Key){
-            return Localization[Key];
+            try{
+                return Localization[Key];
+            }
+            catch (Exception ex) { Console.WriteLine("LOCALIZATION KEY WASN'T FOUND: " + Key + " (" + ex.Message + ")"); return Key; }
         }
 
         /// <summary>

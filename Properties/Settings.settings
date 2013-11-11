@@ -20,5 +20,8 @@
     <Setting Name="InfoBarContent" Type="System.String" Scope="User">
       <Value Profile="(Default)">{Name} {AutoSize}; обновлено {LongDate}</Value>
     </Setting>
+    <Setting Name="ShowKeybrdHelp" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

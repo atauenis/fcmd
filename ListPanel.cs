@@ -112,6 +112,8 @@ namespace fcmd
         public void Repaint()
         {
             lblStatus.Visible = fcmd.Properties.Settings.Default.ShowFileInfo;
+            tsDisks.Visible = fcmd.Properties.Settings.Default.ShowDiskList;
+            tsDisks.Items.Clear();
             foreach (System.IO.DriveInfo di in System.IO.DriveInfo.GetDrives()){
                 string d = di.Name;
                 ToolStripButton tsb = new ToolStripButton(d, null, (object s, EventArgs ea) =>
