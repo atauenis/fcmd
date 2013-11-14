@@ -98,6 +98,7 @@ namespace fcmd
         Localizator locale = new Localizator(); //объект для работы с локализациями интерфейса
 
 		//Подпрограммы
+        [STAThread] //need because of unfixed wpf elementhost bug
 		static void Main(){ //Иницализация программы
 			Application.Run(new frmMain());//BUG: github issue #2
 		}
@@ -109,7 +110,6 @@ namespace fcmd
 		private void frmMain_Load(object sender, EventArgs e){ //функция Form_Load()
             Application.EnableVisualStyles();
             Localize();
-
 
 			#if DEBUG
 				MessageBox.Show ("File commander, версия " + Application.ProductVersion);
@@ -1207,7 +1207,8 @@ namespace fcmd
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
             string AboutString = string.Format(locale.GetString("FileCommanderVer"),"File Commander", Application.ProductVersion)+
-                                               "\n(C) 2013, FC team (Alexander Tauenis & comrades)\nhttps://github.com/atauenis/fcmd\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
+                                               "\n(C) 2013, FC team (Alexander Tauenis & comrades)\nhttps://github.com/atauenis/fcmd\n"+
+                                               "Uses Xamarin Window Toolkit (Xwt)\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
             MessageBox.Show(AboutString,Application.ProductName);
         }
 

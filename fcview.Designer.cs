@@ -65,10 +65,8 @@
             this.tsbHelpF8 = new System.Windows.Forms.ToolStripButton();
             this.tsbHelpF9 = new System.Windows.Forms.ToolStripButton();
             this.tsbHelpF10 = new System.Windows.Forms.ToolStripButton();
-            this.pnlContainer = new System.Windows.Forms.Panel();
             this.mnu.SuspendLayout();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
-            this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.tsKeyboard.SuspendLayout();
             this.SuspendLayout();
@@ -279,7 +277,6 @@
             // 
             // toolStripContainer1.ContentPanel
             // 
-            this.toolStripContainer1.ContentPanel.Controls.Add(this.pnlContainer);
             this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(571, 292);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 23);
@@ -414,14 +411,6 @@
             this.tsbHelpF10.Size = new System.Drawing.Size(66, 22);
             this.tsbHelpF10.Text = "F10 Выход";
             // 
-            // pnlContainer
-            // 
-            this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlContainer.Location = new System.Drawing.Point(0, 0);
-            this.pnlContainer.Name = "pnlContainer";
-            this.pnlContainer.Size = new System.Drawing.Size(571, 292);
-            this.pnlContainer.TabIndex = 3;
-            // 
             // fcview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -434,12 +423,11 @@
             this.Name = "fcview";
             this.Text = "fcview";
             this.Load += new System.EventHandler(this.fcview_Load);
-            this.Resize += new System.EventHandler(this.fcview_Resize);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fcview_KeyDown);
+            this.Resize += new System.EventHandler(this.fcview_Resize);
             this.mnu.ResumeLayout(false);
             this.mnu.PerformLayout();
             this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer1.ContentPanel.ResumeLayout(false);
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
             this.tsKeyboard.ResumeLayout(false);
@@ -475,7 +463,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuEditFind;
         private System.Windows.Forms.ToolStripMenuItem mnuView;
         private System.Windows.Forms.ToolStripContainer toolStripContainer1;
-        private System.Windows.Forms.Panel pnlContainer;
         private System.Windows.Forms.ToolStrip tsKeyboard;
         private System.Windows.Forms.ToolStripButton tsbHelpF1;
         private System.Windows.Forms.ToolStripButton tsbHelpF2;

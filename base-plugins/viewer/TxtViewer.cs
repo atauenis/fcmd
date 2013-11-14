@@ -27,23 +27,24 @@ namespace fcmd.base_plugins.viewer
         string Content = "";
         string URL = "";
         pluginner.IFSPlugin FS;
-		TextBox txtBox = new TextBox();
+        Xwt.TextEntry txtBox = new Xwt.TextEntry();
         PrintDocument Doc = new PrintDocument();
         string LastSearch = "";
 
-        public System.Windows.Forms.Control DisplayBox(){
-            txtBox.Name = "txtBox";
-            txtBox.Dock = DockStyle.Fill;
-            txtBox.Multiline = true;
-            txtBox.Text = Content;
-            txtBox.ReadOnly = true;
-			txtBox.SelectionStart = 0;  // подавление системного...
-			txtBox.SelectionLength = 0; // ...автовыделения всего
-			txtBox.ScrollBars = ScrollBars.Both;
-			txtBox.BackColor = System.Drawing.Color.White;
-			txtBox.BorderStyle = BorderStyle.None; //для отключения влияния тем WinXP+
-
-            return txtBox;
+        public Xwt.Widget DisplayBox{
+            get{
+#if Win
+                Xwt.Application.Initialize(Xwt.ToolkitType.Wpf);
+#elif Gtk
+                Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
+#endif
+                txtBox.Name = "txtBox";
+                txtBox.MultiLine = true;
+                txtBox.Text = Content;
+                txtBox.ReadOnly = true;
+                txtBox.ShowFrame = false;
+                return txtBox;
+            }
         }
 
 		public void LoadFile(string url, pluginner.IFSPlugin fsplugin){
@@ -54,14 +55,16 @@ namespace fcmd.base_plugins.viewer
 		public bool CanCopy{get{return true;}}
 
 		public void Copy(){//правка-копировать
-			Clipboard.SetText(txtBox.SelectedText);
+            //undone: the default xwt is too simple
+			//Clipboard.SetText(txtBox.SelectedText);
 		}
 
 		public bool CanSelectAll{get{return true;}}
 
 		public void SelectAll(){//Выделить всё
-			txtBox.SelectionStart = 0;
-			txtBox.SelectionLength = txtBox.Text.Length;
+            //undone: the default xwt is too simple
+			/*txtBox.SelectionStart = 0;
+			txtBox.SelectionLength = txtBox.Text.Length;*/
 		}
 
 		public bool CanPrint{get{return true;}}
@@ -85,7 +88,8 @@ namespace fcmd.base_plugins.viewer
         /// </summary>
         private void DrawTextOnPrn(object sender, PrintPageEventArgs e) //отрисовка текста, Printer.Print(string) больше нету :-(
         {
-            e.Graphics.DrawString(txtBox.Text, txtBox.Font, System.Drawing.Brushes.Black, 10, 25);
+            //undone: реализовать парсинг txtbox.font
+            e.Graphics.DrawString(txtBox.Text, new System.Drawing.Font(txtBox.Font.Family, Convert.ToInt32(txtBox.Font.Size)), System.Drawing.Brushes.Black, 10, 25);
         }
 
 		public void PrintSettings(){ //Параметры страницы
@@ -143,34 +147,36 @@ namespace fcmd.base_plugins.viewer
             FontDialog fd = new FontDialog();
             fd.AllowScriptChange = false; //.net strings are unicode, need to disable changing the cp of the textbox
             fd.ShowColor = true;
-
-            fd.Font = txtBox.Font;
-            fd.Color = txtBox.ForeColor;
+            //undone
+            //fd.Font = txtBox.Font;
+            //fd.Color = txtBox.ForeColor;
 
             fd.ShowDialog();
 
-            txtBox.Font = fd.Font;
-            txtBox.ForeColor = fd.Color;
+            //txtBox.Font = fd.Font;
+            //txtBox.ForeColor = fd.Color;
         }
 
         public void Search(){//правка-поиск
+            //undone: the default xwt is too simple
             InputBox ibx = new InputBox(new Localizator().GetString("FCVWhatFind"));
             if (ibx.ShowDialog() == DialogResult.Cancel) return; //если нажали отмену
-            int startPos = txtBox.Text.IndexOf(ibx.Result,txtBox.SelectionStart + 1/*чтобы искать дальнейшие вхождения*/);
+            //int startPos = txtBox.Text.IndexOf(ibx.Result,txtBox.SelectionStart + 1/*чтобы искать дальнейшие вхождения*/);
 
-            if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            /*if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
             txtBox.SelectionStart = startPos;
             txtBox.SelectionLength = ibx.Result.Length;
-            LastSearch = ibx.Result;
+            LastSearch = ibx.Result;*/
         }
 
         public void SearchNext(){//искать дальше
+            //undone: the default xwt is too simple
             if (LastSearch.Length == 0) { Search(); return; }
 
-            int startPos = txtBox.Text.IndexOf(LastSearch, txtBox.SelectionStart + 1);
-            if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
-            txtBox.SelectionStart = startPos;
-            txtBox.SelectionLength = LastSearch.Length;
+            //int startPos = txtBox.Text.IndexOf(LastSearch, txtBox.SelectionStart + 1);
+            //if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            //txtBox.SelectionStart = startPos;
+            //txtBox.SelectionLength = LastSearch.Length;
         }
 
         /* TODO-list плагина TxtViewer

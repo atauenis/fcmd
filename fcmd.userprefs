@@ -1,15 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="base-plugins/viewer/TxtViewer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="base-plugins\viewer\TxtViewer.cs">
     <Files>
-      <File FileName="frmMain.cs" Line="131" Column="1" />
-      <File FileName="localFileSystem.cs" Line="136" Column="10" />
-      <File FileName="ListPanel.cs" Line="114" Column="16" />
-      <File FileName="SelectablePanel.cs" Line="34" Column="1" />
-      <File FileName="base-plugins/viewer/TxtViewer.cs" Line="14" Column="33" />
-      <File FileName="fcview.cs" Line="39" Column="1" />
-      <File FileName="pluginfinder.cs" Line="34" Column="83" />
-      <File FileName="pluginner/MyClass.cs" Line="102" Column="22" />
+      <File FileName="frmMain.cs" Line="1" Column="1" />
+      <File FileName="SelectablePanel.cs" Line="1" Column="1" />
+      <File FileName="base-plugins\viewer\TxtViewer.cs" Line="39" Column="36" />
+      <File FileName="fcview.cs" Line="1" Column="1" />
+      <File FileName="pluginfinder.cs" Line="1" Column="1" />
+      <File FileName="pluginner\MyClass.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -27,6 +25,9 @@
       </Pad>
       <Pad Id="ClassPad">
         <State selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

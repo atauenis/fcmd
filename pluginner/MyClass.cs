@@ -256,7 +256,7 @@ namespace pluginner{
         /// <summary>
         /// The control to be displayed in FCView window
         /// </summary>
-        System.Windows.Forms.Control DisplayBox();
+        Xwt.Widget DisplayBox { get; }
 
         /// <summary>
         /// Loads & shows a file into the File Commander Viewer

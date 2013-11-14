@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fcmd", "fcmd.csproj", "{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pluginner", "pluginner\pluginner.csproj", "{88785B26-D617-4BE9-B449-F7CE77444794}"

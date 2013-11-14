@@ -48,7 +48,8 @@ namespace fcmd
 			try {
                 LoadFile(URL, new localFileSystem(), pf.GetFCVplugin(content));
 			} catch (Exception ex) {
-				MessageBox.Show(ex.Message + ex.StackTrace,URL,MessageBoxButtons.OK,MessageBoxIcon.Error);
+				MessageBox.Show(ex.Message + "\n" + ex.StackTrace,URL,MessageBoxButtons.OK,MessageBoxIcon.Error);
+                Console.WriteLine("fcview can't load file: " + ex.Message + "\n" + ex.StackTrace);
 				return;
 			}
         }
@@ -66,13 +67,21 @@ namespace fcmd
             Path = URL;
             fs = FS;
             vp = ViewWith;
+
+#if DEBUG
+            Console.WriteLine("load fcv plugin: " + vp.Name + " displaybox type:" + vp.DisplayBox.GetType().ToString());
+#endif
             vp.LoadFile(URL, pf.GetFSplugin(URL));
 
-            if (vp.DisplayBox().BackColor != SystemColors.Window) pnlContainer.BorderStyle = BorderStyle.Fixed3D;
-            // ^- если цвет фона плагина не оконный, рисовать рамку. Это выверт для подавления XP-стилей
-            // ^- if plugin box backcolor is not windows default bgcolor then draw a border.
-            // this hack is used to dimiss xp-styles
-            this.pnlContainer.Controls.Add(vp.DisplayBox());
+            //initialize xwt
+#if Win
+            Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Wpf);
+#elif Gtk
+            Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Gtk);
+#endif
+            //prepare the xwt-fcmd bridge and return to reality the plugin's DISPLAYBOX
+            Xwt.Toolkit t = Xwt.Toolkit.CurrentEngine;
+            ElHo.Child = (System.Windows.UIElement)t.GetNativeWidget(vp.DisplayBox);
 
             //tuning the fcview ui for the current plugin
             mnuFilePrint.Enabled = vp.CanPrint;
@@ -82,11 +91,12 @@ namespace fcmd
 
             mnuFormat.DropDownItems.Clear();
             if (vp.SettingsMenu.Length > 0)
-            {
+            {//todo: replace winforms menu with xwt menu
                 mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
             }
 
             //building the "view" menu (the list of available plugins)
+            //todo: replace winforms menu with xwt menu
             mnuView.DropDownItems.Clear();
             foreach (string Plugin4List in pf.ViewPlugins)
             {
@@ -97,7 +107,7 @@ namespace fcmd
                 mnuView.DropDownItems.Add(NewMenuItem);
             }
 
-            vp.MsgBox += (string text, string header, MessageBoxButtons buttons, MessageBoxIcon icon) => { MessageBox.Show(text); return ""; };//что-то я тут нахимичил не того :-)
+            vp.MsgBox += (string text, string header, MessageBoxButtons buttons, MessageBoxIcon icon) => { MessageBox.Show(text); return ""; };//undone: что-то я тут нахимичил не того :-)
 
             this.Show();
             this.UseWaitCursor = false;
@@ -175,12 +185,18 @@ namespace fcmd
             LoadFile(Path,fs,vp);
         }
 
+        [STAThread]
         private void fcview_Load(object sender, EventArgs e)
         {
             this.OnResize(new EventArgs());
+            ElHo.Dock = DockStyle.Fill;
+            toolStripContainer1.ContentPanel.Controls.Add(ElHo);
             Localize();
-        }
+         }
 
+        System.Windows.Forms.Integration.ElementHost ElHo = new System.Windows.Forms.Integration.ElementHost();
+        //http://atsoftware.gb7.ru/blog/2013/11/elementhost-invalidoperationexception/
+        
         private void tsKeyboard_ItemClicked(object sender, ToolStripItemClickedEventArgs e){
             switch (e.ClickedItem.Name){
                 case "tsbHelpF1": this.OnKeyDown(new KeyEventArgs(Keys.F1)); break;
