@@ -46,7 +46,10 @@ namespace fcmd
             Path = URL;
 
 			try {
-                LoadFile(URL, new localFileSystem(), pf.GetFCVplugin(content));
+                string GottenHeaders;
+                if(content.Length >= 20) GottenHeaders = content.Substring(0,20);
+                else GottenHeaders = content;
+                LoadFile(URL, new localFileSystem(), pf.GetFCVplugin("NAME=" + URL + "HEADERS=" + GottenHeaders));
 			} catch (Exception ex) {
 				MessageBox.Show(ex.Message + "\n" + ex.StackTrace,URL,MessageBoxButtons.OK,MessageBoxIcon.Error);
                 Console.WriteLine("fcview can't load file: " + ex.Message + "\n" + ex.StackTrace);
@@ -74,11 +77,18 @@ namespace fcmd
             vp.LoadFile(URL, pf.GetFSplugin(URL));
 
             //initialize xwt
-#if Win
-            Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Wpf);
-#elif Gtk
-            Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Gtk);
-#endif
+            switch (Environment.OSVersion.Platform){
+                case PlatformID.Win32NT:
+                    Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Wpf);
+                    break;
+                case PlatformID.MacOSX: //i don't sure that Mono detect OSX as OSX, not Unix; see http://mono.wikia.com/wiki/Detecting_the_execution_platform
+                    Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Cocoa);
+                    break;
+                default:
+                case PlatformID.Unix: //gtk fallback for unknown oses
+                    Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Gtk);
+                    break;
+            }
             //prepare the xwt-fcmd bridge and return to reality the plugin's DISPLAYBOX
             Xwt.Toolkit t = Xwt.Toolkit.CurrentEngine;
             ElHo.Child = (System.Windows.UIElement)t.GetNativeWidget(vp.DisplayBox);
@@ -106,8 +116,6 @@ namespace fcmd
                 if (NewMenuItem.Tag.ToString() == PluginLink) NewMenuItem.Checked = true;
                 mnuView.DropDownItems.Add(NewMenuItem);
             }
-
-            vp.MsgBox += (string text, string header, MessageBoxButtons buttons, MessageBoxIcon icon) => { MessageBox.Show(text); return ""; };//undone: что-то я тут нахимичил не того :-)
 
             this.Show();
             this.UseWaitCursor = false;

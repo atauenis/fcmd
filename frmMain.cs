@@ -1,7 +1,8 @@
-/* The File Commander
- * Главное окно (Windows)
+/* The File Commander (Windows)
+ * Главное окно (Windows-версия)    The main window (version for Windows)
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
- * [и Ко]
+ * Contributors should place own signs here.
  */
 using System;
 using System.Collections.Generic;
@@ -112,7 +113,7 @@ namespace fcmd
             Localize();
 
 			#if DEBUG
-				MessageBox.Show ("File commander, версия " + Application.ProductVersion);
+                new MsgBox("File commander, версия " + Application.ProductVersion);//,"Отладочная версия",MsgBox.MsgBoxType.Information);
 			#endif
             
 			#region Панели
@@ -1208,7 +1209,7 @@ namespace fcmd
         {
             string AboutString = string.Format(locale.GetString("FileCommanderVer"),"File Commander", Application.ProductVersion)+
                                                "\n(C) 2013, FC team (Alexander Tauenis & comrades)\nhttps://github.com/atauenis/fcmd\n"+
-                                               "Uses Xamarin Window Toolkit (Xwt)\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
+                                               "Uses Xamarin Window Toolkit (Xwt) with A.T.'s patches\nhttps://github.com/atauenis/xwt/tree/wpf-patches\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
             MessageBox.Show(AboutString,Application.ProductName);
         }
 

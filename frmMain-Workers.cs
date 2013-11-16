@@ -1,8 +1,8 @@
-﻿/* The File Commander - главное окно
- * Таджики для работ с файлами в фоновых потоках
+﻿/* The File Commander backend   Ядро File Commander
+ * Background file operations   "Рабочие" для работ с файлами в фоновых потоках
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
- * Копирование кода разрешается только с письменного согласия
- * разработчика (А.Т.).
+ * Contributors should place own signs here.
  */
 using System;
 using System.Collections.Generic;

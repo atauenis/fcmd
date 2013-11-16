@@ -68,7 +68,7 @@
             this.Controls.Add(this.cmdCancel);
             this.Controls.Add(this.pbrProgress);
             this.Controls.Add(this.lblStatus);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FileProcessDialog";

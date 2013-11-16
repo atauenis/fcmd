@@ -75,7 +75,7 @@
     <Compile Include="FileProcessDialog.Designer.cs">
       <DependentUpon>FileProcessDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMain-CLI.cs">
+    <Compile Include="frmMain-Actions.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmMain-Workers.cs">
@@ -97,6 +97,7 @@
       <DependentUpon>ListPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Localizator.cs" />
+    <Compile Include="MsgBox.cs" />
     <Compile Include="pluginfinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="base-plugins\fs\localFileSystem.cs" />

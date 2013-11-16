@@ -1,8 +1,9 @@
-﻿/* The File Commander - главное окно
- * Комманды коммандной строки frmMain (command line interface)
+﻿/* The File Commander backend   Ядро File Commander
+ * The main window backend.     Кросс-платформенный код работы
+ * Cross-platform code.         с файлами и не только.
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
- * Копирование кода разрешается только с письменного согласия
- * разработчика (А.Т.).
+ * Contributors should place own signs here.
  */
 using System;
 using System.Windows.Forms;

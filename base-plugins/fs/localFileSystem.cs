@@ -1,5 +1,6 @@
-/* The File Commander shared (cross-platform) kernel
+/* The File Commander backend   Ядро File Commander
  * Local filesystem adapter     Модуль доступа к локальным ФС
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
@@ -22,10 +23,6 @@ namespace fcmd.base_plugins.fs
 		public string Version { get{return "1.0";} }
 		public string Author { get{return "A.T.";} }
 		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
-
-#pragma warning disable //because this is not a forgetted code, it is required by the iplugin interface
-        public event pluginner.MsgBoxDelegate MsgBox;
-#pragma warning restore
 
 		List<pluginner.DirItem> DirContent = new List<pluginner.DirItem>();
 		string CurDir;
