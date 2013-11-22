@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Windows.Forms; //я тебе! убрать при первой возможности!
 
 namespace fcmd{
     public partial class frmMain{
@@ -42,10 +41,6 @@ namespace fcmd{
             int FileWeight = 0;
             checked { FileWeight = 100 / fsp.DirectoryContent.Count; }
 
-            ////making file icon imagelist
-            //ImageList FIcons = new ImageList();
-            //lp.list.SmallImageList = FIcons;
-
             for(int i = 0; i < fsp.DirectoryContent.Count; i++)
             {
                 pluginner.DirItem di = fsp.DirectoryContent[i];
@@ -54,24 +49,13 @@ namespace fcmd{
                 StatusFeedback += FileWeight;
                 if (di.Hidden == false || fcmd.Properties.Settings.Default.ShowHidedFiles == true)
                 {
-                    //try
-                    //{
-                    //    //extracting & registering the icon of the file
-                    //    FIcons.Images.Add(System.Drawing.Icon.ExtractAssociatedIcon(di.Path.Replace("file://","")));//undone
-                    //}catch{}
-
-                    //creating a new listpanel's listview item
-                    ListViewItem NewItem = new ListViewItem(di.TextToShow);
-                    NewItem.Tag = fsp.GetMetadata(di.Path); //each list item is "tagged" with the file's metadata
-                    NewItem.SubItems.Add(KiloMegaGigabyteConvert(di.Size));
-                    NewItem.SubItems.Add(di.Date.ToShortDateString());
-                    AddItem(lp, NewItem);
+                    AddItem(lp, di.TextToShow, fsp.GetMetadata(di.Path), di.Size, di.Date); //todo: add the icon of the file
                 }
             }
             lp.list.EndUpdate();
             lp.list.UseWaitCursor = false;
         }
-
+        
 
         /// <summary>
         /// Background file copier
@@ -132,7 +116,7 @@ namespace fcmd{
                 fs.DeleteFile(url);
             }
             catch (Exception err){
-                MessageBox.Show(err.Message, null, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                new MsgBox(err.Message, null, MsgBox.MsgBoxType.Error);
             }
         }
 
@@ -148,11 +132,11 @@ namespace fcmd{
             }
             catch (pluginner.ThisDirCannotBeRemovedException)
             {
-                MessageBox.Show(string.Format(locale.GetString("DirCantBeRemoved"),url),null,MessageBoxButtons.OK,MessageBoxIcon.Stop);
+                new MsgBox(url, string.Format(locale.GetString("DirCantBeRemoved"), url), MsgBox.MsgBoxType.Warning);
             }
             catch (Exception err)
             {
-                MessageBox.Show(err.Message, null, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                new MsgBox(err.Message, null, MsgBox.MsgBoxType.Error);
             }
         }
     }

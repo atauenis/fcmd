@@ -96,6 +96,7 @@ namespace fcmd
         private ToolStripMenuItem mnuToolsDiskLabel;
         private ToolStripMenuItem mnuToolsSysInfo;
         private ToolStripMenuItem mnuToolsFormat;
+        private ToolStripMenuItem mnuFileCompare;
         Localizator locale = new Localizator(); //объект для работы с локализациями интерфейса
 
 		//Подпрограммы
@@ -395,6 +396,7 @@ namespace fcmd
             this.tsbHelpF8 = new System.Windows.Forms.ToolStripButton();
             this.tsbHelpF9 = new System.Windows.Forms.ToolStripButton();
             this.tsbHelpF10 = new System.Windows.Forms.ToolStripButton();
+            this.mnuFileCompare = new System.Windows.Forms.ToolStripMenuItem();
             this.mstMenu.SuspendLayout();
             this.tsKeyboard.SuspendLayout();
             this.SuspendLayout();
@@ -420,6 +422,7 @@ namespace fcmd
             this.mnuFileUserMenu,
             this.mnuFileView,
             this.mnuFileEdit,
+            this.mnuFileCompare,
             this.mnuFileCopy,
             this.mnuFileMove,
             this.mnuFileNewDir,
@@ -863,13 +866,13 @@ namespace fcmd
             // 
             this.mnuHelpHelpMe.Enabled = false;
             this.mnuHelpHelpMe.Name = "mnuHelpHelpMe";
-            this.mnuHelpHelpMe.Size = new System.Drawing.Size(152, 22);
+            this.mnuHelpHelpMe.Size = new System.Drawing.Size(116, 22);
             this.mnuHelpHelpMe.Text = "FC help";
             // 
             // mnuHelpAbout
             // 
             this.mnuHelpAbout.Name = "mnuHelpAbout";
-            this.mnuHelpAbout.Size = new System.Drawing.Size(152, 22);
+            this.mnuHelpAbout.Size = new System.Drawing.Size(116, 22);
             this.mnuHelpAbout.Text = "About...";
             this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
             // 
@@ -995,6 +998,13 @@ namespace fcmd
             this.tsbHelpF10.Size = new System.Drawing.Size(50, 22);
             this.tsbHelpF10.Text = "F10 Exit";
             // 
+            // mnuFileCompare
+            // 
+            this.mnuFileCompare.Enabled = false;
+            this.mnuFileCompare.Name = "mnuFileCompare";
+            this.mnuFileCompare.Size = new System.Drawing.Size(169, 22);
+            this.mnuFileCompare.Text = "Compare";
+            // 
             // frmMain
             // 
             this.ClientSize = new System.Drawing.Size(667, 410);
@@ -1005,8 +1015,8 @@ namespace fcmd
             this.Name = "frmMain";
             this.Text = "File Commander";
             this.Load += new System.EventHandler(this.frmMain_Load);
-            this.Resize += new System.EventHandler(this.frmMain_Resize);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMain_KeyDown);
+            this.Resize += new System.EventHandler(this.frmMain_Resize);
             this.mstMenu.ResumeLayout(false);
             this.mstMenu.PerformLayout();
             this.tsKeyboard.ResumeLayout(false);
@@ -1213,8 +1223,21 @@ namespace fcmd
             MessageBox.Show(AboutString,Application.ProductName);
         }
 
+        //CROSS-PLATFORM-BACKEND
+        /// <summary>Add an item into the ListPanel's ListView</summary>
+        void AddItem(ListPanel lp, string ItemDisplayText, pluginner.FSEntryMetadata ItemMetadata, long ItemSize, DateTime ItemDate){
+            //creating a new listpanel's listview item
+            ListViewItem NewItem = new ListViewItem(ItemDisplayText);
+            NewItem.Tag = ItemMetadata; //each list item is "tagged" with the file's metadata
+            NewItem.SubItems.Add(KiloMegaGigabyteConvert(ItemSize));
+            NewItem.SubItems.Add(ItemDate.ToShortDateString());
+            AddItem(lp, NewItem);
+            //todo: add file icons
+        }
+
 	}
 
+    //CROSS-PLATFORM-BACKEND
 	public delegate void StringEvent(object sender, EventArgs<String> e);
 	public class EventArgs<T> : EventArgs
 		//http://www.gotdotnet.ru/forums/2/51331/

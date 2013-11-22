@@ -89,7 +89,7 @@ namespace fcmd
                     Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Gtk);
                     break;
             }
-            //prepare the xwt-fcmd bridge and return to reality the plugin's DISPLAYBOX
+            //prepare the xwt-fcmd bridge and return to the reality the plugin's DISPLAYBOX
             Xwt.Toolkit t = Xwt.Toolkit.CurrentEngine;
             ElHo.Child = (System.Windows.UIElement)t.GetNativeWidget(vp.DisplayBox);
 
@@ -99,14 +99,10 @@ namespace fcmd
             mnuEditCopy.Enabled = vp.CanCopy;
             mnuEditSelectAll.Enabled = vp.CanSelectAll;
 
-            mnuFormat.DropDownItems.Clear();
-            if (vp.SettingsMenu.Length > 0)
-            {//todo: replace winforms menu with xwt menu
-                mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
-            }
+            PopulateMenuFormat();
+            
 
             //building the "view" menu (the list of available plugins)
-            //todo: replace winforms menu with xwt menu
             mnuView.DropDownItems.Clear();
             foreach (string Plugin4List in pf.ViewPlugins)
             {
@@ -119,6 +115,23 @@ namespace fcmd
 
             this.Show();
             this.UseWaitCursor = false;
+        }
+
+        private void PopulateMenuFormat(){
+            mnuFormat.DropDownItems.Clear();
+            foreach (Xwt.MenuItem CurMenuItem in vp.SettingsMenu){
+                mnuFormat.DropDownItems.Add(
+                    CurMenuItem.Label,
+                    null,
+                    (object s, EventArgs ea) =>
+                    {
+                        //undone: OnClick code here
+                        /*какого мужского полового органа M$'овцам до сих пор так и
+                          не допёрло сделать нормальный RaiseEvent в шарпе...
+                          коммерческий продукт ёпте...накипело*/
+                    });
+                //todo: submenus, images
+            }
         }
 
         private void SwitchPlugin(ToolStripMenuItem SelectedByUser){
@@ -265,10 +278,10 @@ namespace fcmd
         {
             //обновление спика параметров плагина (меню Формат)
             //update plugin options list (menu "format")
-            if (vp.SettingsMenu.Length > 0){
+            /*if (vp.SettingsMenu.Length > 0){
                 mnuFormat.DropDownItems.Clear();
                 mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
-            }
+            }*///UNDONE
         }
 
         private void mnuEditFindNext_Click(object sender, EventArgs e)

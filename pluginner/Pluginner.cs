@@ -319,7 +319,14 @@ namespace pluginner{
         /// <summary>
         /// An array of ToolStripMenuItems for FCView's menu of plugin's settings
         /// </summary>
-        System.Windows.Forms.ToolStripMenuItem[] SettingsMenu { get; }
+        //System.Windows.Forms.ToolStripMenuItem[] SettingsMenu { get; }
+        List<Xwt.MenuItem> SettingsMenu { get; }
+
+        /*/// <summary>
+        /// Command-mode call handler
+        /// </summary>
+        /// <param name="Command">The user's command with parameters</param>
+        void CommandCall(string Command);*///to be used when the FC Viewer and FC Editor will be merged into an combined suite with vim-like commands interface
     }
 
     #region PleaseSwitchPluginException

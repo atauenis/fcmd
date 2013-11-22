@@ -6,7 +6,7 @@
  * Contributors should place own signs here.
  */
 using System;
-using System.Windows.Forms;
+using System.Windows.Forms;//убрать!
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -58,7 +58,8 @@ namespace fcmd
             pluginner.IFSPlugin fs = ActivePanel.FSProvider;
             if (!fs.FileExists(url))
             {
-                MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                //MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                new MsgBox(string.Format(locale.GetString("FileNotFound")), ActivePanel.list.SelectedItems[0].Text, MsgBox.MsgBoxType.Warning);
                 return;
             }
 
@@ -174,7 +175,7 @@ namespace fcmd
                         CpDirProgressDialog.Top = this.Top + ActivePanel.Top;
                         CpDirProgressDialog.Left = this.Left + ActivePanel.Left;
                         CpDirProgressDialog.lblStatus.Text = String.Format(locale.GetString("DoingCopy"), "\n" + ActivePanel.list.SelectedItems[0].Tag.ToString() + " [" + locale.GetString("Directory") + "]\n", ibxd.Result, null);
-                        CpDirProgressDialog.cmdCancel.Click += (object s, EventArgs e) => { CpDirThread.Abort(); MessageBox.Show(locale.GetString("Canceled")); };
+                        CpDirProgressDialog.cmdCancel.Click += (object s, EventArgs e) => { CpDirThread.Abort(); new MsgBox(locale.GetString("Canceled"), ActivePanel.list.SelectedItems[0].Tag.ToString(),MsgBox.MsgBoxType.Warning); };
 
                         CpDirProgressDialog.Show();
                         CpDirThread.Start();
@@ -201,7 +202,7 @@ namespace fcmd
                 fpd.Top = this.Top + ActivePanel.Top;
                 fpd.Left = this.Left + ActivePanel.Left;
                 fpd.lblStatus.Text = String.Format(locale.GetString("DoingCopy"), "\n" + ActivePanel.list.SelectedItems[0].Tag.ToString() + "\n", ibx.Result,null);
-                fpd.cmdCancel.Click += (object s, EventArgs e) => { CpThread.Abort(); MessageBox.Show(locale.GetString("Canceled")); };
+                fpd.cmdCancel.Click += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(locale.GetString("Canceled"), ActivePanel.list.SelectedItems[0].Tag.ToString(), MsgBox.MsgBoxType.Warning); };
 
                 CpThread.Start();
                 fpd.Show();
@@ -245,7 +246,8 @@ namespace fcmd
             if (SourceFS.GetType() != DestinationFS.GetType())
             {
                 Cp();
-                MessageBox.Show("Cannot move between diffrent filesystems!\nНе сделана поддержка перепещения между разными ФС");
+                //MessageBox.Show("Cannot move between diffrent filesystems!\nНе сделана поддержка перепещения между разными ФС");
+                Xwt.MessageDialog.ShowError("Cannot move between diffrent filesystems!\nНе сделана поддержка перепещения между разными ФС");
                 return;
             }
 

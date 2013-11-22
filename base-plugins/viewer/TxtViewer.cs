@@ -51,6 +51,7 @@ namespace fcmd.base_plugins.viewer
                 txtBox.Text = Content;
                 txtBox.ReadOnly = true;
                 txtBox.ShowFrame = false;
+                txtBox.ShowScrollBars = true;
                 return txtBox;
             }
         }
@@ -62,99 +63,137 @@ namespace fcmd.base_plugins.viewer
 
 		public bool CanCopy{get{return true;}}
 
-		public void Copy(){//правка-копировать
-            //undone: the default xwt is too simple
-			//Clipboard.SetText(txtBox.SelectedText);
+		public void Copy(){//edit-copy
+            string SelText = txtBox.Text.Substring(txtBox.SelectionStart, txtBox.SelectionLength);
+            Xwt.Clipboard.SetText(SelText);
 		}
 
 		public bool CanSelectAll{get{return true;}}
 
-		public void SelectAll(){//Выделить всё
-            //undone: the default xwt is too simple
-			/*txtBox.SelectionStart = 0;
-			txtBox.SelectionLength = txtBox.Text.Length;*/
+		public void SelectAll(){//edit-select all
+			txtBox.SelectionStart = 0;
+			txtBox.SelectionLength = txtBox.Text.Length;
 		}
 
 		public bool CanPrint{get{return true;}}
 
 		public void Print(){//печать на принтер
-			//инициализация печати
+			//initialize printer API
             Doc.PrintPage += DrawTextOnPrn;
             Doc.DocumentName = URL;
 
-            //запрашиваю параметры печати
-            PrintDialog PrnSelector = new PrintDialog();
+            //request printing settings
+            //currently not cross-platform
+            System.Windows.Forms.PrintDialog PrnSelector = new System.Windows.Forms.PrintDialog();
             PrnSelector.Document = Doc;
-            if (PrnSelector.ShowDialog() == DialogResult.Cancel) return;
+            if (PrnSelector.ShowDialog() == System.Windows.Forms.DialogResult.Cancel) return;
 
-            //понеслась!
+            //go!
             Doc.Print();
 		}
 
         /// <summary>
-        /// Отрисовывает текст (хорошо сказал!) на принтере
+        /// Draws the text (funny words :-) ) on the printer
         /// </summary>
         private void DrawTextOnPrn(object sender, PrintPageEventArgs e) //отрисовка текста, Printer.Print(string) больше нету :-(
         {
             e.Graphics.DrawString(txtBox.Text, ConvertXwtFont(txtBox.Font), System.Drawing.Brushes.Black, 10, 25);
         }
 
-		public void PrintSettings(){ //Параметры страницы
+		public void PrintSettings(){ //file-page setup
             PageSetupDialog psd = new PageSetupDialog();
             psd.Document = Doc;
             psd.ShowDialog();
 		}
 
-        public ToolStripMenuItem[] SettingsMenu{//(под)меню настроек
-            get{
-                Options.Clear();
-                Options.Add(new ToolStripMenuItem("У плагина нет настроек",null,this.Test));
-                Options.Add(new ToolStripMenuItem("Шрифт...", null, this.SetFont));
-                //Options.Add(new ToolStripSeparator());//Аргумент '1': преобразование типа из 'System.Windows.Forms.ToolStripSeparator' в 'System.Windows.Forms.ToolStripMenuItem' невозможно
+        //public ToolStripMenuItem[] SettingsMenu{//(под)меню настроек
+        //    get{
+        //        Options.Clear();
+        //        Options.Add(new ToolStripMenuItem("У плагина нет настроек",null,this.Test));
+        //        Options.Add(new ToolStripMenuItem("Шрифт...", null, this.SetFont));
+        //        //Options.Add(new ToolStripSeparator());//Аргумент '1': преобразование типа из 'System.Windows.Forms.ToolStripSeparator' в 'System.Windows.Forms.ToolStripMenuItem' невозможно
 
 
+
+        //        EncodingInfo[] Kodirovki = Encoding.GetEncodings();
+        //        foreach (EncodingInfo cp in Kodirovki)
+        //        {//looping all available codepages and adding it into menu
+        //            ToolStripMenuItem NewItem = new ToolStripMenuItem(cp.DisplayName + " (" + cp.Name + ")", null, this.ChCp);
+        //            NewItem.Tag = cp.CodePage;
+        //            Options.Add(NewItem);
+        //        }
+
+        //        return Options.ToArray();
+        //    }
+        //}
+
+        public List<Xwt.MenuItem> SettingsMenu //the plugin's settings menu (in windows fcview - 'format')
+        {
+            get
+            {
+                List<Xwt.MenuItem> mnuFormat = new List<Xwt.MenuItem>();
+                Xwt.MenuItem mnuFormatTest = new Xwt.MenuItem("test");
+                mnuFormatTest.Clicked += this.Test;
+                mnuFormat.Add(mnuFormatTest);
 
                 EncodingInfo[] Kodirovki = Encoding.GetEncodings();
                 foreach (EncodingInfo cp in Kodirovki)
-                {//looping all available codepages and adding it into menu
-                    ToolStripMenuItem NewItem = new ToolStripMenuItem(cp.DisplayName + " (" + cp.Name + ")", null, this.ChCp);
-                    NewItem.Tag = cp.CodePage;
-                    Options.Add(NewItem);
+                {//reading all available codepages and adding it into menu
+                    Xwt.CheckBoxMenuItem NewItem = new Xwt.CheckBoxMenuItem();
+                    NewItem.Label = cp.DisplayName;
+                    NewItem.Clicked += this.ChCp;
+                    mnuFormat.Add(NewItem);
                 }
 
-                return Options.ToArray();
+                return mnuFormat;
             }
         }
 
         public void ChCp(object sender, EventArgs e) //change codepage
         {
-            ToolStripMenuItem SelItem = (ToolStripMenuItem)sender;
-            Content = Encoding.GetEncoding(Convert.ToInt32(SelItem.Tag)).GetString(FS.GetFile(URL, new int()).Content);
-            txtBox.Text = Content;
+            //ToolStripMenuItem SelItem = (ToolStripMenuItem)sender;
+            //Content = Encoding.GetEncoding(Convert.ToInt32(SelItem.Tag)).GetString(FS.GetFile(URL, new int()).Content);
+            //txtBox.Text = Content;
 
-            //set a tick
-            foreach (ToolStripMenuItem stroka in Options)
+            ////set a tick
+            //foreach (ToolStripMenuItem stroka in Options)
+            //{
+            //    if (Convert.ToInt32(SelItem.Tag) == Convert.ToInt32(stroka.Tag))
+            //    {//this is that!
+            //        stroka.Checked = true;
+            //    }
+            //    else
+            //    {//no, removing possibly mark
+            //        stroka.Checked = false;
+            //    }
+            //}
+
+            Xwt.CheckBoxMenuItem SelItem = (Xwt.CheckBoxMenuItem)sender;
+            Content = Encoding.GetEncoding(SelItem.Label).GetString(FS.GetFile(URL, new int()).Content);
+            txtBox.Text = Content;
+            //undone: отладить, скорее всего, будет падать из-за несоответствия типов
+            foreach (Xwt.CheckBoxMenuItem CurItem in SettingsMenu)
             {
-                if (Convert.ToInt32(SelItem.Tag) == Convert.ToInt32(stroka.Tag))
+                if (Convert.ToInt32(SelItem.Label) == Convert.ToInt32(CurItem.Label))
                 {//this is that!
-                    stroka.Checked = true;
+                    SelItem.Checked = true;
                 }
                 else
                 {//no, removing possibly mark
-                    stroka.Checked = false;
+                    CurItem.Checked = false;
                 }
             }
         }
 
         public void Test(object sender, EventArgs e){ //this plugin have no settings (placeholder)
-            MessageBox.Show("У плагина нет настроек...пока что.");
+            Xwt.MessageDialog.ShowMessage("У плагина нет настроек...пока что.");
         }
 
         public void SetFont(object sender, EventArgs e){//format-font
-            FontDialog fd = new FontDialog();
+            //currently not cross platform!
+            System.Windows.Forms.FontDialog fd = new System.Windows.Forms.FontDialog();
             fd.AllowScriptChange = false; //.net strings are unicode, need to disable changing the cp of the textbox
             fd.ShowColor = true;
-            //undone
             //fd.Font = txtBox.Font;
             //fd.Color = txtBox.ForeColor;
 
@@ -162,28 +201,31 @@ namespace fcmd.base_plugins.viewer
 
             //txtBox.Font = fd.Font;
             //txtBox.ForeColor = fd.Color;
+            
+            //undone: the default xwt is too simple
+            //нужно найти способ изменения шрифта текстэнтри или внести правки в иксвэтэ :-)
         }
 
         public void Search(){//правка-поиск
-            //undone: the default xwt is too simple
+            //todo: rewrite with xwt
             InputBox ibx = new InputBox(new Localizator().GetString("FCVWhatFind"));
             if (ibx.ShowDialog() == DialogResult.Cancel) return; //если нажали отмену
-            //int startPos = txtBox.Text.IndexOf(ibx.Result,txtBox.SelectionStart + 1/*чтобы искать дальнейшие вхождения*/);
+            int startPos = txtBox.Text.IndexOf(ibx.Result,txtBox.SelectionStart + 1/*чтобы искать дальнейшие вхождения*/);
 
-            /*if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
             txtBox.SelectionStart = startPos;
             txtBox.SelectionLength = ibx.Result.Length;
-            LastSearch = ibx.Result;*/
+            LastSearch = ibx.Result;
         }
 
         public void SearchNext(){//искать дальше
-            //undone: the default xwt is too simple
+            //todo: partially rewrite with use of xwt
             if (LastSearch.Length == 0) { Search(); return; }
 
-            //int startPos = txtBox.Text.IndexOf(LastSearch, txtBox.SelectionStart + 1);
-            //if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
-            //txtBox.SelectionStart = startPos;
-            //txtBox.SelectionLength = LastSearch.Length;
+            int startPos = txtBox.Text.IndexOf(LastSearch, txtBox.SelectionStart + 1);
+            if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            txtBox.SelectionStart = startPos;
+            txtBox.SelectionLength = LastSearch.Length;
         }
 
         /// <summary>
