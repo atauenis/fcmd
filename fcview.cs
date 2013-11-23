@@ -117,20 +117,69 @@ namespace fcmd
             this.UseWaitCursor = false;
         }
 
-        private void PopulateMenuFormat(){
+        /// <summary>
+        /// Populates the "Format" main menu
+        /// </summary>
+        private void PopulateMenuFormat()
+        {
             mnuFormat.DropDownItems.Clear();
             foreach (Xwt.MenuItem CurMenuItem in vp.SettingsMenu){
-                mnuFormat.DropDownItems.Add(
-                    CurMenuItem.Label,
-                    null,
-                    (object s, EventArgs ea) =>
-                    {
-                        //undone: OnClick code here
-                        /*какого мужского полового органа M$'овцам до сих пор так и
-                          не допёрло сделать нормальный RaiseEvent в шарпе...
-                          коммерческий продукт ёпте...накипело*/
-                    });
+                ToolStripMenuItem NewItem = new ToolStripMenuItem();
+                NewItem.Text = CurMenuItem.Label;
+                NewItem.Click += (object s, EventArgs ea) =>
+                    {//does not work; check why later
+                        if(CurMenuItem.clicked != null)
+                        CurMenuItem.clicked(CurMenuItem, EventArgs.Empty); //an reason why fcmd uses patched xwt ;-) try this on the default xamarin xwt
+                    };
+                NewItem.Tag = CurMenuItem;
+
+                //add ticks if need
+                if (CurMenuItem.GetType() == typeof(Xwt.CheckBoxMenuItem)){
+                    NewItem.Checked = ((Xwt.CheckBoxMenuItem)CurMenuItem).Checked;
+                }
+                else if (CurMenuItem.GetType() == typeof(Xwt.RadioButtonMenuItem)){
+                    NewItem.Checked = ((Xwt.RadioButtonMenuItem)CurMenuItem).Checked;
+                }
+                
+                //parse submenu (if need)
+                if (CurMenuItem.SubMenu != null) PopulateSubMenu(CurMenuItem.SubMenu, NewItem);
+
+                mnuFormat.DropDownItems.Add(NewItem);
                 //todo: submenus, images
+            }
+        }
+
+        /// <summary>
+        /// Populates the <paramref name="WinMenu"/> with DropDownItems (adds submenu) from the <paramref name="XwtMenu"/>.Items collection
+        /// </summary>
+        /// <param name="XwtMenu">The original Xwt Menu</param>
+        /// <param name="WinMenu">The Winforms MenuItem that should receive the new submenu</param>
+        private void PopulateSubMenu(Xwt.Menu XwtMenu, ToolStripMenuItem WinMenu){
+            foreach (Xwt.MenuItem MenuItem in XwtMenu.Items){
+                ToolStripMenuItem NewMenuItem = new ToolStripMenuItem();
+                NewMenuItem.Text = MenuItem.Label;
+                NewMenuItem.Tag = MenuItem;
+
+                //add ticks if need
+                if (MenuItem.GetType() == typeof(Xwt.CheckBoxMenuItem))
+                {
+                    NewMenuItem.Checked = ((Xwt.CheckBoxMenuItem)MenuItem).Checked;
+                }
+                else if (MenuItem.GetType() == typeof(Xwt.RadioButtonMenuItem))
+                {
+                    NewMenuItem.Checked = ((Xwt.RadioButtonMenuItem)MenuItem).Checked;
+                }
+
+                //configure onclick action
+                NewMenuItem.Click += (object s, EventArgs ea) =>
+                {
+                    MenuItem.clicked(MenuItem, EventArgs.Empty);
+                };
+
+                //parse subsubsubsub.....submenu (if need)
+                if (MenuItem.SubMenu != null) PopulateSubMenu(MenuItem.SubMenu, NewMenuItem);
+
+                WinMenu.DropDownItems.Add(NewMenuItem);
             }
         }
 
@@ -276,12 +325,12 @@ namespace fcmd
 
         private void mnuFormat_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            //обновление спика параметров плагина (меню Формат)
-            //update plugin options list (menu "format")
-            /*if (vp.SettingsMenu.Length > 0){
-                mnuFormat.DropDownItems.Clear();
-                mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
-            }*///UNDONE
+            try{
+                Xwt.MenuItem xmi = (Xwt.MenuItem)e.ClickedItem.Tag;
+                xmi.clicked(xmi, e); //todo: this code is a stupid hack
+                PopulateMenuFormat();
+            }
+            catch { } //"On Error Resume Next" saves time and bytes :-)
         }
 
         private void mnuEditFindNext_Click(object sender, EventArgs e)

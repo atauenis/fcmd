@@ -136,14 +136,19 @@ namespace fcmd.base_plugins.viewer
                 mnuFormatTest.Clicked += this.Test;
                 mnuFormat.Add(mnuFormatTest);
 
+                Xwt.Menu mnuCodepages = new Xwt.Menu();
+
                 EncodingInfo[] Kodirovki = Encoding.GetEncodings();
                 foreach (EncodingInfo cp in Kodirovki)
                 {//reading all available codepages and adding it into menu
                     Xwt.CheckBoxMenuItem NewItem = new Xwt.CheckBoxMenuItem();
                     NewItem.Label = cp.DisplayName;
+                    NewItem.Tag = cp.CodePage;
                     NewItem.Clicked += this.ChCp;
-                    mnuFormat.Add(NewItem);
+                    mnuCodepages.Items.Add(NewItem);
                 }
+
+                mnuFormat.Add(new Xwt.MenuItem("кодировки") { SubMenu = mnuCodepages });
 
                 return mnuFormat;
             }
@@ -151,36 +156,26 @@ namespace fcmd.base_plugins.viewer
 
         public void ChCp(object sender, EventArgs e) //change codepage
         {
-            //ToolStripMenuItem SelItem = (ToolStripMenuItem)sender;
-            //Content = Encoding.GetEncoding(Convert.ToInt32(SelItem.Tag)).GetString(FS.GetFile(URL, new int()).Content);
-            //txtBox.Text = Content;
-
-            ////set a tick
-            //foreach (ToolStripMenuItem stroka in Options)
-            //{
-            //    if (Convert.ToInt32(SelItem.Tag) == Convert.ToInt32(stroka.Tag))
-            //    {//this is that!
-            //        stroka.Checked = true;
-            //    }
-            //    else
-            //    {//no, removing possibly mark
-            //        stroka.Checked = false;
-            //    }
-            //}
-
+            //BUG: the f*cking runtime substitutes selected by user menuitem with "unicode". wtf?
             Xwt.CheckBoxMenuItem SelItem = (Xwt.CheckBoxMenuItem)sender;
-            Content = Encoding.GetEncoding(SelItem.Label).GetString(FS.GetFile(URL, new int()).Content);
+            Content = Encoding.GetEncoding(Convert.ToInt32(SelItem.Tag)).GetString(FS.GetFile(URL, new int()).Content);
             txtBox.Text = Content;
-            //undone: отладить, скорее всего, будет падать из-за несоответствия типов
-            foreach (Xwt.CheckBoxMenuItem CurItem in SettingsMenu)
+#if DEBUG
+            Console.WriteLine("Codepage debug: CP" + SelItem.Tag.ToString() + "=" + Encoding.GetEncoding(Convert.ToInt32(SelItem.Tag)).EncodingName + " (wanted:" + SelItem.Label + ")");
+#endif
+            foreach (Xwt.MenuItem CurItem in SettingsMenu)
             {
-                if (Convert.ToInt32(SelItem.Label) == Convert.ToInt32(CurItem.Label))
-                {//this is that!
-                    SelItem.Checked = true;
-                }
-                else
-                {//no, removing possibly mark
-                    CurItem.Checked = false;
+                if (CurItem.GetType() == new Xwt.CheckBoxMenuItem().GetType())//if the menuitem is checkbox
+                {
+                    Xwt.CheckBoxMenuItem SelItem2 = (Xwt.CheckBoxMenuItem)SelItem;
+                    if (Convert.ToInt32(SelItem.Tag) == Convert.ToInt32(CurItem.Tag))
+                    {//this is that!
+                        SelItem2.Checked = true;
+                    }
+                    else
+                    {//no, removing possibly mark
+                        SelItem2.Checked = false;
+                    }
                 }
             }
         }
