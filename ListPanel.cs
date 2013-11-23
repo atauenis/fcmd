@@ -1,8 +1,9 @@
-﻿/* The File Commander
- * Элемент управления ListPanel (улучшенный аналог ListView)
+﻿/* The File Commander (Windows)
+ * Элемент управления ListPanel (панели frmMain)    The main window's panels
+ * (Windows-версия)                                 (version for Windows)
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
- * Копирование кода разрешается только с письменного согласия
- * разработчика (А.Т.).
+ * Contributors should place own signs here.
  */
 using System;
 using System.Collections.Generic;

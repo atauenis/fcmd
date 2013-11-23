@@ -46,7 +46,10 @@ namespace fcmd
             Path = URL;
 
 			try {
-                LoadFile(URL, new localFileSystem(), pf.GetFCVplugin(content));
+                string GottenHeaders;
+                if(content.Length >= 20) GottenHeaders = content.Substring(0,20);
+                else GottenHeaders = content;
+                LoadFile(URL, new localFileSystem(), pf.GetFCVplugin("NAME=" + URL + "HEADERS=" + GottenHeaders));
 			} catch (Exception ex) {
 				MessageBox.Show(ex.Message + "\n" + ex.StackTrace,URL,MessageBoxButtons.OK,MessageBoxIcon.Error);
                 Console.WriteLine("fcview can't load file: " + ex.Message + "\n" + ex.StackTrace);
@@ -74,12 +77,19 @@ namespace fcmd
             vp.LoadFile(URL, pf.GetFSplugin(URL));
 
             //initialize xwt
-#if Win
-            Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Wpf);
-#elif Gtk
-            Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Gtk);
-#endif
-            //prepare the xwt-fcmd bridge and return to reality the plugin's DISPLAYBOX
+            switch (Environment.OSVersion.Platform){
+                case PlatformID.Win32NT:
+                    Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Wpf);
+                    break;
+                case PlatformID.MacOSX: //i don't sure that Mono detect OSX as OSX, not Unix; see http://mono.wikia.com/wiki/Detecting_the_execution_platform
+                    Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Cocoa);
+                    break;
+                default:
+                case PlatformID.Unix: //gtk fallback for unknown oses
+                    Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Gtk);
+                    break;
+            }
+            //prepare the xwt-fcmd bridge and return to the reality the plugin's DISPLAYBOX
             Xwt.Toolkit t = Xwt.Toolkit.CurrentEngine;
             ElHo.Child = (System.Windows.UIElement)t.GetNativeWidget(vp.DisplayBox);
 
@@ -89,14 +99,10 @@ namespace fcmd
             mnuEditCopy.Enabled = vp.CanCopy;
             mnuEditSelectAll.Enabled = vp.CanSelectAll;
 
-            mnuFormat.DropDownItems.Clear();
-            if (vp.SettingsMenu.Length > 0)
-            {//todo: replace winforms menu with xwt menu
-                mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
-            }
+            PopulateMenuFormat();
+            
 
             //building the "view" menu (the list of available plugins)
-            //todo: replace winforms menu with xwt menu
             mnuView.DropDownItems.Clear();
             foreach (string Plugin4List in pf.ViewPlugins)
             {
@@ -107,10 +113,74 @@ namespace fcmd
                 mnuView.DropDownItems.Add(NewMenuItem);
             }
 
-            vp.MsgBox += (string text, string header, MessageBoxButtons buttons, MessageBoxIcon icon) => { MessageBox.Show(text); return ""; };//undone: что-то я тут нахимичил не того :-)
-
             this.Show();
             this.UseWaitCursor = false;
+        }
+
+        /// <summary>
+        /// Populates the "Format" main menu
+        /// </summary>
+        private void PopulateMenuFormat()
+        {
+            mnuFormat.DropDownItems.Clear();
+            foreach (Xwt.MenuItem CurMenuItem in vp.SettingsMenu){
+                ToolStripMenuItem NewItem = new ToolStripMenuItem();
+                NewItem.Text = CurMenuItem.Label;
+                NewItem.Click += (object s, EventArgs ea) =>
+                    {//does not work; check why later
+                        if(CurMenuItem.clicked != null)
+                        CurMenuItem.clicked(CurMenuItem, EventArgs.Empty); //an reason why fcmd uses patched xwt ;-) try this on the default xamarin xwt
+                    };
+                NewItem.Tag = CurMenuItem;
+
+                //add ticks if need
+                if (CurMenuItem.GetType() == typeof(Xwt.CheckBoxMenuItem)){
+                    NewItem.Checked = ((Xwt.CheckBoxMenuItem)CurMenuItem).Checked;
+                }
+                else if (CurMenuItem.GetType() == typeof(Xwt.RadioButtonMenuItem)){
+                    NewItem.Checked = ((Xwt.RadioButtonMenuItem)CurMenuItem).Checked;
+                }
+                
+                //parse submenu (if need)
+                if (CurMenuItem.SubMenu != null) PopulateSubMenu(CurMenuItem.SubMenu, NewItem);
+
+                mnuFormat.DropDownItems.Add(NewItem);
+                //todo: submenus, images
+            }
+        }
+
+        /// <summary>
+        /// Populates the <paramref name="WinMenu"/> with DropDownItems (adds submenu) from the <paramref name="XwtMenu"/>.Items collection
+        /// </summary>
+        /// <param name="XwtMenu">The original Xwt Menu</param>
+        /// <param name="WinMenu">The Winforms MenuItem that should receive the new submenu</param>
+        private void PopulateSubMenu(Xwt.Menu XwtMenu, ToolStripMenuItem WinMenu){
+            foreach (Xwt.MenuItem MenuItem in XwtMenu.Items){
+                ToolStripMenuItem NewMenuItem = new ToolStripMenuItem();
+                NewMenuItem.Text = MenuItem.Label;
+                NewMenuItem.Tag = MenuItem;
+
+                //add ticks if need
+                if (MenuItem.GetType() == typeof(Xwt.CheckBoxMenuItem))
+                {
+                    NewMenuItem.Checked = ((Xwt.CheckBoxMenuItem)MenuItem).Checked;
+                }
+                else if (MenuItem.GetType() == typeof(Xwt.RadioButtonMenuItem))
+                {
+                    NewMenuItem.Checked = ((Xwt.RadioButtonMenuItem)MenuItem).Checked;
+                }
+
+                //configure onclick action
+                NewMenuItem.Click += (object s, EventArgs ea) =>
+                {
+                    MenuItem.clicked(MenuItem, EventArgs.Empty);
+                };
+
+                //parse subsubsubsub.....submenu (if need)
+                if (MenuItem.SubMenu != null) PopulateSubMenu(MenuItem.SubMenu, NewMenuItem);
+
+                WinMenu.DropDownItems.Add(NewMenuItem);
+            }
         }
 
         private void SwitchPlugin(ToolStripMenuItem SelectedByUser){
@@ -254,13 +324,13 @@ namespace fcmd
         }
 
         private void mnuFormat_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            //обновление спика параметров плагина (меню Формат)
-            //update plugin options list (menu "format")
-            if (vp.SettingsMenu.Length > 0){
-                mnuFormat.DropDownItems.Clear();
-                mnuFormat.DropDownItems.AddRange(vp.SettingsMenu);
+        {//переписать!
+            try{
+                Xwt.MenuItem xmi = (Xwt.MenuItem)e.ClickedItem.Tag;
+                xmi.clicked(xmi, e); //todo: this code is a stupid hack
+                PopulateMenuFormat();
             }
+            catch { } //"On Error Resume Next" saves time and bytes :-)
         }
 
         private void mnuEditFindNext_Click(object sender, EventArgs e)

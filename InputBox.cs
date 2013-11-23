@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace fcmd{
+    [Obsolete("Use Xwt.MessageDialog.AskQuestion instead")]
     public partial class InputBox : Form{
         public InputBox(string AskText){
             InitializeComponent();

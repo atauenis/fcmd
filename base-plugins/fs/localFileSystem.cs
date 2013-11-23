@@ -1,5 +1,6 @@
-/* The File Commander shared (cross-platform) kernel
+/* The File Commander backend   Ядро File Commander
  * Local filesystem adapter     Модуль доступа к локальным ФС
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
@@ -16,16 +17,12 @@ namespace fcmd.base_plugins.fs
          * плагина доступа к локальным ФС.  adapter for the File Commander kernel.
          * Данный код используется как в    This code should be cross-platform and
          * версии для Win (.Net), так и     should be tested on both .NET Win. Forms
-         * в версии для *nix/Android (Mono) and Linux/BSD (Mono/GTK#) envirroments.
+         * в версии для *nix/MacOS (Mono)   and Linux/BSD (Mono/GTK#) envirroments.
          */
         public string Name { get { return new Localizator().GetString("LocalFSVer"); } }
 		public string Version { get{return "1.0";} }
 		public string Author { get{return "A.T.";} }
 		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
-
-#pragma warning disable //because this is not a forgetted code, it is required by the iplugin interface
-        public event pluginner.MsgBoxDelegate MsgBox;
-#pragma warning restore
 
 		List<pluginner.DirItem> DirContent = new List<pluginner.DirItem>();
 		string CurDir;
@@ -157,7 +154,8 @@ namespace fcmd.base_plugins.fs
                 Progress = 100;
             }
             catch (Exception ex){
-                System.Windows.Forms.MessageBox.Show(ex.Message,"LocalFS error",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Stop);
+                //System.Windows.Forms.MessageBox.Show(ex.Message,"LocalFS error",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Stop);
+                new MsgBox(ex.Message, null, MsgBox.MsgBoxType.Error);
                 Console.Write(ex.Message + "\n" + ex.StackTrace + "\n" + "Catched in local fs provider while loading " + InternalURL + "\n");
             }
 		}

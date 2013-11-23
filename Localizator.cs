@@ -1,5 +1,6 @@
-﻿/* The File Commander shared (cross-platform) kernel
- * UI localizer     Модуль для работы с переводами интерфейса на разные языки
+﻿/* The File Commander backend   Ядро File Commander
+ * UI localizer                 Модуль для работы с переводами интерфейса на разные языки
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
@@ -30,7 +31,7 @@ namespace fcmd
                         "FCF9=F9 Оп-ции\n" +
                        "FCF10=F10 Выход\n" + //todo: перевести в читаемый вид
                         "FCmnuFile=&Файл\nFCmnuView=&Вид\nFCmnuNav=&Навигация\nFCmnuTools=С&ервис\nFCmnuHelp=&Справка\n"+
-                        "FCmnuFileUserMenu=Меню пользователя\nFCmnuFileView=Просмотреть файл\nFCmnuFileEdit=Редактировать файл\nFCmnuFileCopy=Копирование\nFCmnuFileMove=Перенос/переименование\nFCmnuFileNewDir=Новый каталог\nFCmnuFileRemove=Удалить\nFCmnuFileAtributes=Свойства\nFCmnuFileQuickSelect=Выбрать файл...\nFCmnuFileUnselect=Убрать синие выделения\nFCmnuFileInvertSelection=Инвертировать выделение\nFCmnuFileRevertSelection=Восстановить прежнее выделение\nFCmnuFileExit=Выxод\n" +
+                        "FCmnuFileUserMenu=Меню пользователя\nFCmnuFileView=Просмотреть файл\nFCmnuFileEdit=Редактировать файл\nFCmnuFileCompare=Сравнить файлы\nFCmnuFileCopy=Копирование\nFCmnuFileMove=Перенос/переименование\nFCmnuFileNewDir=Новый каталог\nFCmnuFileRemove=Удалить\nFCmnuFileAtributes=Свойства\nFCmnuFileQuickSelect=Выбрать файл...\nFCmnuFileUnselect=Убрать синие выделения\nFCmnuFileInvertSelection=Инвертировать выделение\nFCmnuFileRevertSelection=Восстановить прежнее выделение\nFCmnuFileExit=Выxод\n" +
                         "FCmnuViewShort=Краткий (список)\nFCmnuViewDetails=Полный (таблица)\nFCmnuViewIcons=Икноки (значки)\nFCmnuViewThumbs=Эскизы изображений\nFCmnuViewQuickView=Быстрый просмотр выделенного в сосед. панели\nFCmnuViewTree=Древо каталогов\nFCmnuViewPCPCconnect=Прямая связь ПК-ПК\nFCmnuViewPCNETPCconnect=Мини HTTP сервер\nFCmnuViewByName=По имени\nFCmnuViewByType=По расширению\nFCmnuViewByDate=По дате\nFCmnuViewBySize=По размеру\nFCmnuViewNoFilter=Без фильтра (*.*)\nFCmnuViewWithFilter=Применить фильтр имени...\nFCmnuViewToolbar=Панель инструментов\n" +
                         "FCmnuNavigateTree=Дерево\nFCmnuNavigateFind=Розыск файла...\nFCmnuNavigateHistory=История посещений\nFCmnuNavigateReload=Перезагрузить\nFCmnuNavigateFlyTo=Быстрый переход\n" +
                         "FCmnuToolsOptions=Настройки...\nFCmnuToolsPluginManager=Управление расширениями...\nFCmnuToolsEditUserMenu=Редактировать меню пользователя...\nFCmnuToolsKeybrdHelp=Подсказки клавиш F\nFCmnuToolsInfobar=Сводные строки\nFCmnuToolsDiskButtons=Кнопки дисков\nFCmnuToolsConfigEdit=Правка конфигурации FC\nFCmnuToolsKeychains=Учётные данные ФС\nFCmnuToolsDiskLabel=Метка диска...\nFCmnuToolsFormat=Форматировать носитель...\nFCmnuToolsSysInfo=Сведения о системе\n" +
@@ -68,7 +69,7 @@ namespace fcmd
                         "FCVEdit=&Правка\nFCVEditCopy=&Копировать\nFCVEditSelAll=&Выделить всё\nFCVEditSearch=&Найти...\nFCVEditSearchNext=Искать дальше\n" +
                         "FCVView=&Вид\nFCVViewModeText=&Текст\nFCVViewModeImage=&Рисунок\n" +
                         "FCVFormat=&Формат\nFCVHelpMenu=&Справка\nFCVHelpAbout=&О программе и используемом модуле просмотра\n" +
-                        "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден";
+                        "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден\nFCVTxtCodepages=Кодовая страница";
         Dictionary<string, string> Localization = new Dictionary<string, string>();
         
         /// <summary>
