@@ -62,7 +62,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="base-plugins\viewer\TxtViewer.cs" />
+    <Compile Include="..\base-plugins\viewer\TxtViewer.cs" />
     <Compile Include="fcview.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,10 +75,10 @@
     <Compile Include="FileProcessDialog.Designer.cs">
       <DependentUpon>FileProcessDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMain-Actions.cs">
+    <Compile Include="..\frmMain-Actions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain-Workers.cs">
+    <Compile Include="..\frmMain-Workers.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmMain.cs">
@@ -96,11 +96,11 @@
     <Compile Include="ListPanel.Designer.cs">
       <DependentUpon>ListPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Localizator.cs" />
-    <Compile Include="MsgBox.cs" />
-    <Compile Include="pluginfinder.cs" />
+    <Compile Include="..\Localizator.cs" />
+    <Compile Include="..\MsgBox.cs" />
+    <Compile Include="..\pluginfinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="base-plugins\fs\localFileSystem.cs" />
+    <Compile Include="..\base-plugins\fs\localFileSystem.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -114,7 +114,7 @@
     <Compile Include="SelectablePanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Settings.cs" />
+    <Compile Include="..\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -129,22 +129,18 @@
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="Xwt">
-      <HintPath>stolen-opensource-libs\Xwt.dll</HintPath>
+      <HintPath>..\stolen-opensource-libs\Xwt.dll</HintPath>
     </Reference>
     <Reference Include="Xwt.WPF">
-      <HintPath>stolen-opensource-libs\Xwt.WPF.dll</HintPath>
+      <HintPath>..\stolen-opensource-libs\Xwt.WPF.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="fcmd.userprefs" />
     <None Include="ListPanel.resources" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="README" />
-    <None Include="README.md" />
     <None Include="frmMain.resources" />
   </ItemGroup>
   <ItemGroup>
@@ -175,7 +171,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="pluginner\pluginner.csproj">
+    <ProjectReference Include="..\pluginner\pluginner.csproj">
       <Project>{88785B26-D617-4BE9-B449-F7CE77444794}</Project>
       <Name>pluginner</Name>
     </ProjectReference>
@@ -227,4 +223,5 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
 </Project>
