@@ -1,6 +1,5 @@
-﻿/* The File Commander backend   Ядро File Commander
- * UI localizer                 Модуль для работы с переводами интерфейса на разные языки
- * (C) The File Commander Team - https://github.com/atauenis/fcmd
+﻿/* The File Commander shared (cross-platform) kernel
+ * UI localizer     Модуль для работы с переводами интерфейса на разные языки
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
@@ -69,7 +68,7 @@ namespace fcmd
                         "FCVEdit=&Правка\nFCVEditCopy=&Копировать\nFCVEditSelAll=&Выделить всё\nFCVEditSearch=&Найти...\nFCVEditSearchNext=Искать дальше\n" +
                         "FCVView=&Вид\nFCVViewModeText=&Текст\nFCVViewModeImage=&Рисунок\n" +
                         "FCVFormat=&Формат\nFCVHelpMenu=&Справка\nFCVHelpAbout=&О программе и используемом модуле просмотра\n" +
-                        "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден\nFCVTxtCodepages=Кодовая страница";
+                        "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден";
         Dictionary<string, string> Localization = new Dictionary<string, string>();
         
         /// <summary>

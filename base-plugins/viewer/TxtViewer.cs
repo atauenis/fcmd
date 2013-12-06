@@ -148,7 +148,7 @@ namespace fcmd.base_plugins.viewer
                     mnuCodepages.Items.Add(NewItem);
                 }
 
-                mnuFormat.Add(new Xwt.MenuItem(new Localizator().GetString("FCVTxtCodepages")) { SubMenu = mnuCodepages });
+                mnuFormat.Add(new Xwt.MenuItem("кодировки") { SubMenu = mnuCodepages });
 
                 return mnuFormat;
             }

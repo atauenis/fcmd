@@ -324,7 +324,7 @@ namespace fcmd
         }
 
         private void mnuFormat_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {//переписать!
+        {
             try{
                 Xwt.MenuItem xmi = (Xwt.MenuItem)e.ClickedItem.Tag;
                 xmi.clicked(xmi, e); //todo: this code is a stupid hack
