@@ -31,7 +31,8 @@ using System.Runtime.InteropServices;
 //
 //[assembly: AssemblyVersion("0.0")]
 [assembly: AssemblyFileVersion("0.1")]
-[assembly: AssemblyTitleAttribute("File Commander")]
+[assembly: AssemblyTitleAttribute("The File Commander")]
 [assembly: AssemblyDescriptionAttribute("Two panel file manager (like Total Commander)")]
 [assembly: AssemblyCompanyAttribute("github.com/atauenis/fcmd")]
 [assembly: AssemblyCopyrightAttribute("(C) 2013, A.T. and other contributors")]
+[assembly: AssemblyProductAttribute("File Commander")]

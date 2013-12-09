@@ -204,7 +204,7 @@ namespace fcmd.base_plugins.viewer
         public void Search(){//правка-поиск
             //todo: rewrite with xwt
             InputBox ibx = new InputBox(new Localizator().GetString("FCVWhatFind"));
-            if (ibx.ShowDialog() == DialogResult.Cancel) return; //если нажали отмену
+            if (!ibx.ShowDialog()) return; //если нажали отмену
             int startPos = txtBox.Text.IndexOf(ibx.Result,txtBox.SelectionStart + 1/*чтобы искать дальнейшие вхождения*/);
 
             if (startPos == -1) { MessageBox.Show(new Localizator().GetString("FCVNothingFound"), null, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }

@@ -38,6 +38,7 @@ namespace fcmd
                         "FName=Имя\nFSize=Размер\nFDate=Дата\n" +
                         "FCDelAsk=Вы действительно хотите удалить файл \"{0}\"?\n" +
                         "Canceled=Отменено пользователем\n" +
+                        "Cancel=Отмена\n" +
                         "FileNotFound=Файл \"{0}\" не найден\n" +
                         "ItsDir=\"{0}\" является каталогом\n" +
                         "DirCantBeRemoved=Нет возможности удалить {0}\n" +

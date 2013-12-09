@@ -46,7 +46,7 @@ namespace fcmd{
                 pluginner.DirItem di = fsp.DirectoryContent[i];
                 
                 //parsing all files, that given from the FS provider
-                StatusFeedback += FileWeight;
+                StatusFeedback += FileWeight / 100;
                 if (di.Hidden == false || fcmd.Properties.Settings.Default.ShowHidedFiles == true)
                 {
                     AddItem(lp, di.TextToShow, fsp.GetMetadata(di.Path), di.Size, di.Date); //todo: add the icon of the file

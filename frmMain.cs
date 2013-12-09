@@ -1,5 +1,5 @@
-/* The File Commander (Windows)
- * Главное окно (Windows-версия)    The main window (version for Windows)
+/* The File Commander
+ * Главное окно (временная версия)    The main window (temporary)
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
@@ -20,6 +20,8 @@ namespace fcmd
 {
 	public partial class frmMain : Form 
 	{
+        //TODO переписать на XWT
+
         //Внутренние переменные
 		private List<ListPanel> lplLeft = new List<ListPanel>();
 		private List<ListPanel> lplRight = new List<ListPanel>();
@@ -100,10 +102,6 @@ namespace fcmd
         Localizator locale = new Localizator(); //объект для работы с локализациями интерфейса
 
 		//Подпрограммы
-        [STAThread] //need because of unfixed wpf elementhost bug
-		static void Main(){ //Иницализация программы
-			Application.Run(new frmMain());//BUG: github issue #2
-		}
 
 		public frmMain() { //Инициализация элементов управления
 			InitializeComponent();
@@ -205,7 +203,7 @@ namespace fcmd
                 {
                     case Keys.F7: //новый каталог
                         InputBox ibx = new InputBox(locale.GetString("NewDirURL"), ActivePanel.FSProvider.CurrentDirectory + locale.GetString("NewDirTemplate"));
-                        if (ibx.ShowDialog() == DialogResult.OK)
+                        if (ibx.ShowDialog())
                         {
                             MkDir(ibx.Result);
                         }
@@ -308,8 +306,8 @@ namespace fcmd
             int Status = 0;
             Thread LsThread = new Thread(delegate() { DoLs(url, lp, ref Status); });
             FileProcessDialog fpd = new FileProcessDialog();
-            fpd.Top = this.Top + ActivePanel.Top;
-            fpd.Left = this.Left + ActivePanel.Left;
+            fpd.Y = this.Top + ActivePanel.Top;
+            fpd.X = this.Left + ActivePanel.Left;
             string FPDtext = String.Format(locale.GetString("DoingListdir"), "\n" + url, "");
             FPDtext = FPDtext.Replace("{1}", "");
             fpd.lblStatus.Text = FPDtext;
@@ -317,7 +315,7 @@ namespace fcmd
             fpd.Show();
             LsThread.Start();
 
-            do { Application.DoEvents(); fpd.pbrProgress.Value = Status; fpd.Refresh(); }
+            do { Application.DoEvents(); fpd.pbrProgress.Fraction = Status; }
             while (LsThread.ThreadState == System.Threading.ThreadState.Running);
             fpd.Hide();
         }
@@ -1171,8 +1169,7 @@ namespace fcmd
 
         private void mnuFileQuickSelect_Click(object sender, EventArgs e){//file-quick select
             InputBox ibx = new InputBox(locale.GetString("FileQuickSelectFileAsk"));
-            ibx.ShowDialog();
-            if (ibx.DialogResult == DialogResult.Cancel) return;
+            if (ibx.ShowDialog() == false) return;
             
             foreach (ListViewItem Tobeselected in ActivePanel.list.SelectedItems)
             {
