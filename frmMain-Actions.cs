@@ -54,24 +54,11 @@ namespace fcmd
         }
 
         /// <summary>
-        /// Reads the file <paramref name="url"/> and shows in FCView
+        /// Reads the file <paramref name="url"/> and shows in FC Viewer
         /// </summary>
         /// <param name="url"></param>
         public void FCView(string url)
         {
-            /*fcview fcv = new fcview();
-            pluginner.IFSPlugin fs = ActivePanel.FSProvider;
-            if (!fs.FileExists(url))
-            {
-                //MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                new MsgBox(string.Format(locale.GetString("FileNotFound")), ActivePanel.list.SelectedItems[0].Text, MsgBox.MsgBoxType.Warning);
-                return;
-            }
-
-            pluginner.File SelectedFile = fs.GetFile(url, new int());
-            string FileContent = Encoding.ASCII.GetString(SelectedFile.Content);
-            fcv.LoadFile(url, ActivePanel.FSProvider);*/
-
             VEd fcv = new VEd();
             pluginner.IFSPlugin fs = ActivePanel.FSProvider;
             if (!fs.FileExists(url))
@@ -85,7 +72,6 @@ namespace fcmd
             string FileContent = Encoding.ASCII.GetString(SelectedFile.Content);
             fcv.LoadFile(url, ActivePanel.FSProvider, false);
             fcv.Show();
-            //Xwt.Application.Run();
         }
 
         /// <summary>

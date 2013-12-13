@@ -1,5 +1,5 @@
-﻿/* The File Commander shared (cross-platform) kernel
- * UI localizer     Модуль для работы с переводами интерфейса на разные языки
+﻿/* The File Commander
+ * Module for UI translation into different languages
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
@@ -57,21 +57,21 @@ namespace fcmd
                         "FileQuickSelectFileAsk=Какой файл (маску имени) нужно выделить:\n"+
                         "FCVTitle=Просмотр - {0}\n" +
                         "FCETitle=Редактор - {0}\n" +
-                        "FCVF1=F1 Справка\n" +
-                        "FCVF2=F2\n" +
-                        "FCVF3=F3\n" +
-                        "FCVF4=F4 Вид\n" +
-                        "FCVF5=F5 Обновить\n" +
-                        "FCVF6=F6\n" +
-                        "FCVF7=F7 Поиск\n" +
-                        "FCVF8=F8 Формат\n" +
-                        "FCVF9=F9\n" +
-                       "FCVF10=F10 Выход\n" +
-                        "FCVFile=&Файл\nFCVFileOpen=&Открыть\nFCVFileReload=Пере&загрузить\n" +
-                        "FCVFilePrint=&Печать\nFCVFilePrintOptions=Пара&метры страницы\nFCVFileExit=З&акрыть просмотр\n" +
-                        "FCVEmnuEdit=&Правка\nFCVEmnuEditCut=&Вырезать\nFCVEmnuEditCopy=&Копировать\nFCVEmnuEditPaste=Вст&авить\nFCVEmnuEditSelAll=&Выделить всё\nFCVEmnuEditSearch=&Найти...\nFCVEmnuEditSearchNext=Искать дальше\n" +
-                        "FCVView=&Вид\nFCVViewModeText=&Текст\nFCVViewModeImage=&Рисунок\n" +
-                        "FCVFormat=&Формат\nFCVHelpMenu=&Справка\nFCVHelpAbout=&О программе и используемом модуле просмотра\n" +
+                        "FCVE_F1=F1 Справка\n" +
+                        "FCVE_F2=F2\n" +
+                        "FCVE_F3=F3\n" +
+                        "FCVE_F4=F4 Вид\n" +
+                        "FCVE_F5=F5 Обновить\n" +
+                        "FCVE_F6=F6\n" +
+                        "FCVE_F7=F7 Поиск\n" +
+                        "FCVE_F8=F8 Формат\n" +
+                        "FCVE_F9=F9\n" +
+                       "FCVE_F10=F10 Выход\n" +
+                        "FCVE_mnuFile=_Файл\nFCVE_mnuFileNew=Созд_ать\nFCVE_mnuFileOpen=_Открыть\nFCVE_mnuFileReload=Пере_загрузить\nFCVE_mnuFileSave=_Сохранить\nFCVE_mnuFileSaveAs=Со_хранить как...\n" +
+                        "FCVE_mnuFilePrint=_Печать\nFCVE_mnuFilePrintPreview=Пред_варительный просмотр...\nFCVE_mnuFilePrintSettings=Пара_метры страницы...\nFCVE_mnuFileClose=В_ыход\n" +
+                        "FCVE_mnuEdit=_Правка\nFCVE_mnuEditCut=_Вырезать\nFCVE_mnuEditCopy=_Копировать\nFCVE_mnuEditPaste=Вст_авить\nFCVE_mnuEditSelAll=_Выделить всё\nFCVE_mnuEditSearch=_Найти...\nFCVE_mnuEditSearchNext=Искать дальше\n" +
+                        "FCVE_mnuView=_Вид\nFCVE_mnuViewModeText=_Простой текст\nFCVE_mnuViewModeImage=_Рисунок\n" +
+                        "FCVE_mnuFormat=_Формат\nFCVE_mnuHelp=_Справка\nFCVE_mnuHelpHelpme=_Вызов справки\nFCVE_mnuHelpAbout=_О программе и модуле просмотра\n" +
                         "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден";
         Dictionary<string, string> Localization = new Dictionary<string, string>();
         

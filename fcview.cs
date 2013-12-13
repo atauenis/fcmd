@@ -310,23 +310,23 @@ namespace fcmd
         /// </summary>
         public void Localize()
         {
-            tsbHelpF1.Text = locale.GetString("FCVF1");
-            tsbHelpF2.Text = locale.GetString("FCVF2");
-            tsbHelpF3.Text = locale.GetString("FCVF3");
-            tsbHelpF4.Text = locale.GetString("FCVF4");
-            tsbHelpF5.Text = locale.GetString("FCVF5");
-            tsbHelpF6.Text = locale.GetString("FCVF6");
-            tsbHelpF7.Text = locale.GetString("FCVF7");
-            tsbHelpF8.Text = locale.GetString("FCVF8");
-            tsbHelpF9.Text = locale.GetString("FCVF9");
-            tsbHelpF10.Text = locale.GetString("FCVF10");
+            tsbHelpF1.Text = locale.GetString("FCVE_F1");
+            tsbHelpF2.Text = locale.GetString("FCVE_F2");
+            tsbHelpF3.Text = locale.GetString("FCVE_F3");
+            tsbHelpF4.Text = locale.GetString("FCVE_F4");
+            tsbHelpF5.Text = locale.GetString("FCVE_F5");
+            tsbHelpF6.Text = locale.GetString("FCVE_F6");
+            tsbHelpF7.Text = locale.GetString("FCVE_F7");
+            tsbHelpF8.Text = locale.GetString("FCVE_F8");
+            tsbHelpF9.Text = locale.GetString("FCVE_F9");
+            tsbHelpF10.Text = locale.GetString("FCVE_F10");
 
-            mnuFile.Text = locale.GetString("FCVFile");
-            mnuFileOpen.Text = locale.GetString("FCVFileOpen");
-            mnuFileReload.Text = locale.GetString("FCVFileReload");
-            mnuFilePrint.Text = locale.GetString("FCVFilePrint");
-            mnuFilePrintOptions.Text = locale.GetString("FCVFilePrintOptions");
-            mnuFileExit.Text = locale.GetString("FCVFileExit");
+            mnuFile.Text = locale.GetString("FCVE_File");
+            mnuFileOpen.Text = locale.GetString("FCVE_FileOpen");
+            mnuFileReload.Text = locale.GetString("FCVE_FileReload");
+            mnuFilePrint.Text = locale.GetString("FCVE_FilePrint");
+            mnuFilePrintOptions.Text = locale.GetString("FCVE_FilePrintOptions");
+            mnuFileExit.Text = locale.GetString("FCVE_FileExit");
 
             mnuEdit.Text = locale.GetString("FCVEmnuEdit");
             mnuEditCopy.Text = locale.GetString("FCVEmnuEditCopy");
@@ -336,7 +336,7 @@ namespace fcmd
 
             mnuView.Text = locale.GetString("FCVView");
 
-            mnuFormat.Text = locale.GetString("FCVFormat");
+            mnuFormat.Text = locale.GetString("FCVE_Format");
             mnuHelp.Text = locale.GetString("FCVHelpMenu");
             mnuHelpAbout.Text = locale.GetString("FCVHelpAbout");
         }

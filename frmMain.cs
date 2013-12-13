@@ -332,6 +332,7 @@ namespace fcmd
             this.mnuFileUserMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileView = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileCompare = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileMove = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileNewDir = new System.Windows.Forms.ToolStripMenuItem();
@@ -398,7 +399,6 @@ namespace fcmd
             this.tsbHelpF8 = new System.Windows.Forms.ToolStripButton();
             this.tsbHelpF9 = new System.Windows.Forms.ToolStripButton();
             this.tsbHelpF10 = new System.Windows.Forms.ToolStripButton();
-            this.mnuFileCompare = new System.Windows.Forms.ToolStripMenuItem();
             this.mstMenu.SuspendLayout();
             this.tsKeyboard.SuspendLayout();
             this.SuspendLayout();
@@ -464,6 +464,13 @@ namespace fcmd
             this.mnuFileEdit.Size = new System.Drawing.Size(169, 22);
             this.mnuFileEdit.Text = "Edit the file";
             this.mnuFileEdit.Click += new System.EventHandler(this.mnuFileEdit_Click);
+            // 
+            // mnuFileCompare
+            // 
+            this.mnuFileCompare.Enabled = false;
+            this.mnuFileCompare.Name = "mnuFileCompare";
+            this.mnuFileCompare.Size = new System.Drawing.Size(169, 22);
+            this.mnuFileCompare.Text = "Compare";
             // 
             // mnuFileCopy
             // 
@@ -1000,13 +1007,6 @@ namespace fcmd
             this.tsbHelpF10.Size = new System.Drawing.Size(50, 22);
             this.tsbHelpF10.Text = "F10 Exit";
             // 
-            // mnuFileCompare
-            // 
-            this.mnuFileCompare.Enabled = false;
-            this.mnuFileCompare.Name = "mnuFileCompare";
-            this.mnuFileCompare.Size = new System.Drawing.Size(169, 22);
-            this.mnuFileCompare.Text = "Compare";
-            // 
             // frmMain
             // 
             this.ClientSize = new System.Drawing.Size(667, 410);
@@ -1016,6 +1016,7 @@ namespace fcmd
             this.MainMenuStrip = this.mstMenu;
             this.Name = "frmMain";
             this.Text = "File Commander";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMain_KeyDown);
             this.Resize += new System.EventHandler(this.frmMain_Resize);
@@ -1234,6 +1235,11 @@ namespace fcmd
             NewItem.SubItems.Add(ItemDate.ToShortDateString());
             AddItem(lp, NewItem);
             //todo: add file icons
+        }
+
+        private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Xwt.Application.Exit();
         }
 
 	}
