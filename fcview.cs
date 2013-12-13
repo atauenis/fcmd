@@ -40,21 +40,25 @@ namespace fcmd
         /// <param name="URL">The file's URL</param>
         /// <param name="FS">The file's filesystem plugin</param>
 
-        public void LoadFile(string URL, pluginner.IFSPlugin FS){// "text/plain" loading
-            string content = Encoding.UTF8.GetString(FS.GetFile(URL,new int()).Content);
+        public void LoadFile(string URL, pluginner.IFSPlugin FS)
+        {// "text/plain" loading
+            string content = Encoding.UTF8.GetString(FS.GetFile(URL, new int()).Content);
             pluginfinder pf = new pluginfinder();
             Path = URL;
 
-			try {
+            try
+            {
                 string GottenHeaders;
-                if(content.Length >= 20) GottenHeaders = content.Substring(0,20);
+                if (content.Length >= 20) GottenHeaders = content.Substring(0, 20);
                 else GottenHeaders = content;
                 LoadFile(URL, new localFileSystem(), pf.GetFCVplugin("NAME=" + URL + "HEADERS=" + GottenHeaders));
-			} catch (Exception ex) {
-				MessageBox.Show(ex.Message + "\n" + ex.StackTrace,URL,MessageBoxButtons.OK,MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + ex.StackTrace, URL, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("fcview can't load file: " + ex.Message + "\n" + ex.StackTrace);
-				return;
-			}
+                return;
+            }
         }
 
         /// <summary>
@@ -77,7 +81,8 @@ namespace fcmd
             vp.LoadFile(URL, pf.GetFSplugin(URL));
 
             //initialize xwt
-            switch (Environment.OSVersion.Platform){
+            switch (Environment.OSVersion.Platform)
+            {
                 case PlatformID.Win32NT:
                     Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Wpf);
                     break;
@@ -100,13 +105,13 @@ namespace fcmd
             mnuEditSelectAll.Enabled = vp.CanSelectAll;
 
             PopulateMenuFormat();
-            
+
 
             //building the "view" menu (the list of available plugins)
             mnuView.DropDownItems.Clear();
             foreach (string Plugin4List in pf.ViewPlugins)
             {
-                ToolStripMenuItem NewMenuItem = new ToolStripMenuItem(null, null,(object s, EventArgs ea) => SwitchPlugin((ToolStripMenuItem)s));
+                ToolStripMenuItem NewMenuItem = new ToolStripMenuItem(null, null, (object s, EventArgs ea) => SwitchPlugin((ToolStripMenuItem)s));
                 NewMenuItem.Tag = Plugin4List.Split(";".ToCharArray())[1];
                 NewMenuItem.Text = Plugin4List.Split(";".ToCharArray())[2];
                 if (NewMenuItem.Tag.ToString() == PluginLink) NewMenuItem.Checked = true;
@@ -123,24 +128,27 @@ namespace fcmd
         private void PopulateMenuFormat()
         {
             mnuFormat.DropDownItems.Clear();
-            foreach (Xwt.MenuItem CurMenuItem in vp.SettingsMenu){
+            foreach (Xwt.MenuItem CurMenuItem in vp.SettingsMenu)
+            {
                 ToolStripMenuItem NewItem = new ToolStripMenuItem();
                 NewItem.Text = CurMenuItem.Label;
                 NewItem.Click += (object s, EventArgs ea) =>
-                    {//does not work; check why later
-                        if(CurMenuItem.clicked != null)
+                {//does not work; check why later
+                    if (CurMenuItem.clicked != null)
                         CurMenuItem.clicked(CurMenuItem, EventArgs.Empty); //an reason why fcmd uses patched xwt ;-) try this on the default xamarin xwt
-                    };
+                };
                 NewItem.Tag = CurMenuItem;
 
                 //add ticks if need
-                if (CurMenuItem.GetType() == typeof(Xwt.CheckBoxMenuItem)){
+                if (CurMenuItem.GetType() == typeof(Xwt.CheckBoxMenuItem))
+                {
                     NewItem.Checked = ((Xwt.CheckBoxMenuItem)CurMenuItem).Checked;
                 }
-                else if (CurMenuItem.GetType() == typeof(Xwt.RadioButtonMenuItem)){
+                else if (CurMenuItem.GetType() == typeof(Xwt.RadioButtonMenuItem))
+                {
                     NewItem.Checked = ((Xwt.RadioButtonMenuItem)CurMenuItem).Checked;
                 }
-                
+
                 //parse submenu (if need)
                 if (CurMenuItem.SubMenu != null) PopulateSubMenu(CurMenuItem.SubMenu, NewItem);
 
@@ -154,8 +162,10 @@ namespace fcmd
         /// </summary>
         /// <param name="XwtMenu">The original Xwt Menu</param>
         /// <param name="WinMenu">The Winforms MenuItem that should receive the new submenu</param>
-        private void PopulateSubMenu(Xwt.Menu XwtMenu, ToolStripMenuItem WinMenu){
-            foreach (Xwt.MenuItem MenuItem in XwtMenu.Items){
+        private void PopulateSubMenu(Xwt.Menu XwtMenu, ToolStripMenuItem WinMenu)
+        {
+            foreach (Xwt.MenuItem MenuItem in XwtMenu.Items)
+            {
                 ToolStripMenuItem NewMenuItem = new ToolStripMenuItem();
                 NewMenuItem.Text = MenuItem.Label;
                 NewMenuItem.Tag = MenuItem;
@@ -183,9 +193,11 @@ namespace fcmd
             }
         }
 
-        private void SwitchPlugin(ToolStripMenuItem SelectedByUser){
+        private void SwitchPlugin(ToolStripMenuItem SelectedByUser)
+        {
             PluginLink = SelectedByUser.Tag.ToString();
-            foreach (ToolStripMenuItem tsmi in mnuView.DropDownItems){
+            foreach (ToolStripMenuItem tsmi in mnuView.DropDownItems)
+            {
                 tsmi.Checked = false;
             }
             LoadFile(Path, fs, pf.LoadFCVPlugin(SelectedByUser.Tag.ToString()));
@@ -219,12 +231,13 @@ namespace fcmd
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
-            string AboutString = String.Format(locale.GetString("FCViewVer"),Application.ProductVersion) + "\n" + "(C) 2013, Alexander Tauenis\n\n";
+            string AboutString = String.Format(locale.GetString("FCViewVer"), Application.ProductVersion) + "\n" + "(C) 2013, Alexander Tauenis\n\n";
             AboutString += vp.Name + " " + vp.Version + "\n" + vp.Author;
             MessageBox.Show(AboutString, "File Commander Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void fcview_KeyDown(object sender, KeyEventArgs e){
+        private void fcview_KeyDown(object sender, KeyEventArgs e)
+        {
 #if DEBUG
             string DebugText = "Отладка клавиатуры FCView: нажата и отпущена клавиша " + e.KeyCode.ToString();
             DebugText += ", модификаторы: Ctrl=" + e.Control.ToString();
@@ -232,12 +245,13 @@ namespace fcmd
             DebugText += " Shift=" + e.Shift.ToString();
             Console.WriteLine(DebugText);
 #endif
-            switch (e.KeyData){
+            switch (e.KeyData)
+            {
                 case Keys.F4://вид
                     mnuView.ShowDropDown();
                     break;
                 case Keys.F7: //поиск
-                    mnuEditFind_Click(new object(),new EventArgs());
+                    mnuEditFind_Click(new object(), new EventArgs());
                     break;
                 case Keys.F8: //формат (параметры плагина)
                     mnuFormat.ShowDropDown();
@@ -251,8 +265,9 @@ namespace fcmd
             }
         }
 
-        private void mnuFileReload_Click(object sender, EventArgs e){
-            LoadFile(Path,fs,vp);
+        private void mnuFileReload_Click(object sender, EventArgs e)
+        {
+            LoadFile(Path, fs, vp);
         }
 
         [STAThread]
@@ -262,13 +277,15 @@ namespace fcmd
             ElHo.Dock = DockStyle.Fill;
             toolStripContainer1.ContentPanel.Controls.Add(ElHo);
             Localize();
-         }
+        }
 
         System.Windows.Forms.Integration.ElementHost ElHo = new System.Windows.Forms.Integration.ElementHost();
         //http://atsoftware.gb7.ru/blog/2013/11/elementhost-invalidoperationexception/
-        
-        private void tsKeyboard_ItemClicked(object sender, ToolStripItemClickedEventArgs e){
-            switch (e.ClickedItem.Name){
+
+        private void tsKeyboard_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            switch (e.ClickedItem.Name)
+            {
                 case "tsbHelpF1": this.OnKeyDown(new KeyEventArgs(Keys.F1)); break;
                 case "tsbHelpF2": this.OnKeyDown(new KeyEventArgs(Keys.F2)); break;
                 case "tsbHelpF3": this.OnKeyDown(new KeyEventArgs(Keys.F3)); break;
@@ -291,7 +308,8 @@ namespace fcmd
         /// Перевести весь интерфейс на текущий язык
         /// Translate entrie UI into the locale
         /// </summary>
-        public void Localize(){
+        public void Localize()
+        {
             tsbHelpF1.Text = locale.GetString("FCVF1");
             tsbHelpF2.Text = locale.GetString("FCVF2");
             tsbHelpF3.Text = locale.GetString("FCVF3");
@@ -310,11 +328,11 @@ namespace fcmd
             mnuFilePrintOptions.Text = locale.GetString("FCVFilePrintOptions");
             mnuFileExit.Text = locale.GetString("FCVFileExit");
 
-            mnuEdit.Text = locale.GetString("FCVEdit");
-            mnuEditCopy.Text = locale.GetString("FCVEditCopy");
-            mnuEditSelectAll.Text = locale.GetString("FCVEditSelAll");
-            mnuEditFind.Text = locale.GetString("FCVEditSearch");
-            mnuEditFindNext.Text = locale.GetString("FCVEditSearchNext");
+            mnuEdit.Text = locale.GetString("FCVEmnuEdit");
+            mnuEditCopy.Text = locale.GetString("FCVEmnuEditCopy");
+            mnuEditSelectAll.Text = locale.GetString("FCVEmnuEditSelAll");
+            mnuEditFind.Text = locale.GetString("FCVEmnuEditSearch");
+            mnuEditFindNext.Text = locale.GetString("FCVEmnuEditSearchNext");
 
             mnuView.Text = locale.GetString("FCVView");
 
@@ -325,7 +343,8 @@ namespace fcmd
 
         private void mnuFormat_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            try{
+            try
+            {
                 Xwt.MenuItem xmi = (Xwt.MenuItem)e.ClickedItem.Tag;
                 xmi.clicked(xmi, e); //todo: this code is a stupid hack
                 PopulateMenuFormat();

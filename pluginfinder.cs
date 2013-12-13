@@ -18,6 +18,7 @@ namespace fcmd
     class pluginfinder{
         public List<string> FSPlugins = new List<string>();
 		public List<string> ViewPlugins = new List<string>();
+        public List<string> VEPlugins = new List<string>();
         //string[] EditPlugins; //todo
 
         public pluginfinder(){//конструктор
@@ -44,6 +45,20 @@ namespace fcmd
 				}
 			}
             ViewPlugins.Add(".*;(internal)TxtViewer;" + new Localizator().GetString("FCVViewModeText")); //зырилку по-умолчанию в конец списка
+
+            //load the list of VE plugins
+            if (File.Exists(Application.StartupPath + "/fcveplugins.conf"))
+            {
+                string[] vplist = File.ReadAllLines(Application.StartupPath + "/fcveplugins.conf");
+                int rowCounter = 0;
+                foreach (string vp in vplist)
+                {
+                    rowCounter++;
+                    if (vp.Split(";".ToCharArray()).Length != 3) { Console.WriteLine("Error in fcveplugins.conf at row " + rowCounter); break; }
+                    ViewPlugins.Add(vp);
+                }
+            }
+            ViewPlugins.Add(".*;(internal)PlainText;" + new Localizator().GetString("FCVViewModeText")); //зырилку по-умолчанию в конец списка
 
         }
 
@@ -110,6 +125,58 @@ namespace fcmd
                 }
             }
 			return new base_plugins.viewer.TxtViewer(); //если ничего лучшего не найти, тогда дать что имеется
+        }
+
+        /// <summary>
+        /// Search for VE plugin
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public pluginner.IVEPlugin GetFCVEplugin(string content)
+        { //поиск плагина FC VE
+            foreach (string CurDescription in VEPlugins)
+            {
+                string[] Parts = CurDescription.Split(";".ToCharArray());
+                if (System.Text.RegularExpressions.Regex.IsMatch(content, Parts[0]))
+                {
+                    //оно!
+                    return LoadFCVEPlugin(Parts[1]);
+                }
+            }
+            return new base_plugins.ve.PlainText(); //если ничего лучшего не найти, тогда дать что имеется
+        }
+
+        public pluginner.IVEPlugin LoadFCVEPlugin(string name)
+        {
+            if (name.StartsWith("(internal)"))
+            {//плагин встроенный
+                switch (name)
+                {
+                    case "(internal)Plaintext":
+                        return new base_plugins.ve.PlainText();
+                    case "(internal)ImgViewer":
+                        //todo: return простую зырилку на базе picturebox
+                        throw new PluginNotFoundException("Зырилка на базе picturebox пока что в планах"); //убрать
+                }
+            }
+            else
+            {//плагин внешний
+                string file = name;
+                Assembly assembly = Assembly.LoadFile(file);
+
+                foreach (Type type in assembly.GetTypes())
+                {
+                    Type iface = type.GetInterface("pluginner.IVEPlugin");
+
+                    if (iface != null)
+                    {
+                        pluginner.IVEPlugin plugin = (pluginner.IVEPlugin)Activator.CreateInstance(type);
+                        return plugin;
+                    }
+                }
+            }
+
+            throw new PluginNotFoundException("Search was not ended sucscessfully");
         }
 
         /// <summary>

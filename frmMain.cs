@@ -165,6 +165,10 @@ namespace fcmd
 			#endregion
 
 			this.OnSizeChanged (new EventArgs()); //расстановка панелей по местам
+
+            //initialize both XWT and WinForms toolkits (через жопу)
+            this.Show(); this.Select(); //h a c k
+            Xwt.Application.Run();
 		}
 
 		private void frmMain_Resize(object sender, EventArgs e){ //Деформация формы

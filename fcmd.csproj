@@ -62,6 +62,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="base-plugins\ve\PlainText.cs" />
     <Compile Include="base-plugins\viewer\TxtViewer.cs" />
     <Compile Include="fcview.cs">
       <SubType>Form</SubType>
@@ -106,6 +107,7 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="VEd.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />

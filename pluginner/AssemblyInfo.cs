@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription("File Commander: the adapter for pluggable-in modules")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("File Commander by Alexander Tauens")]
+[assembly: AssemblyProduct("File Commander")]
 [assembly: AssemblyCopyright("А.Т.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

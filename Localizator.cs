@@ -17,8 +17,10 @@ namespace fcmd
         List<string> UIFileContent = new List<string>();
         string RusUI = "FileCommanderVer=Файловый менеджер {0}, версия {1}\n" +
                         "FCViewVer=Просмоторщик файлов, версия {0}\n" +
+                        "FCVEVer=Встроенный просмоторщик и редактор файлов FC {0}.\nЗагружен модуль просмотра: " +
                         "LocalFSVer=Модуль доступа к локальным ФС [встроенный]\n" +
                         "TxtViewerVer=Просмоторщик текстовых файлов [встроенный]\n" +
+                        "VEptxt=Простой текст [встроенный]\n" +
                         "FCF1=F1 Справка\n" +
                         "FCF2=F2 Меню\n" +
                         "FCF3=F3 Чтение\n" +
@@ -53,7 +55,8 @@ namespace fcmd
                         "NewDirURL=Введите путь для нового каталога\n" +
                         "NewDirTemplate=\\НОВЫЙ КАТАЛОГ\n" +
                         "FileQuickSelectFileAsk=Какой файл (маску имени) нужно выделить:\n"+
-                        "FCVTitle=Просмоторщик файлов - {0}\n" +
+                        "FCVTitle=Просмотр - {0}\n" +
+                        "FCETitle=Редактор - {0}\n" +
                         "FCVF1=F1 Справка\n" +
                         "FCVF2=F2\n" +
                         "FCVF3=F3\n" +
@@ -66,7 +69,7 @@ namespace fcmd
                        "FCVF10=F10 Выход\n" +
                         "FCVFile=&Файл\nFCVFileOpen=&Открыть\nFCVFileReload=Пере&загрузить\n" +
                         "FCVFilePrint=&Печать\nFCVFilePrintOptions=Пара&метры страницы\nFCVFileExit=З&акрыть просмотр\n" +
-                        "FCVEdit=&Правка\nFCVEditCopy=&Копировать\nFCVEditSelAll=&Выделить всё\nFCVEditSearch=&Найти...\nFCVEditSearchNext=Искать дальше\n" +
+                        "FCVEmnuEdit=&Правка\nFCVEmnuEditCut=&Вырезать\nFCVEmnuEditCopy=&Копировать\nFCVEmnuEditPaste=Вст&авить\nFCVEmnuEditSelAll=&Выделить всё\nFCVEmnuEditSearch=&Найти...\nFCVEmnuEditSearchNext=Искать дальше\n" +
                         "FCVView=&Вид\nFCVViewModeText=&Текст\nFCVViewModeImage=&Рисунок\n" +
                         "FCVFormat=&Формат\nFCVHelpMenu=&Справка\nFCVHelpAbout=&О программе и используемом модуле просмотра\n" +
                         "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден";
