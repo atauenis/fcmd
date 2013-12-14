@@ -20,7 +20,7 @@ namespace fcmd
                         "FCVEVer=Встроенный просмоторщик и редактор файлов FC {0}.\nЗагружен модуль просмотра: " +
                         "LocalFSVer=Модуль доступа к локальным ФС [встроенный]\n" +
                         "TxtViewerVer=Просмоторщик текстовых файлов [встроенный]\n" +
-                        "VEptxt=Простой текст [встроенный]\n" +
+                        "VEptxtVer=Простой текст\n" +
                         "FCF1=F1 Справка\n" +
                         "FCF2=F2 Меню\n" +
                         "FCF3=F3 Чтение\n" +
@@ -31,12 +31,12 @@ namespace fcmd
                         "FCF8=F8 Удал-е\n" +
                         "FCF9=F9 Оп-ции\n" +
                        "FCF10=F10 Выход\n" + //todo: перевести в читаемый вид
-                        "FCmnuFile=&Файл\nFCmnuView=&Вид\nFCmnuNav=&Навигация\nFCmnuTools=С&ервис\nFCmnuHelp=&Справка\n"+
+                        "FCmnuFile=&Файл\nFCmnuView=&Вид\nFCmnuNav=&Навигация\nFCmnuTools=С&ервис\nFCmnuHelp=&Справка\n" +
                         "FCmnuFileUserMenu=Меню пользователя\nFCmnuFileView=Просмотреть файл\nFCmnuFileEdit=Редактировать файл\nFCmnuFileCompare=Сравнить файлы\nFCmnuFileCopy=Копирование\nFCmnuFileMove=Перенос/переименование\nFCmnuFileNewDir=Новый каталог\nFCmnuFileRemove=Удалить\nFCmnuFileAtributes=Свойства\nFCmnuFileQuickSelect=Выбрать файл...\nFCmnuFileUnselect=Убрать синие выделения\nFCmnuFileInvertSelection=Инвертировать выделение\nFCmnuFileRevertSelection=Восстановить прежнее выделение\nFCmnuFileExit=Выxод\n" +
                         "FCmnuViewShort=Краткий (список)\nFCmnuViewDetails=Полный (таблица)\nFCmnuViewIcons=Икноки (значки)\nFCmnuViewThumbs=Эскизы изображений\nFCmnuViewQuickView=Быстрый просмотр выделенного в сосед. панели\nFCmnuViewTree=Древо каталогов\nFCmnuViewPCPCconnect=Прямая связь ПК-ПК\nFCmnuViewPCNETPCconnect=Мини HTTP сервер\nFCmnuViewByName=По имени\nFCmnuViewByType=По расширению\nFCmnuViewByDate=По дате\nFCmnuViewBySize=По размеру\nFCmnuViewNoFilter=Без фильтра (*.*)\nFCmnuViewWithFilter=Применить фильтр имени...\nFCmnuViewToolbar=Панель инструментов\n" +
                         "FCmnuNavigateTree=Дерево\nFCmnuNavigateFind=Розыск файла...\nFCmnuNavigateHistory=История посещений\nFCmnuNavigateReload=Перезагрузить\nFCmnuNavigateFlyTo=Быстрый переход\n" +
                         "FCmnuToolsOptions=Настройки...\nFCmnuToolsPluginManager=Управление расширениями...\nFCmnuToolsEditUserMenu=Редактировать меню пользователя...\nFCmnuToolsKeybrdHelp=Подсказки клавиш F\nFCmnuToolsInfobar=Сводные строки\nFCmnuToolsDiskButtons=Кнопки дисков\nFCmnuToolsConfigEdit=Правка конфигурации FC\nFCmnuToolsKeychains=Учётные данные ФС\nFCmnuToolsDiskLabel=Метка диска...\nFCmnuToolsFormat=Форматировать носитель...\nFCmnuToolsSysInfo=Сведения о системе\n" +
-                        "FCmnuHelpHelpMe=Справка File Commander\nFCmnuHelpAbout=О программе...\n"+
+                        "FCmnuHelpHelpMe=Справка File Commander\nFCmnuHelpAbout=О программе...\n" +
                         "FName=Имя\nFSize=Размер\nFDate=Дата\n" +
                         "FCDelAsk=Вы действительно хотите удалить файл \"{0}\"?\n" +
                         "Canceled=Отменено пользователем\n" +
@@ -54,7 +54,7 @@ namespace fcmd
                         "MoveTo=Перенести/переименовать {0} в:\n" +
                         "NewDirURL=Введите путь для нового каталога\n" +
                         "NewDirTemplate=\\НОВЫЙ КАТАЛОГ\n" +
-                        "FileQuickSelectFileAsk=Какой файл (маску имени) нужно выделить:\n"+
+                        "FileQuickSelectFileAsk=Какой файл (маску имени) нужно выделить:\n" +
                         "FCVTitle=Просмотр - {0}\n" +
                         "FCETitle=Редактор - {0}\n" +
                         "FCVE_F1=F1 Справка\n" +
@@ -72,7 +72,8 @@ namespace fcmd
                         "FCVE_mnuEdit=_Правка\nFCVE_mnuEditCut=_Вырезать\nFCVE_mnuEditCopy=_Копировать\nFCVE_mnuEditPaste=Вст_авить\nFCVE_mnuEditSelAll=_Выделить всё\nFCVE_mnuEditSearch=_Найти...\nFCVE_mnuEditSearchNext=Искать дальше\n" +
                         "FCVE_mnuView=_Вид\nFCVE_mnuViewModeText=_Простой текст\nFCVE_mnuViewModeImage=_Рисунок\n" +
                         "FCVE_mnuFormat=_Формат\nFCVE_mnuHelp=_Справка\nFCVE_mnuHelpHelpme=_Вызов справки\nFCVE_mnuHelpAbout=_О программе и модуле просмотра\n" +
-                        "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден";
+                        "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден\n" +
+                        "FCVEpluginro1=Модуль просмотра {0} не поддерживает редактирование файлов\nFCVEpluginro2=Файл будет открыт в режиме чтения.";
         Dictionary<string, string> Localization = new Dictionary<string, string>();
         
         /// <summary>

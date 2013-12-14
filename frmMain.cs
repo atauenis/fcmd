@@ -238,7 +238,7 @@ namespace fcmd
                     
                     break;
                 case Keys.F3: //просмотр
-                    fcview fcv = new fcview();
+                    VEd fcv = new VEd();
 					pluginner.IFSPlugin fs = ActivePanel.FSProvider;
                     if (fs.DirectoryExists(ActivePanel.list.SelectedItems[0].Tag.ToString()))
                     {
@@ -247,9 +247,19 @@ namespace fcmd
                     }
 
                     if (e.Shift == true) //не вызывается. почему? разобраться!
-                    { fcv.LoadFile(ActivePanel.list.SelectedItems[0].Tag.ToString(),ActivePanel.FSProvider,new base_plugins.viewer.TxtViewer());
+                    { fcv.LoadFile(ActivePanel.list.SelectedItems[0].Tag.ToString(),ActivePanel.FSProvider,new base_plugins.ve.PlainText(),false);
                     }
                     else FCView(ActivePanel.list.SelectedItems[0].Tag.ToString());
+                    break;
+                case Keys.F4: //правка
+                    VEd fce = new VEd();
+                    if (ActivePanel.FSProvider.DirectoryExists(ActivePanel.list.SelectedItems[0].Tag.ToString()))
+                    {
+                        MessageBox.Show(string.Format(locale.GetString("ItsDir"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+                    fce.LoadFile(ActivePanel.list.SelectedItems[0].Tag.ToString(), ActivePanel.FSProvider, true);
+                    fce.Show();
                     break;
                 case Keys.F5: //копировать
                     Cp();
