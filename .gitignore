@@ -19,6 +19,7 @@ TestResults
 
 Дизайнер WinForms.lnk
 Старый вариант ListPanel/
+base-plugins\viewer - winforms printing example (obsolete in fc, but not in dotnet4)/
 
 # Build results
 [Dd]ebug/

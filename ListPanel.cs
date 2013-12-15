@@ -119,7 +119,10 @@ namespace fcmd
                 string d = di.Name;
                 ToolStripButton tsb = new ToolStripButton(d, null, (object s, EventArgs ea) =>
                 {
-                    ToolStripButton tsbn = (ToolStripButton)s; if (OnURLBoxNavigate != null) OnURLBoxNavigate(new object(), new EventArgs<string>("file://" + tsbn.Text));;
+                    ToolStripButton tsbn = (ToolStripButton)s;
+                    if (OnURLBoxNavigate != null){
+                        OnURLBoxNavigate(new object(), new EventArgs<string>("file://" + tsbn.Text));
+                    }else{Console.WriteLine("WARNING: The ListPanel's event OnURLBoxNavigate isn't handled by the host!");}
                 });
                 
                 //Painting drive icons
@@ -187,7 +190,7 @@ namespace fcmd
                 this.OnGotFocus(new EventArgs()); //extractly here because user should not switch focus until the panel is not used for file operations
 
                 TextBox UrlBox = sender as TextBox;
-                if(OnURLBoxNavigate != null) OnURLBoxNavigate(sender, new EventArgs<string>(UrlBox.Text));
+                if (OnURLBoxNavigate != null) OnURLBoxNavigate(sender, new EventArgs<string>(UrlBox.Text)); else Console.WriteLine("WARNING: The ListPanel's event OnURLBoxNavigate isn't handled by the host!");
                 tableLayoutPanel1.Controls.Remove(txtPath);
                 tableLayoutPanel1.Controls.Add(lblPath, 0, 1);
             }

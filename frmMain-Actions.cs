@@ -82,7 +82,6 @@ namespace fcmd
         /// <returns></returns>
         public string Cat(string url)
         {
-            fcview fcv = new fcview();
             pluginner.IFSPlugin fs = ActivePanel.FSProvider;
             if (!fs.FileExists(url)) return "Файл не найден\n";
 

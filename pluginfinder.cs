@@ -1,8 +1,8 @@
-﻿/* The File Commander - API для плагинов
- * Модуль для определения подходящего для каждой цели плагина
+﻿/* The File Commander - plugin API
+ * The plugin finder
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
- * Копирование кода разрешается только с письменного согласия
- * разработчика (А.Т.).
+ * Contributors should place own signs here.
  */
 using System;
 using System.Collections.Generic;
@@ -11,40 +11,29 @@ using System.IO;
 using System.Windows.Forms;
 using System.Reflection;
 using fcmd.base_plugins;
-using fcmd.base_plugins.viewer;
 
 namespace fcmd
 {
-    class pluginfinder{
+    class pluginfinder
+    {
         public List<string> FSPlugins = new List<string>();
-		public List<string> ViewPlugins = new List<string>();
         public List<string> VEPlugins = new List<string>();
-        //string[] EditPlugins; //todo
 
-        public pluginfinder(){//конструктор
-			//загрузка списка плагинов ФС из файла
-			if(File.Exists(Application.StartupPath + "/fsplugins.conf")){
-				string[] fsplist = File.ReadAllLines(Application.StartupPath + "/fsplugins.conf");
-				int rowCounter = 0;
-				foreach(string fsp in fsplist){
-					rowCounter ++;
-					if(fsp.Split(";".ToCharArray()).Length != 2) {Console.WriteLine("Ошибка в файле fsplugins.conf на строке " + rowCounter); break;}
-					FSPlugins.Add (fsp);
-				}
-			}
-			FSPlugins.Add("file;(internal)LocalFS"); //фсплагин по-умолчанию в конец списка
-
-			//загрузка списка плагинов просмоторщика из файла
-			if(File.Exists(Application.StartupPath + "/fcviewplugins.conf")){
-				string[] vplist = File.ReadAllLines(Application.StartupPath + "/fcviewplugins.conf");
-				int rowCounter = 0;
-				foreach(string vp in vplist){
-					rowCounter ++;
-					if(vp.Split(";".ToCharArray()).Length != 3) {Console.WriteLine("Ошибка в файле fcviewplugins.conf на строке " + rowCounter); break;}
-					ViewPlugins.Add (vp);
-				}
-			}
-            ViewPlugins.Add(".*;(internal)TxtViewer;" + new Localizator().GetString("FCVViewModeText")); //зырилку по-умолчанию в конец списка
+        public pluginfinder()
+        {//конструктор
+            //загрузка списка плагинов ФС из файла
+            if (File.Exists(Application.StartupPath + "/fsplugins.conf"))
+            {
+                string[] fsplist = File.ReadAllLines(Application.StartupPath + "/fsplugins.conf");
+                int rowCounter = 0;
+                foreach (string fsp in fsplist)
+                {
+                    rowCounter++;
+                    if (fsp.Split(";".ToCharArray()).Length != 2) { Console.WriteLine("Ошибка в файле fsplugins.conf на строке " + rowCounter); break; }
+                    FSPlugins.Add(fsp);
+                }
+            }
+            FSPlugins.Add("file;(internal)LocalFS"); //фсплагин по-умолчанию в конец списка
 
             //load the list of VE plugins
             if (File.Exists(Application.StartupPath + "/fcveplugins.conf"))
@@ -55,10 +44,10 @@ namespace fcmd
                 {
                     rowCounter++;
                     if (vp.Split(";".ToCharArray()).Length != 3) { Console.WriteLine("Error in fcveplugins.conf at row " + rowCounter); break; }
-                    ViewPlugins.Add(vp);
+                    VEPlugins.Add(vp);
                 }
             }
-            ViewPlugins.Add(".*;(internal)PlainText;" + new Localizator().GetString("FCVViewModeText")); //зырилку по-умолчанию в конец списка
+            VEPlugins.Add(".*;(internal)PlainText;" + new Localizator().GetString("FCVViewModeText")); //зырилку по-умолчанию в конец списка
 
         }
 
@@ -66,7 +55,8 @@ namespace fcmd
         /// Fires when no plugin found for requested protocol/filetype
         /// </summary>
         [global::System.Serializable]
-        public class PluginNotFoundException : Exception{
+        public class PluginNotFoundException : Exception
+        {
             public PluginNotFoundException() { }
             public PluginNotFoundException(string message) : base(message) { }
             public PluginNotFoundException(string message, Exception inner) : base(message, inner) { }
@@ -81,50 +71,42 @@ namespace fcmd
         /// </summary>
         /// <param name="url">The uniform resource locator for the requested file</param>
         /// <returns>The good filesystem plugin (IFSPlugin-based class) or an exception if no plugins found</returns>
-        public pluginner.IFSPlugin GetFSplugin(string url){
+        public pluginner.IFSPlugin GetFSplugin(string url)
+        {
             string[] UrlParts = url.Split("://".ToCharArray());
-            foreach (string CurDescription in FSPlugins){
+            foreach (string CurDescription in FSPlugins)
+            {
                 string[] Parts = CurDescription.Split(";".ToCharArray());
-                if(System.Text.RegularExpressions.Regex.IsMatch(UrlParts[0], Parts[0])){
+                if (System.Text.RegularExpressions.Regex.IsMatch(UrlParts[0], Parts[0]))
+                {
                     //оно!
-                    if(Parts[1].StartsWith("(internal)")){//плагин встроенный
-                        switch(Parts[1]){
+                    if (Parts[1].StartsWith("(internal)"))
+                    {//плагин встроенный
+                        switch (Parts[1])
+                        {
                             case "(internal)LocalFS":
-							return new fcmd.base_plugins.fs.localFileSystem();
+                                return new fcmd.base_plugins.fs.localFileSystem();
                         }
-                    }else{//плагин внешний
+                    }
+                    else
+                    {//плагин внешний
                         string file = Parts[1];
                         Assembly assembly = Assembly.LoadFile(file);
 
-                        foreach (Type type in assembly.GetTypes()){
+                        foreach (Type type in assembly.GetTypes())
+                        {
                             Type iface = type.GetInterface("pluginner.IFSPlugin");
 
-                            if (iface != null){
+                            if (iface != null)
+                            {
                                 pluginner.IFSPlugin plugin = (pluginner.IFSPlugin)Activator.CreateInstance(type);
                                 return plugin;
                             }
-                        }    
+                        }
                     }
                 }
             }
-			throw new PluginNotFoundException("Не найден плагин ФС для протокола " + UrlParts[0]);
-        }
-
-        /// <summary>
-        /// Searches for the good FCView plugin to work with the file, which starts with <paramref name="content"/> headers
-        /// </summary>
-		/// <param name='content'>
-		/// The file full content or headers (last is better, because finding will be faster and RAM wasteless).
-		/// </param>
-        public pluginner.IViewerPlugin GetFCVplugin(string content){ //поиск плагина FCView
-            foreach (string CurDescription in ViewPlugins){
-                string[] Parts = CurDescription.Split(";".ToCharArray());
-                if(System.Text.RegularExpressions.Regex.IsMatch(content, Parts[0])){
-                    //оно!
-                    return LoadFCVPlugin(Parts[1]);
-                }
-            }
-			return new base_plugins.viewer.TxtViewer(); //если ничего лучшего не найти, тогда дать что имеется
+            throw new PluginNotFoundException("Не найден плагин ФС для протокола " + UrlParts[0]);
         }
 
         /// <summary>
@@ -152,11 +134,15 @@ namespace fcmd
             {//плагин встроенный
                 switch (name)
                 {
-                    case "(internal)Plaintext":
+                    case "(internal)PlainText":
                         return new base_plugins.ve.PlainText();
-                    case "(internal)ImgViewer":
-                        //todo: return простую зырилку на базе picturebox
-                        throw new PluginNotFoundException("Зырилка на базе picturebox пока что в планах"); //убрать
+                    /* ==INTERNAL PLUGINS, THAT NEEDS TO BE CREATED==
+                     * a simple raster image viewer/editor based on xwt drawing possibilities
+                     * a markdown viewer based on Xwt.MarkdownView (readonly)
+                     * a HEXadecimal editor (maybe integrated into PlainText as editor)
+                     * a csv table viewer/editor
+                     * a html viewer (based on modificated xwt's webview)
+                     */
                 }
             }
             else
@@ -176,39 +162,8 @@ namespace fcmd
                 }
             }
 
-            throw new PluginNotFoundException("Search was not ended sucscessfully");
+            throw new PluginNotFoundException("Cannot load VE plugin " + name + " because it is somewhere else, but not in known places.");
         }
+    }
 
-        /// <summary>
-        /// Loads the requested viewer plugin
-        /// </summary>
-        /// <param name="name">The path of the plugin's DLL or internal plugin name</param>
-        /// <returns>The FCView content viewing plugin</returns>
-        public pluginner.IViewerPlugin LoadFCVPlugin(string name)
-        {
-            if(name.StartsWith("(internal)")){//плагин встроенный
-                    switch(name){
-                        case "(internal)TxtViewer":
-                            return new base_plugins.viewer.TxtViewer();
-                        case "(internal)ImgViewer":
-                            //todo: return простую зырилку на базе picturebox
-                            throw new PluginNotFoundException("Зырилка на базе picturebox пока что в планах"); //убрать
-                    }
-                }else{//плагин внешний
-                    string file = name;
-                    Assembly assembly = Assembly.LoadFile(file);
-
-                    foreach (Type type in assembly.GetTypes()){
-                        Type iface = type.GetInterface("pluginner.IViewerPlugin");
-
-                        if (iface != null){
-                            pluginner.IViewerPlugin plugin = (pluginner.IViewerPlugin)Activator.CreateInstance(type);
-                            return plugin;
-                        }
-                    }    
-                }
-
-            throw new PluginNotFoundException("Search was not ended sucscessfully");
-            }
-        }
     }

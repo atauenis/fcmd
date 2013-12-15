@@ -73,7 +73,8 @@ namespace fcmd
                         "FCVE_mnuView=_Вид\nFCVE_mnuViewModeText=_Простой текст\nFCVE_mnuViewModeImage=_Рисунок\n" +
                         "FCVE_mnuFormat=_Формат\nFCVE_mnuHelp=_Справка\nFCVE_mnuHelpHelpme=_Вызов справки\nFCVE_mnuHelpAbout=_О программе и модуле просмотра\n" +
                         "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден\n" +
-                        "FCVEpluginro1=Модуль просмотра {0} не поддерживает редактирование файлов\nFCVEpluginro2=Файл будет открыт в режиме чтения.";
+                        "FCVEpluginro1=Модуль просмотра {0} не поддерживает редактирование файлов\nFCVEpluginro2=Файл будет открыт в режиме чтения.\n"+
+                        "FCVE_PluginNotFound=Не найден модуль для открытия этого файла. Файл будет выведен как текст.";
         Dictionary<string, string> Localization = new Dictionary<string, string>();
         
         /// <summary>

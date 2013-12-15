@@ -63,12 +63,11 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="base-plugins\ve\PlainText.cs" />
-    <Compile Include="base-plugins\viewer\TxtViewer.cs" />
-    <Compile Include="fcview.cs">
+    <Compile Include="FileChooser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="fcview.Designer.cs">
-      <DependentUpon>fcview.cs</DependentUpon>
+    <Compile Include="FileChooser.Designer.cs">
+      <DependentUpon>FileChooser.cs</DependentUpon>
     </Compile>
     <Compile Include="FileProcessDialog.cs" />
     <Compile Include="frmMain-Actions.cs">
@@ -110,22 +109,12 @@
     <Compile Include="VEd.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="WindowsFormsIntegration" />
     <Reference Include="Xwt">
       <HintPath>stolen-opensource-libs\Xwt.dll</HintPath>
-    </Reference>
-    <Reference Include="Xwt.WPF">
-      <HintPath>stolen-opensource-libs\Xwt.WPF.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -141,9 +130,8 @@
     <None Include="frmMain.resources" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="fcview.resx">
-      <DependentUpon>fcview.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="FileChooser.resx">
+      <DependentUpon>FileChooser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -213,9 +201,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
     <Content Include="stolen-opensource-libs\readme.txt" />
-    <Content Include="stolen-opensource-libs\Xwt.dll" />
-    <Content Include="stolen-opensource-libs\Xwt.Gtk.dll" />
-    <Content Include="stolen-opensource-libs\Xwt.WPF.dll" />
+    <Content Include="stolen-opensource-libs\Xwt.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="stolen-opensource-libs\Xwt.Gtk.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="stolen-opensource-libs\Xwt.WPF.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
