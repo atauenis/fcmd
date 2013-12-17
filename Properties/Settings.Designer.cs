@@ -103,5 +103,29 @@ namespace fcmd.Properties {
                 this["ShowKeybrdHelp"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowPanelUrlbox {
+            get {
+                return ((bool)(this["ShowPanelUrlbox"]));
+            }
+            set {
+                this["ShowPanelUrlbox"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowPanelTableCaptions {
+            get {
+                return ((bool)(this["ShowPanelTableCaptions"]));
+            }
+            set {
+                this["ShowPanelTableCaptions"] = value;
+            }
+        }
     }
 }

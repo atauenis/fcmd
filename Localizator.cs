@@ -40,6 +40,7 @@ namespace fcmd
                         "FName=Имя\nFSize=Размер\nFDate=Дата\n" +
                         "FCDelAsk=Вы действительно хотите удалить файл \"{0}\"?\n" +
                         "Canceled=Отменено пользователем\n" +
+                        "Okay=ОК\n"+
                         "Cancel=Отмена\n" +
                         "FileNotFound=Файл \"{0}\" не найден\n" +
                         "ItsDir=\"{0}\" является каталогом\n" +
@@ -74,7 +75,10 @@ namespace fcmd
                         "FCVE_mnuFormat=_Формат\nFCVE_mnuHelp=_Справка\nFCVE_mnuHelpHelpme=_Вызов справки\nFCVE_mnuHelpAbout=_О программе и модуле просмотра\n" +
                         "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден\n" +
                         "FCVEpluginro1=Модуль просмотра {0} не поддерживает редактирование файлов\nFCVEpluginro2=Файл будет открыт в режиме чтения.\n"+
-                        "FCVE_PluginNotFound=Не найден модуль для открытия этого файла. Файл будет выведен как текст.";
+                        "FCVE_PluginNotFound=Не найден модуль для открытия этого файла. Файл будет выведен как текст.\n"+
+                        "FCS_Title=Настройки File Commander\nFCS_CantSaveSettings=Невозможно сохранить настройки. Проверьте введённые данные.\n" +
+                        "swtMainWindow=Вид основного окна\n"+
+                        "SWTMWtoolbar=Панель инструментов\nSWTMWdiskbuttons=Кнопки дисков\nSWTMWdisklistbox=Окно выбора диска\nSWTMWpaneltitle=Заголовок файловой панели (с текущим путём)\nSWTMWtablecollumns=Заголовки столбцов\nSWTMWinfobar=Строки состояния\nSWTMWcmdline=Коммандная строка\nSWTMWkeybhelp=Подсказка клавиатуры (клавиш F)";
         Dictionary<string, string> Localization = new Dictionary<string, string>();
         
         /// <summary>

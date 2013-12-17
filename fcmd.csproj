@@ -105,6 +105,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="SettingsWindow.cs" />
+    <Compile Include="SettingsWindowTabs\ISettingsWindowTab.cs" />
+    <Compile Include="SettingsWindowTabs\swtMainWindow.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="VEd.cs" />
   </ItemGroup>
@@ -213,4 +216,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
 </Project>

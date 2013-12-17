@@ -112,6 +112,7 @@ namespace fcmd
         /// </summary>
         public void Repaint()
         {
+            lblPath.Visible = fcmd.Properties.Settings.Default.ShowPanelUrlbox;
             lblStatus.Visible = fcmd.Properties.Settings.Default.ShowFileInfo;
             tsDisks.Visible = fcmd.Properties.Settings.Default.ShowDiskList;
             tsDisks.Items.Clear();
@@ -155,6 +156,8 @@ namespace fcmd
 
                 tsDisks.Items.Add(tsb);
             }
+
+            if (!fcmd.Properties.Settings.Default.ShowPanelTableCaptions && list.View == View.Details) list.View = View.List;
         }
 
         // Processing URL-box clicks and other stuff about it

@@ -779,10 +779,10 @@ namespace fcmd
             // 
             // mnuToolsOptions
             // 
-            this.mnuToolsOptions.Enabled = false;
             this.mnuToolsOptions.Name = "mnuToolsOptions";
             this.mnuToolsOptions.Size = new System.Drawing.Size(208, 22);
             this.mnuToolsOptions.Text = "Settings...";
+            this.mnuToolsOptions.Click += new System.EventHandler(this.mnuToolsOptions_Click);
             // 
             // mnuToolsPluginManager
             // 
@@ -1250,6 +1250,13 @@ namespace fcmd
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             Xwt.Application.Exit();
+        }
+
+        private void mnuToolsOptions_Click(object sender, EventArgs e)
+        {
+            new SettingsWindow().Run();
+            ActivePanel.Repaint();
+            PassivePanel.Repaint();
         }
 
 	}

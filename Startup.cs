@@ -14,7 +14,7 @@ namespace fcmd
         [STAThread] //need because of unfixed wpf elementhost bug
         static void Main()
         {
-            Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
+            Xwt.Application.Initialize(Xwt.ToolkitType.Gtk );
             Application.Run(new frmMain());//BUG: github issue #2
             //todo: xwt.application.run together with winforms.application.run
 
