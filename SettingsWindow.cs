@@ -29,9 +29,10 @@ namespace fcmd
             this.Buttons[0].Clicked += new EventHandler(cmdOk_Clicked);
             this.Buttons[1].Clicked += (o, e) => { this.Hide(); };
 
+            TabList.MinHeight = 388; TabList.MinWidth = 128;
             TabList.Items.Add(new SettingsWindowTabs.swtMainWindow(),Locale.GetString("swtMainWindow"));
-
             TabList.SelectionChanged += new EventHandler(TabList_SelectionChanged);
+            TabList.SelectRow(0); //wpf hack (row №0 isn't automatical selected)
         }
 
         void cmdOk_Clicked(object sender, EventArgs e)

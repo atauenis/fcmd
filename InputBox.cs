@@ -73,6 +73,10 @@ namespace fcmd{
             this.Resizable = false;
             this.Title = System.Windows.Forms.Application.ProductName;
             this.CloseRequested += (o, ea) => { this.Hide(); };
+            foreach (Xwt.DialogButton dbtn in this.Buttons)
+            {
+                dbtn.Clicked += (o, ea) => { this.Hide(); };
+            }
         }
 
         /// <summary>Which text user entered</summary>

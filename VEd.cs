@@ -117,11 +117,19 @@ namespace fcmd
             mnuEditSelectAll.Clicked += (o, ea) => { SendCommand("select *"); };
             mnuEditFindReplace.Clicked += (o, ea) => { SendCommand("findreplace"); };
             mnuEditFindNext.Clicked += (o, ea) => { SendCommand("findreplace last"); };
+            mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
             this.CloseRequested += (o, ea) => { SendCommand("unload"); };
 
             PluginBody = new Xwt.Spinner() { Animate = true };
 
             BuildLayout();
+        }
+
+        void mnuHelpAbout_Clicked(object sender, EventArgs e)
+        {
+            string AboutString1 = String.Format(Locale.GetString("FCVEVer1"), System.Windows.Forms.Application.ProductVersion); ;
+            string AboutString2 = string.Format(Locale.GetString("FCVEVer2"), Plugin.Name, Plugin.Version,"\n", Plugin.Author);
+            Xwt.MessageDialog.ShowMessage(AboutString1,AboutString2);
         }
         
         void CommandBox_KeyReleased(object sender, Xwt.KeyEventArgs e)
@@ -255,5 +263,7 @@ namespace fcmd
             SendCommand("unload");
             this.Hide();
         }
+
+        
     }
 }

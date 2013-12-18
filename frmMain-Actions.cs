@@ -107,7 +107,7 @@ namespace fcmd
             do { Application.DoEvents(); }
             while (MkDirThread.ThreadState == ThreadState.Running);
 
-            fpd.pbrProgress.Fraction = 100;
+            fpd.pbrProgress.Fraction = 1;
             LoadDir(ActivePanel.FSProvider.CurrentDirectory, ActivePanel);
             fpd.Hide();
         }
@@ -133,14 +133,14 @@ namespace fcmd
             pluginner.IFSPlugin fsdel = ActivePanel.FSProvider;
             if (fsdel.FileExists(curItemDel))
             {
-                fpd.pbrProgress.Fraction = 50;
+                fpd.pbrProgress.Fraction = 0.5;
                 Thread RmFileThread = new Thread(delegate() { DoRmFile(curItemDel, fsdel); });
                 RmFileThread.Start();
 
                 do { Application.DoEvents(); }
                 while (RmFileThread.ThreadState == ThreadState.Running);
 
-                fpd.pbrProgress.Fraction = 100;
+                fpd.pbrProgress.Fraction = 1;
                 LoadDir(ActivePanel.FSProvider.CurrentDirectory, ActivePanel);
                 fpd.Hide();
                 return "Файл удалён.\n";
