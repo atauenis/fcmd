@@ -127,5 +127,53 @@ namespace fcmd.Properties {
                 this["ShowPanelTableCaptions"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseExternalViewer {
+            get {
+                return ((bool)(this["UseExternalViewer"]));
+            }
+            set {
+                this["UseExternalViewer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ExternalViewer {
+            get {
+                return ((string)(this["ExternalViewer"]));
+            }
+            set {
+                this["ExternalViewer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseExternalEditor {
+            get {
+                return ((bool)(this["UseExternalEditor"]));
+            }
+            set {
+                this["UseExternalEditor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ExternalEditor {
+            get {
+                return ((string)(this["ExternalEditor"]));
+            }
+            set {
+                this["ExternalEditor"] = value;
+            }
+        }
     }
 }

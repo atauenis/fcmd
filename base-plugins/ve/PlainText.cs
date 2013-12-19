@@ -16,7 +16,7 @@ namespace fcmd.base_plugins.ve
         Xwt.RichTextView RTV = new Xwt.RichTextView();
         Xwt.ScrollView ScrollBox;
         Xwt.Menu mnuFormat = new Xwt.Menu();
-        int Codepage = Encoding.UTF8.CodePage; // todo: set to unicode utf-8
+        int Codepage = Encoding.UTF8.CodePage;
         byte[] fileContent;
         string Txt = "";
 

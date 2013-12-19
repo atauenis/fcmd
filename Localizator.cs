@@ -74,11 +74,12 @@ namespace fcmd
                         "FCVE_mnuView=_Вид\nFCVE_mnuViewModeText=_Простой текст\nFCVE_mnuViewModeImage=_Рисунок\n" +
                         "FCVE_mnuFormat=_Формат\nFCVE_mnuHelp=_Справка\nFCVE_mnuHelpHelpme=_Вызов справки\nFCVE_mnuHelpAbout=_О программе и модуле просмотра\n" +
                         "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден\n" +
-                        "FCVEpluginro1=Модуль просмотра {0} не поддерживает редактирование файлов\nFCVEpluginro2=Файл будет открыт в режиме чтения.\n"+
+                        "FCVE_mnuViewSettings=Параметры...\nFCVEpluginro1=Модуль просмотра {0} не поддерживает редактирование файлов\nFCVEpluginro2=Файл будет открыт в режиме чтения.\n" +
                         "FCVE_PluginNotFound=Не найден модуль для открытия этого файла. Файл будет выведен как текст.\n"+
                         "FCS_Title=Настройки File Commander\nFCS_CantSaveSettings=Невозможно сохранить настройки. Проверьте введённые данные.\n" +
-                        "swtMainWindow=Вид основного окна\n"+
-                        "SWTMWtoolbar=Панель инструментов\nSWTMWdiskbuttons=Кнопки дисков\nSWTMWdisklistbox=Окно выбора диска\nSWTMWpaneltitle=Заголовок файловой панели (с текущим путём)\nSWTMWtablecollumns=Заголовки столбцов\nSWTMWinfobar=Строки состояния\nSWTMWcmdline=Коммандная строка\nSWTMWkeybhelp=Подсказка клавиатуры (клавиш F)";
+                        "swtMainWindow=Вид основного окна\nswtViewerEditor=Правка/просмотр\n" +
+                        "SWTMWtoolbar=Панель инструментов\nSWTMWdiskbuttons=Кнопки дисков\nSWTMWdisklistbox=Окно выбора диска\nSWTMWpaneltitle=Заголовок файловой панели (с текущим путём)\nSWTMWtablecollumns=Заголовки столбцов\nSWTMWinfobar=Строки состояния\nSWTMWcmdline=Коммандная строка\nSWTMWkeybhelp=Подсказка клавиатуры (клавиш F)\n"+
+                        "SWTVEviewer=Просмотр по F3\nSWTVEinternalv=Встроенный просмоторщик (VE)\nSWTVEexternalv=Внешний просмоторщик:\nSWTVEvesetup=Настройка встроенной программы...\nSWTVEeditor=Редактор по F4\nSWTVEinternaleditor=Встроенный редактор\nSWTVEexternaleditor=Внешний редактор:\n";
         Dictionary<string, string> Localization = new Dictionary<string, string>();
         
         /// <summary>

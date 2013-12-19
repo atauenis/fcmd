@@ -1,4 +1,4 @@
-﻿/* The File Commander - simple Viewer/Editor
+﻿/* The File Commander - internal Viewer/Editor
  * The main window of the viewer/editor (VE)
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
@@ -37,8 +37,9 @@ namespace fcmd
         Xwt.MenuItem mnuEditFindReplace = new Xwt.MenuItem() { Tag = "mnuEditSearch" };
         Xwt.MenuItem mnuEditFindNext = new Xwt.MenuItem() { Tag = "mnuEditSearchNext" };
 
-        Xwt.MenuItem mnuView = new Xwt.MenuItem(); //auto filled
-        Xwt.MenuItem mnuFormat = new Xwt.MenuItem(); // ---//---
+        Xwt.MenuItem mnuView = new Xwt.MenuItem();
+        Xwt.MenuItem mnuViewSettings = new Xwt.MenuItem() {Tag = "mnuViewSettings"};
+        Xwt.MenuItem mnuFormat = new Xwt.MenuItem();
 
         Xwt.MenuItem mnuHelp = new Xwt.MenuItem();
         Xwt.MenuItem mnuHelpHelpme = new Xwt.MenuItem() { Tag = "mnuHelpHelpme" };
@@ -91,6 +92,11 @@ namespace fcmd
             TranslateMenu(mnuEdit.SubMenu);
 
             mnuView.Label = Locale.GetString("FCVE_mnuView");
+            mnuViewSettings.Clicked += (o, ea) => { new VEsettings().Run(); };
+            mnuView.SubMenu = new Xwt.Menu();
+            mnuView.SubMenu.Items.Add(mnuViewSettings);
+            TranslateMenu(mnuView.SubMenu);
+
             mnuFormat.Label = Locale.GetString("FCVE_mnuFormat");
 
             mnuHelp.Label = Locale.GetString("FCVE_mnuHelp");

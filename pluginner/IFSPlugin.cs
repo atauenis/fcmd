@@ -189,6 +189,38 @@ namespace pluginner
         public bool Hidden;
     }
 
+    /// <summary>
+    /// Filesystem entry's metadata (like system.io.fileinfo/directoryinfo)
+    /// </summary>
+    public class FSEntryMetadata
+    {
+        /// <summary>The file's short name with extension</summary>
+        public string Name;
+        /// <summary>The file's containing directory</summary>
+        public string UpperDirectory;
+        /// <summary>The file's full path</summary>
+        public string FullURL;
+
+        /// <summary>The file's attribbutes</summary>
+        public System.IO.FileAttributes Attrubutes;
+        /// <summary>The file's GMT-time of creation</summary>
+        public DateTime CreationTimeUTC;
+        /// <summary>The file's GMT-time of last modification</summary>
+        public DateTime LastWriteTimeUTC;
+        /// <summary>The file's GTM-time of last reading</summary>
+        public DateTime LastAccessTimeUTC;
+
+        /// <summary>The file's size (in bytes)</summary>
+        public long Lenght;
+
+        /// <summary>Is the file configured for read only</summary>
+        public bool IsReadOnly;
+
+        /// <summary>Returns uniform resource locator of the file</summary>
+        public override string ToString()
+        { return this.FullURL; }
+    }
+
     /* Исключение выскакивает в случае установления невозможности удаления каталога
      * (это проверяется ДО реального удаления путём переименования или чтения прав!).
      * Плагин должен кидать это исключение только после отмены всех действий,
