@@ -14,11 +14,13 @@ namespace fcmd
         [STAThread] //need because of unfixed wpf elementhost bug
         static void Main(string[] Commands)
         {
+#if DEBUG
             Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
-            Application.Run(new frmMain());//BUG: github issue #2
+#else
+            
             //todo: xwt.application.run together with winforms.application.run
 
-            /*switch (Environment.OSVersion.Platform)
+            switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Win32NT:
                     Xwt.Application.Initialize(Xwt.ToolkitType.Wpf);
@@ -30,7 +32,9 @@ namespace fcmd
                 case PlatformID.Unix: //gtk fallback for unknown oses
                     Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
                     break;
-            }*/
+            }
+#endif
+            Application.Run(new frmMain());
         }
     }
 }

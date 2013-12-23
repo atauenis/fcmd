@@ -17,6 +17,7 @@ namespace fcmd
         Localizator Locale = new Localizator();
         pluginner.IVEPlugin Plugin;
         pluginner.IFSPlugin FSPlugin;
+        bool CanBeShowed = true;
 
         //Xwt.Menu MainMenu = new Xwt.Menu();
         Xwt.MenuItem mnuFile = new Xwt.MenuItem() { Tag="mnuFile"};
@@ -125,10 +126,16 @@ namespace fcmd
             mnuEditFindNext.Clicked += (o, ea) => { SendCommand("findreplace last"); };
             mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
             this.CloseRequested += (o, ea) => { SendCommand("unload"); };
+            this.Shown += new EventHandler(VEd_Shown);
 
             PluginBody = new Xwt.Spinner() { Animate = true };
 
             BuildLayout();
+        }
+
+        void VEd_Shown(object sender, EventArgs e)
+        {
+            this.Visible = CanBeShowed; //if VE should not be enabled, the window should not show everywhy
         }
 
         void mnuHelpAbout_Clicked(object sender, EventArgs e)
@@ -191,7 +198,7 @@ namespace fcmd
             catch (Exception ex)
             {
 
-                Console.WriteLine("VE can't load file: " + ex.Message + "\n" + ex.StackTrace);
+                Console.WriteLine("ERROR: VE can't load file: " + ex.Message + "\n" + ex.StackTrace);
                 return;
             }
         }
@@ -203,6 +210,22 @@ namespace fcmd
         /// <param name="AllowEdit">Allow editing the file</param>
         public void LoadFile(string URL, pluginner.IFSPlugin FS, pluginner.IVEPlugin plugin, bool AllowEdit)
         {
+            //check for external editor
+            try{
+                if (fcmd.Properties.Settings.Default.UseExternalEditor && AllowEdit || fcmd.Properties.Settings.Default.UseExternalViewer && !AllowEdit && URL.StartsWith("file:")){
+                    if (AllowEdit){
+                        ExecuteProgram(fcmd.Properties.Settings.Default.ExternalEditor.Replace("$", "\"" + URL));
+                    }
+                    else{
+                        ExecuteProgram(fcmd.Properties.Settings.Default.ExternalViewer.Replace("$", "\"" + URL));
+                    }
+
+                    CanBeShowed = false;
+                    return;
+                }
+            }
+            catch (Exception ex) { Xwt.MessageDialog.ShowError(Locale.GetString("CantRunEXE"), ex.Message); CanBeShowed = false; return; }
+
             if(AllowEdit)
                 this.Title = string.Format(Locale.GetString("FCETitle"), URL);
             else
@@ -268,6 +291,27 @@ namespace fcmd
         {
             SendCommand("unload");
             this.Hide();
+        }
+
+        /// <summary>
+        /// Run an command line like cmd/bash works
+        /// </summary>
+        /// <param name="CmdLine"></param>
+        private void ExecuteProgram(string CmdLine)
+        {
+            //warning:this program works ugly, the file url shuld start with "file://".
+            //todo: replace this shit-like parameter detection code with more goodly (taking into account the quotes)
+            //      QUICKER!!!
+            string OrigCmdLine = CmdLine;
+            int RazdelPo = OrigCmdLine.IndexOf(" ");
+            string ExeArgs = OrigCmdLine.Substring(RazdelPo + 1).Substring(8); //cut exe filename, "file://" prefix
+            string ExeName = OrigCmdLine.Substring(0, RazdelPo); //cut arguments 
+
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo.FileName = ExeName;
+            proc.StartInfo.Arguments = ExeArgs;
+            proc.StartInfo.ErrorDialog = true;
+            proc.Start();
         }
 
         
