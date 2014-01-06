@@ -57,6 +57,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileListPanel.cs" />
     <Compile Include="IFSPlugin.cs" />
     <Compile Include="IVEPlugin.cs" />
     <Compile Include="Pluginner.cs" />

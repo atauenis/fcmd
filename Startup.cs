@@ -34,7 +34,11 @@ namespace fcmd
                     break;
             }
 #endif
+            new MainWindow().Show();
             Application.Run(new frmMain());
+
+            //note that the "MainWindow" is the modern main window (made using XWT)
+            //and the "frmMain" is the old main window (made with Windows Forms)
         }
     }
 }
