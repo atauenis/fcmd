@@ -25,7 +25,11 @@ namespace pluginner
         public Xwt.ListView ListingView = new Xwt.ListView();
         public Xwt.Label StatusBar = new Xwt.Label();
         public pluginner.IFSPlugin FS;
+
+        /// <summary>User navigates into another directory</summary>
         public event TypedEvent<string> Navigate;
+        /// <summary>User tried to open the highlighted file</summary>
+        public event TypedEvent<string> OpenFile;
 
 
 
@@ -35,14 +39,24 @@ namespace pluginner
             ListingView.DataSource = FLStore;
             ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
             ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
+            UrlBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(UrlBox_KeyReleased);
 
-            this.PackStart(UrlBox, true, Xwt.WidgetPlacement.Start, Xwt.WidgetPlacement.Fill);
-            this.PackStart(ListingView, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill);
-            this.PackStart(StatusBar, true, Xwt.WidgetPlacement.End, Xwt.WidgetPlacement.Fill);
+            this.PackStart(UrlBox,false, true);
+            this.PackStart(ListingView, true, true);
+            this.PackStart(StatusBar, false,true);
 
             UrlBox.ShowFrame = false;
-            UrlBox.Text = "C:\\NC";
+            UrlBox.Text = @"file://C:\NC";
+            ListingView.BorderVisible = false;
             StatusBar.Text = "0 bytes";
+        }
+
+        void UrlBox_KeyReleased(object sender, Xwt.KeyEventArgs e)
+        {
+            if (e.Key == Xwt.Key.Return)
+            {
+                LoadDir(UrlBox.Text,0);
+            }
         }
 
         void ListingView_KeyReleased(object sender, Xwt.KeyEventArgs e)
@@ -66,12 +80,21 @@ namespace pluginner
         {
             try
             {
-                if(Navigate!= null) Navigate(url); //raise event
 
-                if (FS.DirectoryExists(url)){
+                if (FS.DirectoryExists(url))
+                {//it's directory
+                    if (Navigate != null) Navigate(url); //raise event
+                    else Console.WriteLine("WARNING: the event FLP.Navigate was not handled by the host");
+
                     LoadDir(url, 0);
+                    return;
                 }
-                //else the host should handle this
+                else
+                {//it's file
+                    if (OpenFile != null) OpenFile(url); //raise event
+                    else Console.WriteLine("WARNING: the event FLP.OpenFile was not handled by the host");
+                }
+
             }
             catch (Exception ex)
             {
@@ -87,6 +110,8 @@ namespace pluginner
         /// <param name="MinHumanize">Minimal file size, that should be humanized</param>
         public void LoadDir(string URL, int MinHumanize)
         {
+            //TODO: rewrite size humanization code
+            //тодо: сделать аналог настройки TC "Конфигурация-Табуляторы-Размеры в панелях"
             if (FS == null) throw new InvalidOperationException("No filesystem is binded to this FileListPanel");
             FS.CurrentDirectory = URL;
             
@@ -98,11 +123,16 @@ namespace pluginner
                 FLStore.SetValue<string>(FLStore.RowCount-1, dfURL, di.Path);
                 FLStore.SetValue<pluginner.FSEntryMetadata>(FLStore.RowCount - 1, dfMetadata, FS.GetMetadata(di.Path));
                 FLStore.SetValue<string>(FLStore.RowCount - 1, dfDisplayName, di.TextToShow);
-                if(di.IsDirectory)
-                    FLStore.SetValue<string>(FLStore.RowCount-1, dfSize, "<DIR>");
-                else
-                    FLStore.SetValue<string>(FLStore.RowCount-1, dfSize, KiloMegaGigabyteConvert(di.Size,MinHumanize));//todo: сократить/очеловечить до КБ/МБ/ГБ.
-                FLStore.SetValue<DateTime>(FLStore.RowCount-1, dfChanged, di.Date);
+                if(di.TextToShow == "..")//parent dir
+                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, "<↑ UP>");
+                else if (di.IsDirectory){//dir
+                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, "<DIR>");
+                    FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
+                }
+                else{//file
+                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, KiloMegaGigabyteConvert(di.Size, MinHumanize));//todo: сократить/очеловечить до КБ/МБ/ГБ.
+                    FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
+                }
             }
         }
 

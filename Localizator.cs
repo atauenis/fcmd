@@ -40,12 +40,12 @@ namespace fcmd
                         "FName=Имя\nFSize=Размер\nFDate=Дата\n" +
                         "FCDelAsk=Вы действительно хотите удалить файл \"{0}\"?\n" +
                         "Canceled=Отменено пользователем\n" +
-                        "Okay=ОК\n"+
+                        "Okay=ОК\n" +
                         "Cancel=Отмена\n" +
                         "FileNotFound=Файл \"{0}\" не найден\n" +
                         "ItsDir=\"{0}\" является каталогом\n" +
                         "DirCantBeRemoved=Нет возможности удалить {0}\n" +
-                        "CantRunEXE=Ошибка запуска внешней программы: \n"+
+                        "CantRunEXE=Ошибка запуска внешней программы: \n" +
                         "FileProgressDialogTitle=File Commander\n" +
                         "DoingRemove=Выполняется удаление:{0}{1}\n" +
                         "DoingCopy=Выполняется копирование:{0} В {1}{2}\n" +
@@ -76,11 +76,13 @@ namespace fcmd
                         "FCVE_mnuFormat=_Формат\nFCVE_mnuHelp=_Справка\nFCVE_mnuHelpHelpme=_Вызов справки\nFCVE_mnuHelpAbout=_О программе и модуле просмотра\n" +
                         "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден\n" +
                         "FCVE_mnuViewSettings=Параметры...\nFCVEpluginro1=Модуль просмотра {0} не поддерживает редактирование файлов\nFCVEpluginro2=Файл будет открыт в режиме чтения.\n" +
-                        "FCVE_PluginNotFound=Не найден модуль для открытия этого файла. Файл будет выведен как текст.\n"+
+                        "FCVE_PluginNotFound=Не найден модуль для открытия этого файла. Файл будет выведен как текст.\n" +
                         "FCS_Title=Настройки File Commander\nFCS_CantSaveSettings=Невозможно сохранить настройки. Проверьте введённые данные.\n" +
                         "swtMainWindow=Вид основного окна\nswtViewerEditor=Правка/просмотр\n" +
-                        "SWTMWtoolbar=Панель инструментов\nSWTMWdiskbuttons=Кнопки дисков\nSWTMWdisklistbox=Окно выбора диска\nSWTMWpaneltitle=Заголовок файловой панели (с текущим путём)\nSWTMWtablecollumns=Заголовки столбцов\nSWTMWinfobar=Строки состояния\nSWTMWcmdline=Коммандная строка\nSWTMWkeybhelp=Подсказка клавиатуры (клавиш F)\n"+
-                        "SWTVEviewer=Просмотр по F3\nSWTVEinternalv=Встроенный просмоторщик (VE)\nSWTVEexternalv=Внешний просмоторщик:\nSWTVEvesetup=Настройка встроенной программы...\nSWTVEeditor=Редактор по F4\nSWTVEinternaleditor=Встроенный редактор\nSWTVEexternaleditor=Внешний редактор:\n";
+                        "SWTMWtoolbar=Панель инструментов\nSWTMWdiskbuttons=Кнопки дисков\nSWTMWdisklistbox=Окно выбора диска\nSWTMWpaneltitle=Заголовок файловой панели (с текущим путём)\nSWTMWtablecollumns=Заголовки столбцов\nSWTMWinfobar=Строки состояния\nSWTMWcmdline=Коммандная строка\nSWTMWkeybhelp=Подсказка клавиатуры (клавиш F)\n" +
+                        "SWTVEviewer=Просмотр по F3\nSWTVEinternalv=Встроенный просмоторщик (VE)\nSWTVEexternalv=Внешний просмоторщик:\nSWTVEvesetup=Настройка встроенной программы...\nSWTVEeditor=Редактор по F4\nSWTVEinternaleditor=Встроенный редактор\nSWTVEexternaleditor=Внешний редактор:\n" +
+                        "swtMainWindowColumns=    Столбцы панелей\n" +
+                        "SWTMWCFileExtView=Показывать типы (расширения) файлов:\nSWTMWCExtTogether=Сразу после имени\nSWTMWCExtFar=Отдельно\nSWTMWCCollumns=Столбцы\nSWTMWCExt=Расширение\nSWTMWCSize=Pазмер\nSWTMWCDate=Изменено\nSWTMWCFileMode=Доступ\nSWTMWCExpandName=Расширить столбец \"Имя\"\nSWTMWCShowCentury=Показывать век в дате (20хх)\nSWTMWCShowTimeAs12h=12-часовой формат времени (AM/PM)\nSWTMWCShowDirsInStatus=Выводить внизу кол-во папок\nSWTMWCMaxHumanSizePan=Сокр. размер в панелях больше\nSWTMWCMaxHumanSizeStatus=Сокращать в стр. состояния >=\n";
         Dictionary<string, string> Localization = new Dictionary<string, string>();
         
         /// <summary>

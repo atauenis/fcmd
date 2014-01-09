@@ -175,5 +175,41 @@ namespace fcmd.Properties {
                 this["ExternalEditor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Panel1URL {
+            get {
+                return ((string)(this["Panel1URL"]));
+            }
+            set {
+                this["Panel1URL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Panel2URL {
+            get {
+                return ((string)(this["Panel2URL"]));
+            }
+            set {
+                this["Panel2URL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public byte LastActivePanel {
+            get {
+                return ((byte)(this["LastActivePanel"]));
+            }
+            set {
+                this["LastActivePanel"] = value;
+            }
+        }
     }
 }

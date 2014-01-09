@@ -109,6 +109,7 @@
     <Compile Include="SettingsWindow.cs" />
     <Compile Include="SettingsWindowTabs\ISettingsWindowTab.cs" />
     <Compile Include="SettingsWindowTabs\swtMainWindow.cs" />
+    <Compile Include="SettingsWindowTabs\swtMainWindowColumns.cs" />
     <Compile Include="SettingsWindowTabs\swtViewerEditor.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="VEd.cs" />
