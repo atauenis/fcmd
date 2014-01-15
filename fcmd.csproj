@@ -87,6 +87,8 @@
       <DependentUpon>ListPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Localizator.cs" />
+    <Compile Include="MainWindow-Actions.cs" />
+    <Compile Include="MainWindow-Workers.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="MsgBox.cs" />
     <Compile Include="pluginfinder.cs" />

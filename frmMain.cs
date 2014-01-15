@@ -1,7 +1,7 @@
 /* The File Commander
  * Главное окно (временная версия)    The main window (temporary)
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
- * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
 using System;
@@ -1230,7 +1230,7 @@ namespace fcmd
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
             string AboutString = string.Format(locale.GetString("FileCommanderVer"),"File Commander", Application.ProductVersion)+
-                                               "\n(C) 2013, FC team (Alexander Tauenis & comrades)\nhttps://github.com/atauenis/fcmd\n"+
+                                               "\n(C) 2013-14, FC team (Alexander Tauenis & comrades)\nhttps://github.com/atauenis/fcmd\n"+
                                                "Uses Xamarin Window Toolkit (Xwt) with A.T.'s patches\nhttps://github.com/atauenis/xwt/tree/wpf-patches\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
             MessageBox.Show(AboutString,Application.ProductName);
         }

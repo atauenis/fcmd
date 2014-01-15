@@ -2,7 +2,7 @@
  * Элемент управления ListPanel (панели frmMain)    The main window's panels
  * (Windows-версия)                                 (version for Windows)
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
- * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
 using System;

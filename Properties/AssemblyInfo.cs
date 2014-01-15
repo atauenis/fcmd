@@ -34,5 +34,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitleAttribute("The File Commander")]
 [assembly: AssemblyDescriptionAttribute("Two panel file manager (like Total Commander)")]
 [assembly: AssemblyCompanyAttribute("github.com/atauenis/fcmd")]
-[assembly: AssemblyCopyrightAttribute("(C) 2013, A.T. and other contributors")]
+[assembly: AssemblyCopyrightAttribute("(C) 2013-14, A.T. and other contributors")]
 [assembly: AssemblyProductAttribute("File Commander")]

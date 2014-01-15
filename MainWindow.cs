@@ -1,7 +1,7 @@
 ﻿/* The File Commander main window
  * The main file manager window
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
- * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
 using System;
@@ -11,7 +11,7 @@ using System.Text;
 
 namespace fcmd
 {
-    class MainWindow : Xwt.Window
+    partial class MainWindow : Xwt.Window
     {
         Localizator Locale = new Localizator();
         Xwt.Menu MainMenu = new Xwt.Menu();
@@ -110,11 +110,56 @@ namespace fcmd
         /// <summary>The entry form's keyboard keypress handler (except commandbar keypresses)</summary>
         void PanelLayout_KeyReleased(object sender, Xwt.KeyEventArgs e)
         {
+#if DEBUG
             pluginner.FileListPanel p1 = (PanelLayout.Panel1.Content as pluginner.FileListPanel);
             pluginner.FileListPanel p2 = (PanelLayout.Panel2.Content as pluginner.FileListPanel);
+            Console.WriteLine("KEYBOARD DEBUG: " + e.Modifiers.ToString() + "+" + e.Key.ToString() + " was pressed. Panels focuses: " + (ActivePanel == p1) + " | " + (ActivePanel == p2));
+#endif
+            if (e.Key == Xwt.Key.Return) return;//ENTER presses are handled by other event
 
-            //panel focus (active/passive detection) debug
-            //Console.WriteLine((ActivePanel == p1) + " | " + (ActivePanel == p2));
+            string URL1 = ActivePanel.GetValue(ActivePanel.dfURL) ;
+            pluginner.IFSPlugin FS1 = ActivePanel.FS;
+            string URL2 = PassivePanel.GetValue(PassivePanel.dfURL);
+            pluginner.IFSPlugin FS2 = PassivePanel.FS;
+
+            switch (e.Key)
+            {
+                case Xwt.Key.F3: //F3: View. Shift+F3: View as text.
+                    if (URL1 == null)
+                        return;
+
+                    if (!FS1.FileExists(URL1))
+                    {
+                        Xwt.MessageDialog.ShowWarning(string.Format(Locale.GetString("FileNotFound"), ActivePanel.GetValue(ActivePanel.dfDisplayName)));
+                        return;
+                    }
+
+                    VEd V = new VEd();
+                    if (e.Modifiers == Xwt.ModifierKeys.None)
+                    { V.LoadFile(URL1, FS1, false); V.Show(); }
+                    else if(e.Modifiers == Xwt.ModifierKeys.Shift)
+                    { V.LoadFile(URL1, FS1, new base_plugins.ve.PlainText(), false); V.Show(); }
+                    //todo: handle Ctrl+F3 (Sort by name).
+                    return;
+                case Xwt.Key.F4: //F4: Edit. Shift+F4: Edit as txt.
+                    if (URL1 == null)
+                        return;
+
+                    if (!FS1.FileExists(URL1))
+                    {
+                        Xwt.MessageDialog.ShowWarning(string.Format(Locale.GetString("FileNotFound"), ActivePanel.GetValue(ActivePanel.dfDisplayName)));
+                        return;
+                    }
+
+                    VEd E = new VEd();
+                    if (e.Modifiers == Xwt.ModifierKeys.None)
+                    { E.LoadFile(URL1, FS1, true); E.Show(); }
+                    else if(e.Modifiers == Xwt.ModifierKeys.Shift)
+                    { E.LoadFile(URL1, FS1, new base_plugins.ve.PlainText(), true); E.Show(); }
+                    //todo: handle Ctrl+F4 (Sort by extension).
+                    return;
+
+            }
         }
 
         /// <summary>Switches the active panel</summary>

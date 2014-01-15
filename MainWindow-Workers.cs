@@ -1,38 +1,43 @@
-﻿/* The File Commander backend   Ядро File Commander
- * Background file operations   "Рабочие" для работ с файлами в фоновых потоках
+﻿/* The File Commander main window
+ * Background workers
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.IO;
+using pluginner;
 
-namespace fcmd{
-    public partial class frmMain{
+namespace fcmd
+{
+    partial class MainWindow
+    {
         /* ЗАМЕТКА РАЗРАБОТЧИКУ
-         * 
-         * В данном файле размещаются функции для работы с файлами и каталогами.
-         * Данные функции запускаются в отдельных от UI потоках и вызваются функциями
-         * из файлов frmMain.cs и frmMain-CLI.cs . Всякая функция должна иметь
-         * префикс Do, означающий её чисто утилитарную принадлежность, без UI.
-         * Крайне нежелательно обращение к элементам управления формы, поскольку
-         * это требует всяких согласующих операций и прочих делегатов, что ухудшает
-         * читаемость кода.
-         * Также нежелательно обращение к System.Windows.Forms, поскольку код данного
-         * файла должен быть кросс-платформенным.
-         */
+ * 
+ * В данном файле размещаются функции для работы с файлами и каталогами.
+ * Данные функции запускаются в отдельных от UI потоках и вызваются функциями
+ * из файлов frmMain.cs и frmMain-CLI.cs . Всякая функция должна иметь
+ * префикс Do, означающий её чисто утилитарную принадлежность, без UI.
+ * Крайне нежелательно обращение к элементам управления формы, поскольку
+ * это требует всяких согласующих операций и прочих делегатов, что ухудшает
+ * читаемость кода.
+ * Также нежелательно обращение к System.Windows.Forms, поскольку код данного
+ * файла должен быть кросс-платформенным.
+ */
 
         /// <summary>
         /// Background directory lister
         /// </summary>
-        void DoLs(string URL, ListPanel lp, ref int StatusFeedback){
-            CheckForIllegalCrossThreadCalls = false; //HACK: заменить на долбанные делегации и прочую нетовскую муть
-            lp.list.UseWaitCursor = true;
+        void DoLs(string URL, pluginner.FileListPanel lp, ref int StatusFeedback)
+        {
+            //CheckForIllegalCrossThreadCalls = false; //HACK: заменить на долбанные делегации и прочую нетовскую муть
+            /*lp.list.UseWaitCursor = true;
             lp.list.Items.Clear();
             lp.list.BeginUpdate();
-            
+
             //load the directory
             pluginner.IFSPlugin fsp = lp.FSProvider;
             fsp.CurrentDirectory = URL;
@@ -41,10 +46,10 @@ namespace fcmd{
             int FileWeight = 0;
             checked { FileWeight = 100 / fsp.DirectoryContent.Count; }
 
-            for(int i = 0; i < fsp.DirectoryContent.Count; i++)
+            for (int i = 0; i < fsp.DirectoryContent.Count; i++)
             {
                 pluginner.DirItem di = fsp.DirectoryContent[i];
-                
+
                 //parsing all files, that given from the FS provider
                 StatusFeedback += FileWeight / 100;
                 if (di.Hidden == false || fcmd.Properties.Settings.Default.ShowHidedFiles == true)
@@ -53,17 +58,19 @@ namespace fcmd{
                 }
             }
             lp.list.EndUpdate();
-            lp.list.UseWaitCursor = false;
+            lp.list.UseWaitCursor = false;*/
+            lp.LoadDir(URL, 0);
         }
-        
+
 
         /// <summary>
         /// Background file copier
         /// </summary>
         /// <param name="lpa">active listpanel</param>
         /// <param name="lpp">passive listpanel</param>
-        void DoCp(ListPanel lpa, ListPanel lpp, string DestinationURL, pluginner.File SourceFile, int Progress){
-            pluginner.IFSPlugin DestinationFS = lpp.FSProvider;
+        void DoCp(FileListPanel lpa, FileListPanel lpp, string DestinationURL, pluginner.File SourceFile, int Progress)
+        {
+            pluginner.IFSPlugin DestinationFS = lpp.FS;
 
             pluginner.File NewFile = SourceFile;
             NewFile.Path = DestinationURL;
@@ -111,11 +118,14 @@ namespace fcmd{
         /// </summary>
         /// <param name="url">url of the file</param>
         /// <param name="fs">filesystem of the file</param>
-        void DoRmFile(string url, pluginner.IFSPlugin fs){
-            try{
+        void DoRmFile(string url, pluginner.IFSPlugin fs)
+        {
+            try
+            {
                 fs.DeleteFile(url);
             }
-            catch (Exception err){
+            catch (Exception err)
+            {
                 new MsgBox(err.Message, null, MsgBox.MsgBoxType.Error);
             }
         }
@@ -125,19 +135,21 @@ namespace fcmd{
         /// </summary>
         /// <param name="url">url of the file</param>
         /// <param name="fs">filesystem of the file</param>
-        void DoRmDir(string url, pluginner.IFSPlugin fs){
+        void DoRmDir(string url, pluginner.IFSPlugin fs)
+        {
             try
             {
                 fs.DeleteDirectory(url, true);
             }
             catch (pluginner.ThisDirCannotBeRemovedException)
             {
-                new MsgBox(url, string.Format(locale.GetString("DirCantBeRemoved"), url), MsgBox.MsgBoxType.Warning);
+                new MsgBox(url, string.Format(Locale.GetString("DirCantBeRemoved"), url), MsgBox.MsgBoxType.Warning);
             }
             catch (Exception err)
             {
                 new MsgBox(err.Message, null, MsgBox.MsgBoxType.Error);
             }
         }
+
     }
 }

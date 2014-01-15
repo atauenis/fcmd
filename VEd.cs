@@ -1,7 +1,7 @@
 ﻿/* The File Commander - internal Viewer/Editor
  * The main window of the viewer/editor (VE)
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
- * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
 using System;
@@ -197,7 +197,7 @@ namespace fcmd
             }
             catch (Exception ex)
             {
-
+                Xwt.MessageDialog.ShowError(string.Format(Locale.GetString("FCVE_LoadError"),ex.Message));
                 Console.WriteLine("ERROR: VE can't load file: " + ex.Message + "\n" + ex.StackTrace);
                 return;
             }

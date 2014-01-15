@@ -1,7 +1,7 @@
 ﻿/* The File Commander - plugin API
  * The file list widget
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
- * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
 using System;
@@ -136,6 +136,14 @@ namespace pluginner
             }
         }
 
+        /// <summary>
+        /// Reloads the current directory
+        /// </summary>
+        public void LoadDir()
+        {
+            LoadDir(FS.CurrentDirectory, 0);
+        }
+
         /// <summary>Converts the file size (in bytes) to human-readable string</summary>
         /// <param name="Input">The input value</param>
         /// <param name="ShortestNonhumanity">The miminal file size that should be shortened</param>
@@ -150,6 +158,16 @@ namespace pluginner
             if (Input > 1024) return (Input / 1024).ToString() + " KB";
 
             return Input.ToString() + " B"; //if Input is less than 1024
+        }
+        
+        /// <summary>
+        /// Gets the selected row's value from the <paramref name="Datafield"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the datafield</typeparam>
+        /// <param name="Datafield">The datafield</param>
+        /// <returns>The value</returns>
+        public T GetValue<T>(Xwt.IDataField<T> Datafield){
+            return FLStore.GetValue<T>(ListingView.SelectedRow, Datafield);
         }
     }
 }

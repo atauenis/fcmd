@@ -1,5 +1,5 @@
 ﻿/* The File Commander - окно вывода статуса действия
- * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Копирование кода разрешается только с письменного согласия
  * разработчика (А.Т.).
  */

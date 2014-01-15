@@ -1,7 +1,7 @@
 /* The File Commander backend   Ядро File Commander
  * Local filesystem adapter     Модуль доступа к локальным ФС
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
- * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
 using System;

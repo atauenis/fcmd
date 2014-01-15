@@ -1,6 +1,6 @@
 ﻿/* The File Commander
  * Module for UI translation into different languages
- * (C) 2013, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
 using System;
@@ -17,7 +17,7 @@ namespace fcmd
         List<string> UIFileContent = new List<string>();
         string RusUI = "FileCommanderVer=Файловый менеджер {0}, версия {1}\n" +
                         "FCViewVer=Просмоторщик файлов, версия {0}\n" +
-                        "FCVEVer1=Встроенный просмоторщик и редактор файлов FC {0}.\nFCVEVer2=Загружен модуль просмотра: {0}, версия {1}.{2}(C) 2013, комманда FC и {3}\n" +
+                        "FCVEVer1=Встроенный просмоторщик и редактор файлов FC {0}.\nFCVEVer2=Загружен модуль просмотра: {0}, версия {1}.{2}(C) 2013-14-14, комманда FC и {3}\n" +
                         "LocalFSVer=Модуль доступа к локальным ФС [встроенный]\n" +
                         "TxtViewerVer=Просмоторщик текстовых файлов [встроенный]\n" +
                         "VEptxtVer=Простой текст\n" +
@@ -76,7 +76,7 @@ namespace fcmd
                         "FCVE_mnuFormat=_Формат\nFCVE_mnuHelp=_Справка\nFCVE_mnuHelpHelpme=_Вызов справки\nFCVE_mnuHelpAbout=_О программе и модуле просмотра\n" +
                         "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден\n" +
                         "FCVE_mnuViewSettings=Параметры...\nFCVEpluginro1=Модуль просмотра {0} не поддерживает редактирование файлов\nFCVEpluginro2=Файл будет открыт в режиме чтения.\n" +
-                        "FCVE_PluginNotFound=Не найден модуль для открытия этого файла. Файл будет выведен как текст.\n" +
+                        "FCVE_PluginNotFound=Не найден модуль для открытия этого файла. Файл будет выведен как текст.\nFCVE_LoadError=Ошибка загрузки файла: {0}\n" +
                         "FCS_Title=Настройки File Commander\nFCS_CantSaveSettings=Невозможно сохранить настройки. Проверьте введённые данные.\n" +
                         "swtMainWindow=Вид основного окна\nswtViewerEditor=Правка/просмотр\n" +
                         "SWTMWtoolbar=Панель инструментов\nSWTMWdiskbuttons=Кнопки дисков\nSWTMWdisklistbox=Окно выбора диска\nSWTMWpaneltitle=Заголовок файловой панели (с текущим путём)\nSWTMWtablecollumns=Заголовки столбцов\nSWTMWinfobar=Строки состояния\nSWTMWcmdline=Коммандная строка\nSWTMWkeybhelp=Подсказка клавиатуры (клавиш F)\n" +
