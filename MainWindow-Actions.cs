@@ -1,4 +1,10 @@
-﻿using System;
+﻿/* The File Commander main window
+ * File managing operations
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
+ * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * Contributors should place own signs here.
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +16,15 @@ namespace fcmd
     {
         /* ЗАМЕТКА РАЗРАБОТЧИКУ
          * 
-         * В данном файле размещаются комманды "коммандной строки" FC, которые также
-         * используются в штатных функциях файлового менеджера (навигация по каталогам).
+         * В данном файле размещаются подпрограммы для управления файлами, которые
+         * вызываются из MainWindow.cs. Также планируется использование этих подпрограмм
+         * после реализации текстовой коммандной строки FC (которая внизу окна).
          * Все комманды работают с активной и пассивой панелью - Active/PassivePanel.
          * FC всегда их определяет сам. Пассивая панель - всегда получатель файлов.
          * Названия комманд - UNIX в верблюжьем регистре (Ls, Rm, MkDir, Touch и т.п.).
          * Всем коммандам параметры передаются строкой, но допускаются исключения, напр.,
          * если базовая функция "перегружена" функцией для нужд графического интерфейса.
+         * Sorry for my bad english.
          */
 
         /// <summary>
@@ -38,7 +46,7 @@ namespace fcmd
 
             do
             {
-                //Application.DoEvents();
+                Xwt.Application.MainLoop.DispatchPendingEvents();//Application.DoEvents();
                 fpd.pbrProgress.Fraction = Status;
             }
             while (LsThread.ThreadState == ThreadState.Running);
@@ -56,7 +64,7 @@ namespace fcmd
             if (!fs.FileExists(url))
             {
                 //MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                new MsgBox(string.Format(Locale.GetString("FileNotFound")), ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow,ActivePanel.dfDisplayName), MsgBox.MsgBoxType.Warning);
+                Xwt.MessageDialog.ShowError(string.Format(Locale.GetString("FileNotFound"),ActivePanel.GetValue(ActivePanel.dfDisplayName)));
                 return;
             }
 
@@ -105,7 +113,6 @@ namespace fcmd
         /// <summary>
         /// Removes the specifed file
         /// </summary>
-        /// <param name="url"></param>
         public string Rm(string url)
         {
             if (!Xwt.MessageDialog.Confirm(
@@ -127,11 +134,10 @@ namespace fcmd
                 Thread RmFileThread = new Thread(delegate() { DoRmFile(curItemDel, fsdel); });
                 RmFileThread.Start();
 
-                do { /*Application.DoEvents();*/ Xwt.Application.MainLoop.DispatchPendingEvents(); }
+                do { Xwt.Application.MainLoop.DispatchPendingEvents(); }
                 while (RmFileThread.ThreadState == ThreadState.Running);
 
                 fpd.pbrProgress.Fraction = 1;
-                //LoadDir(ActivePanel.FSProvider.CurrentDirectory, ActivePanel);
                 ActivePanel.LoadDir(ActivePanel.FS.CurrentDirectory,0);
                 fpd.Hide();
                 return "Файл удалён.\n";
@@ -143,11 +149,10 @@ namespace fcmd
                 Thread RmDirThread = new Thread(delegate() { DoRmDir(curItemDel, fsdel); });
                 RmDirThread.Start();
 
-                do { /*Application.DoEvents();*/ Xwt.Application.MainLoop.DispatchPendingEvents(); }
+                do { Xwt.Application.MainLoop.DispatchPendingEvents(); }
                 while (RmDirThread.ThreadState == ThreadState.Running);
 
                 fpd.pbrProgress.Fraction = 1;
-                //LoadDir(ActivePanel.FSProvider.CurrentDirectory, ActivePanel);
                 ActivePanel.LoadDir(ActivePanel.FS.CurrentDirectory,0);
 
                 fpd.Hide();
@@ -167,68 +172,66 @@ namespace fcmd
             pluginner.IFSPlugin SourceFS = ActivePanel.FS;
             pluginner.File SourceFile = SourceFS.GetFile(SourceURL, Progress);
 
-            if (!SourceFS.FileExists(SourceURL))
-            {//такого файла (уже?) нет
-                if (SourceFS.DirectoryExists(SourceURL))//а вдруг есть такой каталог?
+            //check for file existing
+            if(SourceFS.FileExists(SourceURL)){
+                InputBox ibx = new InputBox(String.Format(Locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + "/" + SourceFile.Name);
+                if (ibx.ShowDialog())
                 {
-                    InputBox ibxd = new InputBox(String.Format(Locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + "/" + SourceFile.Name);
+                    String DestinationFilePath = ibx.Result;
+                    Thread CpThread = new Thread(delegate() { DoCp(ActivePanel, PassivePanel, DestinationFilePath, SourceFile, Progress); });
+                    FileProcessDialog fpd = new FileProcessDialog();
+                    //UNDONE: place the FPD over the middle of the main window
+                    fpd.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL) + "\n", ibx.Result, null);
+                    fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
 
-                    if (ibxd.ShowDialog())
-                    {
-                        //копирование каталога
-                        Thread CpDirThread = new Thread(delegate() { DoCpDir(SourceURL, ibxd.Result); });
+                    CpThread.Start();
+                    fpd.Show();
 
-                        FileProcessDialog CpDirProgressDialog = new FileProcessDialog();
-                        /*CpDirProgressDialog.Y = this.Top + ActivePanel.Top;
-                        CpDirProgressDialog.X = this.Left + ActivePanel.Left;*/
-                        //UNDONE: позиция окна статуса!!!
-                        CpDirProgressDialog.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL) + " [" + Locale.GetString("Directory") + "]\n", ibxd.Result, null);
-                        CpDirProgressDialog.cmdCancel.Clicked += (object s, EventArgs e) => { CpDirThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
+                    do {Xwt.Application.MainLoop.DispatchPendingEvents(); fpd.pbrProgress.Fraction = Progress; }
+                    while (CpThread.ThreadState == ThreadState.Running);
 
-                        CpDirProgressDialog.Show();
-                        CpDirThread.Start();
-
-                        do { /*Application.DoEvents();*/ Xwt.Application.MainLoop.DispatchPendingEvents(); }
-                        while (CpDirThread.ThreadState == ThreadState.Running);
-
-                        //LoadDir(PassivePanel.FSProvider.CurrentDirectory, PassivePanel); //обновление пассивной панели
-                        PassivePanel.LoadDir(PassivePanel.FS.CurrentDirectory, 0);
-                        CpDirProgressDialog.Hide();
-                    }
-                    return;
+                    PassivePanel.LoadDir();
+                    fpd.Hide();
                 }
-                Xwt.MessageDialog.ShowWarning(
-                    Locale.GetString("FileNotFound"),
-                    ActivePanel.FLStore.GetValue<string>(
-                        ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL
-                    )
-                );
-                //MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-
-            InputBox ibx = new InputBox(String.Format(Locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + "/" + SourceFile.Name);
-            if (ibx.ShowDialog())
+            //not a file...maybe directory?
+            if (SourceFS.DirectoryExists(SourceURL))//а вдруг есть такой каталог?
             {
+                InputBox ibxd = new InputBox(String.Format(Locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + "/" + SourceFile.Name);
+                String DestinationDirPath = ibxd.Result;
+                if (ibxd.ShowDialog())
+                {
+                    //копирование каталога
+                    Thread CpDirThread = new Thread(delegate() { DoCpDir(SourceURL, DestinationDirPath); });
 
-                Thread CpThread = new Thread(delegate() { DoCp(ActivePanel, PassivePanel, ibx.Result, SourceFile, Progress); });
-                FileProcessDialog fpd = new FileProcessDialog();
-                /*fpd.Y = this.Top + ActivePanel.Top;
-                fpd.X = this.Left + ActivePanel.Left;*///UNDONE: позиция окна
-                fpd.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL) + "\n", ibx.Result, null);
-                fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
+                    FileProcessDialog CpDirProgressDialog = new FileProcessDialog();
+                    /*CpDirProgressDialog.Y = this.Top + ActivePanel.Top;
+                    CpDirProgressDialog.X = this.Left + ActivePanel.Left;*/
+                    //UNDONE: позиция окна статуса!!!
+                    CpDirProgressDialog.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL) + " [" + Locale.GetString("Directory") + "]\n", ibxd.Result, null);
+                    CpDirProgressDialog.cmdCancel.Clicked += (object s, EventArgs e) => { CpDirThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
 
-                CpThread.Start();
-                fpd.Show();
+                    CpDirProgressDialog.Show();
+                    CpDirThread.Start();
 
-                do { /*Application.DoEvents();*/ Xwt.Application.MainLoop.DispatchPendingEvents(); fpd.pbrProgress.Fraction = Progress; }
-                while (CpThread.ThreadState == ThreadState.Running);
+                    do { Xwt.Application.MainLoop.DispatchPendingEvents(); }
+                    while (CpDirThread.ThreadState == ThreadState.Running);
 
-                //LoadDir(PassivePanel.FSProvider.CurrentDirectory, PassivePanel); //обновление пассивной панели
-                PassivePanel.LoadDir();
-                fpd.Hide();
+                    //LoadDir(PassivePanel.FSProvider.CurrentDirectory, PassivePanel); //обновление пассивной панели
+                    PassivePanel.LoadDir();
+                    CpDirProgressDialog.Hide();
+                }
+                return;
             }
-            else return;
+            //and if no of those IF blocks are open, say that this isn't a real file nor directory
+            Xwt.MessageDialog.ShowWarning(
+                Locale.GetString("FileNotFound"),
+                ActivePanel.FLStore.GetValue<string>(
+                    ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL
+                )
+            );
+            return;
         }
 
         /// <summary>
@@ -236,16 +239,14 @@ namespace fcmd
         /// </summary>
         void Mv()
         {
-            //Getting the handles of the source and the destination filesystems
             pluginner.IFSPlugin SourceFS = ActivePanel.FS;
             pluginner.IFSPlugin DestinationFS = PassivePanel.FS;
 
             //Getting useful URL parts
             string SourceName = ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfDisplayName);
             string SourcePath = ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL);
-            string DestinationPath = DestinationFS.CurrentDirectory + SourceFS.DirSeparator + SourceName;
+            string DestinationPath = DestinationFS.CurrentDirectory + DestinationFS.DirSeparator + SourceName;
 
-            //Giving the user the one chance to change the destination path
             InputBox ibx = new InputBox
                 (
                 string.Format(Locale.GetString("MoveTo"), SourceName),
@@ -260,9 +261,8 @@ namespace fcmd
             // from an FTP to an ext2fs on Windows or MacOS please tell me :-) )
             if (SourceFS.GetType() != DestinationFS.GetType())
             {
+                Xwt.MessageDialog.ShowError("Cannot move between diffrent filesystems!\nНе сделана поддержка перемещения между разными ФС.");
                 Cp();
-                //MessageBox.Show("Cannot move between diffrent filesystems!\nНе сделана поддержка перепещения между разными ФС");
-                Xwt.MessageDialog.ShowError("Cannot move between diffrent filesystems!\nНе сделана поддержка перепещения между разными ФС");
                 return;
             }
 
@@ -277,9 +277,6 @@ namespace fcmd
                 SourceFS.MoveFile(SourcePath, DestinationPath);
             }
 
-
-            //Final clean-up and UI refresh
-            GC.Collect(); //needs to find that it is really is need
             ActivePanel.LoadDir();
             PassivePanel.LoadDir();
         }

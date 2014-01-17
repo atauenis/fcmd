@@ -88,12 +88,15 @@ namespace fcmd
             {
                 case 1:
                     p1.ListingView.SetFocus();
+                    ActivePanel = p1; PassivePanel = p2;
                     break;
                 case 2:
                     p2.ListingView.SetFocus();
+                    ActivePanel = p2; PassivePanel = p1;
                     break;
                 default:
                     p1.ListingView.SetFocus();
+                    ActivePanel = p1; PassivePanel = p2;
                     break;
             }
 
@@ -117,9 +120,18 @@ namespace fcmd
 #endif
             if (e.Key == Xwt.Key.Return) return;//ENTER presses are handled by other event
 
-            string URL1 = ActivePanel.GetValue(ActivePanel.dfURL) ;
+            string URL1;
+            if (ActivePanel.ListingView.SelectedRow > -1)
+                { URL1 = ActivePanel.GetValue(ActivePanel.dfURL); }
+            else
+                { URL1 = null; }
             pluginner.IFSPlugin FS1 = ActivePanel.FS;
-            string URL2 = PassivePanel.GetValue(PassivePanel.dfURL);
+
+            string URL2;
+            if (PassivePanel.ListingView.SelectedRow > -1)
+                { URL2 = PassivePanel.GetValue(PassivePanel.dfURL); }
+            else
+                { URL2 = null; }
             pluginner.IFSPlugin FS2 = PassivePanel.FS;
 
             switch (e.Key)
@@ -158,8 +170,37 @@ namespace fcmd
                     { E.LoadFile(URL1, FS1, new base_plugins.ve.PlainText(), true); E.Show(); }
                     //todo: handle Ctrl+F4 (Sort by extension).
                     return;
-
+                case Xwt.Key.F5: //F5: Copy.
+                    if (URL1 == null)
+                        return;
+                    Cp();
+                    //todo: handle Ctrl+F5 (Sort by timestamp).
+                    return;
+                case Xwt.Key.F6: //F6: Move/Rename.
+                    if (URL1 == null)
+                        return;
+                    Mv();
+                    //todo: handle Ctrl+F6 (Sort by size).
+                    return;
+                case Xwt.Key.F7: //F7: New directory.
+                    InputBox ibx = new InputBox(Locale.GetString("NewDirURL"), ActivePanel.FS.CurrentDirectory + Locale.GetString("NewDirTemplate"));
+                    if (ibx.ShowDialog()) MkDir(ibx.Result);
+                    return;
+                case Xwt.Key.F8: //F8: delete
+                    if (URL1 == null)
+                        return;
+                    Rm(ActivePanel.GetValue(ActivePanel.dfURL));
+                    //todo: handle Shit+F8 (Move to trash can/recycle bin)
+                    return;
+                case Xwt.Key.F10: //F10: Exit
+                    //todo: ask user, are it really want to close FC?
+                    Xwt.Application.Exit();
+                    //todo: handle Alt+F10 (directory tree)
+                    return;
             }
+#if DEBUG
+            Console.WriteLine("KEYBOARD DEBUG: the key isn't handled");
+#endif
         }
 
         /// <summary>Switches the active panel</summary>

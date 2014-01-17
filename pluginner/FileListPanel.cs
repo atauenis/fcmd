@@ -61,7 +61,7 @@ namespace pluginner
 
         void ListingView_KeyReleased(object sender, Xwt.KeyEventArgs e)
         {
-            if (e.Key == Xwt.Key.Return)
+            if (e.Key == Xwt.Key.Return && ListingView.SelectedRow > -1)
             {
                 NavigateTo(FLStore.GetValue<string>(ListingView.SelectedRow, dfURL));
             }
@@ -134,6 +134,7 @@ namespace pluginner
                     FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
                 }
             }
+            ListingView.SelectRow(0);
         }
 
         /// <summary>
