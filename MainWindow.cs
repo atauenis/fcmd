@@ -68,8 +68,20 @@ namespace fcmd
                 KeybHelpButtons[i] = new Xwt.Button(Locale.GetString("FCF" + i));
                 KeybHelpButtons[i].Style = Xwt.ButtonStyle.Flat;
                 KeybHelpButtons[i].CanGetFocus = false;
+                //KeybHelpButtons[i].Clicked += (o, ea) => { Xwt.MessageDialog.ShowMessage("Button " + i); };//anywhere shows "Button 11"...what the fucks?
                 KeyBoardHelp.PackStart(KeybHelpButtons[i]);
             }
+            KeybHelpButtons[1].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this,new Xwt.KeyEventArgs(Xwt.Key.F1,Xwt.ModifierKeys.None,false,0)); };
+            KeybHelpButtons[2].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F2, Xwt.ModifierKeys.None, false, 0)); };
+            KeybHelpButtons[3].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F3, Xwt.ModifierKeys.None, false, 0)); };
+            KeybHelpButtons[4].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F4, Xwt.ModifierKeys.None, false, 0)); };
+            KeybHelpButtons[5].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F5, Xwt.ModifierKeys.None, false, 0)); };
+            KeybHelpButtons[6].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F6, Xwt.ModifierKeys.None, false, 0)); };
+            KeybHelpButtons[7].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F7, Xwt.ModifierKeys.None, false, 0)); };
+            KeybHelpButtons[8].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F8, Xwt.ModifierKeys.None, false, 0)); };
+            KeybHelpButtons[9].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F9, Xwt.ModifierKeys.None, false, 0)); };
+            KeybHelpButtons[10].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F10, Xwt.ModifierKeys.None, false, 0)); };
+            //todo: implement "object Xwt.Widget.Tag" in modXWT (like Winforms's any Control.Tag)
 
             //apply user's settings
             //default directories
