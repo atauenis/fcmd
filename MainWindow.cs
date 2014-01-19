@@ -116,6 +116,7 @@ namespace fcmd
 
         void MainWindow_CloseRequested(object sender, Xwt.CloseRequestedEventArgs args)
         {
+            //save settings bcos zi form is closing
             Properties.Settings.Default.Panel1URL = p1.FS.CurrentDirectory;
             Properties.Settings.Default.Panel2URL = p2.FS.CurrentDirectory;
             fcmd.Properties.Settings.Default.LastActivePanel = (ActivePanel == p1) ? (byte)1 : (byte)2;

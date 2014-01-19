@@ -15,7 +15,7 @@ namespace fcmd
         static void Main(string[] Commands)
         {
 #if DEBUG
-            Xwt.Application.Initialize(Xwt.ToolkitType.Wpf);
+            Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
 #else
             
             //todo: xwt.application.run together with winforms.application.run

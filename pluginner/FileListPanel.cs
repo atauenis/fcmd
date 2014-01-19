@@ -39,6 +39,9 @@ namespace pluginner
             ListingView.DataSource = FLStore;
             ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
             ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
+            ListingView.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
+            ListingView.SelectionChanged += (o, ea) => { this.OnGotFocus(ea); }; //hack for incomplete Xwt.Gtk ListView (19/01/2014)
+            
             UrlBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(UrlBox_KeyReleased);
 
             this.PackStart(UrlBox,false, true);
