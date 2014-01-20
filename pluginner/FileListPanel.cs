@@ -50,6 +50,7 @@ namespace pluginner
 
             UrlBox.ShowFrame = false;
             UrlBox.Text = @"file://C:\NC";
+            UrlBox.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
             ListingView.BorderVisible = false;
             StatusBar.Text = "0 bytes";
         }

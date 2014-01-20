@@ -59,8 +59,8 @@ namespace fcmd
             p2.ListingView.Columns.Add(Locale.GetString("FSize"), p1.dfSize);
             p2.ListingView.Columns.Add(Locale.GetString("FDate"), p1.dfChanged);
 
-            p1.GotFocus += (o, ea) => { Console.WriteLine("DEBUG: LEFT panel got focus"); SwitchPanel(p1); };
-            p2.GotFocus += (o, ea) => {Console.WriteLine("DEBUG: RIGHT panel got focus"); SwitchPanel(p2); };
+            p1.GotFocus += (o, ea) => { SwitchPanel(p1); };
+            p2.GotFocus += (o, ea) => { SwitchPanel(p2); };
 
             //build keyboard help bar
             for (int i = 1; i < 11; i++)
@@ -210,6 +210,7 @@ namespace fcmd
                     Xwt.Application.Exit();
                     //todo: handle Alt+F10 (directory tree)
                     return;
+                //todo: case Xwt.Key.q: quick search
             }
 #if DEBUG
             Console.WriteLine("KEYBOARD DEBUG: the key isn't handled");
@@ -223,6 +224,10 @@ namespace fcmd
             PassivePanel = ActivePanel;
             ActivePanel = NewPanel;
             CommandBox.PlaceholderText = ActivePanel.FS.CurrentDirectory + ">";
+#if DEBUG
+            string PanelName = (NewPanel == p1) ? "LEFT" : "RIGHT";
+            Console.WriteLine("FOCUS DEBUG: The " + PanelName + " panel (" + NewPanel.FS.CurrentDirectory + ") got focus");
+#endif
         }
     }
 }
