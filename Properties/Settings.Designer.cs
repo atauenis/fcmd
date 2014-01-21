@@ -211,5 +211,22 @@ namespace fcmd.Properties {
                 this["LastActivePanel"] = value;
             }
         }
+        
+        /// <summary>
+        /// File size humanization policy for panels.\nFormat: nnn {where n: 0/1/2}\nExample:222
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("File size humanization policy for panels.\\nFormat: nnn {where n: 0/1/2}\\nExample:" +
+            "222")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("222")]
+        public string SizeShorteningPolicy {
+            get {
+                return ((string)(this["SizeShorteningPolicy"]));
+            }
+            set {
+                this["SizeShorteningPolicy"] = value;
+            }
+        }
     }
 }

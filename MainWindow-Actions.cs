@@ -106,7 +106,7 @@ namespace fcmd
             while (MkDirThread.ThreadState == ThreadState.Running);
 
             fpd.pbrProgress.Fraction = 1;
-            ActivePanel.LoadDir(ActivePanel.FS.CurrentDirectory,0);
+            ActivePanel.LoadDir(ActivePanel.FS.CurrentDirectory);
             fpd.Hide();
         }
 
@@ -138,7 +138,7 @@ namespace fcmd
                 while (RmFileThread.ThreadState == ThreadState.Running);
 
                 fpd.pbrProgress.Fraction = 1;
-                ActivePanel.LoadDir(ActivePanel.FS.CurrentDirectory,0);
+                ActivePanel.LoadDir(ActivePanel.FS.CurrentDirectory);
                 fpd.Hide();
                 return "Файл удалён.\n";
             }
@@ -153,7 +153,7 @@ namespace fcmd
                 while (RmDirThread.ThreadState == ThreadState.Running);
 
                 fpd.pbrProgress.Fraction = 1;
-                ActivePanel.LoadDir(ActivePanel.FS.CurrentDirectory,0);
+                ActivePanel.LoadDir(ActivePanel.FS.CurrentDirectory);
 
                 fpd.Hide();
                 return "Каталог удалён.\n";

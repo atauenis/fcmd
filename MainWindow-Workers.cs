@@ -59,7 +59,7 @@ namespace fcmd
             }
             lp.list.EndUpdate();
             lp.list.UseWaitCursor = false;*/
-            lp.LoadDir(URL, 0);
+            lp.LoadDir(URL);
         }
 
 

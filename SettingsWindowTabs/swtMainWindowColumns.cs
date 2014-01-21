@@ -22,28 +22,24 @@ namespace fcmd.SettingsWindowTabs
         Xwt.RadioButton optDisplayExtTogether = new Xwt.RadioButton();
         Xwt.RadioButton optDisplayExtFar = new Xwt.RadioButton();
 
-        Xwt.Frame fraTabs = new Xwt.Frame();
+        Xwt.Frame fraTabs = new Xwt.Frame(){Sensitive = false};
         Xwt.Table fraTabsBox = new Xwt.Table();
         Xwt.TextEntry txtTabExtension = new Xwt.TextEntry();
         Xwt.TextEntry txtTabSize = new Xwt.TextEntry();
         Xwt.TextEntry txtTabDate = new Xwt.TextEntry();
         Xwt.TextEntry txtTabFilemode = new Xwt.TextEntry();
 
-        Xwt.Frame fraOther = new Xwt.Frame() {Sensitive = false};
+        Xwt.Frame fraOther = new Xwt.Frame();
         Xwt.Table fraOtherBox = new Xwt.Table();
-        Xwt.CheckBox chkExpandName = new Xwt.CheckBox();
-        Xwt.CheckBox chkShowCentury = new Xwt.CheckBox();
-        Xwt.CheckBox chkShowTimeAs12h = new Xwt.CheckBox();
-        Xwt.CheckBox chkShowDirsInStatus = new Xwt.CheckBox();
-        Xwt.TextEntry txtMaxHumanySizeInPanels = new Xwt.TextEntry();
-        Xwt.TextEntry txtMaxHumanySizeInStatus = new Xwt.TextEntry();
+        Xwt.CheckBox chkExpandName = new Xwt.CheckBox() {Sensitive = false};
+        Xwt.CheckBox chkShowCentury = new Xwt.CheckBox() {Sensitive = false};
+        Xwt.CheckBox chkShowTimeAs12h = new Xwt.CheckBox() {Sensitive = false};
+        Xwt.CheckBox chkShowDirsInStatus = new Xwt.CheckBox() {Sensitive = false};
+        Xwt.ComboBox cmbPanelSizeDisplay = new Xwt.ComboBox();
+        Xwt.TextEntry txtMaxHumanySizeInStatus = new Xwt.TextEntry() {Sensitive = false};
 
         public swtMainWindowColumns()
         {
-            Xwt.MarkdownView wrn = new Xwt.MarkdownView();
-            wrn.LoadText("#В связи с ограничениями Xwt.ListView тут настроек пока нет\n\nНеобходимо доработать сей виджет или написать аналог", new Xwt.Formats.MarkdownTextFormat());
-            wrn.BackgroundColor = Xwt.Drawing.Colors.Transparent;
-            box.PackStart(wrn);
             box.PackStart(fraExtensions);
             box.PackStart(fraTabs);
             box.PackStart(fraOther);
@@ -77,15 +73,61 @@ namespace fcmd.SettingsWindowTabs
             chkShowCentury.Label = Locale.GetString("SWTMWCShowCentury");
             chkShowTimeAs12h.Label = Locale.GetString("SWTMWCShowTimeAs12h");
             chkShowDirsInStatus.Label = Locale.GetString("SWTMWCShowDirsInStatus");
+
             fraOtherBox.Add(chkExpandName, 0, 0);
             fraOtherBox.Add(chkShowCentury, 0, 1);
             fraOtherBox.Add(chkShowTimeAs12h, 0, 2);
             fraOtherBox.Add(chkShowDirsInStatus, 0, 3);
 
-            fraOtherBox.Add(new Xwt.Label(Locale.GetString("SWTMWCMaxHumanSizePan")), 0, 4);
-            fraOtherBox.Add(txtMaxHumanySizeInPanels, 1, 4);
+            cmbPanelSizeDisplay.Items.Add("000", Locale.GetString("SizeDisplayPolicy000"));
+            cmbPanelSizeDisplay.Items.Add("100", Locale.GetString("SizeDisplayPolicy100"));
+            cmbPanelSizeDisplay.Items.Add("200", Locale.GetString("SizeDisplayPolicy200"));
+            cmbPanelSizeDisplay.Items.Add("111", Locale.GetString("SizeDisplayPolicy111"));
+            cmbPanelSizeDisplay.Items.Add("222", Locale.GetString("SizeDisplayPolicy222"));
+            cmbPanelSizeDisplay.Items.Add("110", Locale.GetString("SizeDisplayPolicy110"));
+            cmbPanelSizeDisplay.Items.Add("220", Locale.GetString("SizeDisplayPolicy220"));
+
+            /*
+            SizeDisplayPolicy000=bytes
+            SizeDisplayPolicy100=kbytes
+            SizeDisplayPolicy200=kbytes (x.xx KB)
+            SizeDisplayPolicy111=dynamic (x.x К/М/Г)
+            SizeDisplayPolicy222=dynamic (x.xx К/М/Г)
+            SizeDisplayPolicy110=dynamic (x.x К/М)
+            SizeDisplayPolicy220=dynamic (x.xx K/M)
+            */
+
+            fraOtherBox.Add(new Xwt.Label(Locale.GetString("SWTMWCSizeDisplay")), 0, 4);
+            fraOtherBox.Add(cmbPanelSizeDisplay, 1, 4);
             fraOtherBox.Add(new Xwt.Label(Locale.GetString("SWTMWCMaxHumanSizeStatus")), 0, 5);
             fraOtherBox.Add(txtMaxHumanySizeInStatus, 1, 5);
+
+
+            //load settings
+
+            switch (fcmd.Properties.Settings.Default.SizeShorteningPolicy){
+                case "000":
+                    cmbPanelSizeDisplay.SelectedIndex = 0;
+                    break;
+                case "100":
+                    cmbPanelSizeDisplay.SelectedIndex = 1;
+                    break;
+                case "200":
+                    cmbPanelSizeDisplay.SelectedIndex = 2;
+                    break;
+                case "111":
+                    cmbPanelSizeDisplay.SelectedIndex = 3;
+                    break;
+                case "222":
+                    cmbPanelSizeDisplay.SelectedIndex = 4;
+                    break;
+                case "110":
+                    cmbPanelSizeDisplay.SelectedIndex = 5;
+                    break;
+                case "220":
+                    cmbPanelSizeDisplay.SelectedIndex = 6;
+                    break;
+            }
         }
 
         public Xwt.Widget Content
@@ -95,6 +137,7 @@ namespace fcmd.SettingsWindowTabs
 
         public bool SaveSettings()
         {
+            fcmd.Properties.Settings.Default.SizeShorteningPolicy = cmbPanelSizeDisplay.SelectedItem.ToString();
             return true;//undone
         }
     }

@@ -50,5 +50,8 @@
     <Setting Name="LastActivePanel" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
+    <Setting Name="SizeShorteningPolicy" Description="File size humanization policy for panels.\nFormat: nnn {where n: 0/1/2}\nExample:222" Type="System.String" Scope="User">
+      <Value Profile="(Default)">222</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

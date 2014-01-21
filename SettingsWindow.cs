@@ -31,8 +31,8 @@ namespace fcmd
 
             TabList.MinHeight = 388; TabList.MinWidth = 128;
             TabList.Items.Add(new SettingsWindowTabs.swtMainWindow(),Locale.GetString("swtMainWindow"));
-            TabList.Items.Add(new SettingsWindowTabs.swtViewerEditor(), Locale.GetString("swtViewerEditor"));
             TabList.Items.Add(new SettingsWindowTabs.swtMainWindowColumns(), Locale.GetString("swtMainWindowColumns"));
+            TabList.Items.Add(new SettingsWindowTabs.swtViewerEditor(), Locale.GetString("swtViewerEditor"));
 
             TabList.SelectionChanged += new EventHandler(TabList_SelectionChanged);
             TabList.SelectRow(0); //wpf hack (row №0 isn't automatical selected)

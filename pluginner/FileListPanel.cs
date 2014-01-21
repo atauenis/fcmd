@@ -31,7 +31,7 @@ namespace pluginner
         /// <summary>User tried to open the highlighted file</summary>
         public event TypedEvent<string> OpenFile;
 
-
+        private SizeDisplayPolicy CurShortenKB, CurShortenMB, CurShortenGB;
 
         public FileListPanel()
         {
@@ -59,7 +59,7 @@ namespace pluginner
         {
             if (e.Key == Xwt.Key.Return)
             {
-                LoadDir(UrlBox.Text,0);
+                LoadDir(UrlBox.Text);
             }
         }
 
@@ -90,7 +90,7 @@ namespace pluginner
                     if (Navigate != null) Navigate(url); //raise event
                     else Console.WriteLine("WARNING: the event FLP.Navigate was not handled by the host");
 
-                    LoadDir(url, 0);
+                    LoadDir(url);
                     return;
                 }
                 else
@@ -108,19 +108,22 @@ namespace pluginner
         }
 
         /// <summary>
-        /// Load the directory into the panel
+        /// Load the directory into the panel and set view options
         /// </summary>
         /// <param name="URL">Full path of the directory</param>
-        /// <param name="MinHumanize">Minimal file size, that should be humanized</param>
-        public void LoadDir(string URL, int MinHumanize)
+        /// <param name="ShortenKB">How kilobyte sizes should be humanized</param>
+        /// <param name="ShortenMB">How megabyte sizes should be humanized</param>
+        /// <param name="ShortenGB">How gigabyte sizes should be humanized</param> //плохой перевод? "так nбайтные размеры должны очеловечиваться"
+        public void LoadDir(string URL, SizeDisplayPolicy ShortenKB, SizeDisplayPolicy ShortenMB, SizeDisplayPolicy ShortenGB)
         {
-            //TODO: rewrite size humanization code
-            //тодо: сделать аналог настройки TC "Конфигурация-Табуляторы-Размеры в панелях"
+            CurShortenKB = ShortenKB; CurShortenMB = ShortenMB; CurShortenGB = ShortenGB;
+
             if (FS == null) throw new InvalidOperationException("No filesystem is binded to this FileListPanel");
+
             FS.CurrentDirectory = URL;
-            
             FLStore.Clear();
             UrlBox.Text = URL;
+
             foreach (DirItem di in FS.DirectoryContent)
             {
                 FLStore.AddRow();
@@ -134,7 +137,7 @@ namespace pluginner
                     FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
                 }
                 else{//file
-                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, KiloMegaGigabyteConvert(di.Size, MinHumanize));//todo: сократить/очеловечить до КБ/МБ/ГБ.
+                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, KiloMegaGigabyteConvert(di.Size, ShortenKB, ShortenMB, ShortenGB));
                     FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
                 }
             }
@@ -146,23 +149,76 @@ namespace pluginner
         /// </summary>
         public void LoadDir()
         {
-            LoadDir(FS.CurrentDirectory, 0);
+            LoadDir(FS.CurrentDirectory);
+        }
+
+        /// <summary>
+        /// Load the directory into the panel
+        /// </summary>
+        /// <param name="URL">Full path of the directory</param>
+        public void LoadDir(string URL)
+        {
+            LoadDir(URL, CurShortenKB, CurShortenMB, CurShortenGB);
         }
 
         /// <summary>Converts the file size (in bytes) to human-readable string</summary>
         /// <param name="Input">The input value</param>
         /// <param name="ShortestNonhumanity">The miminal file size that should be shortened</param>
         /// <returns>Human-readable string (xxx yB)</returns>
-        private string KiloMegaGigabyteConvert(long Input, int ShortestNonhumanity)
+        private string KiloMegaGigabyteConvert(long Input, SizeDisplayPolicy ShortenKB, SizeDisplayPolicy ShortenMB, SizeDisplayPolicy ShortenGB)
         {
-            if (Input < ShortestNonhumanity) return Input.ToString() + " B"; //if Input shouldn't be shortened, return it as is
+            double ShortenedSize; //here will be writed the decimal value of the hum. readable size
 
+            //TeraByte (will be shortened everywhen)
             if (Input > 1099511627776) return (Input / 1099511627776).ToString() + " TB";
-            if (Input > 1073741824) return (Input / 1073741824).ToString() + " GB";
-            if (Input > 1048576) return (Input / 1048576).ToString() + " MB";
-            if (Input > 1024) return (Input / 1024).ToString() + " KB";
 
-            return Input.ToString() + " B"; //if Input is less than 1024
+            //GigaByte
+            if (Input > 1073741824)
+            {
+                ShortenedSize = Input / 1073741824;
+                switch (ShortenGB)
+                {
+                    case SizeDisplayPolicy.OneNumeral:
+                        return string.Format("{0:0.#} GB", ShortenedSize);
+                    case SizeDisplayPolicy.TwoNumeral:
+                        return string.Format("{0:0.##} GB", ShortenedSize);
+                }
+            }
+
+            //MegaByte
+            if (Input > 1048576)
+            {
+                ShortenedSize = Input / 1048576;
+                switch (ShortenMB)
+                {
+                    case SizeDisplayPolicy.OneNumeral:
+                        return string.Format("{0:0.#} MB", ShortenedSize);
+                    case SizeDisplayPolicy.TwoNumeral:
+                        return string.Format("{0:0.##} MB", ShortenedSize);
+                }
+            }
+
+            //KiloByte
+            if (Input > 1024)
+            {
+                ShortenedSize = Input / 1024;
+                switch (ShortenKB)
+                {
+                    case SizeDisplayPolicy.OneNumeral:
+                        return string.Format("{0:0.#} KB", ShortenedSize);
+                    case SizeDisplayPolicy.TwoNumeral:
+                        return string.Format("{0:0.##} KB", ShortenedSize);
+                }
+            }
+
+            return Input.ToString() + " B"; //if Input is less than 1k or shortening is disallowed
+        }
+
+        /// <summary>Defines the size shortening policy</summary>
+        public enum SizeDisplayPolicy
+        {
+            DontShorten=0, OneNumeral=1, TwoNumeral=2
+            //2048 B, 2 KB, 2.0 KB
         }
         
         /// <summary>

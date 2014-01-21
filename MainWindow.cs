@@ -84,16 +84,19 @@ namespace fcmd
             //todo: implement "object Xwt.Widget.Tag" in modXWT (like Winforms's any Control.Tag)
 
             //apply user's settings
+            //file size display policy
+            char[] Policies = fcmd.Properties.Settings.Default.SizeShorteningPolicy.ToCharArray();
+
             //default directories
             if (Properties.Settings.Default.Panel1URL.Length != 0)
-                p1.LoadDir(Properties.Settings.Default.Panel1URL, 0);
+                p1.LoadDir(Properties.Settings.Default.Panel1URL, ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
             else
-                p1.LoadDir("file://"+System.Windows.Forms.Application.StartupPath,0);
+                p1.LoadDir("file://" + System.Windows.Forms.Application.StartupPath, ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
 
             if (Properties.Settings.Default.Panel2URL.Length != 0)
-                p2.LoadDir(Properties.Settings.Default.Panel2URL, 0);
+                p2.LoadDir(Properties.Settings.Default.Panel2URL, ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
             else
-                p2.LoadDir("file://"+System.Windows.Forms.Application.StartupPath,0);
+                p2.LoadDir("file://"+System.Windows.Forms.Application.StartupPath,ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
 
             //default panel
             switch (fcmd.Properties.Settings.Default.LastActivePanel)
@@ -228,6 +231,22 @@ namespace fcmd
             string PanelName = (NewPanel == p1) ? "LEFT" : "RIGHT";
             Console.WriteLine("FOCUS DEBUG: The " + PanelName + " panel (" + NewPanel.FS.CurrentDirectory + ") got focus");
 #endif
+        }
+
+        /// <summary>Converts size display policy (as string) to FLP.SizeDisplayPolicy</summary>
+        private pluginner.FileListPanel.SizeDisplayPolicy ConvertSDP(char SizeDisplayPolicy)
+        {
+            switch (SizeDisplayPolicy.ToString())
+            {
+                case "0":
+                    return pluginner.FileListPanel.SizeDisplayPolicy.DontShorten;
+                case "1":
+                    return pluginner.FileListPanel.SizeDisplayPolicy.OneNumeral;
+                case "2":
+                    return pluginner.FileListPanel.SizeDisplayPolicy.TwoNumeral;
+                default:
+                    return pluginner.FileListPanel.SizeDisplayPolicy.OneNumeral;
+            }
         }
     }
 }
