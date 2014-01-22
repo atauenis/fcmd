@@ -114,7 +114,6 @@ namespace fcmd
                     ActivePanel = p1; PassivePanel = p2;
                     break;
             }
-
         }
 
         void MainWindow_CloseRequested(object sender, Xwt.CloseRequestedEventArgs args)

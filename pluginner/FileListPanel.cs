@@ -22,6 +22,8 @@ namespace pluginner
         public Xwt.DataField<pluginner.FSEntryMetadata> dfMetadata = new Xwt.DataField<FSEntryMetadata>();
         
         public Xwt.TextEntry UrlBox = new Xwt.TextEntry();
+        public Xwt.HBox DiskList = new Xwt.HBox();
+        public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
         public Xwt.ListView ListingView = new Xwt.ListView();
         public Xwt.Label StatusBar = new Xwt.Label();
         public pluginner.IFSPlugin FS;
@@ -35,24 +37,70 @@ namespace pluginner
 
         public FileListPanel()
         {
+            UrlBox.ShowFrame = false;
+            UrlBox.Text = @"file://C:\NC";
+            UrlBox.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
+            UrlBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(UrlBox_KeyReleased);
+
+            DiskList.Clear();
+            foreach (System.IO.DriveInfo di in System.IO.DriveInfo.GetDrives())
+            {
+                string d = di.Name;
+                Xwt.Button NewBtn = new Xwt.Button(null, d);
+                NewBtn.Clicked += (o, ea) => { NavigateTo("file://"+d); };
+                NewBtn.CanGetFocus = false;
+                NewBtn.Style = Xwt.ButtonStyle.Flat;
+                NewBtn.Margin = -3;
+                NewBtn.Cursor = Xwt.CursorType.Hand;
+                /* todo: rewrite the code; possibly change the modXWT to allow
+                 * change the internal padding of the button.
+                 */
+                switch (di.DriveType)
+                {
+                    case System.IO.DriveType.Fixed:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-harddisk.png");
+                        break;
+                    case System.IO.DriveType.CDRom:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-optical.png");
+                        break;
+                    case System.IO.DriveType.Removable:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
+                        break;
+                    case System.IO.DriveType.Network:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.network-server.png");
+                        break;
+                    case System.IO.DriveType.Ram:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
+                        break;
+                    case System.IO.DriveType.Unknown:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.image-missing.png");
+                        break;
+                }
+
+                //OS-specific icons
+                if (d.StartsWith("A:")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
+                if (d.StartsWith("B:")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
+                if (d.StartsWith("/dev")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.preferences-desktop-peripherals.png");
+                if (d.StartsWith("/proc")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
+                if (d == "/") NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.root-folder.png");
+
+                DiskList.PackStart(NewBtn);
+            }
+
             FLStore = new Xwt.ListStore(dfURL, dfDisplayName,dfSize,dfMetadata,dfChanged);
             ListingView.DataSource = FLStore;
             ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
             ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
             ListingView.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
             ListingView.SelectionChanged += (o, ea) => { this.OnGotFocus(ea); }; //hack for incomplete Xwt.Gtk ListView (19/01/2014)
-            
-            UrlBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(UrlBox_KeyReleased);
+            ListingView.BorderVisible = false;
 
             this.PackStart(UrlBox,false, true);
+            this.PackStart(DiskList, false, true);
             this.PackStart(ListingView, true, true);
             this.PackStart(StatusBar, false,true);
 
-            UrlBox.ShowFrame = false;
-            UrlBox.Text = @"file://C:\NC";
-            UrlBox.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
-            ListingView.BorderVisible = false;
-            StatusBar.Text = "0 bytes";
+            StatusBar.Text = "Not implemented yet";
         }
 
         void UrlBox_KeyReleased(object sender, Xwt.KeyEventArgs e)

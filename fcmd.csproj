@@ -157,34 +157,34 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\folder.png" />
+    <EmbeddedResource Include="Resources\folder.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\image-missing.png" />
+    <EmbeddedResource Include="Resources\image-missing.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\media-floppy.png" />
+    <EmbeddedResource Include="Resources\media-floppy.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\network-server.png" />
+    <EmbeddedResource Include="Resources\network-server.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\preferences-desktop-peripherals.png" />
+    <EmbeddedResource Include="Resources\preferences-desktop-peripherals.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\battery.png" />
+    <EmbeddedResource Include="Resources\battery.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\drive-harddisk.png" />
+    <EmbeddedResource Include="Resources\drive-harddisk.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\drive-optical.png" />
+    <EmbeddedResource Include="Resources\drive-optical.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\drive-removable-media.png" />
+    <EmbeddedResource Include="Resources\drive-removable-media.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\emblem-system.png" />
+    <EmbeddedResource Include="Resources\emblem-system.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
