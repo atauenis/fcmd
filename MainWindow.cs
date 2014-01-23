@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace fcmd
 {
@@ -35,8 +36,6 @@ namespace fcmd
         {
             this.Title = "File Commander";
             this.CloseRequested += new Xwt.CloseRequestedHandler(MainWindow_CloseRequested);
-            PanelLayout.Panel1.Content = new pluginner.FileListPanel(); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
-            PanelLayout.Panel2.Content = new pluginner.FileListPanel();
             PanelLayout.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(PanelLayout_KeyReleased);
 
             Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -12, -12,12);
@@ -45,7 +44,18 @@ namespace fcmd
             
             this.Content = Layout;
             
+            //load bookmarks
+            string BookmarksStore = null;
+            if (fcmd.Properties.Settings.Default.BookmarksFile != null && fcmd.Properties.Settings.Default.BookmarksFile.Length > 0)
+            {
+                BookmarksStore = File.ReadAllText(fcmd.Properties.Settings.Default.BookmarksFile, Encoding.UTF8);
+
+            }
+
             //build panels
+            PanelLayout.Panel1.Content = new pluginner.FileListPanel(BookmarksStore); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
+            PanelLayout.Panel2.Content = new pluginner.FileListPanel(BookmarksStore);
+
             p1 = (PanelLayout.Panel1.Content as pluginner.FileListPanel);
             p2 = (PanelLayout.Panel2.Content as pluginner.FileListPanel);
             

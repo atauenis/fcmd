@@ -228,5 +228,17 @@ namespace fcmd.Properties {
                 this["SizeShorteningPolicy"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BookmarksFile {
+            get {
+                return ((string)(this["BookmarksFile"]));
+            }
+            set {
+                this["BookmarksFile"] = value;
+            }
+        }
     }
 }

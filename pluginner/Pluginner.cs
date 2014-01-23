@@ -6,6 +6,8 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace pluginner{
     public delegate string TypedEvent<T>(T data);

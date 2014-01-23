@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using System.Reflection;
+using System.IO;
 
 namespace pluginner
 {
@@ -35,56 +38,62 @@ namespace pluginner
 
         private SizeDisplayPolicy CurShortenKB, CurShortenMB, CurShortenGB;
 
-        public FileListPanel()
+        public FileListPanel(string BookmarkXML = null)
         {
+            //URL BOX
             UrlBox.ShowFrame = false;
             UrlBox.Text = @"file://C:\NC";
             UrlBox.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
             UrlBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(UrlBox_KeyReleased);
 
-            DiskList.Clear();
-            foreach (System.IO.DriveInfo di in System.IO.DriveInfo.GetDrives())
+            //QUICK ACCESS BAR
+
+            if (BookmarkXML == null)
             {
-                string d = di.Name;
-                Xwt.Button NewBtn = new Xwt.Button(null, d);
-                NewBtn.Clicked += (o, ea) => { NavigateTo("file://"+d); };
-                NewBtn.CanGetFocus = false;
-                NewBtn.Style = Xwt.ButtonStyle.Flat;
-                NewBtn.Margin = -3;
-                NewBtn.Cursor = Xwt.CursorType.Hand;
-                /* todo: rewrite the code; possibly change the modXWT to allow
-                 * change the internal padding of the button.
-                 */
-                switch (di.DriveType)
+                BookmarkXML = Utilities.GetEmbeddedResource("DefaultBookmarks.xml");
+                if (BookmarkXML == null) throw new Exception("Cannot load pluginner.dll::DefaultBookmarks.xml");
+            }
+            DiskList.Clear();
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(BookmarkXML);
+            XmlNodeList items = doc.GetElementsByTagName("SpeedDial");
+            foreach (XmlNode x in items)
+            {//parsing speed dials
+                if (
+                    x.Attributes.GetNamedItem("type") != null
+                    &&
+                    x.Attributes.GetNamedItem("type").Value == "QuickAccessBar"
+                )
                 {
-                    case System.IO.DriveType.Fixed:
-                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-harddisk.png");
-                        break;
-                    case System.IO.DriveType.CDRom:
-                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-optical.png");
-                        break;
-                    case System.IO.DriveType.Removable:
-                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
-                        break;
-                    case System.IO.DriveType.Network:
-                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.network-server.png");
-                        break;
-                    case System.IO.DriveType.Ram:
-                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
-                        break;
-                    case System.IO.DriveType.Unknown:
-                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.image-missing.png");
-                        break;
+                    foreach (XmlNode xc in x.ChildNodes)
+                    {//parsing bookmark list
+                        if (xc.Name == "AutoBookmarks")//автозакладка
+                        {
+                            switch (xc.Attributes.GetNamedItem("type").Value)
+                            {
+                                case "System.IO.DriveInfo.GetDrives":
+                                    AddSysDrives(DiskList);
+                                    break;
+                                //todo: LinuxMounts (/mnt/), LinuxSystemDirs (/)
+                            }
+                        }
+                        else if (xc.Name == "Bookmark")//простая закладка
+                        {
+                            string url = xc.Attributes.GetNamedItem("url").Value;
+                            Xwt.Button NewBtn = new Xwt.Button(null, xc.Attributes.GetNamedItem("title").Value);
+                            NewBtn.Clicked += (o, ea) => {NavigateTo(url);};
+                            NewBtn.CanGetFocus = false;
+                            NewBtn.Style = Xwt.ButtonStyle.Flat;
+                            NewBtn.Margin = -3;
+                            NewBtn.Cursor = Xwt.CursorType.Hand;
+                            DiskList.PackStart(NewBtn);
+                            /* todo: rewrite the code; possibly change the modXWT to allow
+                             * change the internal padding of the button.
+                             */                        
+                        }
+                        //todo: bookmark folders
+                    }
                 }
-
-                //OS-specific icons
-                if (d.StartsWith("A:")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
-                if (d.StartsWith("B:")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
-                if (d.StartsWith("/dev")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.preferences-desktop-peripherals.png");
-                if (d.StartsWith("/proc")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
-                if (d == "/") NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.root-folder.png");
-
-                DiskList.PackStart(NewBtn);
             }
 
             FLStore = new Xwt.ListStore(dfURL, dfDisplayName,dfSize,dfMetadata,dfChanged);
@@ -146,6 +155,12 @@ namespace pluginner
                     if (OpenFile != null) OpenFile(url); //raise event
                     else Console.WriteLine("WARNING: the event FLP.OpenFile was not handled by the host");
                 }
+
+            }
+            catch (pluginner.PleaseSwitchPluginException)
+            {
+                //todo: raise event (mainwindow should handle&refind plugin)
+                Console.WriteLine("Случилося PleaseSwitchPluginException на " + url);
 
             }
             catch (Exception ex)
@@ -278,5 +293,53 @@ namespace pluginner
         public T GetValue<T>(Xwt.IDataField<T> Datafield){
             return FLStore.GetValue<T>(ListingView.SelectedRow, Datafield);
         }
+
+        private void AddSysDrives(Xwt.HBox DiskList)
+        {
+            foreach (System.IO.DriveInfo di in System.IO.DriveInfo.GetDrives())
+            {
+                string d = di.Name;
+                Xwt.Button NewBtn = new Xwt.Button(null, d);
+                NewBtn.Clicked += (o, ea) => { NavigateTo("file://" + d); };
+                NewBtn.CanGetFocus = false;
+                NewBtn.Style = Xwt.ButtonStyle.Flat;
+                NewBtn.Margin = -3;
+                NewBtn.Cursor = Xwt.CursorType.Hand;
+                /* todo: rewrite the code; possibly change the modXWT to allow
+                 * change the internal padding of the button.
+                 */
+                switch (di.DriveType)
+                {
+                    case System.IO.DriveType.Fixed:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-harddisk.png");
+                        break;
+                    case System.IO.DriveType.CDRom:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-optical.png");
+                        break;
+                    case System.IO.DriveType.Removable:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
+                        break;
+                    case System.IO.DriveType.Network:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.network-server.png");
+                        break;
+                    case System.IO.DriveType.Ram:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
+                        break;
+                    case System.IO.DriveType.Unknown:
+                        NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.image-missing.png");
+                        break;
+                }
+
+                //OS-specific icons
+                if (d.StartsWith("A:")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
+                if (d.StartsWith("B:")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
+                if (d.StartsWith("/dev")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.preferences-desktop-peripherals.png");
+                if (d.StartsWith("/proc")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
+                if (d == "/") NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.root-folder.png");
+
+                DiskList.PackStart(NewBtn);
+            }
+        }
+
     }
 }

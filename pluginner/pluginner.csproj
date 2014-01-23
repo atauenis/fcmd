@@ -52,6 +52,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
     <Reference Include="Xwt">
       <HintPath>..\stolen-opensource-libs\Xwt.dll</HintPath>
     </Reference>
@@ -62,6 +63,7 @@
     <Compile Include="IVEPlugin.cs" />
     <Compile Include="Pluginner.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -112,6 +114,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\root-folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DefaultBookmarks.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
