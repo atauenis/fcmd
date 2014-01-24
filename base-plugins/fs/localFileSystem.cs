@@ -23,6 +23,8 @@ namespace fcmd.base_plugins.fs
 		public string Version { get{return "1.0";} }
 		public string Author { get{return "A.T.";} }
 		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
+        public event pluginner.TypedEvent<String> StatusChanged;
+        public event pluginner.TypedEvent<double> ProgressChanged;
 
 		List<pluginner.DirItem> DirContent = new List<pluginner.DirItem>();
 		string CurDir;
@@ -53,11 +55,14 @@ namespace fcmd.base_plugins.fs
 			_CheckProtocol(url);
 			DirContent.Clear();
             string InternalURL = url.Replace("file://", "");
+            if (StatusChanged != null) StatusChanged(string.Format(new Localizator().GetString("DoingListdir"), "", InternalURL));
 
 			pluginner.DirItem tmpVar = new pluginner.DirItem();
 
 			string[] files = System.IO.Directory.GetFiles(InternalURL);
 			string[] dirs = System.IO.Directory.GetDirectories (InternalURL);
+            float FileWeight = 1 / ((float)files.Length + (float)dirs.Length);
+            float Progress = 0;
 
             //элемент "вверх по древу"
             DirectoryInfo curdir = new DirectoryInfo(InternalURL);
@@ -81,6 +86,9 @@ namespace fcmd.base_plugins.fs
 				}
 
 				DirContent.Add(tmpVar);
+                Progress += FileWeight;
+                if (ProgressChanged != null) { ProgressChanged(Progress); }
+                Xwt.Application.MainLoop.DispatchPendingEvents();
 			}
 
 			foreach(string curFile in files){
@@ -97,7 +105,12 @@ namespace fcmd.base_plugins.fs
 				}
 
 				DirContent.Add(tmpVar);
+                Progress += FileWeight;
+                if (ProgressChanged != null) { ProgressChanged(Progress); }
+                Xwt.Application.MainLoop.DispatchPendingEvents();
 			}
+            if (ProgressChanged != null) { ProgressChanged(2); }
+            if (StatusChanged != null) { StatusChanged(""); };
 		}
 
         public bool CanBeRead(string url){ //проверить файл/папку "URL" на читаемость

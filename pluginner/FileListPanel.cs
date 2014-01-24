@@ -23,13 +23,14 @@ namespace pluginner
         public Xwt.DataField<string> dfSize = new Xwt.DataField<string>();
         public Xwt.DataField<DateTime> dfChanged = new Xwt.DataField<DateTime>();
         public Xwt.DataField<pluginner.FSEntryMetadata> dfMetadata = new Xwt.DataField<FSEntryMetadata>();
-        
+        public pluginner.IFSPlugin FS;
         public Xwt.TextEntry UrlBox = new Xwt.TextEntry();
         public Xwt.HBox DiskList = new Xwt.HBox();
         public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
         public Xwt.ListView ListingView = new Xwt.ListView();
         public Xwt.Label StatusBar = new Xwt.Label();
-        public pluginner.IFSPlugin FS;
+        public Xwt.Table StatusTable = new Xwt.Table();
+        public Xwt.ProgressBar StatusProgressbar = new Xwt.ProgressBar();
 
         /// <summary>User navigates into another directory</summary>
         public event TypedEvent<string> Navigate;
@@ -81,7 +82,7 @@ namespace pluginner
                         {
                             string url = xc.Attributes.GetNamedItem("url").Value;
                             Xwt.Button NewBtn = new Xwt.Button(null, xc.Attributes.GetNamedItem("title").Value);
-                            NewBtn.Clicked += (o, ea) => {NavigateTo(url);};
+                            NewBtn.Clicked += (o, ea) => { NavigateTo(url); };
                             NewBtn.CanGetFocus = false;
                             NewBtn.Style = Xwt.ButtonStyle.Flat;
                             NewBtn.Margin = -3;
@@ -89,14 +90,14 @@ namespace pluginner
                             DiskList.PackStart(NewBtn);
                             /* todo: rewrite the code; possibly change the modXWT to allow
                              * change the internal padding of the button.
-                             */                        
+                             */
                         }
                         //todo: bookmark folders
                     }
                 }
             }
 
-            FLStore = new Xwt.ListStore(dfURL, dfDisplayName,dfSize,dfMetadata,dfChanged);
+            FLStore = new Xwt.ListStore(dfURL, dfDisplayName, dfSize, dfMetadata, dfChanged);
             ListingView.DataSource = FLStore;
             ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
             ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
@@ -104,12 +105,12 @@ namespace pluginner
             ListingView.SelectionChanged += (o, ea) => { this.OnGotFocus(ea); }; //hack for incomplete Xwt.Gtk ListView (19/01/2014)
             ListingView.BorderVisible = false;
 
-            this.PackStart(UrlBox,false, true);
+            this.PackStart(UrlBox, false, true);
             this.PackStart(DiskList, false, true);
             this.PackStart(ListingView, true, true);
-            this.PackStart(StatusBar, false,true);
+            this.PackStart(StatusBar, false, true);
 
-            StatusBar.Text = "Not implemented yet";
+            WriteDefaultStatusLabel();
         }
 
         void UrlBox_KeyReleased(object sender, Xwt.KeyEventArgs e)
@@ -183,9 +184,14 @@ namespace pluginner
 
             if (FS == null) throw new InvalidOperationException("No filesystem is binded to this FileListPanel");
 
+            ListingView.Cursor = Xwt.CursorType.IBeam;//todo: modify modxwt and add hourglass cursor
+            ListingView.Sensitive = false;
+
             FS.CurrentDirectory = URL;
             FLStore.Clear();
             UrlBox.Text = URL;
+            FS.StatusChanged += new TypedEvent<string>(FS_StatusChanged);
+            FS.ProgressChanged += new TypedEvent<double>(FS_ProgressChanged);
 
             foreach (DirItem di in FS.DirectoryContent)
             {
@@ -204,7 +210,47 @@ namespace pluginner
                     FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
                 }
             }
+            ListingView.Sensitive = true;
+            ListingView.Cursor = Xwt.CursorType.Arrow;
             ListingView.SelectRow(0);
+            ListingView.SetFocus();//one fixed bug may make many other bugs...уточнить необходимость!
+        }
+
+        void FS_StatusChanged(string data)
+        {
+            if (data.Length == 0)
+                WriteDefaultStatusLabel();
+            else
+                StatusBar.Text = data;
+        }
+
+        void FS_ProgressChanged(double data)
+        {
+            if (data > 0 && data <= 1){
+                StatusProgressbar.Fraction = data;
+                //show
+                try{
+                    this.Remove(StatusBar);
+                    this.Remove(StatusTable);
+                }
+                catch { }
+
+                try{this.PackStart(StatusTable);}
+                catch { }
+
+                StatusTable.Clear();
+                StatusTable.Add(new Xwt.Spinner() { Animate = true }, 0, 0, 1);
+                StatusTable.Add(StatusBar, 1, 0);
+                StatusTable.Add(StatusProgressbar, 1, 1);
+            }
+            else {
+                //hide
+                try { this.Remove(StatusTable); StatusTable.Clear(); this.Remove(StatusBar); }
+                catch { }
+
+                try{this.PackStart(StatusBar);}
+                catch { }
+            }
         }
 
         /// <summary>
@@ -294,6 +340,8 @@ namespace pluginner
             return FLStore.GetValue<T>(ListingView.SelectedRow, Datafield);
         }
 
+        /// <summary>Add autobookmark "system disks" onto disk toolbar</summary>
+        /// <param name="DiskList"></param>
         private void AddSysDrives(Xwt.HBox DiskList)
         {
             foreach (System.IO.DriveInfo di in System.IO.DriveInfo.GetDrives())
@@ -339,6 +387,15 @@ namespace pluginner
 
                 DiskList.PackStart(NewBtn);
             }
+        }
+
+        /// <summary>
+        /// Writes to statusbar the default text
+        /// </summary>
+        private void WriteDefaultStatusLabel()
+        {
+            //todo
+            StatusBar.Text = "The statusbar is not yet implemented...";
         }
 
     }

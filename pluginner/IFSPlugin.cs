@@ -117,6 +117,16 @@ namespace pluginner
         /// Separator of the directories in path
         /// </summary>
         string DirSeparator { get; }
+
+        /// <summary>
+        /// Raises when the plugin want to change text in the panel's status bar
+        /// </summary>
+        event pluginner.TypedEvent<string> StatusChanged;
+
+        /// <summary>
+        /// Raises when the plugin want to show a progressbar in the panel status bar; the argument is a number in range of 0...1; if the eventarg is 0, the progress bar will hide
+        /// </summary>
+        event pluginner.TypedEvent<double> ProgressChanged;
     }
 
     /// <summary>File info</summary>

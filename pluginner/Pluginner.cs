@@ -10,7 +10,7 @@ using System.IO;
 using System.Reflection;
 
 namespace pluginner{
-    public delegate string TypedEvent<T>(T data);
+    public delegate void TypedEvent<T>(T data);
 
 	/// <summary>
 	/// Default plugin interface.
