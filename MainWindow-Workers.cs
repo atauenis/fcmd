@@ -31,35 +31,15 @@ namespace fcmd
         /// <summary>
         /// Background directory lister
         /// </summary>
+        [Obsolete("Артефакт из ранних версий на базе winforms, не актуален в связи с вводом Filelistpanel.LoadDir")]
         void DoLs(string URL, pluginner.FileListPanel lp, ref int StatusFeedback)
         {
-            //CheckForIllegalCrossThreadCalls = false; //HACK: заменить на долбанные делегации и прочую нетовскую муть
-            /*lp.list.UseWaitCursor = true;
-            lp.list.Items.Clear();
-            lp.list.BeginUpdate();
-
-            //load the directory
-            pluginner.IFSPlugin fsp = lp.FSProvider;
-            fsp.CurrentDirectory = URL;
-
-            //making the statistic info
-            int FileWeight = 0;
-            checked { FileWeight = 100 / fsp.DirectoryContent.Count; }
-
-            for (int i = 0; i < fsp.DirectoryContent.Count; i++)
+            //remove as possibly
+            Xwt.Application.Invoke(new Action(delegate
             {
-                pluginner.DirItem di = fsp.DirectoryContent[i];
-
-                //parsing all files, that given from the FS provider
-                StatusFeedback += FileWeight / 100;
-                if (di.Hidden == false || fcmd.Properties.Settings.Default.ShowHidedFiles == true)
-                {
-                    AddItem(lp, di.TextToShow, fsp.GetMetadata(di.Path), di.Size, di.Date); //todo: add the icon of the file
-                }
+                lp.LoadDir(URL);
             }
-            lp.list.EndUpdate();
-            lp.list.UseWaitCursor = false;*/
-            lp.LoadDir(URL);
+            ));
         }
 
 

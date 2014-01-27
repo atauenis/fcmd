@@ -41,6 +41,20 @@ namespace pluginner
 
         public FileListPanel(string BookmarkXML = null)
         {
+            BuildUI(BookmarkXML);
+
+            this.PackStart(UrlBox, false, true);
+            this.PackStart(DiskList, false, true);
+            this.PackStart(ListingView, true, true);
+            this.PackStart(StatusBar, false, true);
+
+            WriteDefaultStatusLabel();
+        }
+
+        /// <summary>Make the panel's widgets</summary>
+        /// <param name="BookmarkXML">Bookmark list XML data</param>
+        public void BuildUI(string BookmarkXML)
+        {
             //URL BOX
             UrlBox.ShowFrame = false;
             UrlBox.Text = @"file://C:\NC";
@@ -73,7 +87,7 @@ namespace pluginner
                             switch (xc.Attributes.GetNamedItem("type").Value)
                             {
                                 case "System.IO.DriveInfo.GetDrives":
-                                    AddSysDrives(DiskList);
+                                    AddSysDrives();
                                     break;
                                 //todo: LinuxMounts (/mnt/), LinuxSystemDirs (/)
                             }
@@ -97,20 +111,15 @@ namespace pluginner
                 }
             }
 
-            FLStore = new Xwt.ListStore(dfURL, dfDisplayName, dfSize, dfMetadata, dfChanged);
+            if(FLStore == null)
+            { FLStore = new Xwt.ListStore(dfURL, dfDisplayName, dfSize, dfMetadata, dfChanged); }
             ListingView.DataSource = FLStore;
             ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
             ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
             ListingView.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
             ListingView.SelectionChanged += (o, ea) => { this.OnGotFocus(ea); }; //hack for incomplete Xwt.Gtk ListView (19/01/2014)
             ListingView.BorderVisible = false;
-
-            this.PackStart(UrlBox, false, true);
-            this.PackStart(DiskList, false, true);
-            this.PackStart(ListingView, true, true);
-            this.PackStart(StatusBar, false, true);
-
-            WriteDefaultStatusLabel();
+            ListingView.GtkEnableSearch = false;
         }
 
         void UrlBox_KeyReleased(object sender, Xwt.KeyEventArgs e)
@@ -342,7 +351,7 @@ namespace pluginner
 
         /// <summary>Add autobookmark "system disks" onto disk toolbar</summary>
         /// <param name="DiskList"></param>
-        private void AddSysDrives(Xwt.HBox DiskList)
+        private void AddSysDrives()
         {
             foreach (System.IO.DriveInfo di in System.IO.DriveInfo.GetDrives())
             {
@@ -353,6 +362,11 @@ namespace pluginner
                 NewBtn.Style = Xwt.ButtonStyle.Flat;
                 NewBtn.Margin = -3;
                 NewBtn.Cursor = Xwt.CursorType.Hand;
+                NewBtn.Sensitive = di.IsReady;
+                if (di.IsReady)
+                {
+                    NewBtn.TooltipText = di.VolumeLabel + " (" + di.DriveFormat + ")";
+                }
                 /* todo: rewrite the code; possibly change the modXWT to allow
                  * change the internal padding of the button.
                  */
