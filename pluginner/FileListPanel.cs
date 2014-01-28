@@ -38,6 +38,7 @@ namespace pluginner
         public event TypedEvent<string> OpenFile;
 
         private SizeDisplayPolicy CurShortenKB, CurShortenMB, CurShortenGB;
+        private bool ProgressShown = false;
 
         public FileListPanel(string BookmarkXML = null)
         {
@@ -236,24 +237,28 @@ namespace pluginner
         void FS_ProgressChanged(double data)
         {
             if (data > 0 && data <= 1){
-                StatusProgressbar.Fraction = data;
                 //show
-                try{
-                    this.Remove(StatusBar);
-                    this.Remove(StatusTable);
+                StatusProgressbar.Fraction = data;
+                if (ProgressShown)
+                {
+                    //do nothing; it's already updated
                 }
-                catch { }
+                else
+                {
+                    //show it
+                    this.Remove(StatusBar);
+                    this.PackStart(StatusTable);
 
-                try{this.PackStart(StatusTable);}
-                catch { }
-
-                StatusTable.Clear();
-                StatusTable.Add(new Xwt.Spinner() { Animate = true }, 0, 0, 1);
-                StatusTable.Add(StatusBar, 1, 0);
-                StatusTable.Add(StatusProgressbar, 1, 1);
+                    StatusTable.Clear();
+                    StatusTable.Add(new Xwt.Spinner() { Animate = true }, 0, 0, 1);
+                    StatusTable.Add(StatusBar, 1, 0);
+                    StatusTable.Add(StatusProgressbar, 1, 1);
+                    ProgressShown = true;
+                }
             }
             else {
                 //hide
+                ProgressShown = false;
                 try { this.Remove(StatusTable); StatusTable.Clear(); this.Remove(StatusBar); }
                 catch { }
 

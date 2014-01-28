@@ -15,7 +15,7 @@ namespace fcmd
     /// <summary>Operation progress dialog</summary>
     public class FileProcessDialog : Xwt.Window
     {
-        public Xwt.Label lblStatus = new Xwt.Label();
+        public Xwt.Label lblStatus = new Xwt.Label() { TextAlignment = Xwt.Alignment.Center };
         public Xwt.ProgressBar pbrProgress = new Xwt.ProgressBar();
         public Xwt.Button cmdCancel = new Xwt.Button() { Label = "CANSEL" };
         public Xwt.VBox Layout = new Xwt.VBox();
@@ -26,7 +26,7 @@ namespace fcmd
             Localizator locale = new Localizator();
             this.Title = locale.GetString("FileProgressDialogTitle");
             cmdCancel.Label = locale.GetString("Cancel");
-            this.Decorated = false;
+            //this.Decorated = false;
             this.Resizable = false;
 
             Layout.PackStart(lblStatus, true, true);

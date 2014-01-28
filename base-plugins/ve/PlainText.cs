@@ -28,7 +28,7 @@ namespace fcmd.base_plugins.ve
 
         public void OpenFile(string url, pluginner.IFSPlugin fsplugin)
         {
-            fileContent = fsplugin.GetFile(url, 0).Content;
+            fileContent = fsplugin.GetFile(url, new double()).Content;
             Txt = Encoding.GetEncoding(Codepage).GetString(fileContent);
 
             RTV.LoadText(Txt, new Xwt.Formats.PlainTextFormat());

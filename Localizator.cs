@@ -52,6 +52,7 @@ namespace fcmd
                         "DoingMkdir=Создаётся каталог:{0}{1}\n" +
                         "DoingListdir=Чтение каталога:{0}{1}...\n" +
                         "Directory=Каталог\n" +
+                        "Completed=Операция завершена успешно.\n"+
                         "CopyTo=Введите путь для копирования {0}:\n" +
                         "MoveTo=Перенести/переименовать {0} в:\n" +
                         "NewDirURL=Введите путь для нового каталога\n" +
@@ -75,6 +76,7 @@ namespace fcmd
                         "FCVE_mnuView=_Вид\nFCVE_mnuViewModeText=_Простой текст\nFCVE_mnuViewModeImage=_Рисунок\n" +
                         "FCVE_mnuFormat=_Формат\nFCVE_mnuHelp=_Справка\nFCVE_mnuHelpHelpme=_Вызов справки\nFCVE_mnuHelpAbout=_О программе и модуле просмотра\n" +
                         "FCVWhatFind=Введите искомую строку\nFCVNothingFound=Запрошенный текст в файле не найден\n" +
+                        "FCVELoadingMsg=Загружается файл: {0} ...\n"+
                         "FCVE_mnuViewSettings=Параметры...\nFCVEpluginro1=Модуль просмотра {0} не поддерживает редактирование файлов\nFCVEpluginro2=Файл будет открыт в режиме чтения.\n" +
                         "FCVE_PluginNotFound=Не найден модуль для открытия этого файла. Файл будет выведен как текст.\nFCVE_LoadError=Ошибка загрузки файла: {0}\n" +
                         "FCS_Title=Настройки File Commander\nFCS_CantSaveSettings=Невозможно сохранить настройки. Проверьте введённые данные.\n" +

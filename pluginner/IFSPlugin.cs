@@ -63,7 +63,8 @@ namespace pluginner
         /// <param name='URL'>
         /// URL of the file.
         /// </param>
-        File GetFile(string URL, int Progress);
+        /// <param name="Progress">OBDOLETE, WILL BE REMOVED SOON</param>
+        File GetFile(string URL, double Progress);
 
         /// <summary>
         /// Gets the file's attribbutes

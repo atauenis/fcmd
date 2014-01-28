@@ -213,14 +213,14 @@ namespace fcmd
             //check for external editor
             try{
                 if (fcmd.Properties.Settings.Default.UseExternalEditor && AllowEdit || fcmd.Properties.Settings.Default.UseExternalViewer && !AllowEdit && URL.StartsWith("file:")){
+                    CanBeShowed = false;
+                    //todo: add fs check (ext. editor may not support filesystems, which are powered by FC plugins)
                     if (AllowEdit){
                         ExecuteProgram(fcmd.Properties.Settings.Default.ExternalEditor.Replace("$", "\"" + URL));
                     }
                     else{
                         ExecuteProgram(fcmd.Properties.Settings.Default.ExternalViewer.Replace("$", "\"" + URL));
                     }
-
-                    CanBeShowed = false;
                     return;
                 }
             }
@@ -230,6 +230,17 @@ namespace fcmd
                 this.Title = string.Format(Locale.GetString("FCETitle"), URL);
             else
                 this.Title = string.Format(Locale.GetString("FCVTitle"), URL);
+
+            FileProcessDialog ProgressDialog = new FileProcessDialog();
+            string ProgressInitialText = String.Format(Locale.GetString("FCVELoadingMsg"),URL);
+            ProgressDialog.lblStatus.Text = ProgressInitialText;
+            FS.ProgressChanged += (d) => { ProgressDialog.pbrProgress.Fraction = (d >= 0 && d <= 1) ? d : ProgressDialog.pbrProgress.Fraction; Xwt.Application.MainLoop.DispatchPendingEvents();  };
+            FS.StatusChanged += (d) => { ProgressDialog.lblStatus.Text = ProgressInitialText + "\n" + d; Xwt.Application.MainLoop.DispatchPendingEvents(); };
+            ProgressDialog.cmdCancel.Clicked += (o, ea) => { CanBeShowed = false; ProgressDialog.Hide(); return; };
+            ProgressDialog.Show();
+            Xwt.Application.MainLoop.DispatchPendingEvents();
+
+            if (!CanBeShowed) return;
 
             Plugin = plugin;
             Plugin.ReadOnly = !AllowEdit;
@@ -248,6 +259,7 @@ namespace fcmd
             PluginBody = Plugin.Body;
             SetVEMode(Mode);
             BuildLayout();
+            ProgressDialog.Hide();
         }
 
         private void OpenFile()
