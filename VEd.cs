@@ -125,10 +125,15 @@ namespace fcmd
             mnuEditFindReplace.Clicked += (o, ea) => { SendCommand("findreplace"); };
             mnuEditFindNext.Clicked += (o, ea) => { SendCommand("findreplace last"); };
             mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
-            this.CloseRequested += (o, ea) => { SendCommand("unload"); };
+
+			this.CloseRequested += (o, ea) => { SendCommand("unload"); this.Hide(); };
             this.Shown += new EventHandler(VEd_Shown);
 
+#if !MONO
             PluginBody = new Xwt.Spinner() { Animate = true };
+#else
+			PluginBody = new Xwt.HBox(); //"workaround" for xwt/modxwt bug https://github.com/mono/xwt/issues/283
+#endif
 
             BuildLayout();
         }
@@ -179,7 +184,8 @@ namespace fcmd
         /// <param name="AllowEdit">Mode of VE: true=editor, false=viewer</param>
         public void LoadFile(string URL, pluginner.IFSPlugin FS, bool AllowEdit)
         {
-            string content = Encoding.UTF8.GetString(FS.GetFile(URL, new int()).Content);
+			byte[] ContentBytes = FS.GetFile(URL,new double()).Content;
+			string content = (ContentBytes != null && ContentBytes.Length > 0) ? Encoding.UTF8.GetString(ContentBytes) : "";
             pluginfinder pf = new pluginfinder();
 
             try
@@ -260,6 +266,10 @@ namespace fcmd
             SetVEMode(Mode);
             BuildLayout();
             ProgressDialog.Hide();
+			
+			PluginBody.KeyReleased += (sender, e) => {
+				if(e.Key == Xwt.Key.q) this.OnCloseRequested();
+			};
         }
 
         private void OpenFile()

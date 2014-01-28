@@ -15,7 +15,7 @@ namespace fcmd
         static void Main(string[] Commands)
         {
 #if DEBUG
-            Xwt.Application.Initialize(Xwt.ToolkitType.Wpf);
+            Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
 #else
             
             //todo: xwt.application.run together with winforms.application.run
@@ -34,8 +34,12 @@ namespace fcmd
                     break;
             }
 #endif
-            new MainWindow().Show();
+			new MainWindow().Show();
+#if !MONO
             Application.Run(new frmMain());
+#else
+			Xwt.Application.Run();
+#endif
 
             //note that the "MainWindow" is the modern main window (made using XWT)
             //and the "frmMain" is the old main window (made with Windows Forms)

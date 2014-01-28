@@ -15,7 +15,8 @@ namespace fcmd
     partial class MainWindow : Xwt.Window
     {
         Localizator Locale = new Localizator();
-        Xwt.Menu MainMenu = new Xwt.Menu();
+#warning "The main menu currently is not implemented"
+        Xwt.Menu WindowMenu = new Xwt.Menu();
         Xwt.VBox Layout = new Xwt.VBox();
         Xwt.HPaned PanelLayout = new Xwt.HPaned();
 
@@ -35,9 +36,11 @@ namespace fcmd
         public MainWindow()
         {
             this.Title = "File Commander";
+			this.MainMenu = WindowMenu;
             this.CloseRequested += new Xwt.CloseRequestedHandler(MainWindow_CloseRequested);
             PanelLayout.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(PanelLayout_KeyReleased);
 
+			this.MainMenu.Items.Add (new Xwt.MenuItem("Меню в процессе разработки"){SubMenu = new Xwt.Menu(){Items={new Xwt.MenuItem("Да, не сделано ещё пока"){SubMenu=new Xwt.Menu(){Items={new Xwt.MenuItem("Яша, Яша, не балуй, а то слон откусит ху..."){SubMenu=new Xwt.Menu(){Items={new Xwt.MenuItem("...лиган ты Яша, где твоя мамаша?")}}}}}}}}});
             Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -12, -12,12);
             Layout.PackStart(CommandBox,false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Fill,-12,-12,-12);
             Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Start,-12,-6,-12,-12);

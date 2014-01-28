@@ -256,15 +256,17 @@ namespace fcmd.base_plugins.fs
             pluginner.FSEntryMetadata lego = new pluginner.FSEntryMetadata();
             FileInfo metadatasource = new FileInfo(InternalURL);
 
+            lego.Name = metadatasource.Name;
+            lego.FullURL = url;
+			try{
+            lego.UpperDirectory = metadatasource.DirectoryName;
             lego.Attrubutes = metadatasource.Attributes;
             lego.CreationTimeUTC = metadatasource.CreationTimeUtc;
-            lego.FullURL = url;
             lego.IsReadOnly = metadatasource.IsReadOnly;
             lego.LastAccessTimeUTC = metadatasource.LastAccessTimeUtc;
             lego.LastWriteTimeUTC = metadatasource.LastWriteTimeUtc;
             if(!Directory.Exists(InternalURL)) lego.Lenght = metadatasource.Length;
-            lego.Name = metadatasource.Name;
-            lego.UpperDirectory = metadatasource.DirectoryName;
+			}catch(Exception ex){Console.WriteLine("WARNING: can't build metadata lego for " + url + ": " + ex.Message + ex.StackTrace);}
 
             return lego;
         }

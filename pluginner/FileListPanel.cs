@@ -246,11 +246,13 @@ namespace pluginner
                 else
                 {
                     //show it
-                    this.Remove(StatusBar);
+					this.Remove(StatusBar);
                     this.PackStart(StatusTable);
 
                     StatusTable.Clear();
-                    StatusTable.Add(new Xwt.Spinner() { Animate = true }, 0, 0, 1);
+#if !MONO //workaround for xwt/modxwt bug https://github.com/mono/xwt/issues/283
+                    StatusTable.Add(new Xwt.Spinner() { Animate = true }, 0, 0, 1);!
+#endif
                     StatusTable.Add(StatusBar, 1, 0);
                     StatusTable.Add(StatusProgressbar, 1, 1);
                     ProgressShown = true;

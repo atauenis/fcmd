@@ -29,7 +29,7 @@ namespace fcmd.base_plugins.ve
         public void OpenFile(string url, pluginner.IFSPlugin fsplugin)
         {
             fileContent = fsplugin.GetFile(url, new double()).Content;
-            Txt = Encoding.GetEncoding(Codepage).GetString(fileContent);
+			Txt = Encoding.GetEncoding(Codepage).GetString(fileContent ?? new byte[]{0,0}); //фаллбак взят с потолка, чем бы дитя не тешилось, лишь бы не...ругалось
 
             RTV.LoadText(Txt, new Xwt.Formats.PlainTextFormat());
         }

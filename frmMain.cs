@@ -157,7 +157,7 @@ namespace fcmd
             mnuToolsInfobar.Checked = fcmd.Properties.Settings.Default.ShowFileInfo;
 
 			#region Изначальный перечень файлов
-			string startupDir = "file://" + Directory.GetLogicalDrives()[1];
+			string startupDir = "file://" + Directory.GetLogicalDrives()[0];
             ActivePanel = lplRight[0];
             Ls(startupDir);
             ActivePanel = lplLeft[0];

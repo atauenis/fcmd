@@ -1,26 +1,21 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="base-plugins\viewer\TxtViewer.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug [Mono]|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="pluginner/FileListPanel.cs">
     <Files>
-      <File FileName="frmMain.cs" Line="1" Column="1" />
-      <File FileName="SelectablePanel.cs" Line="1" Column="1" />
-      <File FileName="base-plugins\viewer\TxtViewer.cs" Line="39" Column="36" />
-      <File FileName="fcview.cs" Line="1" Column="1" />
-      <File FileName="pluginfinder.cs" Line="1" Column="1" />
-      <File FileName="pluginner\MyClass.cs" Line="1" Column="1" />
+      <File FileName="VEd.cs" Line="133" Column="6" />
+      <File FileName="pluginner/FileListPanel.cs" Line="253" Column="81" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="fcmd" expanded="True">
             <Node name="base-plugins" expanded="True">
-              <Node name="viewer" expanded="True">
-                <Node name="TxtViewer.cs" selected="True" />
-              </Node>
+              <Node name="fs" expanded="True" />
             </Node>
-            <Node name="fcview.cs" expanded="True" />
+            <Node name="Properties" expanded="True" />
+            <Node name="FileChooser.cs" expanded="True" />
           </Node>
-          <Node name="pluginner" expanded="True" />
+          <Node name="pluginner" expanded="True" selected="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
