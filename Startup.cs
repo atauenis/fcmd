@@ -14,6 +14,7 @@ namespace fcmd
         [STAThread] //need because of unfixed wpf elementhost bug
         static void Main(string[] Commands)
         {
+            Console.WriteLine("The File commander, version " + Application.ProductVersion + "\n(C) 2013-14, Alexander Tauenis and the FC development team (https://github.com/atauenis/fcmd).\nThe FC is licensed \"as is,\" with  no  warranties regarding product performance or non-infringement of third party intellectual property rights; the software may be modified without restrictions");
 #if DEBUG
             Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
 #else
@@ -35,7 +36,7 @@ namespace fcmd
             }
 #endif
 			new MainWindow().Show();
-#if !MONO
+#if OLDMAIN
             Application.Run(new frmMain());
 #else
 			Xwt.Application.Run();

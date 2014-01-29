@@ -31,10 +31,10 @@ namespace fcmd
                         "FCF8=F8 Удал-е\n" +
                         "FCF9=F9 Оп-ции\n" +
                        "FCF10=F10 Выход\n" + //todo: перевести в читаемый вид
-                        "FCmnuFile=&Файл\nFCmnuView=&Вид\nFCmnuNav=&Навигация\nFCmnuTools=С&ервис\nFCmnuHelp=&Справка\n" +
+                        "FCmnuFile=_Файл\nFCmnuView=_Вид\nFCmnuNav=_Навигация\nFCmnuTools=С_ервис\nFCmnuHelp=_Справка\n" +
                         "FCmnuFileUserMenu=Меню пользователя\nFCmnuFileView=Просмотреть файл\nFCmnuFileEdit=Редактировать файл\nFCmnuFileCompare=Сравнить файлы\nFCmnuFileCopy=Копирование\nFCmnuFileMove=Перенос/переименование\nFCmnuFileNewDir=Новый каталог\nFCmnuFileRemove=Удалить\nFCmnuFileAtributes=Свойства\nFCmnuFileQuickSelect=Выбрать файл...\nFCmnuFileUnselect=Убрать синие выделения\nFCmnuFileInvertSelection=Инвертировать выделение\nFCmnuFileRevertSelection=Восстановить прежнее выделение\nFCmnuFileExit=Выxод\n" +
                         "FCmnuViewShort=Краткий (список)\nFCmnuViewDetails=Полный (таблица)\nFCmnuViewIcons=Икноки (значки)\nFCmnuViewThumbs=Эскизы изображений\nFCmnuViewQuickView=Быстрый просмотр выделенного в сосед. панели\nFCmnuViewTree=Древо каталогов\nFCmnuViewPCPCconnect=Прямая связь ПК-ПК\nFCmnuViewPCNETPCconnect=Мини HTTP сервер\nFCmnuViewByName=По имени\nFCmnuViewByType=По расширению\nFCmnuViewByDate=По дате\nFCmnuViewBySize=По размеру\nFCmnuViewNoFilter=Без фильтра (*.*)\nFCmnuViewWithFilter=Применить фильтр имени...\nFCmnuViewToolbar=Панель инструментов\n" +
-                        "FCmnuNavigateTree=Дерево\nFCmnuNavigateFind=Розыск файла...\nFCmnuNavigateHistory=История посещений\nFCmnuNavigateReload=Перезагрузить\nFCmnuNavigateFlyTo=Быстрый переход\n" +
+                        "FCmnuNavigateTree=Дерево\nFCmnuNavigateFind=Розыск файла...\nFCmnuNavigateHistory=История посещений\nFCmnuNavigateReload=Перезагрузить\n" +
                         "FCmnuToolsOptions=Настройки...\nFCmnuToolsPluginManager=Управление расширениями...\nFCmnuToolsEditUserMenu=Редактировать меню пользователя...\nFCmnuToolsKeybrdHelp=Подсказки клавиш F\nFCmnuToolsInfobar=Сводные строки\nFCmnuToolsDiskButtons=Кнопки дисков\nFCmnuToolsConfigEdit=Правка конфигурации FC\nFCmnuToolsKeychains=Учётные данные ФС\nFCmnuToolsDiskLabel=Метка диска...\nFCmnuToolsFormat=Форматировать носитель...\nFCmnuToolsSysInfo=Сведения о системе\n" +
                         "FCmnuHelpHelpMe=Справка File Commander\nFCmnuHelpAbout=О программе...\n" +
                         "FName=Имя\nFSize=Размер\nFDate=Дата\n" +

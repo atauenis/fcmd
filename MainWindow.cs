@@ -9,14 +9,74 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Winforms = System.Windows.Forms;
 
 namespace fcmd
 {
     partial class MainWindow : Xwt.Window
     {
         Localizator Locale = new Localizator();
-#warning "The main menu currently is not implemented"
         Xwt.Menu WindowMenu = new Xwt.Menu();
+
+        Xwt.MenuItem mnuFile = new Xwt.MenuItem() { Tag="mnuFile" };
+        Xwt.MenuItem mnuFileUserMenu = new Xwt.MenuItem() { Tag = "mnuFileUserMenu" };
+        Xwt.MenuItem mnuFileView = new Xwt.MenuItem() { Tag = "mnuFileView" };
+        Xwt.MenuItem mnuFileEdit = new Xwt.MenuItem() { Tag = "mnuFileEdit" };
+        Xwt.MenuItem mnuFileCompare = new Xwt.MenuItem() { Tag = "mnuFileCompare" };
+        Xwt.MenuItem mnuFileCopy = new Xwt.MenuItem() { Tag = "mnuFileCopy" };
+        Xwt.MenuItem mnuFileMove = new Xwt.MenuItem() { Tag = "mnuFileMove" };
+        Xwt.MenuItem mnuFileNewDir = new Xwt.MenuItem() { Tag = "mnuFileNewDir" };
+        Xwt.MenuItem mnuFileRemove = new Xwt.MenuItem() { Tag = "mnuFileRemove" };
+        Xwt.MenuItem mnuFileAtributes = new Xwt.MenuItem() { Tag = "mnuFileAtributes" };
+        Xwt.MenuItem mnuFileQuickSelect = new Xwt.MenuItem() { Tag = "mnuFileQuickSelect" };
+        Xwt.MenuItem mnuFileUnselect = new Xwt.MenuItem() { Tag = "mnuFileUnselect" };
+        Xwt.MenuItem mnuFileInvertSelection = new Xwt.MenuItem() { Tag = "mnuFileInvertSelection" };
+        Xwt.MenuItem mnuFileRevertSelection = new Xwt.MenuItem() { Tag = "mnuFileRevertSelection" };
+        Xwt.MenuItem mnuFileExit = new Xwt.MenuItem() { Tag = "mnuFileExit" };
+
+
+        Xwt.MenuItem mnuView = new Xwt.MenuItem() { Tag="mnuView" };
+        Xwt.MenuItem mnuViewShort = new Xwt.MenuItem() { Tag="mnuViewShort" };
+        Xwt.MenuItem mnuViewDetails = new Xwt.MenuItem() { Tag="mnuViewDetails" };
+        Xwt.MenuItem mnuViewIcons = new Xwt.MenuItem() { Tag="mnuViewIcons" };
+        Xwt.MenuItem mnuViewThumbs = new Xwt.MenuItem() { Tag="mnuViewThumbs" };
+        Xwt.MenuItem mnuViewQuickView = new Xwt.MenuItem() { Tag="mnuViewQuickView" };
+        Xwt.MenuItem mnuViewTree = new Xwt.MenuItem() { Tag="mnuViewTree" };
+        Xwt.MenuItem mnuViewPCPCconnect = new Xwt.MenuItem() { Tag = "mnuViewPCPCconnect" };
+        Xwt.MenuItem mnuViewPCNETPCconnect = new Xwt.MenuItem() { Tag = "mnuViewPCNETPCconnect" };
+        Xwt.MenuItem mnuViewByName = new Xwt.MenuItem() { Tag="mnuViewByName" };
+        Xwt.MenuItem mnuViewByType = new Xwt.MenuItem() { Tag="mnuViewByType" };
+        Xwt.MenuItem mnuViewByDate = new Xwt.MenuItem() { Tag="mnuViewByDate" };
+        Xwt.MenuItem mnuViewBySize = new Xwt.MenuItem() { Tag="mnuViewBySize" };
+        Xwt.MenuItem mnuViewNoFilter = new Xwt.MenuItem() { Tag="mnuViewNoFilter" };
+        Xwt.MenuItem mnuViewWithFilter = new Xwt.MenuItem() { Tag="mnuViewWithFilter" };
+
+
+        Xwt.MenuItem mnuNavigate = new Xwt.MenuItem() { Tag="mnuNav" };
+        Xwt.MenuItem mnuNavigateTree = new Xwt.MenuItem() { Tag="mnuNavigateTree" };
+        Xwt.MenuItem mnuNavigateFind = new Xwt.MenuItem() { Tag="mnuNavigateFind" };
+        Xwt.MenuItem mnuNavigateHistory = new Xwt.MenuItem() { Tag="mnuNavigateHistory" };
+        Xwt.MenuItem mnuNavigateReload = new Xwt.MenuItem() { Tag="mnuNavigateReload" };
+        Xwt.MenuItem mnuNavigateFlyTo = new Xwt.MenuItem() { Tag="mnuNavigateFlyTo" };
+
+        Xwt.MenuItem mnuTools = new Xwt.MenuItem() { Tag="mnuTools" };
+        Xwt.MenuItem mnuToolsOptions = new Xwt.MenuItem() { Tag="mnuToolsOptions" };
+        Xwt.MenuItem mnuToolsPluginManager = new Xwt.MenuItem() { Tag="mnuToolsPluginManager" };
+        Xwt.MenuItem mnuToolsEditUserMenu = new Xwt.MenuItem() { Tag = "mnuToolsEditUserMenu" };
+        Xwt.MenuItem mnuToolsKeychains = new Xwt.MenuItem() { Tag="mnuToolsKeychains" };
+        Xwt.MenuItem mnuToolsConfigEdit = new Xwt.MenuItem() { Tag = "mnuToolsConfigEdit" };
+        Xwt.CheckBoxMenuItem mnuToolsKeybrdHelp = new Xwt.CheckBoxMenuItem() { Tag = "mnuToolsKeybrdHelp" };
+        Xwt.CheckBoxMenuItem mnuToolsInfobar = new Xwt.CheckBoxMenuItem() { Tag = "mnuToolsInfobar" };
+        Xwt.CheckBoxMenuItem mnuToolsDiskButtons = new Xwt.CheckBoxMenuItem() { Tag = "mnuToolsDiskButtons" };
+        Xwt.MenuItem mnuToolsDiskLabel = new Xwt.MenuItem() { Tag = "mnuToolsDiskLabel" };
+        Xwt.MenuItem mnuToolsFormat = new Xwt.MenuItem() { Tag = "mnuToolsFormat" };
+        Xwt.MenuItem mnuToolsSysInfo = new Xwt.MenuItem() { Tag = "mnuToolsSysInfo" };
+
+        Xwt.MenuItem mnuHelp = new Xwt.MenuItem() { Tag = "mnuHelp" };
+        Xwt.MenuItem mnuHelpHelpMe = new Xwt.MenuItem() { Tag = "mnuHelpHelpMe" };
+        Xwt.MenuItem mnuHelpAbout = new Xwt.MenuItem() { Tag = "mnuHelpAbout" };
+
+
         Xwt.VBox Layout = new Xwt.VBox();
         Xwt.HPaned PanelLayout = new Xwt.HPaned();
 
@@ -37,10 +97,84 @@ namespace fcmd
         {
             this.Title = "File Commander";
 			this.MainMenu = WindowMenu;
+
+            MainMenu.Items.Add(mnuFile);
+            MainMenu.Items.Add(mnuView);
+            MainMenu.Items.Add(mnuNavigate);
+            MainMenu.Items.Add(mnuTools);
+            MainMenu.Items.Add(mnuHelp);
+
+            mnuFile.SubMenu = new Xwt.Menu();
+            mnuFile.SubMenu.Items.Add(mnuFileUserMenu);
+            mnuFile.SubMenu.Items.Add(mnuFileView);
+            mnuFile.SubMenu.Items.Add(mnuFileEdit);
+            mnuFile.SubMenu.Items.Add(mnuFileCompare);
+            mnuFile.SubMenu.Items.Add(mnuFileCopy);
+            mnuFile.SubMenu.Items.Add(mnuFileMove);
+            mnuFile.SubMenu.Items.Add(mnuFileNewDir);
+            mnuFile.SubMenu.Items.Add(mnuFileRemove);
+            mnuFile.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+            mnuFile.SubMenu.Items.Add(mnuFileAtributes);
+            mnuFile.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+            mnuFile.SubMenu.Items.Add(mnuFileQuickSelect);
+            mnuFile.SubMenu.Items.Add(mnuFileUnselect);
+            mnuFile.SubMenu.Items.Add(mnuFileInvertSelection);
+            mnuFile.SubMenu.Items.Add(mnuFileRevertSelection);
+            mnuFile.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+            mnuFile.SubMenu.Items.Add(mnuFileExit);
+
+            mnuView.SubMenu = new Xwt.Menu();
+            mnuView.SubMenu.Items.Add(mnuViewShort);
+            mnuView.SubMenu.Items.Add(mnuViewDetails);
+            mnuView.SubMenu.Items.Add(mnuViewIcons);
+            mnuView.SubMenu.Items.Add(mnuViewThumbs);
+            mnuView.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+            mnuView.SubMenu.Items.Add(mnuViewQuickView);
+            mnuView.SubMenu.Items.Add(mnuViewTree);
+            mnuView.SubMenu.Items.Add(mnuViewPCPCconnect);
+            mnuView.SubMenu.Items.Add(mnuViewPCNETPCconnect);
+            mnuView.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+            mnuView.SubMenu.Items.Add(mnuViewByName);
+            mnuView.SubMenu.Items.Add(mnuViewByType);
+            mnuView.SubMenu.Items.Add(mnuViewByDate);
+            mnuView.SubMenu.Items.Add(mnuViewBySize);
+            mnuView.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+            mnuView.SubMenu.Items.Add(mnuViewNoFilter);
+            mnuView.SubMenu.Items.Add(mnuViewWithFilter);
+
+            mnuNavigate.SubMenu = new Xwt.Menu();
+            mnuNavigate.SubMenu.Items.Add(mnuNavigateTree);
+            mnuNavigate.SubMenu.Items.Add(mnuNavigateHistory);
+            mnuNavigate.SubMenu.Items.Add(mnuNavigateFind);
+            mnuNavigate.SubMenu.Items.Add(mnuNavigateReload);
+
+            mnuTools.SubMenu = new Xwt.Menu();
+            mnuTools.SubMenu.Items.Add(mnuToolsOptions);
+            mnuTools.SubMenu.Items.Add(mnuToolsPluginManager);
+            mnuTools.SubMenu.Items.Add(mnuToolsEditUserMenu);
+            mnuTools.SubMenu.Items.Add(mnuToolsKeychains);
+            mnuTools.SubMenu.Items.Add(mnuToolsConfigEdit);
+            mnuTools.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+            mnuTools.SubMenu.Items.Add(mnuToolsKeybrdHelp); //todo: move to View menu
+            mnuTools.SubMenu.Items.Add(mnuToolsInfobar);
+            mnuTools.SubMenu.Items.Add(mnuToolsDiskButtons);
+            mnuTools.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+            mnuTools.SubMenu.Items.Add(mnuToolsDiskLabel);
+            mnuTools.SubMenu.Items.Add(mnuToolsFormat);
+            mnuTools.SubMenu.Items.Add(mnuToolsSysInfo);
+
+            mnuHelp.SubMenu = new Xwt.Menu();
+            mnuHelp.SubMenu.Items.Add(mnuHelpHelpMe);
+            mnuHelp.SubMenu.Items.Add(mnuHelpAbout);
+
+            TranslateMenu(MainMenu);
+
             this.CloseRequested += new Xwt.CloseRequestedHandler(MainWindow_CloseRequested);
             PanelLayout.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(PanelLayout_KeyReleased);
 
-			this.MainMenu.Items.Add (new Xwt.MenuItem("Меню в процессе разработки"){SubMenu = new Xwt.Menu(){Items={new Xwt.MenuItem("Да, не сделано ещё пока"){SubMenu=new Xwt.Menu(){Items={new Xwt.MenuItem("Яша, Яша, не балуй, а то слон откусит ху..."){SubMenu=new Xwt.Menu(){Items={new Xwt.MenuItem("...лиган ты Яша, где твоя мамаша?")}}}}}}}}});
+            mnuToolsOptions.Clicked += new EventHandler(mnuToolsOptions_Clicked);
+            mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
+            
             Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -12, -12,12);
             Layout.PackStart(CommandBox,false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Fill,-12,-12,-12);
             Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Start,-12,-6,-12,-12);
@@ -127,6 +261,23 @@ namespace fcmd
                     ActivePanel = p1; PassivePanel = p2;
                     break;
             }
+        }
+
+        void mnuToolsOptions_Clicked(object sender, EventArgs e)
+        {
+            new SettingsWindow().Run();
+            ActivePanel.LoadDir();
+            PassivePanel.LoadDir();
+            //todo: rebuild panels (panel.RebuildUI())
+        }
+
+        void mnuHelpAbout_Clicked(object sender, EventArgs e)
+        {
+            string AboutString = string.Format(Locale.GetString("FileCommanderVer"), "File Commander", Winforms.Application.ProductVersion) +
+                                   "\n(C) 2013-14, FC team (Alexander Tauenis & comrades)\nhttps://github.com/atauenis/fcmd\n" +
+                                   "Uses Xamarin Window Toolkit (Xwt) with A.T.'s modifications\nhttps://github.com/atauenis/xwt/tree/modxwt\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
+            Xwt.MessageDialog.ShowMessage(AboutString);
+
         }
 
         void MainWindow_CloseRequested(object sender, Xwt.CloseRequestedEventArgs args)
@@ -259,6 +410,23 @@ namespace fcmd
                 default:
                     return pluginner.FileListPanel.SizeDisplayPolicy.OneNumeral;
             }
+        }
+
+        /// <summary>Translates the <paramref name="mnu"/> into the current UI language</summary>
+        private void TranslateMenu(Xwt.Menu mnu)
+        {
+            try
+            { //dirty hack...i don't know why, but "if(mnu.Items == null) return;" raises NullReferenceException...
+                foreach (Xwt.MenuItem currentMenuItem in mnu.Items)
+                {
+                    if (currentMenuItem.GetType() != typeof(Xwt.SeparatorMenuItem))
+                    { //skip separators
+                        currentMenuItem.Label = Locale.GetString("FC" + currentMenuItem.Tag.ToString());
+                        TranslateMenu(currentMenuItem.SubMenu);
+                    }
+                }
+            }
+            catch { }
         }
     }
 }

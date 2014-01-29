@@ -24,6 +24,7 @@ namespace fcmd
 
             Layout.Panel1.Content = TabList;
             this.Content = Layout;
+            this.ShowInTaskbar = false;
 
             this.Buttons.Add(Xwt.Command.Save, Xwt.Command.Cancel);
             this.Buttons[0].Clicked += new EventHandler(cmdOk_Clicked);

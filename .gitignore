@@ -18,8 +18,8 @@ TestResults
 *.userprefs
 
 Дизайнер WinForms.lnk
-Старый вариант ListPanel/
 base-plugins\viewer - winforms printing example (obsolete in fc, but not in dotnet4)/
+Старый вариант */
 
 # Build results
 [Dd]ebug/
