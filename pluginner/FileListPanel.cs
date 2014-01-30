@@ -25,6 +25,7 @@ namespace pluginner
         public Xwt.DataField<pluginner.FSEntryMetadata> dfMetadata = new Xwt.DataField<FSEntryMetadata>();
         public pluginner.IFSPlugin FS;
         public Xwt.TextEntry UrlBox = new Xwt.TextEntry();
+		public pluginner.LightScroller DiskBox = new LightScroller();
         public Xwt.HBox DiskList = new Xwt.HBox();
         public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
         public Xwt.ListView ListingView = new Xwt.ListView();
@@ -43,9 +44,11 @@ namespace pluginner
         public FileListPanel(string BookmarkXML = null)
         {
             BuildUI(BookmarkXML);
+			DiskBox.Content = DiskList;
+			DiskBox.CanScrollByY = false;
 
             this.PackStart(UrlBox, false, true);
-            this.PackStart(DiskList, false, true);
+            this.PackStart(DiskBox, false, true);
             this.PackStart(ListingView, true, true);
             this.PackStart(StatusBar, false, true);
 

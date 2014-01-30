@@ -144,6 +144,9 @@
     <None Include="README-DEV.md" />
     <None Include="README.md" />
     <None Include="frmMain.resources" />
+    <None Include="stolen-opensource-libs\Xwt.Gtk.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FileChooser.resx">

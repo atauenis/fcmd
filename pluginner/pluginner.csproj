@@ -73,6 +73,7 @@
     <Compile Include="Pluginner.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="LightScroller.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

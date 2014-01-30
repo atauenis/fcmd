@@ -2,8 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug [Mono]|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="pluginner/FileListPanel.cs">
     <Files>
-      <File FileName="VEd.cs" Line="133" Column="6" />
-      <File FileName="pluginner/FileListPanel.cs" Line="253" Column="81" />
+      <File FileName="VEd.cs" Line="272" Column="6" />
+      <File FileName="pluginner/FileListPanel.cs" Line="403" Column="26" />
+      <File FileName="base-plugins/ve/PlainText.cs" Line="32" Column="156" />
+      <File FileName="MainWindow.cs" Line="42" Column="4" />
+      <File FileName="Startup.cs" Line="18" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,11 +14,14 @@
           <Node name="fcmd" expanded="True">
             <Node name="base-plugins" expanded="True">
               <Node name="fs" expanded="True" />
+              <Node name="ve" expanded="True" />
             </Node>
             <Node name="Properties" expanded="True" />
             <Node name="FileChooser.cs" expanded="True" />
           </Node>
-          <Node name="pluginner" expanded="True" selected="True" />
+          <Node name="pluginner" expanded="True">
+            <Node name="FileListPanel.cs" selected="True" />
+          </Node>
         </State>
       </Pad>
       <Pad Id="ClassPad">
