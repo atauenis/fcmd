@@ -69,7 +69,7 @@ namespace fcmd
             }
 
             pluginner.File SelectedFile = fs.GetFile(url, new int());
-            string FileContent = Encoding.ASCII.GetString(SelectedFile.Content);
+            string FileContent = Encoding.ASCII.GetString(fs.GetFileContent(url));
             fcv.LoadFile(url, ActivePanel.FSProvider, false);
             fcv.Show();
         }
@@ -85,8 +85,7 @@ namespace fcmd
             pluginner.IFSPlugin fs = ActivePanel.FSProvider;
             if (!fs.FileExists(url)) return "Файл не найден\n";
 
-            pluginner.File SelectedFile = fs.GetFile(url, new int());
-            return Encoding.ASCII.GetString(SelectedFile.Content);
+            return Encoding.ASCII.GetString(fs.GetFileContent(url));
         }
 
         /// <summary>

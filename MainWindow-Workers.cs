@@ -50,12 +50,13 @@ namespace fcmd
         /// <param name="lpp">passive listpanel</param>
         void DoCp(FileListPanel lpa, FileListPanel lpp, string DestinationURL, pluginner.File SourceFile, int Progress)
         {
+            pluginner.IFSPlugin SourceFS = lpa.FS;
             pluginner.IFSPlugin DestinationFS = lpp.FS;
 
             pluginner.File NewFile = SourceFile;
             NewFile.Path = DestinationURL;
 
-            DestinationFS.WriteFile(NewFile, Progress);
+            DestinationFS.WriteFile(NewFile, Progress, SourceFS.GetFileContent(SourceFile.Path));
         }
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace fcmd
 
                     //запись копии
                     CurFile.Path = s2;
-                    fsb.WriteFile(CurFile, new int());
+                    fsb.WriteFile(CurFile, new int(), fsa.GetFileContent(s1));
                 }
                 else
                 {

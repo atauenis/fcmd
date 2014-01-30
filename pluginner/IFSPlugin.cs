@@ -72,10 +72,28 @@ namespace pluginner
         /// <param name="URL"></param>
         FSEntryMetadata GetMetadata(string URL);
 
-        /// <summary>Writes the file.</summary>
-        /// <param name='NewFile'>New file's content.</param>
-        void WriteFile(File NewFile, int Progress);
+        /// <summary>
+        /// Get the file's full content
+        /// </summary>
+        /// <param name="URL">The URL of the file</param>
+        byte[] GetFileContent(string URL);
+
+        /// <summary>
+        /// Get the file's full content
+        /// </summary>
+        /// <param name="URL">The URL of the file</param>
+        /// <param name="Start">The starting point in the file at which to begin reading</param>
+        /// <param name="Length">The number of bytes to read</param>
+        byte[] GetFileContent(string URL, Int32 Start, Int32 Length);
+        //in future versions, the Int32 will be replaced with a longer type
+        //(currently, the temporary system.io call is limited to 4GB files)
+
+        /// <summary>Writes a file.</summary>
+        /// <param name='NewFile'>The file</param>
+        /// <param name="Content">The file's content</param>
+        void WriteFile(File NewFile, int Progress, byte[] Content);
         //todo:void WriteFileMetadata(FileMetadata md);
+        //todo: переписать всё, убрать инт прогресс и ускорить работу путём секционирования файлов
 
         /// <summary>
         /// Delete the file <paramref name="URL"/>.
@@ -148,12 +166,6 @@ namespace pluginner
         /// The file's full path.
         /// </summary>
         public string Path;
-
-        /// <summary>
-        /// The file's content.
-        /// NOTE: if the 'file' is a directory, it's content will be null
-        /// </summary>
-        public byte[] Content;
 
         /// <summary>
         /// Returns the file's name

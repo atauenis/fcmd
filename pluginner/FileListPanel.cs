@@ -179,8 +179,12 @@ namespace pluginner
             }
             catch (Exception ex)
             {
+                ListingView.Sensitive = true;
+                ListingView.Cursor = Xwt.CursorType.Arrow;
+
                 Xwt.MessageDialog.ShowError(ex.Message);
                 Console.WriteLine(ex.Message + "\n" + ex.StackTrace);
+                WriteDefaultStatusLabel();
             }
         }
 

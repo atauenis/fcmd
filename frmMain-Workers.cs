@@ -68,7 +68,8 @@ namespace fcmd{
             pluginner.File NewFile = SourceFile;
             NewFile.Path = DestinationURL;
 
-            DestinationFS.WriteFile(NewFile, Progress);
+            //DestinationFS.WriteFile(NewFile, Progress);
+            System.Windows.Forms.MessageBox.Show("Ф-я не работает");
         }
 
         /// <summary>
@@ -96,7 +97,8 @@ namespace fcmd{
 
                     //запись копии
                     CurFile.Path = s2;
-                    fsb.WriteFile(CurFile, new int());
+                    //fsb.WriteFile(CurFile, new int());
+                    System.Windows.Forms.MessageBox.Show("Ф-я не работает");
                 }
                 else
                 {

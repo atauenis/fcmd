@@ -136,20 +136,49 @@ namespace fcmd.base_plugins.fs
             }
         }
 
-		public pluginner.File GetFile(string url, double Progress){ //чтение файла
-			_CheckProtocol(url);
-			string InternalURL = url.Replace("file://","");
+        public pluginner.File GetFile(string url, double Progress)
+        { //чтение файла
+            _CheckProtocol(url);
+            string InternalURL = url.Replace("file://", "");
 
-			pluginner.File fsf = new pluginner.File(); //fsf=filesystem file
+            pluginner.File fsf = new pluginner.File(); //fsf=filesystem file
             Progress = 50;
-			fsf.Path = InternalURL;
-			fsf.Metadata = GetMetadata(url);
-            try { fsf.Content = File.ReadAllBytes(InternalURL); } catch {fsf.Content = null;}
+            fsf.Path = InternalURL;
+            fsf.Metadata = GetMetadata(url);
+            //УБРАТЬ после отладки нового метода загрузки
+            //try { fsf.Content = File.ReadAllBytes(InternalURL); } catch {fsf.Content = null;}
             fsf.Name = new FileInfo(InternalURL).Name;
-			return fsf;
-		}
+            return fsf;
+        }
 
-        public void WriteFile(pluginner.File NewFile, int Progress)
+        public byte[] GetFileContent(string url)
+        {
+            _CheckProtocol(url);
+            string InternalURL = url.Replace("file://", "");
+            FileStream fistr = new FileStream(InternalURL, FileMode.Open,FileAccess.Read,FileShare.Read);
+            BinaryReader bire = new BinaryReader(fistr);
+            int Length = 0;
+            try
+            { Length = (int)fistr.Length; }
+            catch
+            { Length = int.MaxValue; Console.WriteLine("LOCALFS: the file is too long, reading only first " + int.MaxValue + " bytes.\nCall fs.GetFileContent() with length definition."); }
+            return bire.ReadBytes(Length);
+        }
+
+        public byte[] GetFileContent(string url, Int32 start, Int32 length)
+        {
+            //код не проверялся!!!
+            //this code wasn't debugged!!!
+            _CheckProtocol(url);
+            string InternalURL = url.Replace("file://", "");
+            FileStream fistr = new FileStream(InternalURL, FileMode.Open,FileAccess.Read,FileShare.Read);
+            BinaryReader bire = new BinaryReader(fistr);
+            byte[] rezultat = new byte[length];
+            bire.Read(rezultat, start, length);
+            return rezultat;
+        }
+
+        public void WriteFile(pluginner.File NewFile, int Progress, byte[] Content)
         { //запись файла
             _CheckProtocol(NewFile.Path);
             string InternalURL = NewFile.Path.Replace("file://", "");
@@ -157,7 +186,7 @@ namespace fcmd.base_plugins.fs
             try{
                 Progress = 10;
                 pluginner.File f = NewFile;
-                if(!Directory.Exists(InternalURL)) File.WriteAllBytes(InternalURL, f.Content);
+                if(!Directory.Exists(InternalURL)) File.WriteAllBytes(InternalURL, Content);
                 Progress = 25;
                 if (!Directory.Exists(InternalURL)) File.SetAttributes(InternalURL, f.Metadata.Attrubutes);
                 Progress = 50;
