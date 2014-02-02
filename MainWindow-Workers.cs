@@ -56,7 +56,33 @@ namespace fcmd
             pluginner.File NewFile = SourceFile;
             NewFile.Path = DestinationURL;
 
-            DestinationFS.WriteFile(NewFile, Progress, SourceFS.GetFileContent(SourceFile.Path));
+            if (SourceFile.Path == DestinationURL){
+                string itself = Locale.GetString("CantCopySelf");
+                string toshow = string.Format(Locale.GetString("CantCopy"), SourceFile.Name, itself);
+                
+                Xwt.Application.Invoke(new Action(delegate { Xwt.MessageDialog.ShowWarning(toshow); }));
+                //calling the msgbox in non-main threads causes some UI bugs, thus pushing this call into main thread
+                return;
+            }
+
+            try
+            {
+                byte[] content = SourceFS.GetFileContent(SourceFile.Path);//todo: разобрать на копирование по частям, дабы не забивать файлы сразу целиком в ОЗУ
+                pluginner.FSEntryMetadata md = SourceFS.GetMetadata(SourceFile.Path);
+                md.FullURL = NewFile.Path;
+
+                DestinationFS.Touch(md);
+                DestinationFS.WriteFileContent(DestinationURL, content);
+            }
+            catch (pluginner.PleaseSwitchPluginException)
+            {
+                Xwt.MessageDialog.ShowError("Не совпадают файловые системы. Копирование из ФС в ФС в разработке...типа как.");
+                //todo: different-filesystem copying
+            }
+            catch (Exception ex)
+            {
+                Xwt.MessageDialog.ShowMessage("");
+            }
         }
 
         /// <summary>

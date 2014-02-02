@@ -45,6 +45,11 @@ namespace fcmd
                         "FileNotFound=Файл \"{0}\" не найден\n" +
                         "ItsDir=\"{0}\" является каталогом\n" +
                         "DirCantBeRemoved=Нет возможности удалить {0}\n" +
+                        "CantRead=Не читается: {0}.{1}\n" +
+                        "CantWrite=Не пишется: {0}.{1}\n" +
+                        "CantCopy=Ошибка копирования {0}: {1}\n" +
+                        "CantCopySelf=Невозможно скопировать файл самого в себя!\n" +
+                        "CantMove=Ошибка перемещения/переименования {0}: {1}\n" +
                         "CantRunEXE=Ошибка запуска внешней программы: \n" +
                         "FileProgressDialogTitle=File Commander\n" +
                         "DoingRemove=Выполняется удаление:{0}{1}\n" +

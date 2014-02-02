@@ -173,7 +173,7 @@ namespace fcmd
 
             //check for file existing
             if(SourceFS.FileExists(SourceURL)){
-                InputBox ibx = new InputBox(String.Format(Locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + "/" + SourceFile.Name);
+                InputBox ibx = new InputBox(String.Format(Locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + PassivePanel.FS.DirSeparator + SourceFile.Name);
                 if (ibx.ShowDialog())
                 {
                     String DestinationFilePath = ibx.Result;
@@ -267,6 +267,17 @@ namespace fcmd
 
             //Now, assuming that the src & dest fs is same and supports
             //cross-disk file moving
+
+            if (SourcePath == DestinationPath)
+            {
+                string itself = Locale.GetString("CantCopySelf");
+                string toshow = string.Format(Locale.GetString("CantMove"), SourcePath, itself);
+
+                Xwt.Application.Invoke(new Action(delegate { Xwt.MessageDialog.ShowWarning(toshow); }));
+                //calling the msgbox in non-main threads causes some UI bugs, thus pushing this call into main thread
+                return;
+            }
+
             if (SourceFS.DirectoryExists(SourcePath))
             {//this is a directory
                 SourceFS.MoveDirectory(SourcePath, DestinationPath);

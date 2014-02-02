@@ -136,6 +136,43 @@ namespace fcmd.base_plugins.fs
             }
         }
 
+        public void Touch(pluginner.FSEntryMetadata Metadata)
+        {
+            string url = Metadata.FullURL;
+            _CheckProtocol(url);
+            string InternalURL = url.Replace("file://", "");
+
+            if (!Directory.Exists(InternalURL) && !File.Exists(InternalURL))
+            {
+                StreamWriter sw = File.CreateText(InternalURL);
+                sw.Close();
+                sw.Dispose();
+            }
+
+            try
+            {
+                File.SetAttributes(InternalURL, Metadata.Attrubutes);
+                File.SetCreationTime(InternalURL, Metadata.CreationTimeUTC);
+                File.SetLastWriteTime(InternalURL, DateTime.Now);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public void Touch(string URL)
+        {
+            _CheckProtocol(URL);
+            string InternalURL = URL.Replace("file://", "");
+
+            pluginner.FSEntryMetadata newmd = new pluginner.FSEntryMetadata();
+            newmd.FullURL = InternalURL;
+            newmd.CreationTimeUTC = DateTime.UtcNow;
+            newmd.LastWriteTimeUTC = DateTime.UtcNow;
+            Touch(newmd);
+        }
+
         public pluginner.File GetFile(string url, double Progress)
         { //чтение файла
             _CheckProtocol(url);
@@ -143,10 +180,8 @@ namespace fcmd.base_plugins.fs
 
             pluginner.File fsf = new pluginner.File(); //fsf=filesystem file
             Progress = 50;
-            fsf.Path = InternalURL;
+            fsf.Path = "file://" + InternalURL; //this long method have a correction for possibly damages of letters' cases or changes of slashes
             fsf.Metadata = GetMetadata(url);
-            //УБРАТЬ после отладки нового метода загрузки
-            //try { fsf.Content = File.ReadAllBytes(InternalURL); } catch {fsf.Content = null;}
             fsf.Name = new FileInfo(InternalURL).Name;
             return fsf;
         }
@@ -198,9 +233,24 @@ namespace fcmd.base_plugins.fs
             catch (Exception ex){
                 //System.Windows.Forms.MessageBox.Show(ex.Message,"LocalFS error",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Stop);
                 new MsgBox(ex.Message, null, MsgBox.MsgBoxType.Error);
-                Console.Write(ex.Message + "\n" + ex.StackTrace + "\n" + "Catched in local fs provider while loading " + InternalURL + "\n");
+                Console.Write(ex.Message + "\n" + ex.StackTrace + "\n" + "Catched in local fs provider while writing " + InternalURL + "\n");
             }
 		}
+
+        public void WriteFileContent(string url, Int32 Start, byte[] Content)
+        {
+            _CheckProtocol(url);
+            string InternalURL = url.Replace("file://", "");
+
+            FileStream fistr = new FileStream(InternalURL, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            BinaryWriter biwr = new BinaryWriter(fistr);
+            biwr.Write(Content, Start, Content.Length);
+        }
+
+        public void WriteFileContent(string URL, byte[] Content)
+        {
+            WriteFileContent(URL, 0, Content);
+        }
 
 		public void DeleteFile(string url){//удалить файл
 			_CheckProtocol(url);

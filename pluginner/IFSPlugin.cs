@@ -91,9 +91,29 @@ namespace pluginner
         /// <summary>Writes a file.</summary>
         /// <param name='NewFile'>The file</param>
         /// <param name="Content">The file's content</param>
+        [Obsolete("Replacing to Touch+WriteFileContent (но ПОКА ЧТО много где используется старый вызов)")]
         void WriteFile(File NewFile, int Progress, byte[] Content);
         //todo:void WriteFileMetadata(FileMetadata md);
         //todo: переписать всё, убрать инт прогресс и ускорить работу путём секционирования файлов
+
+        /// <summary>Writes bytes into a file</summary>
+        /// <param name="URL">The URL of the file</param>
+        /// <param name="Start">The starting point at which to begin writing</param>
+        /// <param name="Content">A byte array containing the data to write</param>
+        void WriteFileContent(string URL, Int32 Start, byte[] Content);
+
+        /// <summary>Writes bytes into a file (the file will be fully overwrited)</summary>
+        /// <param name="URL">The URL of the file</param>
+        /// <param name="Content">A byte array containing the data to write</param>
+        void WriteFileContent(string URL, byte[] Content);
+
+        /// <summary>Writes metadata of the specifed filesystem item (it's URL is written in the <paramref name="metadata"/>).</summary>
+        /// <param name="metadata">The metadata and URL of the fs item</param>
+        void Touch(FSEntryMetadata metadata);
+
+        /// <summary>Creates a new file with default metadata</summary>
+        /// <param name="URL">The URL of the file</param>
+        void Touch(string URL);
 
         /// <summary>
         /// Delete the file <paramref name="URL"/>.
@@ -117,8 +137,8 @@ namespace pluginner
         /// </param>       
         void DeleteDirectory(string URL, bool TrySafe);
         /* Если булево значение = true, плагин должен сначала проверить, выйдет ли
-         * каменный цветок, если он вдруг окажется не уверен в этом, должен кинуть
-         * сразу исключение pluginner.ThisDirCannotBeRemovedException .
+         * каменный цветок, ну а если не выйдет, плагин должен кинуть
+         * сразу же исключение pluginner.ThisDirCannotBeRemovedException .
          */
 
         /// <summary>
