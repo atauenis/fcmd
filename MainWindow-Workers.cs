@@ -48,11 +48,8 @@ namespace fcmd
         /// </summary>
         /// <param name="lpa">active listpanel</param>
         /// <param name="lpp">passive listpanel</param>
-        void DoCp(FileListPanel lpa, FileListPanel lpp, string DestinationURL, pluginner.File SourceFile, int Progress)
+        void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL)
         {
-            pluginner.IFSPlugin SourceFS = lpa.FS;
-            pluginner.IFSPlugin DestinationFS = lpp.FS;
-
             pluginner.File NewFile = SourceFile;
             NewFile.Path = DestinationURL;
 
@@ -81,41 +78,42 @@ namespace fcmd
             }
             catch (Exception ex)
             {
-                Xwt.MessageDialog.ShowMessage("");
+                Xwt.MessageDialog.ShowMessage(string.Format(Locale.GetString("CantCopy"),SourceFile.Name,ex.Message));
             }
         }
 
         /// <summary>
         /// Copy the entrie directory
         /// </summary>
-        private void DoCpDir(string source, string destination)
+        private void DoCpDir(string source, string destination, pluginner.IFSPlugin fsa, pluginner.IFSPlugin fsb)
         {
-            pluginfinder pf = new pluginfinder();
+            /*pluginfinder pf = new pluginfinder();
             pluginner.IFSPlugin fsa = pf.GetFSplugin(source); fsa.CurrentDirectory = source;
-            pluginner.IFSPlugin fsb = pf.GetFSplugin(destination);
+            pluginner.IFSPlugin fsb = pf.GetFSplugin(destination);*/
+
+            if (!System.IO.Directory.Exists(source))
+                return;
 
             if (!Directory.Exists(destination)) { fsb.CreateDirectory(destination); }
             fsb.CurrentDirectory = destination;
             foreach (pluginner.DirItem di in fsa.DirectoryContent)
             {
                 if (di.TextToShow == "..")
-                { /*не трогать, это кнопка "вверх"*/}
+                { /* don't touch the link to the parent directory */}
                 else if (!di.IsDirectory)
                 {
                     //перебор файлов
                     //формирование нового пути
-                    string s1 = di.Path; //старый путь
-                    pluginner.File CurFile = fsa.GetFile(s1, new int()); //исходный файл
-                    string s2 = destination + fsb.DirSeparator + CurFile.Name; //новый путь
+                    string s1 = di.Path; //source url
+                    FSEntryMetadata md1 = fsa.GetMetadata(s1);
+                    string s2 = destination + fsb.DirSeparator + md1.Name;
 
-                    //запись копии
-                    CurFile.Path = s2;
-                    fsb.WriteFile(CurFile, new int(), fsa.GetFileContent(s1));
+                    DoCp(fsa, fsb, fsa.GetFile(s1, new double()), s1);
                 }
                 else
                 {
                     //перебор подкаталогов
-                    DoCpDir(di.Path, destination + fsb.DirSeparator + di.TextToShow);
+                    DoCpDir(di.Path, destination + fsb.DirSeparator + di.TextToShow, fsa,fsb);
                 }
             }
         }

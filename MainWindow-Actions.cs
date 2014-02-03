@@ -177,7 +177,7 @@ namespace fcmd
                 if (ibx.ShowDialog())
                 {
                     String DestinationFilePath = ibx.Result;
-                    Thread CpThread = new Thread(delegate() { DoCp(ActivePanel, PassivePanel, DestinationFilePath, SourceFile, Progress); });
+                    Thread CpThread = new Thread(delegate() { DoCp(ActivePanel.FS, PassivePanel.FS, SourceFile, DestinationFilePath); });
                     FileProcessDialog fpd = new FileProcessDialog();
                     //UNDONE: place the FPD over the middle of the main window
                     fpd.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL) + "\n", ibx.Result, null);
@@ -202,7 +202,7 @@ namespace fcmd
                 if (ibxd.ShowDialog())
                 {
                     //копирование каталога
-                    Thread CpDirThread = new Thread(delegate() { DoCpDir(SourceURL, DestinationDirPath); });
+                    Thread CpDirThread = new Thread(delegate() { DoCpDir(SourceURL, DestinationDirPath, ActivePanel.FS,PassivePanel.FS); });
 
                     FileProcessDialog CpDirProgressDialog = new FileProcessDialog();
                     /*CpDirProgressDialog.Y = this.Top + ActivePanel.Top;
