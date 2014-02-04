@@ -74,6 +74,7 @@ namespace fcmd
 
         Xwt.MenuItem mnuHelp = new Xwt.MenuItem() { Tag = "mnuHelp" };
         Xwt.MenuItem mnuHelpHelpMe = new Xwt.MenuItem() { Tag = "mnuHelpHelpMe" };
+		Xwt.MenuItem mnuHelpDebug = new Xwt.MenuItem() { Tag="mnuHelpDebug" };
         Xwt.MenuItem mnuHelpAbout = new Xwt.MenuItem() { Tag = "mnuHelpAbout" };
 
 
@@ -165,6 +166,7 @@ namespace fcmd
 
             mnuHelp.SubMenu = new Xwt.Menu();
             mnuHelp.SubMenu.Items.Add(mnuHelpHelpMe);
+			mnuHelp.SubMenu.Items.Add(mnuHelpDebug);
             mnuHelp.SubMenu.Items.Add(mnuHelpAbout);
 
             TranslateMenu(MainMenu);
@@ -173,6 +175,7 @@ namespace fcmd
             PanelLayout.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(PanelLayout_KeyReleased);
 
             mnuToolsOptions.Clicked += new EventHandler(mnuToolsOptions_Clicked);
+			mnuHelpDebug.Clicked += ShowDebugInfo;
             mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
             
             Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -12, -12,12);
@@ -261,6 +264,30 @@ namespace fcmd
                     ActivePanel = p1; PassivePanel = p2;
                     break;
             }
+        }
+
+        void ShowDebugInfo (object sender, EventArgs e)
+        {
+			Xwt.Dialog Fcdbg = new Xwt.Dialog();
+			Fcdbg.Buttons.Add(Xwt.Command.Close);
+			Fcdbg.Buttons[0].Clicked += (o, ea) => {Fcdbg.Hide();};
+			Fcdbg.Title="FC debug output";
+			string txt = ""+
+				"===THE FILE COMMANDER, VERSION " + Winforms.Application.ProductVersion + (Environment.Is64BitProcess ? " 64-BIT" : " 32-BIT") + "===\n"+
+				Environment.CommandLine + " @ .NET fw " + Environment.Version + (Environment.Is64BitOperatingSystem ? " 64-bit" : " 32-bit") + " on " + Environment.MachineName + "-" + Environment.OSVersion + "\n" +
+				"The current drawing toolkit is " + Xwt.Toolkit.CurrentEngine.GetSafeBackend (this) + "\n" +
+				"\nPanel debug:\n---------\n"+
+				"The active panel is: " + ((ActivePanel == p1) ? "LEFT\n" : "RIGHT\n") +
+				"The passive panel is: " + ((ActivePanel == p2) ? "LEFT\n" : "RIGHT\n")+
+				"The LEFT filesystem: " + p1.FS.ToString() + " at \"" + p1.FS.CurrentDirectory + "\"\n"+
+				"The RIGHT filesystem: " + p2.FS.ToString() + " at \"" + p2.FS.CurrentDirectory + "\"\n"+
+				"Filesystems are same by type? " + (p1.FS.GetType()==p2.FS.GetType()) + ".\n"+
+				"Filesystems are identically? " + (p1.FS==p2.FS) + ".\n";
+			Xwt.RichTextView rtv = new Xwt.RichTextView();
+			rtv.LoadText(txt, new Xwt.Formats.PlainTextFormat());
+			Fcdbg.Content = rtv;
+			Fcdbg.Width = 500;
+			Fcdbg.Run();
         }
 
         void mnuToolsOptions_Clicked(object sender, EventArgs e)

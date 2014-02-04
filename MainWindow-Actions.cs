@@ -198,11 +198,12 @@ namespace fcmd
             if (SourceFS.DirectoryExists(SourceURL))//а вдруг есть такой каталог?
             {
                 InputBox ibxd = new InputBox(String.Format(Locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + "/" + SourceFile.Name);
-                String DestinationDirPath = ibxd.Result;
+                
                 if (ibxd.ShowDialog())
                 {
+					String DestinationDirPath = ibxd.Result;
                     //копирование каталога
-                    Thread CpDirThread = new Thread(delegate() { DoCpDir(SourceURL, DestinationDirPath, ActivePanel.FS,PassivePanel.FS); });
+                    Thread CpDirThread = new Thread(delegate() { DoCpDir(SourceURL, DestinationDirPath, ActivePanel.FS, PassivePanel.FS); });
 
                     FileProcessDialog CpDirProgressDialog = new FileProcessDialog();
                     /*CpDirProgressDialog.Y = this.Top + ActivePanel.Top;

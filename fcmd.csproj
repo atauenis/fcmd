@@ -123,6 +123,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="VEd.cs" />
     <Compile Include="VEsettings.cs" />
+    <Compile Include="ReplaceQuestionDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

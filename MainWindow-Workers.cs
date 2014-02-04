@@ -16,17 +16,16 @@ namespace fcmd
     partial class MainWindow
     {
         /* ЗАМЕТКА РАЗРАБОТЧИКУ
- * 
- * В данном файле размещаются функции для работы с файлами и каталогами.
- * Данные функции запускаются в отдельных от UI потоках и вызваются функциями
- * из файлов frmMain.cs и frmMain-CLI.cs . Всякая функция должна иметь
- * префикс Do, означающий её чисто утилитарную принадлежность, без UI.
- * Крайне нежелательно обращение к элементам управления формы, поскольку
- * это требует всяких согласующих операций и прочих делегатов, что ухудшает
- * читаемость кода.
- * Также нежелательно обращение к System.Windows.Forms, поскольку код данного
- * файла должен быть кросс-платформенным.
- */
+		 * 
+		 * В данном файле размещаются функции для работы с файлами и каталогами.
+		 * Данные функции запускаются в отдельных от UI потоках из кода
+		 * файла MainWindow-Actions.cs . Всякая функция должна иметь
+		 * префикс Do, означающий её чисто утилитарную принадлежность.
+		 * 
+		 * Вызовы пользовательского интерфейса (XWT) должны производиться через
+		 * вызывалку Xwt.Application.Invoke(new Action(delegate { КОД ПОТОКА ИНТЕРФЕЙСА }));
+		 * в противном случае возможны глюки (вылеты WPF, зависания и лаги GTK).
+		 */
 
         /// <summary>
         /// Background directory lister
@@ -42,13 +41,49 @@ namespace fcmd
             ));
         }
 
-
-        /// <summary>
-        /// Background file copier
-        /// </summary>
-        /// <param name="lpa">active listpanel</param>
-        /// <param name="lpp">passive listpanel</param>
+		/// <summary>
+		/// Background file copier
+		/// </summary>
+		/// <param name='SourceFS'>
+		/// Source FS.
+		/// </param>
+		/// <param name='DestinationFS'>
+		/// Destination FS.
+		/// </param>
+		/// <param name='SourceFile'>
+		/// Source file.
+		/// </param>
+		/// <param name='DestinationURL'>
+		/// Destination URL.
+		/// </param>
         void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL)
+		{
+			ReplaceQuestionDialog.ClickedButton Placeholder = ReplaceQuestionDialog.ClickedButton.Cancel;
+			DoCp(SourceFS,DestinationFS,SourceFile,DestinationURL,ref Placeholder);
+		}
+
+		/// <summary>
+		/// Background file copier
+		/// </summary>
+		/// <param name='SourceFS'>
+		/// Source FS.
+		/// </param>
+		/// <param name='DestinationFS'>
+		/// Destination FS.
+		/// </param>
+		/// <param name='SourceFile'>
+		/// Source file.
+		/// </param>
+		/// <param name='DestinationURL'>
+		/// Destination URL.
+		/// </param>
+		/// <param name='SkipAll'>
+		/// The referenced variable will be set to TRUE if user chooses "Skip all"
+		/// </param>
+		/// <param name='ReplaceAll'>
+		/// The referenced variable will be set to TRUE if user chooses "Replace all"
+		/// </param>
+        void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL, ref ReplaceQuestionDialog.ClickedButton Feedback)
         {
             pluginner.File NewFile = SourceFile;
             NewFile.Path = DestinationURL;
@@ -58,9 +93,36 @@ namespace fcmd
                 string toshow = string.Format(Locale.GetString("CantCopy"), SourceFile.Name, itself);
                 
                 Xwt.Application.Invoke(new Action(delegate { Xwt.MessageDialog.ShowWarning(toshow); }));
-                //calling the msgbox in non-main threads causes some UI bugs, thus pushing this call into main thread
+                //calling the msgbox in non-main threads causes some UI bugs, thus push this call into main thread
                 return;
             }
+
+			if(DestinationFS.FileExists (DestinationURL)){
+				ReplaceQuestionDialog rpd = new ReplaceQuestionDialog(DestinationFS.GetFile(DestinationURL,new double()).Name);
+				switch(rpd.Run()){
+				case ReplaceQuestionDialog.ClickedButton.Replace:
+					//continue execution
+					Feedback = rpd.ChoosedButton;
+					break;
+				case ReplaceQuestionDialog.ClickedButton.ReplaceAll:
+					//continue execution
+					Feedback = rpd.ChoosedButton;
+					break;
+				case ReplaceQuestionDialog.ClickedButton.ReplaceOld:
+					Feedback = rpd.ChoosedButton;
+					if(SourceFS.GetMetadata(SourceFile.Path).LastWriteTimeUTC < DestinationFS.GetFile(DestinationURL,new double()).Metadata.LastWriteTimeUTC)
+					{/*continue execution*/}
+					else
+					{return;}
+					break;
+				case ReplaceQuestionDialog.ClickedButton.Skip:
+					Feedback = rpd.ChoosedButton;
+					return;
+				case ReplaceQuestionDialog.ClickedButton.SkipAll:
+					Feedback = rpd.ChoosedButton;
+					return;
+				}
+			}
 
             try
             {
@@ -87,32 +149,25 @@ namespace fcmd
         /// </summary>
         private void DoCpDir(string source, string destination, pluginner.IFSPlugin fsa, pluginner.IFSPlugin fsb)
         {
-            /*pluginfinder pf = new pluginfinder();
-            pluginner.IFSPlugin fsa = pf.GetFSplugin(source); fsa.CurrentDirectory = source;
-            pluginner.IFSPlugin fsb = pf.GetFSplugin(destination);*/
-
-            if (!System.IO.Directory.Exists(source))
-                return;
-
-            if (!Directory.Exists(destination)) { fsb.CreateDirectory(destination); }
+            if (!fsb.DirectoryExists(destination)) { fsb.CreateDirectory(destination); }
             fsb.CurrentDirectory = destination;
-            foreach (pluginner.DirItem di in fsa.DirectoryContent)
+
+            foreach (DirItem di in fsa.DirectoryContent)
             {
                 if (di.TextToShow == "..")
                 { /* don't touch the link to the parent directory */}
                 else if (!di.IsDirectory)
                 {
-                    //перебор файлов
-                    //формирование нового пути
+                    //it is file
                     string s1 = di.Path; //source url
                     FSEntryMetadata md1 = fsa.GetMetadata(s1);
-                    string s2 = destination + fsb.DirSeparator + md1.Name;
+                    string s2 = destination + fsb.DirSeparator + md1.Name; //destination url
 
-                    DoCp(fsa, fsb, fsa.GetFile(s1, new double()), s1);
+                    DoCp(fsa, fsb, fsa.GetFile(s1, new double()), s2);
                 }
-                else
+                else if (di.IsDirectory)
                 {
-                    //перебор подкаталогов
+                    //it is subdirectory
                     DoCpDir(di.Path, destination + fsb.DirSeparator + di.TextToShow, fsa,fsb);
                 }
             }

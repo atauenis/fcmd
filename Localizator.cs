@@ -36,7 +36,7 @@ namespace fcmd
                         "FCmnuViewShort=Краткий (список)\nFCmnuViewDetails=Полный (таблица)\nFCmnuViewIcons=Икноки (значки)\nFCmnuViewThumbs=Эскизы изображений\nFCmnuViewQuickView=Быстрый просмотр выделенного в сосед. панели\nFCmnuViewTree=Древо каталогов\nFCmnuViewPCPCconnect=Прямая связь ПК-ПК\nFCmnuViewPCNETPCconnect=Мини HTTP сервер\nFCmnuViewByName=По имени\nFCmnuViewByType=По расширению\nFCmnuViewByDate=По дате\nFCmnuViewBySize=По размеру\nFCmnuViewNoFilter=Без фильтра (*.*)\nFCmnuViewWithFilter=Применить фильтр имени...\nFCmnuViewToolbar=Панель инструментов\n" +
                         "FCmnuNavigateTree=Дерево\nFCmnuNavigateFind=Розыск файла...\nFCmnuNavigateHistory=История посещений\nFCmnuNavigateReload=Перезагрузить\n" +
                         "FCmnuToolsOptions=Настройки...\nFCmnuToolsPluginManager=Управление расширениями...\nFCmnuToolsEditUserMenu=Редактировать меню пользователя...\nFCmnuToolsKeybrdHelp=Подсказки клавиш F\nFCmnuToolsInfobar=Сводные строки\nFCmnuToolsDiskButtons=Кнопки дисков\nFCmnuToolsConfigEdit=Правка конфигурации FC\nFCmnuToolsKeychains=Учётные данные ФС\nFCmnuToolsDiskLabel=Метка диска...\nFCmnuToolsFormat=Форматировать носитель...\nFCmnuToolsSysInfo=Сведения о системе\n" +
-                        "FCmnuHelpHelpMe=Справка File Commander\nFCmnuHelpAbout=О программе...\n" +
+                        "FCmnuHelpHelpMe=Справка File Commander\nFCmnuHelpDebug=Отладка Файло-Коммандера\nFCmnuHelpAbout=О программе...\n" +
                         "FName=Имя\nFSize=Размер\nFDate=Дата\n" +
                         "FCDelAsk=Вы действительно хотите удалить файл \"{0}\"?\n" +
                         "Canceled=Отменено пользователем\n" +
@@ -48,7 +48,7 @@ namespace fcmd
                         "CantRead=Не читается: {0}.{1}\n" +
                         "CantWrite=Не пишется: {0}.{1}\n" +
                         "CantCopy=Ошибка копирования {0}: {1}\n" +
-                        "CantCopySelf=Невозможно скопировать файл самого в себя!\n" +
+                        "CantCopySelf=Нельзя копировать файл самого в себя!\n" +
                         "CantMove=Ошибка перемещения/переименования {0}: {1}\n" +
                         "CantRunEXE=Ошибка запуска внешней программы: \n" +
                         "FileProgressDialogTitle=File Commander\n" +
@@ -87,10 +87,14 @@ namespace fcmd
                         "FCS_Title=Настройки File Commander\nFCS_CantSaveSettings=Невозможно сохранить настройки. Проверьте введённые данные.\n" +
                         "swtMainWindow=Вид основного окна\nswtViewerEditor=Правка/просмотр\n" +
                         "SWTMWtoolbar=Панель инструментов\nSWTMWdiskbuttons=Кнопки дисков\nSWTMWdisklistbox=Окно выбора диска\nSWTMWpaneltitle=Заголовок файловой панели (с текущим путём)\nSWTMWtablecollumns=Заголовки столбцов\nSWTMWinfobar=Строки состояния\nSWTMWcmdline=Коммандная строка\nSWTMWkeybhelp=Подсказка клавиатуры (клавиш F)\n" +
-                        "SWTVEviewer=Просмотр по F3\nSWTVEinternalv=Встроенный просмоторщик (VE)\nSWTVEexternalv=Внешний просмоторщик:\nSWTVEvesetup=Настройка встроенной программы...\nSWTVEeditor=Редактор по F4\nSWTVEinternaleditor=Встроенный редактор\nSWTVEexternaleditor=Внешний редактор:\n" +
+                        "SWTVEviewer=Просмотр по F3\nSWTVEinternalv=Встроенный просмоторщик\nSWTVEexternalv=Внешний просмоторщик:\nSWTVEvesetup=Настройка встроенной программы...\nSWTVEeditor=Редактор по F4\nSWTVEinternaleditor=Встроенный редактор\nSWTVEexternaleditor=Внешний редактор:\n" +
                         "swtMainWindowColumns=    Столбцы панелей\n" +
                         "SWTMWCFileExtView=Показывать типы (расширения) файлов:\nSWTMWCExtTogether=Сразу после имени\nSWTMWCExtFar=Отдельно\nSWTMWCCollumns=Столбцы\nSWTMWCExt=Расширение\nSWTMWCSize=Pазмер\nSWTMWCDate=Изменено\nSWTMWCFileMode=Доступ\nSWTMWCExpandName=Расширить столбец \"Имя\"\nSWTMWCShowCentury=Показывать век в дате (20хх)\nSWTMWCShowTimeAs12h=12-часовой формат времени (AM/PM)\nSWTMWCShowDirsInStatus=Выводить внизу кол-во папок\nSWTMWCSizeDisplay=Размер в панелях\n" +
-                        "SizeDisplayPolicy000=в байтах\nSizeDisplayPolicy100=в КБ (округлённо)\nSizeDisplayPolicy200=в КБ (2 знака)\nSizeDisplayPolicy111=плавающий (x.x К/М/Г)\nSizeDisplayPolicy222=плавающий (x.xx К/М/Г)\nSizeDisplayPolicy110=плавающий (x.x К/М)\nSizeDisplayPolicy220=плавающий (x.xx K/M)\n";
+                        "SizeDisplayPolicy000=в байтах\nSizeDisplayPolicy100=в КБ (округлённо)\nSizeDisplayPolicy200=в КБ (2 знака)\nSizeDisplayPolicy111=плавающий (x.x К/М/Г)\nSizeDisplayPolicy222=плавающий (x.xx К/М/Г)\nSizeDisplayPolicy110=плавающий (x.x К/М)\nSizeDisplayPolicy220=плавающий (x.xx K/M)\n"+
+						"ReplaceQDTitle=Обнаружен конфликт имён файлов\nReplaceQDText=Существует одноимённый файл {0}. Выберите действие:\n"+
+						"ReplaceQDReplace=Заменить\nReplaceQDReplaceAll=Заменить все\n"+
+						"ReplaceQDSkip=Пропустить\nReplaceQDSkipAll=Пропустить все\n"+
+						"ReplaceQDReplaceOld=Заменять устаревшие\nReplaceQDCompare=Сравнить\n";
         Dictionary<string, string> Localization = new Dictionary<string, string>();
         
         /// <summary>
