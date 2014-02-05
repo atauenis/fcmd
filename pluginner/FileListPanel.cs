@@ -47,8 +47,8 @@ namespace pluginner
 			DiskBox.Content = DiskList;
 			DiskBox.CanScrollByY = false;
 
-            this.PackStart(UrlBox, false, true);
             this.PackStart(DiskBox, false, true);
+            this.PackStart(UrlBox, false, true);
             this.PackStart(ListingView, true, true);
             this.PackStart(StatusBar, false, true);
 

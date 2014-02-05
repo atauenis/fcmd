@@ -178,7 +178,7 @@ namespace fcmd
 			mnuHelpDebug.Clicked += ShowDebugInfo;
             mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
             
-            Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -12, -12,12);
+            Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -6, -12,12);
             Layout.PackStart(CommandBox,false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Fill,-12,-12,-12);
             Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Start,-12,-6,-12,-12);
             
@@ -198,6 +198,8 @@ namespace fcmd
 
             p1 = (PanelLayout.Panel1.Content as pluginner.FileListPanel);
             p2 = (PanelLayout.Panel2.Content as pluginner.FileListPanel);
+            p1.OpenFile += new pluginner.TypedEvent<string>(Panel_OpenFile);
+            p2.OpenFile += new pluginner.TypedEvent<string>(Panel_OpenFile);
             
             p1.FS = new base_plugins.fs.localFileSystem();
             p1.ListingView.Columns.Add(Locale.GetString("FName"), p1.dfDisplayName);
@@ -234,6 +236,9 @@ namespace fcmd
             //todo: implement "object Xwt.Widget.Tag" in modXWT (like Winforms's any Control.Tag)
 
             //apply user's settings
+            //window size
+            this.Width = fcmd.Properties.Settings.Default.WinWidth;
+            this.Height = fcmd.Properties.Settings.Default.WinHeight;
             //file size display policy
             char[] Policies = fcmd.Properties.Settings.Default.SizeShorteningPolicy.ToCharArray();
 
@@ -266,6 +271,24 @@ namespace fcmd
             }
         }
 
+        void Panel_OpenFile(string data)
+        {
+            if (data.StartsWith("file://") && System.IO.File.Exists(data.Replace("file://","")))
+            {
+                try
+                {
+                    System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                    proc.StartInfo.FileName = data.Replace("file://", "");
+                    proc.StartInfo.UseShellExecute = true;
+                    proc.Start();
+                }
+                catch (Exception ex)
+                {
+                    Xwt.MessageDialog.ShowMessage(ex.Message);
+                }
+            }
+        }
+
         void ShowDebugInfo (object sender, EventArgs e)
         {
 			Xwt.Dialog Fcdbg = new Xwt.Dialog();
@@ -274,15 +297,16 @@ namespace fcmd
 			Fcdbg.Title="FC debug output";
 			string txt = ""+
 				"===THE FILE COMMANDER, VERSION " + Winforms.Application.ProductVersion + (Environment.Is64BitProcess ? " 64-BIT" : " 32-BIT") + "===\n"+
-				Environment.CommandLine + " @ .NET fw " + Environment.Version + (Environment.Is64BitOperatingSystem ? " 64-bit" : " 32-bit") + " on " + Environment.MachineName + "-" + Environment.OSVersion + "\n" +
+				Environment.CommandLine + " @ .NET fw " + Environment.Version + (Environment.Is64BitOperatingSystem ? " 64-bit" : " 32-bit") + " on " + Environment.MachineName + "-" + Environment.OSVersion + " (" + Environment.OSVersion.Platform + " v" + Environment.OSVersion.Version.Major + "." + Environment.OSVersion.Version.Minor + ")\n" +
 				"The current drawing toolkit is " + Xwt.Toolkit.CurrentEngine.GetSafeBackend (this) + "\n" +
 				"\nPanel debug:\n---------\n"+
 				"The active panel is: " + ((ActivePanel == p1) ? "LEFT\n" : "RIGHT\n") +
 				"The passive panel is: " + ((ActivePanel == p2) ? "LEFT\n" : "RIGHT\n")+
+                "They are different? "+ (ActivePanel != PassivePanel).ToString().ToUpper() + " (should be true)\n"+
 				"The LEFT filesystem: " + p1.FS.ToString() + " at \"" + p1.FS.CurrentDirectory + "\"\n"+
 				"The RIGHT filesystem: " + p2.FS.ToString() + " at \"" + p2.FS.CurrentDirectory + "\"\n"+
-				"Filesystems are same by type? " + (p1.FS.GetType()==p2.FS.GetType()) + ".\n"+
-				"Filesystems are identically? " + (p1.FS==p2.FS) + ".\n";
+				"Filesystems are same by type? " + (p1.FS.GetType()==p2.FS.GetType()).ToString().ToUpper() + ".\n"+
+				"Filesystems are identically? " + (p1.FS==p2.FS).ToString().ToUpper() + " (should be false).\n";
 			Xwt.RichTextView rtv = new Xwt.RichTextView();
 			rtv.LoadText(txt, new Xwt.Formats.PlainTextFormat());
 			Fcdbg.Content = rtv;
@@ -310,9 +334,12 @@ namespace fcmd
         void MainWindow_CloseRequested(object sender, Xwt.CloseRequestedEventArgs args)
         {
             //save settings bcos zi form is closing
+            Properties.Settings.Default.WinHeight = this.Height;
+            Properties.Settings.Default.WinWidth = this.Width;
             Properties.Settings.Default.Panel1URL = p1.FS.CurrentDirectory;
             Properties.Settings.Default.Panel2URL = p2.FS.CurrentDirectory;
-            fcmd.Properties.Settings.Default.LastActivePanel = (ActivePanel == p1) ? (byte)1 : (byte)2;
+            Properties.Settings.Default.LastActivePanel = (ActivePanel == p1) ? (byte)1 : (byte)2;
+            Properties.Settings.Default.Save();
             Xwt.Application.Exit();
         }
 
@@ -414,6 +441,7 @@ namespace fcmd
         /// <param name="NewPanel">The new active panel</param>
         private void SwitchPanel(pluginner.FileListPanel NewPanel)
         {
+            if (NewPanel == ActivePanel) return;
             PassivePanel = ActivePanel;
             ActivePanel = NewPanel;
             CommandBox.PlaceholderText = ActivePanel.FS.CurrentDirectory + ">";

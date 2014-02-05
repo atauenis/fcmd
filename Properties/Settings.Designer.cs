@@ -240,5 +240,29 @@ namespace fcmd.Properties {
                 this["BookmarksFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public double WinHeight {
+            get {
+                return ((double)(this["WinHeight"]));
+            }
+            set {
+                this["WinHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("750")]
+        public double WinWidth {
+            get {
+                return ((double)(this["WinWidth"]));
+            }
+            set {
+                this["WinWidth"] = value;
+            }
+        }
     }
 }

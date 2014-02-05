@@ -56,5 +56,11 @@
     <Setting Name="BookmarksFile" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="WinHeight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="WinWidth" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">750</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
