@@ -1,5 +1,5 @@
-/* The File Commander backend   Ядро File Commander
- * Local filesystem adapter     Модуль доступа к локальным ФС
+/* The File Commander base plugins - Local filesystem adapter
+ * The main part of the LocalFS FS plugin
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
@@ -10,14 +10,14 @@ using System.IO;
 
 namespace fcmd.base_plugins.fs
 {
-	public class localFileSystem : pluginner.IFSPlugin
+	public partial class localFileSystem : pluginner.IFSPlugin
 	{
         /* ЗАМЕТКА РАЗРАБОТЧИКУ             DEVELOPER NOTES
-         * В данном файле содержится код    This file contanis the local filesystem
-         * плагина доступа к локальным ФС.  adapter for the File Commander kernel.
-         * Данный код используется как в    This code should be cross-platform and
-         * версии для Win (.Net), так и     should be tested on both .NET Win. Forms
-         * в версии для *nix/MacOS (Mono)   and Linux/BSD (Mono/GTK#) envirroments.
+         * В данном файле содержится код    This file contanis the local FS
+         * плагина доступа к локальным ФС.  adapter for the File Commander.
+         * Не забывайте про отличия сред    Please don't forget about the differences
+         * Linux/BSD/MacOS от Windows.      between *nix & Win32, the code MUST be
+         * Код должен работать везде!       cross-platformy.
          */
         public string Name { get { return new Localizator().GetString("LocalFSVer"); } }
 		public string Version { get{return "1.0";} }
@@ -29,7 +29,14 @@ namespace fcmd.base_plugins.fs
 		List<pluginner.DirItem> DirContent = new List<pluginner.DirItem>();
 		string CurDir;
 
-		public string CurrentDirectory {get{return CurDir;} set{CurDir = value; ReadDirectory(value);}}
+        public string CurrentDirectory
+        {
+            get { return CurDir; }
+            set {
+                CurDir = value;
+                ReadDirectory(value);
+            }
+        }
 
 		private void _CheckProtocol(string url){ //проверка на то, чтобы нечаянно через localfs не попытались зайти в ftp, webdav, реестр и т.п. :-)
 			if(!url.StartsWith("file:")) throw new pluginner.PleaseSwitchPluginException();
@@ -111,6 +118,12 @@ namespace fcmd.base_plugins.fs
 			}
             if (ProgressChanged != null) { ProgressChanged(2); }
             if (StatusChanged != null) { StatusChanged(""); };
+
+
+            if (CLIpromptChanged != null)
+            {
+                CLIpromptChanged("FC: " + InternalURL + ">");
+            }
 		}
 
         public bool CanBeRead(string url){ //проверить файл/папку "URL" на читаемость

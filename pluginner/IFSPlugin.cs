@@ -166,6 +166,27 @@ namespace pluginner
         /// Raises when the plugin want to show a progressbar in the panel status bar; the argument is a number in range of 0...1; if the eventarg is 0, the progress bar will hide
         /// </summary>
         event pluginner.TypedEvent<double> ProgressChanged;
+
+        /// <summary>
+        /// Start a program <paramref name="CommandLine"/> in the environment or write some data into the current program's stdin stream.
+        /// </summary>
+        /// <param name="StdIn">The stdin text or the new program name</param>
+        void CLIstdinWriteLine(string StdIn);
+
+        /// <summary>
+        /// The plugin raises this event when the STDOUT of a program in CLI sends a data;
+        /// </summary>
+        event TypedEvent<string> CLIstdoutDataReceived;
+
+        /// <summary>
+        /// The plugin raises this event when the STDERR of a program in CLI sends a data;
+        /// </summary>
+        event TypedEvent<string> CLIstderrDataReceived;
+
+        /// <summary>
+        /// The plugin raises this event when the commandbar prompt should be changed
+        /// </summary>
+        event TypedEvent<string> CLIpromptChanged;
     }
 
     /// <summary>File info</summary>

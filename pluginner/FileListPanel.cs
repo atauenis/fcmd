@@ -32,6 +32,8 @@ namespace pluginner
         public Xwt.Label StatusBar = new Xwt.Label();
         public Xwt.Table StatusTable = new Xwt.Table();
         public Xwt.ProgressBar StatusProgressbar = new Xwt.ProgressBar();
+        Xwt.TextEntry CLIoutput = new Xwt.TextEntry() { MultiLine = true, ShowScrollBars = true, ShowFrame = true, Visible = false, HeightRequest = 50 };
+        Xwt.TextEntry CLIprompt = new Xwt.TextEntry();
 
         /// <summary>User navigates into another directory</summary>
         public event TypedEvent<string> Navigate;
@@ -50,9 +52,36 @@ namespace pluginner
             this.PackStart(DiskBox, false, true);
             this.PackStart(UrlBox, false, true);
             this.PackStart(ListingView, true, true);
+            this.PackStart(CLIoutput);
+            this.PackStart(CLIprompt);
             this.PackStart(StatusBar, false, true);
 
             WriteDefaultStatusLabel();
+
+            CLIprompt.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(CLIprompt_KeyReleased);
+        }
+
+        void CLIprompt_KeyReleased(object sender, Xwt.KeyEventArgs e)
+        {
+            if (e.Key == Xwt.Key.Return){
+                CLIoutput.Visible = true;
+                string stdin = CLIprompt.Text;
+                CLIprompt.Text = "";
+                FS.CLIstdinWriteLine(stdin);
+            }
+        }
+
+        void FS_CLIpromptChanged(string data)
+        {
+            CLIprompt.PlaceholderText = data;
+        }
+
+        void FS_CLIstdoutDataReceived(string data)
+        {
+            Xwt.Application.Invoke(new Action(delegate
+            {
+                CLIoutput.Text += "\n" + data;
+            }));
         }
 
         /// <summary>Make the panel's widgets</summary>
@@ -200,6 +229,10 @@ namespace pluginner
             CurShortenKB = ShortenKB; CurShortenMB = ShortenMB; CurShortenGB = ShortenGB;
 
             if (FS == null) throw new InvalidOperationException("No filesystem is binded to this FileListPanel");
+
+            //неспешное TODO:придумать, куда лучше закорячить; не забываем, что во время работы FS может меняться полностью
+            FS.CLIstdoutDataReceived += new TypedEvent<string>(FS_CLIstdoutDataReceived);
+            FS.CLIpromptChanged += new TypedEvent<string>(FS_CLIpromptChanged);
 
             ListingView.Cursor = Xwt.CursorType.IBeam;//todo: modify modxwt and add hourglass cursor
             ListingView.Sensitive = false;

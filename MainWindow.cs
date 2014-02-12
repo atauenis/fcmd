@@ -89,7 +89,6 @@ namespace fcmd
         /// <summary>The current inactive panel</summary>
         pluginner.FileListPanel PassivePanel;
 
-        Xwt.TextEntry CommandBox = new Xwt.TextEntry();
         Xwt.HBox KeyBoardHelp = new Xwt.HBox();
         Xwt.Button[] KeybHelpButtons = new Xwt.Button[11]; //одна лишняя, которая нумбер [0]
 
@@ -179,7 +178,6 @@ namespace fcmd
             mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
             
             Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -6, -12,12);
-            Layout.PackStart(CommandBox,false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Fill,-12,-12,-12);
             Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Start,-12,-6,-12,-12);
             
             this.Content = Layout;
@@ -444,7 +442,6 @@ namespace fcmd
             if (NewPanel == ActivePanel) return;
             PassivePanel = ActivePanel;
             ActivePanel = NewPanel;
-            CommandBox.PlaceholderText = ActivePanel.FS.CurrentDirectory + ">";
 #if DEBUG
             string PanelName = (NewPanel == p1) ? "LEFT" : "RIGHT";
             Console.WriteLine("FOCUS DEBUG: The " + PanelName + " panel (" + NewPanel.FS.CurrentDirectory + ") got focus");
