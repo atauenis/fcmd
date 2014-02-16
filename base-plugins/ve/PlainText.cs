@@ -26,6 +26,18 @@ namespace fcmd.base_plugins.ve
             ScrollBox.HeightRequest = 350;//todo: read from settings
         }
 
+        public int[] FlexibleAPIversion {
+            get{
+                int[] fapiver = {0,1,0, 0,1,0};
+                return fapiver;
+            }
+        }
+
+        public object FlexibleAPIcall(string call, params object[] arguments)
+        {
+            return null;
+        }
+
         public void OpenFile(string url, pluginner.IFSPlugin fsplugin)
         {
             fileContent = fsplugin.GetFileContent(url);

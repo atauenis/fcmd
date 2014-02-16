@@ -42,10 +42,12 @@ namespace pluginner
 
         private SizeDisplayPolicy CurShortenKB, CurShortenMB, CurShortenGB;
         private bool ProgressShown = false;
+        private string QABarXML;
+        private string ColorSXML;
 
-        public FileListPanel(string BookmarkXML = null)
+        public FileListPanel(string BookmarkXML = null, string PanelColorSchemeXML = null)
         {
-            BuildUI(BookmarkXML);
+            BuildUI(BookmarkXML, PanelColorSchemeXML);
 			DiskBox.Content = DiskList;
 			DiskBox.CanScrollByY = false;
 
@@ -86,7 +88,8 @@ namespace pluginner
 
         /// <summary>Make the panel's widgets</summary>
         /// <param name="BookmarkXML">Bookmark list XML data</param>
-        public void BuildUI(string BookmarkXML)
+        /// <param name="PanelColorSchemeXML">The panel's color scheme XML data (PanelColorScheme section)</param>
+        public void BuildUI(string BookmarkXML = null, string PanelColorSchemeXML= null)
         {
             //URL BOX
             UrlBox.ShowFrame = false;
@@ -95,16 +98,20 @@ namespace pluginner
             UrlBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(UrlBox_KeyReleased);
 
             //QUICK ACCESS BAR
-
-            if (BookmarkXML == null)
-            {
-                BookmarkXML = Utilities.GetEmbeddedResource("DefaultBookmarks.xml");
-                if (BookmarkXML == null) throw new Exception("Cannot load pluginner.dll::DefaultBookmarks.xml");
+            if (BookmarkXML == null){
+                if (QABarXML == null){
+                    BookmarkXML = Utilities.GetEmbeddedResource("DefaultBookmarks.xml");
+                    if (BookmarkXML == null) throw new Exception("Cannot load pluginner.dll::DefaultBookmarks.xml");
+                    QABarXML = BookmarkXML;
+                }
+                else{
+                    BookmarkXML = QABarXML;
+                }
             }
             DiskList.Clear();
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(BookmarkXML);
-            XmlNodeList items = doc.GetElementsByTagName("SpeedDial");
+            XmlDocument bmDoc = new XmlDocument();
+            bmDoc.LoadXml(BookmarkXML);
+            XmlNodeList items = bmDoc.GetElementsByTagName("SpeedDial");
             foreach (XmlNode x in items)
             {//parsing speed dials
                 if (
@@ -141,6 +148,83 @@ namespace pluginner
                         }
                         //todo: bookmark folders
                     }
+                }
+            }
+
+            //COLORS
+            if (PanelColorSchemeXML == null){
+                if (ColorSXML == null){
+                    ColorSXML = Utilities.GetEmbeddedResource("MidnorkovColorScheme.xml");
+                }
+            }
+            else ColorSXML = PanelColorSchemeXML;
+
+            if (!ColorSXML.StartsWith("<PanelColorScheme"))
+            {
+                int start = ColorSXML.IndexOf("<PanelColorScheme");
+                string Cut1 = ColorSXML.Substring(start);
+                int stop = Cut1.IndexOf("</PanelColorScheme>");
+                if (start < 0) throw new Exception("PLUGINNER: Invalid color scheme. It should start with \"<PanelColorScheme>\" and end with \"</PanelColorScheme>\" XML tags");
+                ColorSXML = Cut1.Substring(0, stop + 19);
+            }
+
+            XmlDocument csDoc = new XmlDocument();
+            csDoc.LoadXml(ColorSXML);
+            XmlNodeList csNodes = csDoc.GetElementsByTagName("Brush");
+            foreach (XmlNode x in csNodes){
+                try{
+                Xwt.Label defaultcolors = new Xwt.Label("The explorer for default system colors");
+                this.PackStart(defaultcolors);
+                Xwt.Drawing.Color fcolor = defaultcolors.TextColor;
+                Xwt.Drawing.Color bgcolor = defaultcolors.BackgroundColor;
+                this.Remove(defaultcolors);
+                defaultcolors = null;
+
+                try { fcolor = Utilities.Rgb2XwtColor(x.Attributes["forecolor"].Value); }
+                catch { }
+                try { bgcolor = Utilities.Rgb2XwtColor(x.Attributes["backcolor"].Value); }
+                catch { }
+
+                    switch (x.Attributes["id"].Value)
+                    {
+                        case "ThePanel":
+                            this.BackgroundColor = bgcolor;
+                            break;
+                        case "QuickAccessBar":
+                            DiskList.BackgroundColor = bgcolor;
+                            DiskBox.BackgroundColor = bgcolor;
+                            foreach (Xwt.Button btn in DiskButtons){
+                                btn.BackgroundColor = bgcolor;
+                                //todo: доработать modXWT и запилить забытое (?) свойство ForeColor.
+                            }
+                            break;
+                        case "UrlBar":
+                            UrlBox.BackgroundColor = bgcolor;
+                            //todo: доработать modXWT и запилить забытое (?) свойство ForeColor.
+                            UrlBox.ShowFrame =  Convert.ToBoolean(x.Attributes["border"].Value);
+                            break;
+                        case "FileList":
+                            ListingView.BackgroundColor = bgcolor;
+                            ListingView.BorderVisible = Convert.ToBoolean(x.Attributes["border"].Value);
+                            break;
+                        case "StatusBar":
+                            StatusBar.BackgroundColor = bgcolor;
+                            StatusBar.TextColor = fcolor;
+                            StatusTable.BackgroundColor = bgcolor;
+                            break;
+                        case "CLIoutput":
+                            CLIoutput.BackgroundColor = bgcolor;
+                            CLIoutput.ShowFrame = Convert.ToBoolean(x.Attributes["border"].Value);
+                            break;
+                        case "CLIprompt":
+                            CLIprompt.BackgroundColor = bgcolor;
+                            CLIprompt.ShowFrame = Convert.ToBoolean(x.Attributes["border"].Value);
+                            break;
+                    }
+                }
+                catch (NullReferenceException)
+                {
+                    Console.WriteLine("WARNING: Something is wrong in the color scheme: " + x.OuterXml);
                 }
             }
 
@@ -237,28 +321,37 @@ namespace pluginner
             ListingView.Cursor = Xwt.CursorType.IBeam;//todo: modify modxwt and add hourglass cursor
             ListingView.Sensitive = false;
 
-            FS.CurrentDirectory = URL;
-            FLStore.Clear();
-            UrlBox.Text = URL;
-            FS.StatusChanged += new TypedEvent<string>(FS_StatusChanged);
-            FS.ProgressChanged += new TypedEvent<double>(FS_ProgressChanged);
-
-            foreach (DirItem di in FS.DirectoryContent)
+            try
             {
-                FLStore.AddRow();
-                FLStore.SetValue<string>(FLStore.RowCount-1, dfURL, di.Path);
-                FLStore.SetValue<pluginner.FSEntryMetadata>(FLStore.RowCount - 1, dfMetadata, FS.GetMetadata(di.Path));
-                FLStore.SetValue<string>(FLStore.RowCount - 1, dfDisplayName, di.TextToShow);
-                if(di.TextToShow == "..")//parent dir
-                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, "<↑ UP>");
-                else if (di.IsDirectory){//dir
-                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, "<DIR>");
-                    FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
+                FS.CurrentDirectory = URL;
+                FLStore.Clear();
+                UrlBox.Text = URL;
+                FS.StatusChanged += new TypedEvent<string>(FS_StatusChanged);
+                FS.ProgressChanged += new TypedEvent<double>(FS_ProgressChanged);
+
+                foreach (DirItem di in FS.DirectoryContent)
+                {
+                    FLStore.AddRow();
+                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfURL, di.Path);
+                    FLStore.SetValue<pluginner.FSEntryMetadata>(FLStore.RowCount - 1, dfMetadata, FS.GetMetadata(di.Path));
+                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfDisplayName, di.TextToShow);
+                    if (di.TextToShow == "..")//parent dir
+                        FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, "<↑ UP>");
+                    else if (di.IsDirectory)
+                    {//dir
+                        FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, "<DIR>");
+                        FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
+                    }
+                    else
+                    {//file
+                        FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, KiloMegaGigabyteConvert(di.Size, ShortenKB, ShortenMB, ShortenGB));
+                        FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
+                    }
                 }
-                else{//file
-                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, KiloMegaGigabyteConvert(di.Size, ShortenKB, ShortenMB, ShortenGB));
-                    FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
-                }
+            }
+            catch (Exception ex)
+            {
+                Xwt.MessageDialog.ShowWarning(ex.Message);
             }
             ListingView.Sensitive = true;
             ListingView.Cursor = Xwt.CursorType.Arrow;
@@ -458,6 +551,8 @@ namespace pluginner
             //todo
             StatusBar.Text = "The statusbar is not yet implemented...";
         }
+
+
 
     }
 }

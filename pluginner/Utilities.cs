@@ -13,8 +13,28 @@ using System.IO;
 
 namespace pluginner
 {
-    class Utilities
+    public static class Utilities
     {
+        public static int Hex2Dec(string hex)
+        {
+            return Convert.ToInt32(hex, 16);
+        }
+
+        public static Xwt.Drawing.Color Rgb2XwtColor(string RGBhex)
+        {
+            if (RGBhex.Length != 6) throw new ArgumentOutOfRangeException("RGBhex", "The color should be in the following format: HHHHHH (where H is any hexacedimal number)");
+            string[] colors16 = new string[3];
+            colors16[0] = RGBhex.Substring(0, 1) + RGBhex.Substring(1, 1);
+            colors16[1] = RGBhex.Substring(2, 1) + RGBhex.Substring(3, 1);
+            colors16[2] = RGBhex.Substring(4, 1) + RGBhex.Substring(5, 1);
+            int[] colors10 = new int[3];
+            for (int i = 0; i < 3; i++)
+            {
+                colors10[i] = Hex2Dec(colors16[i]);
+            }
+            return new Xwt.Drawing.Color(colors10[0], colors10[1], colors10[2]);
+        }
+
         /// <summary>Loads embedded resource</summary>
         /// <param name="resourceName">The name of the resource</param>
         /// <param name="assembly">The assembly, which contains the resource</param>

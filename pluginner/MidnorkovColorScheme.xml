@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ColorScheme id="default" name="Midnorkov Commander" description="The color scheme, that looks like the classic file managers: Norton, Volkov and Midnight Commanders and FAR Manager">
+  <Window id="Main">
+    <Brush id="Window" backcolor="0000FF" forecolor="FFFFFF" />
+    <Brush id="KeybrdHelp" backcolor="AAAAAA" forecolor="000000"/>
+    <PanelColorScheme>
+      <Brush id="ThePanel" backcolor="0000FF" forecolor="00FFFF"/>
+      <Brush id="QuickAccessBar" backcolor="0000FF" forecolor="00FFFF"/>
+      <Brush id="UrlBar" backcolor="0000FF" forecolor="00FFFF" border="false"/>
+      <Brush id="FileList" backcolor="0000FF" forecolor="FFFFFF" border="false"/>
+      <Brush id="StatusBar" backcolor="0000FF" forecolor="00FFFF"/>
+      <Brush id="CLIoutput" backcolor="000000" forecolor="AAAAAA" border="true"/>
+      <Brush id="CLIprompt" backcolor="000000" forecolor="AAAAAA" border="true"/>
+    </PanelColorScheme>
+  </Window>
+  <Window id="VE">
+    <Brush id="Window" backcolor="0000FF" forecolor="FFFFFF" />
+    <Brush id="PluginBody" backcolor="0000FF" forecolor="AAAAAA" />
+    <Brush id="KeybrdHelp" backcolor="AAAAAA" forecolor="000000"/>
+  </Window>
+</ColorScheme>

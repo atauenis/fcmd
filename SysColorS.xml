@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ColorScheme id="default" name="File Commander Default" description="The default color scheme (allow the OS to set the widget colors).">
+  <!--Всё пущено на самотёк, как в версиях до 16 февраля 2014 г.-->
+  <Window id="Main">
+    <!--<Brush id="Window" />
+    <Brush id="KeybrdHelp" />-->
+    <PanelColorScheme>
+      <!--<Brush id="ThePanel"/>
+      <Brush id="QuickAccessBar"/>
+      <Brush id="UrlBar" border="false"/>
+      <Brush id="FileList" border="false"/>
+      <Brush id="StatusBar"/>-->
+      <Brush id="CLIoutput" backcolor="000000" forecolor="AAAAAA" border="true"/>
+      <Brush id="CLIprompt" backcolor="000000" forecolor="AAAAAA" border="true"/>
+    </PanelColorScheme>
+  </Window>
+  <Window id="VE">
+    <!--<Brush id="Window" backcolor="0000FF" forecolor="FFFFFF" />
+    <Brush id="PluginBody" backcolor="0000FF" forecolor="AAAAAA" />
+    <Brush id="KeybrdHelp" backcolor="AAAAAA" forecolor="000000"/>-->
+  </Window>
+</ColorScheme>

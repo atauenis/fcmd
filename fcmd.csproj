@@ -131,6 +131,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
     <Reference Include="Xwt">
       <HintPath>stolen-opensource-libs\Xwt.dll</HintPath>
     </Reference>
@@ -223,6 +224,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <None Include="SysColorS.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="stolen-opensource-libs\readme.txt" />
     <Content Include="stolen-opensource-libs\Xwt.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace fcmd
 {
@@ -289,6 +290,57 @@ namespace fcmd
             if(fcmd.Properties.Settings.Default.ShowKeybrdHelp) Layout.PackStart(KeyBoardHelp, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, 6, -12, -12);
             //the values -12, -6 and 6 are need for 0px margins, and found experimentally.
             //as those experiments showed, these values is measured in pixels. Live and learn!
+
+            //UI color scheme
+            string ColorSchemeText = null;
+            if (fcmd.Properties.Settings.Default.ColorScheme != null && fcmd.Properties.Settings.Default.ColorScheme.Length > 0)
+            {
+                ColorSchemeText = System.IO.File.ReadAllText(fcmd.Properties.Settings.Default.ColorScheme, Encoding.UTF8);
+            }
+            else
+            {
+                ColorSchemeText = pluginner.Utilities.GetEmbeddedResource("MidnorkovColorScheme.xml");
+                //Midnorkov is the default, Midnight/Norton/Volkov Commander-like color scheme, included into Pluginner as a fallback
+            }
+            
+            Xwt.Label defaultcolors = new Xwt.Label("The explorer for default system colors");
+            Layout.PackStart(defaultcolors);
+            Xwt.Drawing.Color fcolor = defaultcolors.TextColor;
+            Xwt.Drawing.Color bgcolor = Layout.BackgroundColor; //defaultcolors.BackgroundColor;
+            Layout.Remove(defaultcolors);
+            defaultcolors = null;
+
+            XmlDocument csDoc = new XmlDocument();
+            csDoc.LoadXml(ColorSchemeText);
+            XmlNodeList csNodes = csDoc.GetElementsByTagName("Brush");
+            foreach (XmlNode x in csNodes)
+            {
+                try
+                {
+                    try { fcolor = pluginner.Utilities.Rgb2XwtColor(x.Attributes["forecolor"].Value); }
+                    catch { }
+                    try { bgcolor = pluginner.Utilities.Rgb2XwtColor(x.Attributes["backcolor"].Value); }
+                    catch { }
+
+                    switch (x.Attributes["id"].Value)
+                    {
+                        case "Window":
+                            Layout.BackgroundColor = bgcolor;
+                            break;
+                        case "PluginBody":
+                            PluginBody.BackgroundColor = bgcolor;
+                            break;
+                        case "KeybrdHelp":
+                            KeyBoardHelp.BackgroundColor = bgcolor;
+                            //todo: раскрасить кнопки F-клавиш
+                            break;
+                    }
+                }
+                catch (NullReferenceException)
+                {
+                    Console.WriteLine("WARNING: Something is wrong in the color scheme: " + x.OuterXml);
+                }
+            }
         }
 
 

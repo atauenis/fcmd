@@ -53,7 +53,7 @@
     <Setting Name="SizeShorteningPolicy" Description="File size humanization policy for panels.\nFormat: nnn {where n: 0/1/2}\nExample:222" Type="System.String" Scope="User">
       <Value Profile="(Default)">222</Value>
     </Setting>
-    <Setting Name="BookmarksFile" Type="System.String" Scope="User">
+    <Setting Name="BookmarksFile" Description="URL to the file that contains the hotlist" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="WinHeight" Type="System.Double" Scope="User">
@@ -61,6 +61,9 @@
     </Setting>
     <Setting Name="WinWidth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">750</Value>
+    </Setting>
+    <Setting Name="ColorScheme" Description="URL to the file which contains the color scheme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SysColorS.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Winforms = System.Windows.Forms;
+using System.Xml;
 
 namespace fcmd
 {
@@ -178,7 +179,7 @@ namespace fcmd
             mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
             
             Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -6, -12,12);
-            Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Start,-12,-6,-12,-12);
+            Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Start,-12,-12,-12,-12);
             
             this.Content = Layout;
             
@@ -189,10 +190,21 @@ namespace fcmd
                 BookmarksStore = File.ReadAllText(fcmd.Properties.Settings.Default.BookmarksFile, Encoding.UTF8);
 
             }
+            //apply color scheme to panels
+            string ColorSchemeText = null;
+            if (fcmd.Properties.Settings.Default.ColorScheme != null && fcmd.Properties.Settings.Default.ColorScheme.Length > 0)
+            {
+                ColorSchemeText = File.ReadAllText(fcmd.Properties.Settings.Default.ColorScheme, Encoding.UTF8);
+            }
+            else
+            {
+                ColorSchemeText = pluginner.Utilities.GetEmbeddedResource("MidnorkovColorScheme.xml");
+                //Midnorkov is the default, Midnight/Norton/Volkov Commander-like color scheme, included into Pluginner as a fallback
+            }
 
             //build panels
-            PanelLayout.Panel1.Content = new pluginner.FileListPanel(BookmarksStore); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
-            PanelLayout.Panel2.Content = new pluginner.FileListPanel(BookmarksStore);
+            PanelLayout.Panel1.Content = new pluginner.FileListPanel(BookmarksStore, ColorSchemeText); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
+            PanelLayout.Panel2.Content = new pluginner.FileListPanel(BookmarksStore, ColorSchemeText);
 
             p1 = (PanelLayout.Panel1.Content as pluginner.FileListPanel);
             p2 = (PanelLayout.Panel2.Content as pluginner.FileListPanel);
@@ -267,6 +279,42 @@ namespace fcmd
                     ActivePanel = p1; PassivePanel = p2;
                     break;
             }
+            //this.Show();
+            //UI color scheme
+            Xwt.Label defaultcolors = new Xwt.Label("The explorer for default system colors");
+            Layout.PackStart(defaultcolors);
+            Xwt.Drawing.Color fcolor = defaultcolors.TextColor;
+            Xwt.Drawing.Color bgcolor = Layout.BackgroundColor; //defaultcolors.BackgroundColor;
+            Layout.Remove(defaultcolors);
+            defaultcolors = null;
+
+            XmlDocument csDoc = new XmlDocument();
+            csDoc.LoadXml(ColorSchemeText);
+            XmlNodeList csNodes = csDoc.GetElementsByTagName("Brush");
+            foreach (XmlNode x in csNodes)
+            {
+                try{
+                try { fcolor = pluginner.Utilities.Rgb2XwtColor(x.Attributes["forecolor"].Value); }
+                catch { }
+                try { bgcolor = pluginner.Utilities.Rgb2XwtColor(x.Attributes["backcolor"].Value); }
+                catch { }
+
+                switch (x.Attributes["id"].Value)
+                {
+                    case "Window":
+                        Layout.BackgroundColor = bgcolor;
+                        break;
+                    case "KeybrdHelp":
+                        KeyBoardHelp.BackgroundColor = bgcolor;
+                        //todo: раскрасить кнопки F-клавиш
+                        break;
+                }
+                }
+                catch (NullReferenceException){
+                    Console.WriteLine("WARNING: Something is wrong in the color scheme: "+x.OuterXml);
+                }
+            }
+
         }
 
         void Panel_OpenFile(string data)
@@ -317,7 +365,6 @@ namespace fcmd
             new SettingsWindow().Run();
             ActivePanel.LoadDir();
             PassivePanel.LoadDir();
-            //todo: rebuild panels (panel.RebuildUI())
         }
 
         void mnuHelpAbout_Clicked(object sender, EventArgs e)

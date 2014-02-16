@@ -363,6 +363,20 @@ namespace fcmd.base_plugins.fs
             return lego;
         }
 
+        public int[] FlexibleAPIversion
+        {
+            get
+            {
+                int[] fapiver = { 0, 1, 0, 0, 1, 0 };
+                return fapiver;
+            }
+        }
+
+        public object FlexibleAPIcall(string call, params object[] arguments)
+        {
+            return null;
+        }
+
         /// <summary> Send new feedback data to UI</summary>
         /// <param name="Progress">The new progress value (or -1.79769e+308 if it should stay w/o changes): from 0.0 to 1.0 (or > 1.0 to hide the bar)</param>
         /// <param name="Status">The new status text (or null if it should stay w/o changes)</param>

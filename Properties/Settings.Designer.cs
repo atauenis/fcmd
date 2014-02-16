@@ -229,7 +229,11 @@ namespace fcmd.Properties {
             }
         }
         
+        /// <summary>
+        /// URL to the file that contains the hotlist
+        /// </summary>
         [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("URL to the file that contains the hotlist")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string BookmarksFile {
@@ -262,6 +266,22 @@ namespace fcmd.Properties {
             }
             set {
                 this["WinWidth"] = value;
+            }
+        }
+        
+        /// <summary>
+        /// URL to the file which contains the color scheme
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("URL to the file which contains the color scheme")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SysColorS.xml")]
+        public string ColorScheme {
+            get {
+                return ((string)(this["ColorScheme"]));
+            }
+            set {
+                this["ColorScheme"] = value;
             }
         }
     }
