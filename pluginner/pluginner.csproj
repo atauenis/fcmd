@@ -62,6 +62,8 @@
     <Compile Include="FileListPanel.cs" />
     <Compile Include="IFSPlugin.cs" />
     <Compile Include="IVEPlugin.cs" />
+    <Compile Include="ListView2.cs" />
+    <Compile Include="ListView2Item.cs" />
     <Compile Include="Pluginner.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />

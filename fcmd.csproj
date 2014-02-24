@@ -95,6 +95,7 @@
       <DependentUpon>ListPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Localizator.cs" />
+    <Compile Include="LV2_Test.cs" />
     <Compile Include="MainWindow-Actions.cs" />
     <Compile Include="MainWindow-Workers.cs" />
     <Compile Include="MainWindow.cs" />

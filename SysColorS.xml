@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ColorScheme id="default" name="File Commander Default" description="The default color scheme (allow the OS to set the widget colors).">
-  <!--Всё пущено на самотёк, как в версиях до 16 февраля 2014 г.-->
+  <!--Всё пущено на самотёк, как до a3f81d1 -->
   <Window id="Main">
     <!--<Brush id="Window" />
     <Brush id="KeybrdHelp" />-->
