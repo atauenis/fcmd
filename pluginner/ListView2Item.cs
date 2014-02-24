@@ -42,6 +42,11 @@ namespace pluginner
             }
         }
 
+        public void OnDblClick()
+        {
+            this.OnButtonPressed(new ButtonEventArgs() { MultiplePress = 2 });
+        }
+
         public ListView2Item(int RowNumber, int ColNumber, string RowTag, ListView2.CollumnInfo[] Collumns, List<Object> Data)
         {
             //this.BackgroundColor = Xwt.Drawing.Colors.GreenYellow;

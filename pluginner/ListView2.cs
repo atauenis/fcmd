@@ -42,6 +42,7 @@ namespace pluginner
             ScrollerOut.VerticalScrollPolicy = ScrollPolicy.Never;
             ScrollerIn.Content = Grid;
             ScrollerIn.HorizontalScrollPolicy = ScrollPolicy.Never;
+            ScrollerIn.BorderVisible = false;
             Layout.PackStart(CollumnRow);
             Layout.PackStart(ScrollerIn,true,true);
             Layout.KeyPressed += Layout_KeyPressed;
@@ -68,16 +69,39 @@ namespace pluginner
 
         void Layout_KeyPressed(object sender, KeyEventArgs e)
         {
+            //currently, the keyboard feel is same as in Norton & Total Commanders
             switch (e.Key)
             {
-                case Key.Up:
+                case Key.Up: //[↑] - move cursor up
                     if(PointedItem.RowNo > 0)
                         _SetPoint(Items[PointedItem.RowNo - 1]);
                     break;
-                case Key.Down:
+                case Key.Down: //[↓] - move cursor bottom
                     if(PointedItem.RowNo < LastRow - 1)
                         _SetPoint(Items[PointedItem.RowNo + 1]);
                     break;
+                case Key.Insert: //[Ins] - set selection & move pointer bottom
+                    _SelectItem(PointedItem);
+                    if(PointedItem.RowNo < LastRow - 1)
+                        _SetPoint(Items[PointedItem.RowNo + 1]);
+                    break;
+                case Key.Return: //[↵] - same as double click
+                    PointedItem.OnDblClick();
+                    break;
+                case Key.NumPadMultiply: //gray [*] - invert selection
+                    foreach (ListView2Item lvi in Items)
+                    {
+                        if ((int)lvi.State >= 2){
+                            _UnselectItem(lvi);
+                        }
+                        else{
+                            _SelectItem(lvi);
+                        }
+                    }
+                    break;
+                default: //otherwise send this keypress far
+                    this.OnKeyPressed(e);
+                    return;
             }
         }
 
@@ -167,7 +191,8 @@ namespace pluginner
 
         public void RemoveItem(ListView2Item Item)
         {
-            //Items.Remove(Item);
+            //Note that the removing item is simply hided.
+            //To remove it completely, call Clear() sub-programm. But all other rows will be also removed.
             Item.Visible = false;
         }
 
