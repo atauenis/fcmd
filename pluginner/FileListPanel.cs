@@ -17,18 +17,17 @@ namespace pluginner
     /// <summary>Filelist panel</summary>
     public class FileListPanel : Xwt.VBox
     {
-        public Xwt.ListStore FLStore; //file list storage
-        public Xwt.DataField<string> dfURL = new Xwt.DataField<string>();
-        public Xwt.DataField<string> dfDisplayName = new Xwt.DataField<string>();
-        public Xwt.DataField<string> dfSize = new Xwt.DataField<string>();
-        public Xwt.DataField<DateTime> dfChanged = new Xwt.DataField<DateTime>();
-        public Xwt.DataField<pluginner.FSEntryMetadata> dfMetadata = new Xwt.DataField<FSEntryMetadata>();
+        public int dfURL = 0;
+        public int dfDisplayName = 1;
+        public int dfSize = 2;
+        public int dfChanged = 3;
+
         public pluginner.IFSPlugin FS;
         public Xwt.TextEntry UrlBox = new Xwt.TextEntry();
 		public pluginner.LightScroller DiskBox = new LightScroller();
         public Xwt.HBox DiskList = new Xwt.HBox();
         public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
-        public Xwt.ListView ListingView = new Xwt.ListView();
+        public ListView2 ListingView = new ListView2();
         public Xwt.Label StatusBar = new Xwt.Label();
         public Xwt.Table StatusTable = new Xwt.Table();
         public Xwt.ProgressBar StatusProgressbar = new Xwt.ProgressBar();
@@ -61,6 +60,8 @@ namespace pluginner
             WriteDefaultStatusLabel();
 
             CLIprompt.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(CLIprompt_KeyReleased);
+            this.GotFocus += (o, ea) => { ListingView.BorderVisible = true; };
+            this.LostFocus += (o, ea) => { ListingView.BorderVisible = false; };
         }
 
         void CLIprompt_KeyReleased(object sender, Xwt.KeyEventArgs e)
@@ -228,15 +229,11 @@ namespace pluginner
                 }
             }
 
-            if(FLStore == null)
-            { FLStore = new Xwt.ListStore(dfURL, dfDisplayName, dfSize, dfMetadata, dfChanged); }
-            ListingView.DataSource = FLStore;
             ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
             ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
             ListingView.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
-            ListingView.SelectionChanged += (o, ea) => { this.OnGotFocus(ea); }; //hack for incomplete Xwt.Gtk ListView (19/01/2014)
+            //ListingView.SelectionChanged += (o, ea) => { this.OnGotFocus(ea); }; //hack for incomplete Xwt.Gtk ListView (19/01/2014)
             ListingView.BorderVisible = false;
-            ListingView.GtkEnableSearch = false;
         }
 
         void UrlBox_KeyReleased(object sender, Xwt.KeyEventArgs e)
@@ -251,14 +248,14 @@ namespace pluginner
         {
             if (e.Key == Xwt.Key.Return && ListingView.SelectedRow > -1)
             {
-                NavigateTo(FLStore.GetValue<string>(ListingView.SelectedRow, dfURL));
+                NavigateTo(ListingView.PointedItem.Data[0].ToString());
             }
         }
 
         void ListingView_ButtonPressed(object sender, Xwt.ButtonEventArgs e)
-        {
+        {//FIXME: possibly unreachable code, archaism from Winforms/Xwt ListView-based ListPanel
             if (e.MultiplePress == 2)//double click
-                NavigateTo(FLStore.GetValue<string>(ListingView.SelectedRow, dfURL));
+                NavigateTo(ListingView.PointedItem.Data[0].ToString());
         }
 
         /// <summary>
@@ -324,29 +321,29 @@ namespace pluginner
             try
             {
                 FS.CurrentDirectory = URL;
-                FLStore.Clear();
+                ListingView.Clear();
                 UrlBox.Text = URL;
                 FS.StatusChanged += new TypedEvent<string>(FS_StatusChanged);
                 FS.ProgressChanged += new TypedEvent<double>(FS_ProgressChanged);
 
                 foreach (DirItem di in FS.DirectoryContent)
                 {
-                    FLStore.AddRow();
-                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfURL, di.Path);
-                    FLStore.SetValue<pluginner.FSEntryMetadata>(FLStore.RowCount - 1, dfMetadata, FS.GetMetadata(di.Path));
-                    FLStore.SetValue<string>(FLStore.RowCount - 1, dfDisplayName, di.TextToShow);
+                    List<Object> Data = new List<Object>();
+                    Data.Add(di.Path);
+                    Data.Add(di.TextToShow);
                     if (di.TextToShow == "..")//parent dir
-                        FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, "<↑ UP>");
+                        Data.Add("<↑ UP>");
                     else if (di.IsDirectory)
                     {//dir
-                        FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, "<DIR>");
-                        FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
+                        Data.Add("<DIR>");
+                        Data.Add(di.Date);
                     }
                     else
                     {//file
-                        FLStore.SetValue<string>(FLStore.RowCount - 1, dfSize, KiloMegaGigabyteConvert(di.Size, ShortenKB, ShortenMB, ShortenGB));
-                        FLStore.SetValue<DateTime>(FLStore.RowCount - 1, dfChanged, di.Date);
+                        Data.Add(KiloMegaGigabyteConvert(di.Size, ShortenKB, ShortenMB, ShortenGB));
+                        Data.Add(di.Date);
                     }
+                    ListingView.AddItem(Data,di.Path);
                 }
             }
             catch (Exception ex)
@@ -355,7 +352,8 @@ namespace pluginner
             }
             ListingView.Sensitive = true;
             ListingView.Cursor = Xwt.CursorType.Arrow;
-            ListingView.SelectRow(0);
+            if (ListingView.Items.Count > 0)
+            { ListingView.SelectedRow = 0; }
             ListingView.SetFocus();//one fixed bug may make many other bugs...уточнить необходимость!
         }
 
@@ -480,13 +478,17 @@ namespace pluginner
         }
         
         /// <summary>
-        /// Gets the selected row's value from the <paramref name="Datafield"/>
+        /// Gets the selected row's value from the collumn №<paramref name="Field"/>
         /// </summary>
-        /// <typeparam name="T">The type of the datafield</typeparam>
-        /// <param name="Datafield">The datafield</param>
+        /// <typeparam name="T">The type of the data</typeparam>
+        /// <param name="Field">The field number</param>
         /// <returns>The value</returns>
-        public T GetValue<T>(Xwt.IDataField<T> Datafield){
-            return FLStore.GetValue<T>(ListingView.SelectedRow, Datafield);
+        public T GetValue<T>(int Field){
+            return (T)ListingView.PointedItem.Data[Field];
+        }
+
+        public string GetValue(int Field){
+            return (string)ListingView.PointedItem.Data[Field];
         }
 
         /// <summary>Add autobookmark "system disks" onto disk toolbar</summary>

@@ -125,7 +125,7 @@ namespace fcmd
             fpd.cmdCancel.Sensitive = false;
             fpd.Show();
 
-            string curItemDel = ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL);
+            string curItemDel = ActivePanel.GetValue<string>(ActivePanel.dfURL);
             pluginner.IFSPlugin fsdel = ActivePanel.FS;
             if (fsdel.FileExists(curItemDel))
             {
@@ -167,7 +167,7 @@ namespace fcmd
         public void Cp()
         {
             int Progress = 0;
-            string SourceURL = ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL);
+            string SourceURL = ActivePanel.GetValue<string>(ActivePanel.dfURL);
             pluginner.IFSPlugin SourceFS = ActivePanel.FS;
             pluginner.File SourceFile = SourceFS.GetFile(SourceURL, Progress);
 
@@ -180,8 +180,8 @@ namespace fcmd
                     Thread CpThread = new Thread(delegate() { DoCp(ActivePanel.FS, PassivePanel.FS, SourceFile, DestinationFilePath); });
                     FileProcessDialog fpd = new FileProcessDialog();
                     //UNDONE: place the FPD over the middle of the main window
-                    fpd.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL) + "\n", ibx.Result, null);
-                    fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
+                    fpd.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.GetValue<string>(ActivePanel.dfURL) + "\n", ibx.Result, null);
+                    fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
 
                     CpThread.Start();
                     fpd.Show();
@@ -209,7 +209,7 @@ namespace fcmd
                     /*CpDirProgressDialog.Y = this.Top + ActivePanel.Top;
                     CpDirProgressDialog.X = this.Left + ActivePanel.Left;*/
                     //UNDONE: позиция окна статуса!!!
-                    CpDirProgressDialog.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL) + " [" + Locale.GetString("Directory") + "]\n", ibxd.Result, null);
+                    CpDirProgressDialog.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.GetValue<string>(ActivePanel.dfURL) + " [" + Locale.GetString("Directory") + "]\n", ibxd.Result, null);
                     CpDirProgressDialog.cmdCancel.Clicked += (object s, EventArgs e) => { CpDirThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
 
                     CpDirProgressDialog.Show();
@@ -227,8 +227,8 @@ namespace fcmd
             //and if no of those IF blocks are open, say that this isn't a real file nor directory
             Xwt.MessageDialog.ShowWarning(
                 Locale.GetString("FileNotFound"),
-                ActivePanel.FLStore.GetValue<string>(
-                    ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL
+                ActivePanel.GetValue<string>(
+                    ActivePanel.dfURL
                 )
             );
             return;
@@ -243,8 +243,8 @@ namespace fcmd
             pluginner.IFSPlugin DestinationFS = PassivePanel.FS;
 
             //Getting useful URL parts
-            string SourceName = ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfDisplayName);
-            string SourcePath = ActivePanel.FLStore.GetValue<string>(ActivePanel.ListingView.SelectedRow, ActivePanel.dfURL);
+            string SourceName = ActivePanel.GetValue<string>(ActivePanel.dfDisplayName);
+            string SourcePath = ActivePanel.GetValue<string>(ActivePanel.dfURL);
             string DestinationPath = DestinationFS.CurrentDirectory + DestinationFS.DirSeparator + SourceName;
 
             InputBox ibx = new InputBox

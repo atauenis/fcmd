@@ -237,10 +237,23 @@ namespace pluginner
                 foreach (CollumnInfo ci in value)
                 {
                     _Collumns.Add(ci);
-                    CollumnTitles.Add(new Xwt.Label(ci.Title) { WidthRequest = ci.Width});
+                    CollumnTitles.Add(new Xwt.Label(ci.Title) { WidthRequest = ci.Width, Visible = ci.Visible});
                     CollumnRow.PackStart(CollumnTitles[CollumnTitles.Count-1]);
                 }
             }
+        }
+
+        /// <summary>Defines visiblity of the widget's border</summary>
+        public bool BorderVisible
+        {
+            get { return ScrollerOut.BorderVisible; }
+            set { ScrollerOut.BorderVisible = value; }
+        }
+
+        public int SelectedRow
+        {
+            get { return PointedItem.RowNo; }
+            set { _SetPoint(Items[value]); }
         }
 
 
@@ -278,6 +291,7 @@ namespace pluginner
             public string Title;
             public object Tag;
             public double Width;
+            public bool Visible;
         }
     }
 }

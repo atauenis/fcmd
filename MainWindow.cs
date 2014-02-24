@@ -210,16 +210,18 @@ namespace fcmd
             p2 = (PanelLayout.Panel2.Content as pluginner.FileListPanel);
             p1.OpenFile += new pluginner.TypedEvent<string>(Panel_OpenFile);
             p2.OpenFile += new pluginner.TypedEvent<string>(Panel_OpenFile);
-            
+
+            List<pluginner.ListView2.CollumnInfo> LVCols = new List<pluginner.ListView2.CollumnInfo>();
+            LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = "URL", Tag = "Path", Width = 0, Visible = false });
+            LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = Locale.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
+            LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = Locale.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
+            LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = Locale.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
+
             p1.FS = new base_plugins.fs.localFileSystem();
-            p1.ListingView.Columns.Add(Locale.GetString("FName"), p1.dfDisplayName);
-            p1.ListingView.Columns.Add(Locale.GetString("FSize"), p1.dfSize);
-            p1.ListingView.Columns.Add(Locale.GetString("FDate"), p1.dfChanged);
+            p1.ListingView.Collumns = LVCols.ToArray();
 
             p2.FS = new base_plugins.fs.localFileSystem();
-            p2.ListingView.Columns.Add(Locale.GetString("FName"), p1.dfDisplayName);
-            p2.ListingView.Columns.Add(Locale.GetString("FSize"), p1.dfSize);
-            p2.ListingView.Columns.Add(Locale.GetString("FDate"), p1.dfChanged);
+            p2.ListingView.Collumns = LVCols.ToArray();
 
             p1.GotFocus += (o, ea) => { SwitchPanel(p1); };
             p2.GotFocus += (o, ea) => { SwitchPanel(p2); };

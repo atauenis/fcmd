@@ -35,8 +35,7 @@ namespace fcmd
                     break;
             }
 #endif
-			//new MainWindow().Show(); //TO ENABLE FCMD DEBUG, UNCOMMENT
-            new LV2_Test().Show(); //TO ENABLE LV2 DEBUG, UNCOMMENT
+			new MainWindow().Show();
 #if OLDMAIN
             Application.Run(new frmMain());
 #else
