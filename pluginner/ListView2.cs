@@ -25,6 +25,7 @@ namespace pluginner
         private Views _View = Views.Details;
         //todo: int MaxRow (для переноса при режиме Small Icons)
         private List<CollumnInfo> _Collumns = new List<CollumnInfo>();
+        private int Through10Counter = 0; //для устранения зависания UI при загрузке длинных списков
         
         /// <summary>List of items. Please do not edit directly! Please use the AddItem and RemoveItem functions.</summary>
         public List<ListView2Item> Items = new List<ListView2Item>();
@@ -34,7 +35,6 @@ namespace pluginner
         public ListView2()
 	    {
             base.Content = ScrollerOut;
-            CollumnRow.BackgroundColor = Xwt.Drawing.Colors.RosyBrown;
             Layout.Spacing = 0;
             Grid.DefaultRowSpacing = 0;
 
@@ -42,11 +42,15 @@ namespace pluginner
             ScrollerOut.VerticalScrollPolicy = ScrollPolicy.Never;
             ScrollerIn.Content = Grid;
             ScrollerIn.HorizontalScrollPolicy = ScrollPolicy.Never;
-            ScrollerIn.BorderVisible = false;
             Layout.PackStart(CollumnRow);
             Layout.PackStart(ScrollerIn,true,true);
+
             Layout.KeyPressed += Layout_KeyPressed;
             Layout.CanGetFocus = true;
+            base.CanGetFocus = true;
+            this.KeyPressed += Layout_KeyPressed;
+
+            this.ScrollerIn.BackgroundColor = Xwt.Drawing.Colors.White;
 	    }
 
 
@@ -54,6 +58,7 @@ namespace pluginner
 
         private void Item_ButtonPressed(object sender, ButtonEventArgs e)
         {
+            this.SetFocus();
             ListView2Item lvi = Items[(sender as ListView2Item).RowNo];//через жопу? уточнить лучший способ, sender не работает
             //currently, the mouse click policy is same as in Total and Norton Commander
             if (e.Button == PointerButton.Right)//right click - select & do nothing
@@ -75,19 +80,23 @@ namespace pluginner
                 case Key.Up: //[↑] - move cursor up
                     if(PointedItem.RowNo > 0)
                         _SetPoint(Items[PointedItem.RowNo - 1]);
-                    break;
+                    e.Handled = true;
+                    return;
                 case Key.Down: //[↓] - move cursor bottom
                     if(PointedItem.RowNo < LastRow - 1)
                         _SetPoint(Items[PointedItem.RowNo + 1]);
-                    break;
+                    e.Handled = true;
+                    return;
                 case Key.Insert: //[Ins] - set selection & move pointer bottom
                     _SelectItem(PointedItem);
                     if(PointedItem.RowNo < LastRow - 1)
                         _SetPoint(Items[PointedItem.RowNo + 1]);
-                    break;
+                    e.Handled = true;
+                    return;
                 case Key.Return: //[↵] - same as double click
                     PointedItem.OnDblClick();
-                    break;
+                    e.Handled = true;
+                    return;
                 case Key.NumPadMultiply: //gray [*] - invert selection
                     foreach (ListView2Item lvi in Items)
                     {
@@ -98,9 +107,7 @@ namespace pluginner
                             _SelectItem(lvi);
                         }
                     }
-                    break;
-                default: //otherwise send this keypress far
-                    this.OnKeyPressed(e);
+                    e.Handled = true;
                     return;
             }
         }
@@ -185,8 +192,16 @@ namespace pluginner
             Items.Add(Item);
             Grid.Add(Item, LastCol, LastRow,1,1,true);
             Item.ButtonPressed += new EventHandler<ButtonEventArgs>(Item_ButtonPressed);
+            Item.CanGetFocus = true;
             if (LastRow == 0) _SetPoint(Item);
             LastRow++;
+
+            Through10Counter++;
+            if (Through10Counter == 250)
+            {
+                Xwt.Application.MainLoop.DispatchPendingEvents();
+                Through10Counter = 0;
+            }
         }
 
         public void RemoveItem(ListView2Item Item)

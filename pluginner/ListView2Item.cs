@@ -90,7 +90,7 @@ namespace pluginner
                 switch (value)
                 {
                     case ListView2.ItemStates.Pointed:
-                        Layout.BackgroundColor = Xwt.Drawing.Colors.AntiqueWhite;
+                        Layout.BackgroundColor = Xwt.Drawing.Colors.LightGray;
                         break;
                     case ListView2.ItemStates.Selected:
                         Layout.BackgroundColor = Xwt.Drawing.Colors.DeepSkyBlue;
@@ -98,7 +98,7 @@ namespace pluginner
                     case ListView2.ItemStates.PointedAndSelected:
                         Layout.BackgroundColor =
                             Xwt.Drawing.Colors.DeepSkyBlue.BlendWith(
-                            Xwt.Drawing.Colors.WhiteSmoke, 0.5
+                            Xwt.Drawing.Colors.LightGray, 0.5
                             );
                         break;
                     default:

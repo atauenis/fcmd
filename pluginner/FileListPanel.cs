@@ -60,8 +60,7 @@ namespace pluginner
             WriteDefaultStatusLabel();
 
             CLIprompt.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(CLIprompt_KeyReleased);
-            this.GotFocus += (o, ea) => { ListingView.BorderVisible = true; };
-            this.LostFocus += (o, ea) => { ListingView.BorderVisible = false; };
+            ListingView.BorderVisible = true;
         }
 
         void CLIprompt_KeyReleased(object sender, Xwt.KeyEventArgs e)

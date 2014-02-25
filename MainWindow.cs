@@ -495,6 +495,8 @@ namespace fcmd
             string PanelName = (NewPanel == p1) ? "LEFT" : "RIGHT";
             Console.WriteLine("FOCUS DEBUG: The " + PanelName + " panel (" + NewPanel.FS.CurrentDirectory + ") got focus");
 #endif
+            PassivePanel.UrlBox.BackgroundColor = Xwt.Drawing.Colors.LightBlue;
+            ActivePanel.UrlBox.BackgroundColor = Xwt.Drawing.Colors.DodgerBlue;
         }
 
         /// <summary>Converts size display policy (as string) to FLP.SizeDisplayPolicy</summary>
