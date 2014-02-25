@@ -12,6 +12,7 @@ using Xwt;
 
 namespace pluginner
 {
+	/// <summary>Modern listview widget</summary>
     public class ListView2 : Widget
     {
         private VBox Layout = new VBox();
@@ -29,8 +30,12 @@ namespace pluginner
         
         /// <summary>List of items. Please do not edit directly! Please use the AddItem and RemoveItem functions.</summary>
         public List<ListView2Item> Items = new List<ListView2Item>();
+		/// <summary>The pointed item</summary>
         public ListView2Item PointedItem;
+		/// <summary>The list of selected items</summary>
         public List<ListView2Item> SelectedItems = new List<ListView2Item>();
+		/// <summary>The rows that are allowed to be pointed by keyboard OR null if all rows are allowed</summary>
+		public List<int> AllowedToPoint = new List<int>();
 
         public ListView2()
 	    {
@@ -51,6 +56,11 @@ namespace pluginner
             this.KeyPressed += Layout_KeyPressed;
 
             this.ScrollerIn.BackgroundColor = Xwt.Drawing.Colors.White;
+
+			//tests set for custom pointing edge setup
+			/*AllowedToPoint.Add(5);
+			AllowedToPoint.Add(6);
+			AllowedToPoint.Add(9);*/
 	    }
 
 
@@ -59,7 +69,7 @@ namespace pluginner
         private void Item_ButtonPressed(object sender, ButtonEventArgs e)
         {
             this.SetFocus();
-            ListView2Item lvi = Items[(sender as ListView2Item).RowNo];//через жопу? уточнить лучший способ, sender не работает
+            ListView2Item lvi = Items[(sender as ListView2Item).RowNo];//вырезание гланд через жопу? уточнить лучший способ, sender не работает
             //currently, the mouse click policy is same as in Total and Norton Commander
             if (e.Button == PointerButton.Right)//right click - select & do nothing
             {
@@ -78,19 +88,16 @@ namespace pluginner
             switch (e.Key)
             {
                 case Key.Up: //[↑] - move cursor up
-                    if(PointedItem.RowNo > 0)
-                        _SetPoint(Items[PointedItem.RowNo - 1]);
+					_SetPointerByCondition(-1);
                     e.Handled = true;
                     return;
                 case Key.Down: //[↓] - move cursor bottom
-                    if(PointedItem.RowNo < LastRow - 1)
-                        _SetPoint(Items[PointedItem.RowNo + 1]);
+					_SetPointerByCondition(+1);
                     e.Handled = true;
                     return;
                 case Key.Insert: //[Ins] - set selection & move pointer bottom
                     _SelectItem(PointedItem);
-                    if(PointedItem.RowNo < LastRow - 1)
-                        _SetPoint(Items[PointedItem.RowNo + 1]);
+					_SetPointerByCondition(+1);
                     e.Handled = true;
                     return;
                 case Key.Return: //[↵] - same as double click
@@ -114,6 +121,44 @@ namespace pluginner
 
 
         //SUB-PROGRAMS
+
+		/// <summary>
+		/// Sets the pointer to an item by defined condition.
+		/// </summary>
+		/// <param name='Condition'>
+		/// Условие (на сколько строк переместиться)
+		/// </param>
+		private void _SetPointerByCondition(int Condition){
+			/*ОПИСАНИЕ: Перенос курсора выше или ниже.
+			  ПРИНЦИП: При наличии списка допущенных к выбору строк (массив номеров строк AllowedToPoint),
+			  курсор прыгает в ближайшую допущенную строку в прямом направлении. При выходе из сего списка,
+			  курсор может идти в том же направлении дальше без ограничений.
+			  */
+			int NewRow;
+			if(Condition > 0){
+				//move bottom
+				NewRow = PointedItem.RowNo + Condition;
+				foreach(int r in AllowedToPoint){
+					if(r > NewRow-1){
+						NewRow = r; break;
+					}
+				}
+
+				if(NewRow < LastRow)
+                    _SetPoint(Items[NewRow]);
+			}else if(Condition < 0){
+				//move up
+				NewRow = PointedItem.RowNo - -Condition;
+				for(int i = AllowedToPoint.Count-1; i > 0; i--){
+					int r = AllowedToPoint[i];
+					if(r < NewRow){
+						NewRow = r; break;
+					}
+				}
+            	if(NewRow >= 0)
+					_SetPoint(Items[NewRow]);
+			}
+		}
 
         /// <summary>Inverts selection of an item</summary>
         /// <param name="lvi">The requested ListView2Item</param>
