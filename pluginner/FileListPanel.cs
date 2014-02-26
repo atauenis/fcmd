@@ -28,6 +28,9 @@ namespace pluginner
         public Xwt.HBox DiskList = new Xwt.HBox();
         public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
         public ListView2 ListingView = new ListView2();
+        public Xwt.HBox QuickSearchBox = new Xwt.HBox();
+        public Xwt.ImageView QuickSearchIcon = new Xwt.ImageView();
+        public Xwt.TextEntry QuickSearchText = new Xwt.TextEntry();
         public Xwt.Label StatusBar = new Xwt.Label();
         public Xwt.Table StatusTable = new Xwt.Table();
         public Xwt.ProgressBar StatusProgressbar = new Xwt.ProgressBar();
@@ -53,6 +56,7 @@ namespace pluginner
             this.PackStart(DiskBox, false, true);
             this.PackStart(UrlBox, false, true);
             this.PackStart(ListingView, true, true);
+            this.PackStart(QuickSearchBox, false, false);
             this.PackStart(CLIoutput);
             this.PackStart(CLIprompt);
             this.PackStart(StatusBar, false, true);
@@ -61,6 +65,37 @@ namespace pluginner
 
             CLIprompt.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(CLIprompt_KeyReleased);
             ListingView.BorderVisible = true;
+
+            QuickSearchIcon.Image = Xwt.Drawing.Image.FromResource("pluginner.Resources.search.png");
+            QuickSearchText.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
+            QuickSearchText.KeyPressed += new EventHandler<Xwt.KeyEventArgs>(QuickSearchText_KeyPressed);
+            QuickSearchBox.PackStart(QuickSearchIcon);
+            QuickSearchBox.PackStart(QuickSearchText, true, true);
+            QuickSearchBox.Visible = false;
+        }
+
+        void QuickSearchText_KeyPressed(object sender, Xwt.KeyEventArgs e)
+        {
+            if (e.Key == Xwt.Key.Escape)
+            {
+                QuickSearchText.Text = "";
+                QuickSearchBox.Visible = false;
+                ListingView.AllowedToPoint.Clear();
+                return;
+            }
+#if DEBUG
+            Console.WriteLine("DEBUG: Quick search for: "+QuickSearchText.Text);
+#endif
+
+            ListingView.Sensitive = false;
+            ListingView.AllowedToPoint.Clear();
+            foreach (ListView2Item lvi in ListingView.Items)
+            {
+                if(lvi.Data[1].ToString().StartsWith(QuickSearchText.Text)){
+                    ListingView.AllowedToPoint.Add(lvi.RowNo);
+                }
+            }
+            ListingView.Sensitive = true;
         }
 
         void CLIprompt_KeyReleased(object sender, Xwt.KeyEventArgs e)
@@ -248,6 +283,12 @@ namespace pluginner
             if (e.Key == Xwt.Key.Return && ListingView.SelectedRow > -1)
             {
                 NavigateTo(ListingView.PointedItem.Data[0].ToString());
+            }
+            if ((int)e.Key < 65000) //keys before 65000th are characters, numbers & other human stuff
+            {
+                QuickSearchText.Text += e.Key.ToString();
+                QuickSearchBox.Visible = true;
+                QuickSearchText.SetFocus();
             }
         }
 
