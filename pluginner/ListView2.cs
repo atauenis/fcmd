@@ -27,7 +27,17 @@ namespace pluginner
         //todo: int MaxRow (для переноса при режиме Small Icons)
         private List<CollumnInfo> _Collumns = new List<CollumnInfo>();
         private int Through10Counter = 0; //для устранения зависания UI при загрузке длинных списков
-        
+        private bool Color2 = false; //для обеспечения чередования цветов строк
+
+        //Color sheme
+        public Xwt.Drawing.Color NormalBgColor1 = Xwt.Drawing.Colors.White;
+        public Xwt.Drawing.Color NormalBgColor2 = Xwt.Drawing.Colors.WhiteSmoke;
+        public Xwt.Drawing.Color NormalFgColor1 = Xwt.Drawing.Colors.Black;
+        public Xwt.Drawing.Color NormalFgColor2 = Xwt.Drawing.Colors.Black;
+        public Xwt.Drawing.Color PointedBgColor = Xwt.Drawing.Colors.LightGray;
+        public Xwt.Drawing.Color PointedFgColor = Xwt.Drawing.Colors.Black;
+        public Xwt.Drawing.Color SelectedBgColor = Xwt.Drawing.Colors.White;
+        public Xwt.Drawing.Color SelectedFgColor = Xwt.Drawing.Colors.Red;
         /// <summary>List of items. Please do not edit directly! Please use the AddItem and RemoveItem functions.</summary>
         public List<ListView2Item> Items = new List<ListView2Item>();
 		/// <summary>The pointed item</summary>
@@ -219,6 +229,9 @@ namespace pluginner
 
         //PUBLIC MEMBERS
 
+        /// <summary>Add a new item</summary>
+        /// <param name="Data">The item's content</param>
+        /// <param name="Tag">The tag for the new item (optional)</param>
         public void AddItem(List<Object> Data, string Tag = null)
         {
             ListView2Item lvi = new ListView2Item(
@@ -228,12 +241,28 @@ namespace pluginner
                 _Collumns.ToArray(),
                 Data);
             lvi.Font = Xwt.Drawing.Font.SystemSansSerifFont.WithWeight(Xwt.Drawing.FontWeight.Heavy);
+            lvi.PointerBgColor = PointedBgColor;
+            lvi.PointerFgColor = PointedFgColor;
+            lvi.SelectionBgColor = SelectedBgColor;
+            lvi.SelectionFgColor = SelectedFgColor;
             lvi.State = ItemStates.Default;
             AddItem(lvi);
         }
 
+        /// <summary>Add a new ListView2Item into this ListView2</summary>
+        /// <param name="Item">The new ListView2Item</param>
         public void AddItem(ListView2Item Item)
         {
+            if (Color2){
+                Item.NormalBgColor = NormalBgColor2;
+                Item.NormalFgColor = NormalFgColor1;
+            }
+            else{
+                Item.NormalBgColor = NormalBgColor1;
+                Item.NormalFgColor = NormalFgColor1;
+            }
+
+            Color2 = !Color2;
             Items.Add(Item);
             Grid.Add(Item, LastCol, LastRow,1,1,true);
             Item.ButtonPressed += new EventHandler<ButtonEventArgs>(Item_ButtonPressed);
@@ -249,6 +278,8 @@ namespace pluginner
             }
         }
 
+        /// <summary>Removes the specifed item from the list</summary>
+        /// <param name="Item">The item</param>
         public void RemoveItem(ListView2Item Item)
         {
             //Note that the removing item is simply hided.
@@ -256,11 +287,15 @@ namespace pluginner
             Item.Visible = false;
         }
 
+        /// <summary>Gets pointer for the ListView2Item at specifed row №</summary>
+        /// <param name="Row">The row's number</param>
+        /// <returns>A pointer to the ListView2 Item</returns>
         public ListView2Item GetItem(int Row)
         {
             return Items[Row];
         }
 
+        /// <summary>Purges the ListView2 (deletes all items from display and memory). Useful when memory leaks are happen.</summary>
         public void Clear()
         {
             Grid.Clear();
@@ -288,6 +323,7 @@ namespace pluginner
             }
         }
 
+        /// <summary>Sets collumn configuration</summary>
         public CollumnInfo[] Collumns
         {
             get { return _Collumns.ToArray(); }
@@ -310,6 +346,7 @@ namespace pluginner
             set { ScrollerOut.BorderVisible = value; }
         }
 
+        /// <summary>Selected row's number</summary>
         public int SelectedRow
         {
             get { return PointedItem.RowNo; }
