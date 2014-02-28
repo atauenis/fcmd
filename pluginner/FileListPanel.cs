@@ -83,10 +83,8 @@ namespace pluginner
                 ListingView.AllowedToPoint.Clear();
                 return;
             }
-#if DEBUG
-            Console.WriteLine("DEBUG: Quick search for: "+QuickSearchText.Text);
-#endif
 
+            //search for good items
             ListingView.Sensitive = false;
             ListingView.AllowedToPoint.Clear();
             foreach (ListView2Item lvi in ListingView.Items)
@@ -96,6 +94,17 @@ namespace pluginner
                 }
             }
             ListingView.Sensitive = true;
+
+            //set pointer to the first good item (if need)
+            if (ListingView.AllowedToPoint.Count > 0){
+                if (ListingView.SelectedRow < ListingView.AllowedToPoint[0]
+                    ||
+                    ListingView.SelectedRow > ListingView.AllowedToPoint[ListingView.AllowedToPoint.Count-1]
+                    )
+                {
+                    ListingView.SelectedRow = ListingView.AllowedToPoint[0];
+                }
+            }
         }
 
         void CLIprompt_KeyReleased(object sender, Xwt.KeyEventArgs e)
