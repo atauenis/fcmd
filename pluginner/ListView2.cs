@@ -17,7 +17,7 @@ namespace pluginner
     {
         private VBox Layout = new VBox();
         private HBox CollumnRow = new HBox();
-        private ScrollView ScrollerIn = new ScrollView(); //vertical scroller
+        private HeavyScroller ScrollerIn = new HeavyScroller(); //vertical scroller
         private ScrollView ScrollerOut = new ScrollView(); //horizontal scroller
         private List<Label> CollumnTitles = new List<Label>();
         private Table Grid = new Table();
@@ -56,7 +56,7 @@ namespace pluginner
             ScrollerOut.Content = Layout;
             ScrollerOut.VerticalScrollPolicy = ScrollPolicy.Never;
             ScrollerIn.Content = Grid;
-            ScrollerIn.HorizontalScrollPolicy = ScrollPolicy.Never;
+            ScrollerIn.CanScrollByX = false;// ScrollPolicy.Never;
             Layout.PackStart(CollumnRow);
             Layout.PackStart(ScrollerIn,true,true);
 
@@ -321,6 +321,12 @@ namespace pluginner
                 Item.State = ItemStates.Default;
                 SelectedItems.Remove(Item);
             }
+        }
+
+        public void ScrollTo(int rowno)
+        {
+            double Y = Items[0].Surface.GetPreferredSize().Height * rowno;
+            ScrollerIn.ScrollToY(Y);
         }
 
         /// <summary>Sets collumn configuration</summary>

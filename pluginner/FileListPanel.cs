@@ -103,6 +103,7 @@ namespace pluginner
                     )
                 {
                     ListingView.SelectedRow = ListingView.AllowedToPoint[0];
+                    ListingView.ScrollTo(ListingView.AllowedToPoint[0]);
                 }
             }
         }
