@@ -17,7 +17,7 @@ namespace pluginner
     {
         private VBox Layout = new VBox();
         private HBox CollumnRow = new HBox();
-        private HeavyScroller ScrollerIn = new HeavyScroller(); //vertical scroller
+        public HeavyScroller ScrollerIn = new HeavyScroller(); //vertical scroller
         private ScrollView ScrollerOut = new ScrollView(); //horizontal scroller
         private List<Label> CollumnTitles = new List<Label>();
         private Table Grid = new Table();
@@ -323,10 +323,12 @@ namespace pluginner
             }
         }
 
-        public void ScrollTo(int rowno)
+        /// <summary>Scrolls the internal scroll view to the specifed row</summary>
+        /// <param name="rowno">The row's number</param>
+        public void ScrollToRow(int rowno)
         {
             double Y = Items[0].Surface.GetPreferredSize().Height * rowno;
-            ScrollerIn.ScrollToY(Y);
+            ScrollerIn.ScrollTo(Y);
         }
 
         /// <summary>Sets collumn configuration</summary>

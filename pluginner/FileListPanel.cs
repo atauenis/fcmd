@@ -103,7 +103,7 @@ namespace pluginner
                     )
                 {
                     ListingView.SelectedRow = ListingView.AllowedToPoint[0];
-                    ListingView.ScrollTo(ListingView.AllowedToPoint[0]);
+                    ListingView.ScrollToRow(ListingView.AllowedToPoint[0]);
                 }
             }
         }
@@ -403,7 +403,7 @@ namespace pluginner
             ListingView.Sensitive = true;
             ListingView.Cursor = Xwt.CursorType.Arrow;
             if (ListingView.Items.Count > 0)
-            { ListingView.SelectedRow = 0; }
+            { ListingView.SelectedRow = 0; ListingView.ScrollerIn.ScrollTo(0, 0); }
             ListingView.SetFocus();//one fixed bug may make many other bugs...уточнить необходимость!
         }
 

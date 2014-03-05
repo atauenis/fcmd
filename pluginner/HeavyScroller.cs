@@ -13,7 +13,7 @@ using Xwt;
 namespace pluginner
 {
     /// <summary>A scrollable panel</summary>
-    class HeavyScroller : Xwt.Widget
+    public class HeavyScroller : Xwt.Widget
     {
         Table Layout = new Table();
         Canvas Locator = new Canvas() ;
@@ -57,10 +57,21 @@ namespace pluginner
             Locator.SetChildBounds(Child, new Rectangle(OffsetX,OffsetY,Child.Surface.GetPreferredSize().Width,Child.Surface.GetPreferredSize().Height));
         }
 
-        public void ScrollToY(double y)
+        /// <summary>Scrolls this scroller to the specifed coordinates</summary>
+        /// <param name="y">The new coordinate by vertical axis or null if do not change</param>
+        /// <param name="x">The new coordinate by horizontal axis or null if do not change</param>
+        public void ScrollTo(double? y = null, double? x = null)
         {
-            OffsetY = y;
-            VScroll.Value = y;
+            if (y != null){
+                OffsetY = (double)y;
+                VScroll.Value = (double)y;
+            }
+
+            if (x != null){
+                OffsetX = (double)x;
+                HScroll.Value = (double)x;
+            }
+
             Scroll();
         }
 
@@ -76,7 +87,7 @@ namespace pluginner
                 VScroll.StepIncrement = 1;
                 VScroll.UpperValue = Child.Surface.GetPreferredSize().Height;
                 HScroll.UpperValue = Child.Surface.GetPreferredSize().Width;
-                ScrollToY(0);
+                ScrollTo(0);
             }
         }
 
