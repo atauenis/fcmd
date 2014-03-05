@@ -84,6 +84,7 @@ namespace fcmd
                         "FCVELoadingMsg=Загружается файл: {0} ...\n"+
                         "FCVE_mnuViewSettings=Параметры...\nFCVEpluginro1=Модуль просмотра {0} не поддерживает редактирование файлов\nFCVEpluginro2=Файл будет открыт в режиме чтения.\n" +
                         "FCVE_PluginNotFound=Не найден модуль для открытия этого файла. Файл будет выведен как текст.\nFCVE_LoadError=Ошибка загрузки файла: {0}\n" +
+                        "FCVES_Title=Настройки просмоторщика/редактора\nFCVES_ShowToolbar=Показывать _верхнюю панель (как в FAR)\nFCVES_ShowCmdBar=Показывать _коммандную строку\n" +
                         "FCS_Title=Настройки File Commander\nFCS_CantSaveSettings=Невозможно сохранить настройки. Проверьте введённые данные.\n" +
                         "swtMainWindow=Вид основного окна\nswtViewerEditor=Правка/просмотр\n" +
                         "SWTMWtoolbar=Панель инструментов\nSWTMWdiskbuttons=Кнопки дисков\nSWTMWdisklistbox=Окно выбора диска\nSWTMWpaneltitle=Заголовок файловой панели (с текущим путём)\nSWTMWtablecollumns=Заголовки столбцов\nSWTMWinfobar=Строки состояния\nSWTMWcmdline=Коммандная строка\nSWTMWkeybhelp=Подсказка клавиатуры (клавиш F)\n" +

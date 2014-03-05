@@ -12,11 +12,15 @@ namespace fcmd.base_plugins.ve
         public string Version { get { return "1.0"; } }
         public string Author { get { return "Alexander Tauenis"; } }
         #endregion
-
+        Xwt.Menu mnuFormat = new Xwt.Menu();
+        Xwt.Table Layout = new Xwt.Table() { DefaultRowSpacing = 0 };
         Xwt.RichTextView RTV = new Xwt.RichTextView();
         Xwt.ScrollView ScrollBox;
-        Xwt.Menu mnuFormat = new Xwt.Menu();
-        int Codepage = Encoding.UTF8.CodePage;
+        Xwt.Label lblFileName = new Xwt.Label("file name");
+        Xwt.MenuButton mbMode = new Xwt.MenuButton("Text") { Sensitive = false, Type = Xwt.ButtonType.Normal, Style = Xwt.ButtonStyle.Flat };
+        Xwt.MenuButton mbCodepage = new Xwt.MenuButton("codepage") { Type = Xwt.ButtonType.DropDown, Style = Xwt.ButtonStyle.Flat };
+        
+        int Codepage = Encoding.Default.CodePage;
         byte[] fileContent;
         string Txt = "";
 
@@ -24,6 +28,38 @@ namespace fcmd.base_plugins.ve
         {
             ScrollBox = new Xwt.ScrollView(RTV);
             ScrollBox.HeightRequest = 350;//todo: read from settings
+
+            if (fcmd.Properties.Settings.Default.VE_ShowToolbar)
+            {
+                Layout.Add(lblFileName, 0, 0);
+                Layout.Add(mbMode, 1, 0);
+                Layout.Add(mbCodepage, 2, 0);
+            }
+            Layout.Add(ScrollBox, 0, 1, 1, 3, true, true);
+
+            foreach (EncodingInfo cp in Encoding.GetEncodings())
+            {
+                Xwt.MenuItem mi = new Xwt.MenuItem();
+                mi.Tag = cp.CodePage;
+                mi.Label = "CP" + cp.CodePage + " - " + cp.DisplayName;
+                mi.Clicked += new EventHandler(Codepage_Clicked);
+                mnuFormat.Items.Add(mi);
+            }
+            mbCodepage.Menu = mnuFormat;
+        }
+
+        void Codepage_Clicked(object sender, EventArgs e)
+        {
+            Xwt.MenuItem MI = (Xwt.MenuItem)sender;
+            ChangeCodepage(Convert.ToInt32(MI.Tag));
+        }
+
+        void ChangeCodepage(int CP)
+        {
+            Codepage = Convert.ToInt32(CP);
+            Txt = Encoding.GetEncoding(Codepage).GetString(fileContent ?? new byte[] { 0, 0 });
+            RTV.LoadText(Txt, new Xwt.Formats.PlainTextFormat());
+            mbCodepage.Label = Encoding.GetEncoding(Codepage).EncodingName;
         }
 
         public int[] FlexibleAPIversion {
@@ -40,10 +76,9 @@ namespace fcmd.base_plugins.ve
 
         public void OpenFile(string url, pluginner.IFSPlugin fsplugin)
         {
+            lblFileName.Text = url;
             fileContent = fsplugin.GetFileContent(url);
-			Txt = Encoding.GetEncoding(Codepage).GetString(fileContent ?? new byte[]{0,0}); //фаллбак взят с потолка, чем бы дитя не тешилось, лишь бы не...ругалось
-
-            RTV.LoadText(Txt, new Xwt.Formats.PlainTextFormat());
+            ChangeCodepage(Codepage);
         }
 
         public void SaveFile(bool SaveAs = false) { }
@@ -51,6 +86,9 @@ namespace fcmd.base_plugins.ve
         public void ExecuteCommand(string Command, string[] Arguments)
         {
             switch(Command){
+                case "codepage":
+                    ChangeCodepage(Convert.ToInt32(Arguments[1]));
+                    break;
                 case "findreplace": break;
                 case "cut": break;
                 case "copy": break;
@@ -63,7 +101,7 @@ namespace fcmd.base_plugins.ve
         }
 
         public Xwt.Widget Body {
-            get { return ScrollBox; }
+            get { return Layout; }
         }
 
         public bool ReadOnly { get { return false; } set { } } //todo

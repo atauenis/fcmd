@@ -282,7 +282,7 @@ namespace fcmd
         }
 
         /// <summary>(Re)builds the "Layout" vbox</summary>
-        private void BuildLayout()
+        public void BuildLayout()
         {
             Layout.Clear();
             Layout.PackStart(PluginBody, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -12, -12);
@@ -359,6 +359,9 @@ namespace fcmd
                 }
             }
             catch { }
+
+            KeyBoardHelp.Visible = Properties.Settings.Default.ShowKeybrdHelp;
+            CommandBox.Visible = Properties.Settings.Default.VE_ShowCmdBar;
         }
 
         private void Exit()

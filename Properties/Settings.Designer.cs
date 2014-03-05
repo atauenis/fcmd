@@ -284,5 +284,29 @@ namespace fcmd.Properties {
                 this["ColorScheme"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool VE_ShowToolbar {
+            get {
+                return ((bool)(this["VE_ShowToolbar"]));
+            }
+            set {
+                this["VE_ShowToolbar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool VE_ShowCmdBar {
+            get {
+                return ((bool)(this["VE_ShowCmdBar"]));
+            }
+            set {
+                this["VE_ShowCmdBar"] = value;
+            }
+        }
     }
 }
