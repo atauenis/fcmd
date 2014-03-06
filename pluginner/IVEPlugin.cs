@@ -1,5 +1,5 @@
 ﻿/* The File Commander - plugin API
- * Viewer&Editor plugins' interface
+ * Interface for Viewer&Editor plugins
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
@@ -40,5 +40,8 @@ namespace pluginner
 
         /// <summary>Defines, can the plugin edit files (set to false if the plugin is readonly)</summary>
         bool CanEdit { get; }
+
+        /// <summary>Defines, should this plugin display a toolbar at the top of the box or not</summary>
+        bool ShowToolbar { set; }
     }
 }

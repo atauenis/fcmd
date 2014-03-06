@@ -28,14 +28,11 @@ namespace fcmd.base_plugins.ve
         {
             ScrollBox = new Xwt.ScrollView(RTV);
             ScrollBox.HeightRequest = 350;//todo: read from settings
-
-            if (fcmd.Properties.Settings.Default.VE_ShowToolbar)
-            {
-                Layout.Add(lblFileName, 0, 0);
-                Layout.Add(mbMode, 1, 0);
-                Layout.Add(mbCodepage, 2, 0);
-            }
             Layout.Add(ScrollBox, 0, 1, 1, 3, true, true);
+
+            Layout.Add(lblFileName, 0, 0);
+            Layout.Add(mbMode, 1, 0);
+            Layout.Add(mbCodepage, 2, 0);
 
             foreach (EncodingInfo cp in Encoding.GetEncodings())
             {
@@ -109,5 +106,14 @@ namespace fcmd.base_plugins.ve
         public bool CanEdit { get { return false; } }//todo (needs to edit xwt rtv or te)
 
         public Xwt.Menu FormatMenu { get { return mnuFormat;} }
+
+        public bool ShowToolbar {
+            set
+            {
+                lblFileName.Visible = value;
+                mbMode.Visible = value;
+                mbCodepage.Visible = value;
+            }
+        }
     }
 }

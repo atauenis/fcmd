@@ -94,7 +94,12 @@ namespace fcmd
             TranslateMenu(mnuEdit.SubMenu);
 
             mnuView.Label = Locale.GetString("FCVE_mnuView");
-            mnuViewSettings.Clicked += (o, ea) => { new VEsettings().Run(); };
+            mnuViewSettings.Clicked += (o, ea) => {
+                new VEsettings().Run();
+                Plugin.ShowToolbar = fcmd.Properties.Settings.Default.VE_ShowToolbar;
+                KeyBoardHelp.Visible = Properties.Settings.Default.ShowKeybrdHelp;
+                CommandBox.Visible = Properties.Settings.Default.VE_ShowCmdBar;
+            };
             mnuView.SubMenu = new Xwt.Menu();
             mnuView.SubMenu.Items.Add(mnuViewSettings);
             TranslateMenu(mnuView.SubMenu);
@@ -233,10 +238,12 @@ namespace fcmd
             }
             catch (Exception ex) { Xwt.MessageDialog.ShowError(Locale.GetString("CantRunEXE"), ex.Message); CanBeShowed = false; return; }
 
+            string FiNa4Title = URL.Substring(URL.LastIndexOf(FS.DirSeparator) + 1);
+
             if(AllowEdit)
-                this.Title = string.Format(Locale.GetString("FCETitle"), URL);
+                this.Title = string.Format(Locale.GetString("FCETitle"), FiNa4Title);
             else
-                this.Title = string.Format(Locale.GetString("FCVTitle"), URL);
+                this.Title = string.Format(Locale.GetString("FCVTitle"), FiNa4Title);
 
             FileProcessDialog ProgressDialog = new FileProcessDialog();
             string ProgressInitialText = String.Format(Locale.GetString("FCVELoadingMsg"),URL);
@@ -252,6 +259,7 @@ namespace fcmd
             Plugin = plugin;
             Plugin.ReadOnly = !AllowEdit;
             Plugin.OpenFile(URL, FS);
+            Plugin.ShowToolbar = fcmd.Properties.Settings.Default.VE_ShowToolbar;
             mnuFormat.SubMenu = Plugin.FormatMenu;
 
             bool Mode = AllowEdit;
