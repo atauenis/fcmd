@@ -34,7 +34,7 @@ namespace pluginner
         public Xwt.Label StatusBar = new Xwt.Label();
         public Xwt.Table StatusTable = new Xwt.Table();
         public Xwt.ProgressBar StatusProgressbar = new Xwt.ProgressBar();
-        Xwt.TextEntry CLIoutput = new Xwt.TextEntry() { MultiLine = true, ShowScrollBars = true, ShowFrame = true, Visible = false, HeightRequest = 50 };
+        Xwt.TextEntry CLIoutput = new Xwt.TextEntry() { MultiLine = true, ShowFrame = true, Visible = false, HeightRequest = 50 };
         Xwt.TextEntry CLIprompt = new Xwt.TextEntry();
 
         /// <summary>User navigates into another directory</summary>
