@@ -62,7 +62,10 @@ namespace fcmd
                         "MoveTo=Перенести/переименовать {0} в:\n" +
                         "NewDirURL=Введите путь для нового каталога\n" +
                         "NewDirTemplate=\\НОВЫЙ КАТАЛОГ\n" +
-                        "FileQuickSelectFileAsk=Какой файл (маску имени) нужно выделить:\n" +
+                        "NameFilterQuestion=Укажите шаблон имён файлов (пример, *.bat или e*.exe)\n" +
+                        "NameFilterFound=Поиск {0}: найдено {1} совпадений\n"+
+                        "NameFilterUseRegExp=_Регулярное выражение\n"+
+                        "NameFilterError=Ошибка поиска! Проверьте запрос\n"+
                         "FCVTitle=Просмотр - {0}\n" +
                         "FCETitle=Редактор - {0}\n" +
                         "FCVE_F1=F1 Справка\n" +

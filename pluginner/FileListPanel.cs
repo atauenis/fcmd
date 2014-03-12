@@ -42,7 +42,7 @@ namespace pluginner
         /// <summary>User tried to open the highlighted file</summary>
         public event TypedEvent<string> OpenFile;
 
-        private SizeDisplayPolicy CurShortenKB, CurShortenMB, CurShortenGB;
+        public SizeDisplayPolicy CurShortenKB, CurShortenMB, CurShortenGB;
         private bool ProgressShown = false;
         private string QABarXML;
         private string ColorSXML;
@@ -365,6 +365,25 @@ namespace pluginner
             FS.CLIstdoutDataReceived += new TypedEvent<string>(FS_CLIstdoutDataReceived);
             FS.CLIpromptChanged += new TypedEvent<string>(FS_CLIpromptChanged);
 
+            LoadDir(
+                URL,
+                FS.DirectoryContent,
+                ShortenKB,
+                ShortenMB,
+                ShortenGB
+                );
+        }
+
+        /// <summary>
+        /// Load the specifed directory with specifed content into the panel and set view options
+        /// </summary>
+        /// <param name="URL">The full URL of the directory (for reference needs)</param>
+        /// <param name="dis">Directory item list</param>
+        /// <param name="ShortenKB">How kilobyte sizes should be humanized</param>
+        /// <param name="ShortenMB">How megabyte sizes should be humanized</param>
+        /// <param name="ShortenGB">How gigabyte sizes should be humanized</param> //плохой перевод? "так nбайтные размеры должны очеловечиваться"
+        public void LoadDir(string URL, List<DirItem> dis, SizeDisplayPolicy ShortenKB, SizeDisplayPolicy ShortenMB, SizeDisplayPolicy ShortenGB)
+        {
             ListingView.Cursor = Xwt.CursorType.IBeam;//todo: modify modxwt and add hourglass cursor
             ListingView.Sensitive = false;
 
@@ -376,7 +395,7 @@ namespace pluginner
                 FS.StatusChanged += new TypedEvent<string>(FS_StatusChanged);
                 FS.ProgressChanged += new TypedEvent<double>(FS_ProgressChanged);
 
-                foreach (DirItem di in FS.DirectoryContent)
+                foreach (DirItem di in dis)
                 {
                     List<Object> Data = new List<Object>();
                     Data.Add(di.Path);
@@ -393,7 +412,7 @@ namespace pluginner
                         Data.Add(KiloMegaGigabyteConvert(di.Size, ShortenKB, ShortenMB, ShortenGB));
                         Data.Add(di.Date);
                     }
-                    ListingView.AddItem(Data,di.Path);
+                    ListingView.AddItem(Data, di.Path);
                 }
             }
             catch (Exception ex)
@@ -405,6 +424,7 @@ namespace pluginner
             if (ListingView.Items.Count > 0)
             { ListingView.SelectedRow = 0; ListingView.ScrollerIn.ScrollTo(0, 0); }
             ListingView.SetFocus();//one fixed bug may make many other bugs...уточнить необходимость!
+        
         }
 
         void FS_StatusChanged(string data)

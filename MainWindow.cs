@@ -173,7 +173,9 @@ namespace fcmd
 
             this.CloseRequested += new Xwt.CloseRequestedHandler(MainWindow_CloseRequested);
             PanelLayout.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(PanelLayout_KeyReleased);
-
+            mnuViewNoFilter.Clicked += (o, ea) => { ActivePanel.LoadDir(); };
+            mnuViewWithFilter.Clicked += new EventHandler(mnuViewWithFilter_Clicked);
+            mnuNavigateReload.Clicked += new EventHandler(mnuNavigateReload_Clicked);
             mnuToolsOptions.Clicked += new EventHandler(mnuToolsOptions_Clicked);
 			mnuHelpDebug.Clicked += ShowDebugInfo;
             mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
@@ -319,6 +321,53 @@ namespace fcmd
 
         }
 
+        void mnuViewWithFilter_Clicked(object sender, EventArgs e)
+        {
+            string Filter = @"*.*";
+
+            InputBox ibx = new InputBox(Locale.GetString("NameFilterQuestion"), Filter);
+            Xwt.CheckBox chkRegExp = new Xwt.CheckBox(Locale.GetString("NameFilterUseRegExp"));
+            ibx.OtherWidgets.Add(chkRegExp, 0, 0);
+            if (!ibx.ShowDialog()) return;
+            Filter = ibx.Result;
+            if (chkRegExp.State == Xwt.CheckBoxState.Off)
+            {
+                Filter = Filter.Replace(".", @"\.");
+                Filter = Filter.Replace("*", ".*");
+                Filter = Filter.Replace("?", ".");
+            }
+            try
+            {
+                System.Text.RegularExpressions.Regex re = new System.Text.RegularExpressions.Regex(Filter);
+
+                List<pluginner.DirItem> GoodItems = new List<pluginner.DirItem>();
+                foreach (pluginner.DirItem di in ActivePanel.FS.DirectoryContent)
+                {
+                    if (re.IsMatch(di.TextToShow))
+                        GoodItems.Add(di);
+                }
+
+                ActivePanel.LoadDir(
+                    ActivePanel.FS.CurrentDirectory,
+                    GoodItems,
+                    ActivePanel.CurShortenKB,
+                    ActivePanel.CurShortenMB,
+                    ActivePanel.CurShortenGB
+                    );
+
+                ActivePanel.StatusBar.Text = string.Format(Locale.GetString("NameFilterFound"), Filter, GoodItems.Count);
+            }
+            catch (Exception ex)
+            {
+                Xwt.MessageDialog.ShowError(Locale.GetString("NameFilterError"), ex.Message);
+            }
+        }
+
+        void mnuNavigateReload_Clicked(object sender, EventArgs e)
+        {
+            ActivePanel.LoadDir();
+        }
+
         void Panel_OpenFile(string data)
         {
             if (data.StartsWith("file://") && System.IO.File.Exists(data.Replace("file://","")))
@@ -372,8 +421,8 @@ namespace fcmd
         void mnuHelpAbout_Clicked(object sender, EventArgs e)
         {
             string AboutString = string.Format(Locale.GetString("FileCommanderVer"), "File Commander", Winforms.Application.ProductVersion) +
-                                   "\n(C) 2013-14, FC team (Alexander Tauenis & comrades)\nhttps://github.com/atauenis/fcmd\n" +
-                                   "Uses Xamarin Window Toolkit (Xwt) with A.T.'s modifications\nhttps://github.com/atauenis/xwt/tree/modxwt\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
+                                   "\n(C) 2013-14, the FC team (Alexander Tauenis & comrades)\nhttps://github.com/atauenis/fcmd\n" +
+                                   "Uses Xamarin Window Toolkit (Xwt) with A.T.'s modifications\nhttps://github.com/atauenis/xwt\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
             Xwt.MessageDialog.ShowMessage(AboutString);
 
         }

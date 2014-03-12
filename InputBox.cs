@@ -10,6 +10,7 @@ namespace fcmd{
         Xwt.Label lblQuestion = new Xwt.Label();
         Xwt.TextEntry txtAnwser = new Xwt.TextEntry();
         Xwt.VBox box = new Xwt.VBox();
+        public Xwt.Table OtherWidgets = new Xwt.Table();
 
 
         public InputBox(string AskText)
@@ -68,6 +69,8 @@ namespace fcmd{
         {
             box.PackStart(lblQuestion);
             box.PackStart(txtAnwser);
+            if(OtherWidgets.Placements.Count > 0)
+            box.PackStart(OtherWidgets);
             this.Content = box;
             this.ShowInTaskbar = false;
             this.Resizable = false;
