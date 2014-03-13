@@ -28,32 +28,6 @@ namespace fcmd
          */
 
         /// <summary>
-        /// Reads the <paramref name="url"/>'s file/subdir list and pushes it into the active panel.
-        /// </summary>
-        /// <param name="url"></param>
-        public void Ls(string url)
-        {
-            int Status = 0;
-            Thread LsThread = new Thread(delegate() { DoLs(url, ActivePanel, ref Status); });
-            FileProcessDialog fpd = new FileProcessDialog();
-            fpd.Location = new Xwt.Point(this.Location.Y, this.Location.X);
-            string FPDtext = String.Format(Locale.GetString("DoingListdir"), "\n" + url, "");
-            FPDtext = FPDtext.Replace("{1}", "");
-            fpd.lblStatus.Text = FPDtext;
-
-            fpd.Show();
-            LsThread.Start();
-
-            do
-            {
-                Xwt.Application.MainLoop.DispatchPendingEvents();//Application.DoEvents();
-                fpd.pbrProgress.Fraction = Status;
-            }
-            while (LsThread.ThreadState == ThreadState.Running);
-            fpd.Hide();
-        }
-
-        /// <summary>
         /// Reads the file <paramref name="url"/> and shows in FC Viewer
         /// </summary>
         /// <param name="url"></param>

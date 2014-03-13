@@ -45,6 +45,7 @@ namespace fcmd{
             Build();
             Xwt.Command DialogResult = this.Run();//4beginners: xwtdialog.Run() = winform.ShowDialog() = winform.Show(vbModal);
 
+            if (DialogResult == null) return false;
             switch (DialogResult.Id)
             {
                 case "Add":

@@ -67,7 +67,7 @@ namespace pluginner
 
             this.ScrollerIn.BackgroundColor = Xwt.Drawing.Colors.White;
 
-			//tests set for custom pointing edge setup
+			//tests for custom pointing edge setup
 			/*AllowedToPoint.Add(5);
 			AllowedToPoint.Add(6);
 			AllowedToPoint.Add(9);*/
@@ -79,7 +79,7 @@ namespace pluginner
         private void Item_ButtonPressed(object sender, ButtonEventArgs e)
         {
             this.SetFocus();
-            ListView2Item lvi = Items[(sender as ListView2Item).RowNo];//вырезание гланд через жопу? уточнить лучший способ, sender не работает
+            ListView2Item lvi = Items[(sender as ListView2Item).RowNo];//вырезание гланд через жопу автогеном? уточнить лучший способ, sender не работает
             //currently, the mouse click policy is same as in Total and Norton Commander
             if (e.Button == PointerButton.Right)//right click - select & do nothing
             {
@@ -115,15 +115,7 @@ namespace pluginner
                     e.Handled = true;
                     return;
                 case Key.NumPadMultiply: //gray [*] - invert selection
-                    foreach (ListView2Item lvi in Items)
-                    {
-                        if ((int)lvi.State >= 2){
-                            _UnselectItem(lvi);
-                        }
-                        else{
-                            _SelectItem(lvi);
-                        }
-                    }
+                    InvertSelection();
                     e.Handled = true;
                     return;
             }
@@ -320,6 +312,43 @@ namespace pluginner
             {
                 Item.State = ItemStates.Default;
                 SelectedItems.Remove(Item);
+            }
+        }
+
+        /// <summary>Selects an row</summary>
+        /// <param name="Item">The row or null if need to select all rows</param>
+        public void Select(ListView2Item Item = null)
+        {
+            if (Item != null){
+                _SelectItem(Item);
+                return;
+            }
+
+            SelectedItems.Clear();
+            foreach (ListView2Item lvi in Items)
+            {
+                if (lvi.State == ItemStates.Pointed || lvi.State == ItemStates.PointedAndSelected)
+                    lvi.State = ItemStates.PointedAndSelected;
+                else
+                    lvi.State = ItemStates.Selected;
+
+                SelectedItems.Add(lvi);
+            }
+        }
+
+        /// <summary>Inverts selection of items (like the "[*] gray" key)</summary>
+        public void InvertSelection()
+        {
+            foreach (ListView2Item lvi in Items)
+            {
+                if ((int)lvi.State >= 2)
+                {
+                    _UnselectItem(lvi);
+                }
+                else
+                {
+                    _SelectItem(lvi);
+                }
             }
         }
 

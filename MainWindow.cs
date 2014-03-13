@@ -29,10 +29,10 @@ namespace fcmd
         Xwt.MenuItem mnuFileNewDir = new Xwt.MenuItem() { Tag = "mnuFileNewDir" };
         Xwt.MenuItem mnuFileRemove = new Xwt.MenuItem() { Tag = "mnuFileRemove" };
         Xwt.MenuItem mnuFileAtributes = new Xwt.MenuItem() { Tag = "mnuFileAtributes" };
-        Xwt.MenuItem mnuFileQuickSelect = new Xwt.MenuItem() { Tag = "mnuFileQuickSelect" };
+        //Xwt.MenuItem mnuFileQuickSelect = new Xwt.MenuItem() { Tag = "mnuFileQuickSelect" };
+        Xwt.MenuItem mnuFileSelectAll = new Xwt.MenuItem() { Tag = "mnuFileSelectAll" };
         Xwt.MenuItem mnuFileUnselect = new Xwt.MenuItem() { Tag = "mnuFileUnselect" };
         Xwt.MenuItem mnuFileInvertSelection = new Xwt.MenuItem() { Tag = "mnuFileInvertSelection" };
-        Xwt.MenuItem mnuFileRevertSelection = new Xwt.MenuItem() { Tag = "mnuFileRevertSelection" };
         Xwt.MenuItem mnuFileExit = new Xwt.MenuItem() { Tag = "mnuFileExit" };
 
 
@@ -117,10 +117,10 @@ namespace fcmd
             mnuFile.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
             mnuFile.SubMenu.Items.Add(mnuFileAtributes);
             mnuFile.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
-            mnuFile.SubMenu.Items.Add(mnuFileQuickSelect);
+            //mnuFile.SubMenu.Items.Add(mnuFileQuickSelect);
+            mnuFile.SubMenu.Items.Add(mnuFileSelectAll);
             mnuFile.SubMenu.Items.Add(mnuFileUnselect);
             mnuFile.SubMenu.Items.Add(mnuFileInvertSelection);
-            mnuFile.SubMenu.Items.Add(mnuFileRevertSelection);
             mnuFile.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
             mnuFile.SubMenu.Items.Add(mnuFileExit);
 
@@ -173,6 +173,16 @@ namespace fcmd
 
             this.CloseRequested += new Xwt.CloseRequestedHandler(MainWindow_CloseRequested);
             PanelLayout.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(PanelLayout_KeyReleased);
+            mnuFileView.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.F3, Xwt.ModifierKeys.None, false, 0)); };
+            mnuFileEdit.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.F4, Xwt.ModifierKeys.None, false, 0)); };
+            mnuFileCopy.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.F5, Xwt.ModifierKeys.None, false, 0)); };
+            mnuFileMove.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.F6, Xwt.ModifierKeys.None, false, 0)); };
+            mnuFileNewDir.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.F7, Xwt.ModifierKeys.None, false, 0)); };
+            mnuFileRemove.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.F8, Xwt.ModifierKeys.None, false, 0)); };
+            mnuFileSelectAll.Clicked += (o, ea) => { ActivePanel.ListingView.Select(null); };
+            mnuFileUnselect.Clicked += (o, ea) => { ActivePanel.ListingView.Unselect(); };
+            mnuFileInvertSelection.Clicked += (o, ea) => { ActivePanel.ListingView.InvertSelection(); };
+            mnuFileExit.Clicked += (o, ea) => { this.Close(); };
             mnuViewNoFilter.Clicked += (o, ea) => { ActivePanel.LoadDir(); };
             mnuViewWithFilter.Clicked += new EventHandler(mnuViewWithFilter_Clicked);
             mnuNavigateReload.Clicked += new EventHandler(mnuNavigateReload_Clicked);

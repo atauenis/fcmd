@@ -27,20 +27,6 @@ namespace fcmd
 		 * в противном случае возможны глюки (вылеты WPF, зависания и лаги GTK).
 		 */
 
-        /// <summary>
-        /// Background directory lister
-        /// </summary>
-        [Obsolete("Артефакт из ранних версий на базе winforms, не актуален в связи с вводом Filelistpanel.LoadDir")]
-        void DoLs(string URL, pluginner.FileListPanel lp, ref int StatusFeedback)
-        {
-            //remove as possibly
-            Xwt.Application.Invoke(new Action(delegate
-            {
-                lp.LoadDir(URL);
-            }
-            ));
-        }
-
 		/// <summary>
 		/// Background file copier
 		/// </summary>
