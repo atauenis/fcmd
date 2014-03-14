@@ -46,9 +46,12 @@ namespace pluginner
         private bool ProgressShown = false;
         private string QABarXML;
         private string ColorSXML;
+        private string SBtext1, SBtext2;
 
-        public FileListPanel(string BookmarkXML = null, string PanelColorSchemeXML = null)
+        public FileListPanel(string BookmarkXML = null, string PanelColorSchemeXML = null, string InfobarText1 = "{Name}", string InfobarText2 = "F: {FileS}, D: {DirS}")
         {
+            SBtext1 = InfobarText1;
+            SBtext2 = InfobarText2;
             BuildUI(BookmarkXML, PanelColorSchemeXML);
 			DiskBox.Content = DiskList;
 			DiskBox.CanScrollByY = false;
@@ -275,9 +278,21 @@ namespace pluginner
 
             ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
             ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
-            ListingView.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
-            //ListingView.SelectionChanged += (o, ea) => { this.OnGotFocus(ea); }; //hack for incomplete Xwt.Gtk ListView (19/01/2014)
+            ListingView.GotFocus += (o, ea) =>{ this.OnGotFocus(ea); };
+            ListingView.PointerMoved += new TypedEvent<ListView2Item>(ListingView_PointerMoved);
+            ListingView.SelectionChanged += new TypedEvent<List<ListView2Item>>(ListingView_SelectionChanged);
             ListingView.BorderVisible = false;
+            StatusBar.Wrap = Xwt.WrapMode.Word;
+        }
+
+        void ListingView_SelectionChanged(List<ListView2Item> data)
+        {
+            WriteDefaultStatusLabel();
+        }
+
+        void ListingView_PointerMoved(ListView2Item data)
+        {
+            WriteDefaultStatusLabel();
         }
 
         void UrlBox_KeyReleased(object sender, Xwt.KeyEventArgs e)
@@ -400,8 +415,11 @@ namespace pluginner
                     List<Object> Data = new List<Object>();
                     Data.Add(di.Path);
                     Data.Add(di.TextToShow);
-                    if (di.TextToShow == "..")//parent dir
+                    if (di.TextToShow == "..")
+                    {//parent dir
                         Data.Add("<↑ UP>");
+                        Data.Add(FS.GetMetadata(di.Path).LastWriteTimeUTC.ToLocalTime());
+                    }
                     else if (di.IsDirectory)
                     {//dir
                         Data.Add("<DIR>");
@@ -412,6 +430,7 @@ namespace pluginner
                         Data.Add(KiloMegaGigabyteConvert(di.Size, ShortenKB, ShortenMB, ShortenGB));
                         Data.Add(di.Date);
                     }
+                    Data.Add(di);
                     ListingView.AddItem(Data, di.Path);
                 }
             }
@@ -620,8 +639,27 @@ namespace pluginner
         /// </summary>
         private void WriteDefaultStatusLabel()
         {
-            //todo
-            StatusBar.Text = "The statusbar is not yet implemented...";
+            if(ListingView.SelectedItems.Count<1)
+            StatusBar.Text = MakeStatusbarText(SBtext1);
+            else
+            StatusBar.Text = MakeStatusbarText(SBtext2);
+        }
+
+        private string MakeStatusbarText(string Template)
+        {
+            string txt = Template;
+            try
+            {
+                DirItem di = (DirItem)ListingView.PointedItem.Data[4];
+                txt = txt.Replace("{FullName}", di.TextToShow);
+                txt = txt.Replace("{AutoSize}", KiloMegaGigabyteConvert(di.Size,CurShortenKB,CurShortenMB,CurShortenMB));
+                txt = txt.Replace("{Date}", di.Date.ToShortDateString());
+                txt = txt.Replace("{Time}", di.Date.ToLocalTime().ToShortTimeString());
+                txt = txt.Replace("{SelectedItems}", ListingView.SelectedItems.Count.ToString());
+                //todo: add masks SizeB, SizeKB, SizeMB, TimeUTC, Name, Extension
+            }
+            catch { }
+            return txt;
         }
 
 

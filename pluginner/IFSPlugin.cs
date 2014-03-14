@@ -233,7 +233,7 @@ namespace pluginner
         public long Size;
 
         /// <summary>
-        /// The file's date.
+        /// The file's date&time in GMT
         /// </summary>
         public DateTime Date;
 

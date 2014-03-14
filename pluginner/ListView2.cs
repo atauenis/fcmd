@@ -177,13 +177,12 @@ namespace pluginner
                     break;
 
                 case ItemStates.Selected:
-                    lvi.State = ItemStates.Default;
-                    break;
                 case ItemStates.PointedAndSelected:
-                    lvi.State = ItemStates.Pointed;
-                    PointedItem = lvi;
+                    _UnselectItem(lvi);
                     break;
             }
+            if (SelectionChanged != null)
+                SelectionChanged(SelectedItems);
         }
 
         /// <summary>Removes selection of an item</summary>
@@ -195,6 +194,8 @@ namespace pluginner
                 lvi.State = ItemStates.Pointed;
             else
                 lvi.State = ItemStates.Default;
+            if (SelectionChanged != null)
+                SelectionChanged(SelectedItems);
         }
 
         /// <summary>Sets the pointer to an item</summary>
@@ -216,6 +217,9 @@ namespace pluginner
             else
                 lvi.State = ItemStates.Pointed;
             PointedItem = lvi;
+
+            if (PointerMoved != null)
+                PointerMoved(lvi);
         }
 
 
@@ -313,6 +317,9 @@ namespace pluginner
                 Item.State = ItemStates.Default;
                 SelectedItems.Remove(Item);
             }
+
+            if (SelectionChanged != null)
+                SelectionChanged(SelectedItems);
         }
 
         /// <summary>Selects an row</summary>
@@ -334,6 +341,9 @@ namespace pluginner
 
                 SelectedItems.Add(lvi);
             }
+
+            if (SelectionChanged != null)
+                SelectionChanged(SelectedItems);
         }
 
         /// <summary>Inverts selection of items (like the "[*] gray" key)</summary>
@@ -350,6 +360,8 @@ namespace pluginner
                     _SelectItem(lvi);
                 }
             }
+            if (SelectionChanged != null)
+                SelectionChanged(SelectedItems);
         }
 
         /// <summary>Scrolls the internal scroll view to the specifed row</summary>
@@ -359,6 +371,9 @@ namespace pluginner
             double Y = Items[0].Surface.GetPreferredSize().Height * rowno;
             ScrollerIn.ScrollTo(Y);
         }
+
+        public event TypedEvent<pluginner.ListView2Item> PointerMoved;
+        public event TypedEvent<List<pluginner.ListView2Item>> SelectionChanged;
 
         /// <summary>Sets collumn configuration</summary>
         public CollumnInfo[] Collumns

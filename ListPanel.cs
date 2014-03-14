@@ -82,7 +82,7 @@ namespace fcmd
             try
             {
                 pluginner.FSEntryMetadata Finfo = list.SelectedItems[0].Tag as pluginner.FSEntryMetadata;
-                string Text = fcmd.Properties.Settings.Default.InfoBarContent;
+                string Text = fcmd.Properties.Settings.Default.InfoBarContent1;
 
                 Text = Text.Replace("{Name}", Finfo.Name);
                 Text = Text.Replace("{Size}", Finfo.Lenght.ToString());

@@ -215,8 +215,8 @@ namespace fcmd
             }
 
             //build panels
-            PanelLayout.Panel1.Content = new pluginner.FileListPanel(BookmarksStore, ColorSchemeText); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
-            PanelLayout.Panel2.Content = new pluginner.FileListPanel(BookmarksStore, ColorSchemeText);
+            PanelLayout.Panel1.Content = new pluginner.FileListPanel(BookmarksStore, ColorSchemeText, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
+            PanelLayout.Panel2.Content = new pluginner.FileListPanel(BookmarksStore, ColorSchemeText, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2);
 
             p1 = (PanelLayout.Panel1.Content as pluginner.FileListPanel);
             p2 = (PanelLayout.Panel2.Content as pluginner.FileListPanel);

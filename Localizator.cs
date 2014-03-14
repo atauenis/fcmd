@@ -95,6 +95,10 @@ namespace fcmd
                         "swtMainWindowColumns=    Столбцы панелей\n" +
                         "SWTMWCFileExtView=Показывать типы (расширения) файлов:\nSWTMWCExtTogether=Сразу после имени\nSWTMWCExtFar=Отдельно\nSWTMWCCollumns=Столбцы\nSWTMWCExt=Расширение\nSWTMWCSize=Pазмер\nSWTMWCDate=Изменено\nSWTMWCFileMode=Доступ\nSWTMWCExpandName=Расширить столбец \"Имя\"\nSWTMWCShowCentury=Показывать век в дате (20хх)\nSWTMWCShowTimeAs12h=12-часовой формат времени (AM/PM)\nSWTMWCShowDirsInStatus=Выводить внизу кол-во папок\nSWTMWCSizeDisplay=Размер в панелях\n" +
                         "SizeDisplayPolicy000=в байтах\nSizeDisplayPolicy100=в КБ (округлённо)\nSizeDisplayPolicy200=в КБ (2 знака)\nSizeDisplayPolicy111=плавающий (x.x К/М/Г)\nSizeDisplayPolicy222=плавающий (x.xx К/М/Г)\nSizeDisplayPolicy110=плавающий (x.x К/М)\nSizeDisplayPolicy220=плавающий (x.xx K/M)\n"+
+                        "SWTMWinfobar=    Информационная строка\n"+
+                        "SWTMWItext1=Текст, когда нет выделенных файлов:\n"+
+                        "SWTMWItext2=Текст, когда выделены файлы:\n"+
+                        "SWTMWIhelp=Допускается использование масок.{n}Допустимые маски для подстановки значений:{n}{FullName} - полное имя файла: filename.ext{n}{AutoSize} - размер файла: 18 KB{n}{Date} - дата изменения файла: 01.01.1970{n}{Time} - время изменения файла: 00:00:00{n}{SelectedItems} - сколько строк выделено{n}\n" +
 						"ReplaceQDTitle=Обнаружен конфликт имён файлов\nReplaceQDText=Существует одноимённый файл {0}. Выберите действие:\n"+
 						"ReplaceQDReplace=Заменить\nReplaceQDReplaceAll=Заменить все\n"+
 						"ReplaceQDSkip=Пропустить\nReplaceQDSkipAll=Пропустить все\n"+

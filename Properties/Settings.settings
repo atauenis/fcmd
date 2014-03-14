@@ -17,8 +17,8 @@
     <Setting Name="DiskBarContent" Type="System.String" Scope="User">
       <Value Profile="(Default)">{Disks}</Value>
     </Setting>
-    <Setting Name="InfoBarContent" Type="System.String" Scope="User">
-      <Value Profile="(Default)">{Name} {AutoSize}; обновлено {LongDate}</Value>
+    <Setting Name="InfoBarContent1" Description="The text in infobar when no files are selected" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{FullName} {AutoSize} {Date} {Time}</Value>
     </Setting>
     <Setting Name="ShowKeybrdHelp" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -70,6 +70,9 @@
     </Setting>
     <Setting Name="VE_ShowCmdBar" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoBarContent2" Description="The text in infobar when &gt;0 files are selected" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Выделено: {SelectedItems}</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -80,15 +80,19 @@ namespace fcmd.Properties {
             }
         }
         
+        /// <summary>
+        /// The text in infobar when no files are selected
+        /// </summary>
         [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("The text in infobar when no files are selected")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{Name} {AutoSize}; обновлено {LongDate}")]
-        public string InfoBarContent {
+        [global::System.Configuration.DefaultSettingValueAttribute("{FullName} {AutoSize} {Date} {Time}")]
+        public string InfoBarContent1 {
             get {
-                return ((string)(this["InfoBarContent"]));
+                return ((string)(this["InfoBarContent1"]));
             }
             set {
-                this["InfoBarContent"] = value;
+                this["InfoBarContent1"] = value;
             }
         }
         
@@ -306,6 +310,22 @@ namespace fcmd.Properties {
             }
             set {
                 this["VE_ShowCmdBar"] = value;
+            }
+        }
+        
+        /// <summary>
+        /// The text in infobar when &gt;0 files are selected
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("The text in infobar when >0 files are selected")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Выделено: {SelectedItems}")]
+        public string InfoBarContent2 {
+            get {
+                return ((string)(this["InfoBarContent2"]));
+            }
+            set {
+                this["InfoBarContent2"] = value;
             }
         }
     }

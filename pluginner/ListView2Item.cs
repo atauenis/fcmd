@@ -39,6 +39,7 @@ namespace pluginner
                 Object Item = _Values[i];
 
                 Label lbl = new Label();
+                if (Item.GetType() != typeof(DirItem))
                 lbl.Text = Item.ToString(); //todo: добавить поддержку сложных типов, таких как рисунки и контролы
                 //lbl.BackgroundColor = Xwt.Drawing.Colors.Chocolate;
                 if (_Cols.Count() > i && i != _Cols.Count() - 1)
