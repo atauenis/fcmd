@@ -112,7 +112,7 @@ namespace fcmd
         /// <returns></returns>
         public string GetString(string Key){
             try{
-                return Localization[Key];
+                return Localization[Key].Replace("{n}", "\n");
             }
             catch (Exception ex) { Console.WriteLine("LOCALIZATION KEY WASN'T FOUND: " + Key + " (" + ex.Message + ")"); return Key; }
         }

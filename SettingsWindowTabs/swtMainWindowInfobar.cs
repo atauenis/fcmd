@@ -26,7 +26,7 @@ namespace fcmd.SettingsWindowTabs
                 ));
             Layout.PackStart(txtText2);
             Layout.PackStart(new Xwt.Label(
-                Locale.GetString("SWTMWIhelp").Replace("{n}", "\n")
+                Locale.GetString("SWTMWIhelp")
                 ){ Wrap = Xwt.WrapMode.Word }
                 );
 
