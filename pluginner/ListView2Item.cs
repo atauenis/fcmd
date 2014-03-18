@@ -38,9 +38,10 @@ namespace pluginner
             {
                 Object Item = _Values[i];
 
-                Label lbl = new Label();
-                if (Item.GetType() != typeof(DirItem))
-                lbl.Text = Item.ToString(); //todo: добавить поддержку сложных типов, таких как рисунки и контролы
+                Widget lbl;
+
+                lbl = MakeWidget(Item);
+                
                 //lbl.BackgroundColor = Xwt.Drawing.Colors.Chocolate;
                 if (_Cols.Count() > i && i != _Cols.Count() - 1)
                 {
@@ -49,6 +50,29 @@ namespace pluginner
                 }
                 Layout.PackStart(lbl);
             }
+        }
+
+        /// <summary>Makes a ready to display widget from an data-storage type (String, Image, DateTime or etc)</summary>
+        /// <param name="Content">The ready for storage data (an string, Integer, DateTime, Xwt Image or et centera)</param>
+        /// <returns>The XWT widget, which can be embedded ewerywhere</returns>
+        private Widget MakeWidget(object Content)
+        {
+            if (Content.GetType() == typeof(DirItem))
+            {
+                return new Label() { Visible = false }; //non-visible placeholder
+            }
+
+            if (Content.GetType() == typeof(Xwt.Drawing.Image))
+            {
+                return new ImageView(Content as Xwt.Drawing.Image);
+            }
+
+            if (Content.GetType() == typeof(Widget)){
+                //todo: find a time and debug this code. Not so many skills I have to anwser, should it work or not.
+                return Content as Widget;
+            }
+
+            return new Label(Content.ToString());
         }
 
         public void OnDblClick()
