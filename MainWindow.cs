@@ -29,7 +29,8 @@ namespace fcmd
         Xwt.MenuItem mnuFileNewDir = new Xwt.MenuItem() { Tag = "mnuFileNewDir" };
         Xwt.MenuItem mnuFileRemove = new Xwt.MenuItem() { Tag = "mnuFileRemove" };
         Xwt.MenuItem mnuFileAtributes = new Xwt.MenuItem() { Tag = "mnuFileAtributes" };
-        //Xwt.MenuItem mnuFileQuickSelect = new Xwt.MenuItem() { Tag = "mnuFileQuickSelect" };
+        Xwt.MenuItem mnuFileQuickSelect = new Xwt.MenuItem() { Tag = "mnuFileQuickSelect" };
+        Xwt.MenuItem mnuFileQuickUnselect = new Xwt.MenuItem() { Tag = "mnuFileQuickUnselect" };
         Xwt.MenuItem mnuFileSelectAll = new Xwt.MenuItem() { Tag = "mnuFileSelectAll" };
         Xwt.MenuItem mnuFileUnselect = new Xwt.MenuItem() { Tag = "mnuFileUnselect" };
         Xwt.MenuItem mnuFileInvertSelection = new Xwt.MenuItem() { Tag = "mnuFileInvertSelection" };
@@ -117,7 +118,8 @@ namespace fcmd
             mnuFile.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
             mnuFile.SubMenu.Items.Add(mnuFileAtributes);
             mnuFile.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
-            //mnuFile.SubMenu.Items.Add(mnuFileQuickSelect);
+            mnuFile.SubMenu.Items.Add(mnuFileQuickSelect);
+            mnuFile.SubMenu.Items.Add(mnuFileQuickUnselect);
             mnuFile.SubMenu.Items.Add(mnuFileSelectAll);
             mnuFile.SubMenu.Items.Add(mnuFileUnselect);
             mnuFile.SubMenu.Items.Add(mnuFileInvertSelection);
@@ -182,6 +184,8 @@ namespace fcmd
             mnuFileSelectAll.Clicked += (o, ea) => { ActivePanel.ListingView.Select(null); };
             mnuFileUnselect.Clicked += (o, ea) => { ActivePanel.ListingView.Unselect(); };
             mnuFileInvertSelection.Clicked += (o, ea) => { ActivePanel.ListingView.InvertSelection(); };
+            mnuFileQuickSelect.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.NumPadAdd, Xwt.ModifierKeys.None, false, 0)); };
+            mnuFileQuickUnselect.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.NumPadSubtract, Xwt.ModifierKeys.None, false, 0)); };
             mnuFileExit.Clicked += (o, ea) => { this.Close(); };
             mnuViewNoFilter.Clicked += (o, ea) => { ActivePanel.LoadDir(); };
             mnuViewWithFilter.Clicked += new EventHandler(mnuViewWithFilter_Clicked);
@@ -475,6 +479,76 @@ namespace fcmd
 
             switch (e.Key)
             {
+                case Xwt.Key.NumPadAdd: //[+] gray - add selection
+                    string Filter = @"*.*";
+
+                    InputBox ibx_qs = new InputBox(Locale.GetString("QuickSelect"), Filter);
+                    Xwt.CheckBox chkRegExp = new Xwt.CheckBox(Locale.GetString("NameFilterUseRegExp"));
+                    ibx_qs.OtherWidgets.Add(chkRegExp, 0, 0);
+                    if (!ibx_qs.ShowDialog()) return;
+                    Filter = ibx_qs.Result;
+                    if (chkRegExp.State == Xwt.CheckBoxState.Off)
+                    {
+                        Filter = Filter.Replace(".", @"\.");
+                        Filter = Filter.Replace("*", ".*");
+                        Filter = Filter.Replace("?", ".");
+                    }
+                    try
+                    {
+                        System.Text.RegularExpressions.Regex re = new System.Text.RegularExpressions.Regex(Filter);
+
+                        int Count = 0;
+                        foreach (pluginner.ListView2Item lvi in ActivePanel.ListingView.Items)
+                        {
+                            if (re.IsMatch(lvi.Data[1].ToString())){
+                                ActivePanel.ListingView.Select(lvi);
+                                Count++;
+                            }
+                        }
+
+                        ActivePanel.StatusBar.Text = string.Format(Locale.GetString("NameFilterFound"), Filter, Count);
+                    }
+                    catch (Exception ex)
+                    {
+                        Xwt.MessageDialog.ShowError(Locale.GetString("NameFilterError"), ex.Message);
+                    }
+                    return;
+
+                case Xwt.Key.NumPadSubtract: //[-] gray - add selection
+                    string Filter_qus = @"*.*";
+
+                    InputBox ibx_qus = new InputBox(Locale.GetString("QuickUnselect"), Filter_qus);
+                    Xwt.CheckBox chkRegExp_qus = new Xwt.CheckBox(Locale.GetString("NameFilterUseRegExp"));
+                    ibx_qus.OtherWidgets.Add(chkRegExp_qus, 0, 0);
+                    if (!ibx_qus.ShowDialog()) return;
+                    Filter_qus = ibx_qus.Result;
+                    if (chkRegExp_qus.State == Xwt.CheckBoxState.Off)
+                    {
+                        Filter_qus = Filter_qus.Replace(".", @"\.");
+                        Filter_qus = Filter_qus.Replace("*", ".*");
+                        Filter_qus = Filter_qus.Replace("?", ".");
+                    }
+                    try
+                    {
+                        System.Text.RegularExpressions.Regex re = new System.Text.RegularExpressions.Regex(Filter_qus);
+
+                        int Count_qus = 0;
+                        foreach (pluginner.ListView2Item lvi in ActivePanel.ListingView.Items)
+                        {
+                            if (re.IsMatch(lvi.Data[1].ToString()))
+                            {
+                                ActivePanel.ListingView.Unselect(lvi);
+                                Count_qus++;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Xwt.MessageDialog.ShowError(Locale.GetString("NameFilterError"), ex.Message);
+                    }
+                    return;
+
+                //F KEYS
                 case Xwt.Key.F3: //F3: View. Shift+F3: View as text.
                     if (URL1 == null)
                         return;
