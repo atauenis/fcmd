@@ -43,7 +43,7 @@ namespace fcmd.SettingsWindowTabs
         {
             fcmd.Properties.Settings.Default.InfoBarContent1 = txtText1.Text;
             fcmd.Properties.Settings.Default.InfoBarContent2 = txtText2.Text;
-            return true;//undone
+            return true;
         }
     }
 }

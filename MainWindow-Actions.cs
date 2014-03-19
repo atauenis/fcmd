@@ -153,12 +153,13 @@ namespace fcmd
                     String DestinationFilePath = ibx.Result;
                     Thread CpThread = new Thread(delegate() { DoCp(ActivePanel.FS, PassivePanel.FS, SourceFile, DestinationFilePath); });
                     FileProcessDialog fpd = new FileProcessDialog();
-                    //UNDONE: place the FPD over the middle of the main window
+                    fpd.Y = this.Y + (this.Height / 2) - (fpd.Height / 2);
+                    fpd.X = this.X + (this.Width / 2) - (fpd.Width / 2);//todo: dont known why, but doesn't work as need. Find what is fucks!
                     fpd.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.GetValue<string>(ActivePanel.dfURL) + "\n", ibx.Result, null);
                     fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
 
-                    CpThread.Start();
                     fpd.Show();
+                    CpThread.Start();
 
                     do {Xwt.Application.MainLoop.DispatchPendingEvents(); fpd.pbrProgress.Fraction = Progress; }
                     while (CpThread.ThreadState == ThreadState.Running);
@@ -180,9 +181,8 @@ namespace fcmd
                     Thread CpDirThread = new Thread(delegate() { DoCpDir(SourceURL, DestinationDirPath, ActivePanel.FS, PassivePanel.FS); });
 
                     FileProcessDialog CpDirProgressDialog = new FileProcessDialog();
-                    /*CpDirProgressDialog.Y = this.Top + ActivePanel.Top;
-                    CpDirProgressDialog.X = this.Left + ActivePanel.Left;*/
-                    //UNDONE: позиция окна статуса!!!
+                    CpDirProgressDialog.Y = this.Y + (this.Height/2) - (CpDirProgressDialog.Height/2);
+                    CpDirProgressDialog.X = this.X + (this.Width/2) - (CpDirProgressDialog.Width/2);//todo: dont known why, but doesn't work as need. Find what is fucks!
                     CpDirProgressDialog.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.GetValue<string>(ActivePanel.dfURL) + " [" + Locale.GetString("Directory") + "]\n", ibxd.Result, null);
                     CpDirProgressDialog.cmdCancel.Clicked += (object s, EventArgs e) => { CpDirThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
 

@@ -190,8 +190,7 @@ namespace pluginner
                             NewBtn.Margin = -3;
                             NewBtn.Cursor = Xwt.CursorType.Hand;
                             DiskList.PackStart(NewBtn);
-                            /* todo: rewrite the code; possibly change the modXWT to allow
-                             * change the internal padding of the button.
+                            /* todo: rewrite the code; possibly change the XWT to add toolbars
                              */
                         }
                         //todo: bookmark folders

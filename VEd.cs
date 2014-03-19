@@ -19,6 +19,7 @@ namespace fcmd
         pluginner.IVEPlugin Plugin;
         pluginner.IFSPlugin FSPlugin;
         bool CanBeShowed = true;
+        bool IsEditor = false;
 
         //Xwt.Menu MainMenu = new Xwt.Menu();
         Xwt.MenuItem mnuFile = new Xwt.MenuItem() { Tag="mnuFile"};
@@ -239,6 +240,7 @@ namespace fcmd
             catch (Exception ex) { Xwt.MessageDialog.ShowError(Locale.GetString("CantRunEXE"), ex.Message); CanBeShowed = false; return; }
 
             string FiNa4Title = URL.Substring(URL.LastIndexOf(FS.DirSeparator) + 1);
+            IsEditor = AllowEdit;
 
             if(AllowEdit)
                 this.Title = string.Format(Locale.GetString("FCETitle"), FiNa4Title);
@@ -286,7 +288,7 @@ namespace fcmd
             FileChooser OpenFileDialog = new FileChooser(FSPlugin);
             if (OpenFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel || OpenFileDialog.SelectedFile == null) return;
             SendCommand("unload");
-            LoadFile(OpenFileDialog.SelectedFile, OpenFileDialog.listPanel1.FSProvider, false);//undone: добавить запись тек. состояния VE.
+            LoadFile(OpenFileDialog.SelectedFile, OpenFileDialog.listPanel1.FSProvider, IsEditor);
         }
 
         /// <summary>(Re)builds the "Layout" vbox</summary>
