@@ -258,7 +258,7 @@ namespace pluginner
 
         public int RowNo;
         public int ColNo;
-        public string Tag; //don't forgetting that the lv2 is used only for file list, so the tag can be only a string
+        //public string Tag; //don't forgetting that the lv2 is used only for file list, so the tag can be only a string
 
         /// <summary>
         /// Get or set the data. Note that the data should be written fully.

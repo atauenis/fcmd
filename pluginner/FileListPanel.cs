@@ -29,8 +29,7 @@ namespace pluginner
         public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
         public ListView2 ListingView = new ListView2();
         public Xwt.HBox QuickSearchBox = new Xwt.HBox();
-        public Xwt.ImageView QuickSearchIcon = new Xwt.ImageView();
-        public Xwt.TextEntry QuickSearchText = new Xwt.TextEntry();
+        public Xwt.SearchTextEntry QuickSearchText = new Xwt.SearchTextEntry();
         public Xwt.Label StatusBar = new Xwt.Label();
         public Xwt.Table StatusTable = new Xwt.Table();
         public Xwt.ProgressBar StatusProgressbar = new Xwt.ProgressBar();
@@ -69,10 +68,8 @@ namespace pluginner
             CLIprompt.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(CLIprompt_KeyReleased);
             ListingView.BorderVisible = true;
 
-            QuickSearchIcon.Image = Xwt.Drawing.Image.FromResource("pluginner.Resources.search.png");
             QuickSearchText.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
             QuickSearchText.KeyPressed += new EventHandler<Xwt.KeyEventArgs>(QuickSearchText_KeyPressed);
-            QuickSearchBox.PackStart(QuickSearchIcon);
             QuickSearchBox.PackStart(QuickSearchText, true, true);
             QuickSearchBox.Visible = false;
         }
@@ -176,6 +173,9 @@ namespace pluginner
                             {
                                 case "System.IO.DriveInfo.GetDrives":
                                     AddSysDrives();
+                                    break;
+                                case "LinuxMounts":
+                                    AddLinuxMounts();
                                     break;
                                 //todo: LinuxMounts (/mnt/), LinuxSystemDirs (/)
                             }
@@ -631,6 +631,25 @@ namespace pluginner
 
                 DiskList.PackStart(NewBtn);
             }
+        }
+
+        private void AddLinuxMounts()
+        {
+            if (Directory.Exists(@"/mnt"))
+            {
+                foreach (string dir in Directory.GetDirectories(@"/mnt/"))
+                {
+                    Xwt.Button NewBtn = new Xwt.Button(null, dir.Replace("/mnt/",""));
+                    NewBtn.Clicked += (o, ea) => { NavigateTo("file://" + dir); };
+                    NewBtn.CanGetFocus = false;
+                    NewBtn.Style = Xwt.ButtonStyle.Flat;
+                    NewBtn.Margin = -3;
+                    NewBtn.Cursor = Xwt.CursorType.Hand;
+                    NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
+                    DiskList.PackStart(NewBtn);
+                }
+            }
+            else AddSysDrives(); //fallback for Windows
         }
 
         /// <summary>
