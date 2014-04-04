@@ -435,8 +435,8 @@ namespace fcmd
         void mnuHelpAbout_Clicked(object sender, EventArgs e)
         {
             string AboutString = string.Format(Locale.GetString("FileCommanderVer"), "File Commander", Winforms.Application.ProductVersion) +
-                                   "\n(C) 2013-14, the FC team (Alexander Tauenis & comrades)\nhttps://github.com/atauenis/fcmd\n" +
-                                   "Uses Xamarin Window Toolkit (Xwt) with A.T.'s modifications\nhttps://github.com/atauenis/xwt\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
+                                   "\n(C) 2013-14, the File Commander team (Alexander Tauenis & zero comrades):\nhttps://github.com/atauenis/fcmd\nNew contributors are welcome!\n" +
+                                   "Using Xamarin Window Toolkit (Xwt):\nhttps://github.com/mono/xwt\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
             Xwt.MessageDialog.ShowMessage(AboutString);
 
         }
