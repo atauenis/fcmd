@@ -1,32 +1,32 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Option id="ShowAllFiles" value="True" />
-          <Node name="Properties" expanded="True" />
-          <Node name="fcmd" expanded="True">
-            <Node name="Properties" expanded="True">
-              <Node name="Settings.settings" selected="True" />
-            </Node>
-            <Node name="FileChooser.cs" expanded="True" />
-          </Node>
-          <Node name="pluginner" expanded="True" />
-        </State>
-      </Pad>
-      <Pad Id="ClassPad">
-        <State selected="True" />
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
+	<Pads>
+	  <Pad Id="ProjectPad">
+		<State expanded="True">
+		  <Option id="ShowAllFiles" value="True" />
+		  <Node name="Properties" expanded="True" />
+		  <Node name="fcmd" expanded="True">
+			<Node name="Properties" expanded="True">
+			  <Node name="Settings.settings" selected="True" />
+			</Node>
+			<Node name="FileChooser.cs" expanded="True" />
+		  </Node>
+		  <Node name="pluginner" expanded="True" />
+		</State>
+	  </Pad>
+	  <Pad Id="ClassPad">
+		<State selected="True" />
+	  </Pad>
+	  <Pad Id="MonoDevelop.Debugger.WatchPad">
+		<State />
+	  </Pad>
+	</Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Catchpoint exceptionName="System.InvalidCastException" />
-    </BreakpointStore>
+	<BreakpointStore>
+	  <Catchpoint exceptionName="System.InvalidCastException" />
+	</BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

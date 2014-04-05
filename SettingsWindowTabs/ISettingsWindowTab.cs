@@ -11,9 +11,9 @@ using System.Text;
 
 namespace fcmd.SettingsWindowTabs
 {
-    interface ISettingsWindowTab
-    {
-        Xwt.Widget Content { get; }
-        bool SaveSettings();
-    }
+	interface ISettingsWindowTab
+	{
+		Xwt.Widget Content { get; }
+		bool SaveSettings();
+	}
 }

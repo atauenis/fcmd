@@ -11,52 +11,52 @@ using System.Text;
 
 namespace fcmd
 {
-    /// <summary>The settings window (window, where user switches the program's settings)</summary>
-    class SettingsWindow : Xwt.Dialog
-    {
-        Localizator Locale = new Localizator();
-        Xwt.HPaned Layout = new Xwt.HPaned();
-        Xwt.ListBox TabList = new Xwt.ListBox();
+	/// <summary>The settings window (window, where user switches the program's settings)</summary>
+	class SettingsWindow : Xwt.Dialog
+	{
+		Localizator Locale = new Localizator();
+		Xwt.HPaned Layout = new Xwt.HPaned();
+		Xwt.ListBox TabList = new Xwt.ListBox();
 
-        public SettingsWindow()
-        {
-            this.Title = Locale.GetString("FCS_Title");
+		public SettingsWindow()
+		{
+			this.Title = Locale.GetString("FCS_Title");
 
-            Layout.Panel1.Content = TabList;
-            this.Content = Layout;
-            this.ShowInTaskbar = false;
+			Layout.Panel1.Content = TabList;
+			this.Content = Layout;
+			this.ShowInTaskbar = false;
 
-            this.Buttons.Add(Xwt.Command.Save, Xwt.Command.Cancel);
-            this.Buttons[0].Clicked += new EventHandler(cmdOk_Clicked);
-            this.Buttons[1].Clicked += (o, e) => { this.Hide(); };
+			this.Buttons.Add(Xwt.Command.Save, Xwt.Command.Cancel);
+			this.Buttons[0].Clicked += new EventHandler(cmdOk_Clicked);
+			this.Buttons[1].Clicked += (o, e) => { this.Hide(); };
 
-            TabList.MinHeight = 388; TabList.MinWidth = 128;
-            TabList.Items.Add(new SettingsWindowTabs.swtMainWindow(),Locale.GetString("swtMainWindow"));
-            TabList.Items.Add(new SettingsWindowTabs.swtMainWindowColumns(), Locale.GetString("swtMainWindowColumns"));
-            TabList.Items.Add(new SettingsWindowTabs.swtMainWindowInfobar(), Locale.GetString("SWTMWinfobar"));
-            TabList.Items.Add(new SettingsWindowTabs.swtViewerEditor(), Locale.GetString("swtViewerEditor"));
+			TabList.MinHeight = 388; TabList.MinWidth = 128;
+			TabList.Items.Add(new SettingsWindowTabs.swtMainWindow(),Locale.GetString("swtMainWindow"));
+			TabList.Items.Add(new SettingsWindowTabs.swtMainWindowColumns(), Locale.GetString("swtMainWindowColumns"));
+			TabList.Items.Add(new SettingsWindowTabs.swtMainWindowInfobar(), Locale.GetString("SWTMWinfobar"));
+			TabList.Items.Add(new SettingsWindowTabs.swtViewerEditor(), Locale.GetString("swtViewerEditor"));
 
-            TabList.SelectionChanged += new EventHandler(TabList_SelectionChanged);
-            TabList.SelectRow(0); //wpf hack (row №0 isn't automatical selected)
-        }
+			TabList.SelectionChanged += new EventHandler(TabList_SelectionChanged);
+			TabList.SelectRow(0); //wpf hack (row №0 isn't automatical selected)
+		}
 
-        void cmdOk_Clicked(object sender, EventArgs e)
-        {
-            foreach (SettingsWindowTabs.ISettingsWindowTab swt in TabList.Items)
-            {
-                if (!swt.SaveSettings())
-                {
-                    //if someone is unable to save settings...
-                    Xwt.MessageDialog.ShowError(Locale.GetString("FCS_CantSaveSettings"));
-                    return;
-                }
-            }
-            this.Hide();
-        }
+		void cmdOk_Clicked(object sender, EventArgs e)
+		{
+			foreach (SettingsWindowTabs.ISettingsWindowTab swt in TabList.Items)
+			{
+				if (!swt.SaveSettings())
+				{
+					//if someone is unable to save settings...
+					Xwt.MessageDialog.ShowError(Locale.GetString("FCS_CantSaveSettings"));
+					return;
+				}
+			}
+			this.Hide();
+		}
 
-        void TabList_SelectionChanged(object sender, EventArgs e)
-        {
-            Layout.Panel2.Content = (TabList.SelectedItem as SettingsWindowTabs.ISettingsWindowTab).Content;
-        }
-    }
+		void TabList_SelectionChanged(object sender, EventArgs e)
+		{
+			Layout.Panel2.Content = (TabList.SelectedItem as SettingsWindowTabs.ISettingsWindowTab).Content;
+		}
+	}
 }

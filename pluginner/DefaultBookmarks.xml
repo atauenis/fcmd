@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Bookmarks>
   <SpeedDial type="QuickAccessBar">
-    <AutoBookmarks type="System.IO.DriveInfo.GetDrives"/>
+	<AutoBookmarks type="System.IO.DriveInfo.GetDrives"/>
   </SpeedDial>
 </Bookmarks>
 
@@ -10,16 +10,16 @@ Bookmarks: корневой элемент списка закладок
   Без параметров.
 SpeedDial: меню быстрого вызова (закладок)
   type=тип меню, одно из значений:
-    QuickAccessBar-панель дисков
-    BookmarksMenu-меню закладок (на 23/01/2014 не реализовано)
-    UserMenu-пользовательское меню по F2 ( -//- )
+	QuickAccessBar-панель дисков
+	BookmarksMenu-меню закладок (на 23/01/2014 не реализовано)
+	UserMenu-пользовательское меню по F2 ( -//- )
 Bookmark: закладка в меню
   url: адрес, куда закладка указывает
   title: надпись закладки
   icon: иконка закладки (на 23/01/2014 не реализовано)
 AutoBookmarks: автоматическая закладка (несколько закладок), выводится в зависимости от условий
   type: что должно быть на её месте, одно из значений:
-    System.IO.DriveInfo.GetDrives: список дисков из одноимённой функции .NET, неадекватный вывод под Mono
-    LinuxMounts: список дисков в системах Linux (по каталогу /mnt)
-    LinuxSystemDirs: системные каталоги Linux: / /var/ /etc/ /tmp/ /bin/ и т.д. (на 23/01/2014 не реализовано)
+	System.IO.DriveInfo.GetDrives: список дисков из одноимённой функции .NET, неадекватный вывод под Mono
+	LinuxMounts: список дисков в системах Linux (по каталогу /mnt)
+	LinuxSystemDirs: системные каталоги Linux: / /var/ /etc/ /tmp/ /bin/ и т.д. (на 23/01/2014 не реализовано)
 -->

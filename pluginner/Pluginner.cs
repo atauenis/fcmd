@@ -10,14 +10,14 @@ using System.IO;
 using System.Reflection;
 
 namespace pluginner{
-    public delegate void TypedEvent<T>(T data);
+	public delegate void TypedEvent<T>(T data);
 
 	/// <summary>
 	/// Default plugin interface.
 	/// </summary>
 	public interface IPlugin{
-        //BASIC PLUGIN'S PROPERTIES
-        //ОСНОВНЫЕ СВОЙСТВА ПЛАГИНОВ
+		//BASIC PLUGIN'S PROPERTIES
+		//ОСНОВНЫЕ СВОЙСТВА ПЛАГИНОВ
 		/// <summary>
 		/// Gives the plugin's name
 		/// </summary>
@@ -33,31 +33,31 @@ namespace pluginner{
 		/// </summary>
 		string Author { get; }
 
-        //FLEXIBLE API
-        //ГИБКОЕ API
-        /// <summary>
-        /// (int[6]) Defines mimimal and maximal versions of the flexible API.
-        /// Currently it is {0,1,0, 0,1,0}
-        /// </summary>
-        int[] FlexibleAPIversion { get; }
+		//FLEXIBLE API
+		//ГИБКОЕ API
+		/// <summary>
+		/// (int[6]) Defines mimimal and maximal versions of the flexible API.
+		/// Currently it is {0,1,0, 0,1,0}
+		/// </summary>
+		int[] FlexibleAPIversion { get; }
 
-        /// <summary>
-        /// Calls a flexible API function
-        /// </summary>
-        /// <param name="call">The function name</param>
-        /// <param name="arguments">The argument or arguments</param>
-        /// <returns>Something, that the function returns (type is defined in the FC flexible API documentation)</returns>
-        object FlexibleAPIcall(string call, params object[] arguments);
+		/// <summary>
+		/// Calls a flexible API function
+		/// </summary>
+		/// <param name="call">The function name</param>
+		/// <param name="arguments">The argument or arguments</param>
+		/// <returns>Something, that the function returns (type is defined in the FC flexible API documentation)</returns>
+		object FlexibleAPIcall(string call, params object[] arguments);
 	}
 
 	//todo: IUIPlugin (плагины к интерфейсу File Commander)
 
    
-    #region PleaseSwitchPluginException
-    /// <summary>
+	#region PleaseSwitchPluginException
+	/// <summary>
 	/// This exception fires when the plugin module needs to be changed to an other plugin module.
 	/// For example, when a filesystem plugin tried to be used with uncompatible filesystem or a image viewer plugin tried to show a text file.
-    /// The File Commander should catch this exception and find a new plugin (see pluginfinder.cs file)
+	/// The File Commander should catch this exception and find a new plugin (see pluginfinder.cs file)
 	/// </summary>
 	[System.Serializable]
 	public class PleaseSwitchPluginException : System.Exception
@@ -93,8 +93,8 @@ namespace pluginner{
 		/// <param name="info">The object that holds the serialized object data.</param>
 		protected PleaseSwitchPluginException (System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-        }
-    #endregion
-    }
+		}
+	#endregion
+	}
 }
 
