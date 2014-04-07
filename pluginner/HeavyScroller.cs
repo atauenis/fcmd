@@ -12,7 +12,7 @@ using Xwt;
 
 namespace pluginner
 {
-	/// <summary>A scrollable panel</summary>
+	/// <summary>A scrollable panel, that can be 100% controlled by the host</summary>
 	public class HeavyScroller : Xwt.Widget
 	{
 		Table Layout = new Table();
@@ -32,8 +32,29 @@ namespace pluginner
 			base.Content = Layout;
 
 			BoundsChanged += new EventHandler(HeavyScroller_BoundsChanged);
-
 			VScroll.ValueChanged += new EventHandler(VScroll_ValueChanged);
+			HScroll.ValueChanged += new EventHandler(HScroll_ValueChanged);
+			this.MouseScrolled += new EventHandler<MouseScrolledEventArgs>(HeavyScroller_MouseScrolled);
+		}
+
+
+		void HeavyScroller_MouseScrolled(object sender, MouseScrolledEventArgs e)
+		{
+			switch (e.Direction)
+			{
+				case ScrollDirection.Down:
+					ScrollTo(OffsetY - 10);
+					return;
+				case ScrollDirection.Up:
+					ScrollTo(OffsetY + 10);
+					return;
+				case ScrollDirection.Right:
+					ScrollTo(null, OffsetX + 10);
+					return;
+				case ScrollDirection.Left:
+					ScrollTo(null, OffsetX - 10);
+					return;
+			}
 		}
 
 		void HeavyScroller_BoundsChanged(object sender, EventArgs e)
@@ -46,30 +67,39 @@ namespace pluginner
 			Scroll();
 		}
 
-		void VScroll_ValueChanged(object sender, EventArgs e)
+		void HScroll_ValueChanged(object sender, EventArgs e)
 		{
-			OffsetY = -VScroll.Value;
-			Scroll();
+			ScrollTo(null, -HScroll.Value, false);
 		}
 
+		void VScroll_ValueChanged(object sender, EventArgs e)
+		{
+			ScrollTo(-VScroll.Value, null, false);
+		}
+
+		/// <summary>Materializes the current position of content in this scrollable view.</summary>
 		void Scroll()
 		{
+			//To simply scroll the content, please call ScrollTo()!
 			Locator.SetChildBounds(Child, new Rectangle(OffsetX,OffsetY,Child.Surface.GetPreferredSize().Width,Child.Surface.GetPreferredSize().Height));
 		}
 
 		/// <summary>Scrolls this scroller to the specifed coordinates</summary>
 		/// <param name="y">The new coordinate by vertical axis or null if do not change</param>
 		/// <param name="x">The new coordinate by horizontal axis or null if do not change</param>
-		public void ScrollTo(double? y = null, double? x = null)
+		/// <param name="TouchScrollbars">It is need to update scroll bars values? Set this to False to prevent endless loops.</param>
+		public void ScrollTo(double? y = null, double? x = null, bool TouchScrollbars = true)
 		{
 			if (y != null){
 				OffsetY = (double)y;
-				VScroll.Value = (double)y;
+				if(TouchScrollbars)
+				VScroll.Value = (double)-y;
 			}
 
 			if (x != null){
 				OffsetX = (double)x;
-				HScroll.Value = (double)x;
+				if(TouchScrollbars)
+				HScroll.Value = (double)-x;
 			}
 
 			Scroll();
@@ -93,14 +123,10 @@ namespace pluginner
 
 		/// <summary>Allows/denies scrolling the content on the horizontal axis</summary>
 		public bool CanScrollByX
-		{
-			set { }
-		}
+		{ get; set; } //for retrogrades: this is not a bug, it's new c# style
 
 		/// <summary>Allows/denies scrolling the content on the vertical axis</summary>
 		public bool CanScrollByY
-		{
-			set { }
-		}
+		{ get; set; }
 	}
 }
