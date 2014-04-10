@@ -199,7 +199,6 @@ namespace pluginner
 
 		/// <summary>
 		/// The file's MIME type.
-		/// NOTE: if the file is a directory, it's type will be "x-fcmd/directory"
 		/// </summary>
 		public string MIMEType;
 
@@ -217,6 +216,7 @@ namespace pluginner
 	/// <summary>Common directory item info.</summary>
 	public struct DirItem
 	{
+		//TODO: pluginner.DirItem sometimes duplicates pluginner.File, it's need to do something to DRY.
 		/// <summary>
 		/// The path of the file.
 		/// </summary>
@@ -251,6 +251,20 @@ namespace pluginner
 		/// Is the file/directory hidden. 0=maybe showed, 1=dont show
 		/// </summary>
 		public bool Hidden;
+
+		/// <summary>
+		/// The file's MIME type.
+		/// </summary>
+		public string MIMEType;
+		/* Allowed MIME types:
+		 * any registered or wide-used MIME types
+		 * application/octet-stream: a unknown file
+		 * x-fcmd/directory: a directory
+		 * x-fcmd/up: ".." link
+		 * x-fcmd/hardlink: a hard link
+		 * x-fcmd/link: link to a file or directory
+		 * x-fcmd-win32-shortcut-XXX/YYY: a shortcut to file with XXX/YYY type
+		 */
 	}
 
 	/// <summary>

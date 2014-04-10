@@ -76,6 +76,7 @@ namespace fcmd.base_plugins.fs
 			if (curdir.Parent != null){
 				tmpVar.Path = "file://" + curdir.Parent.FullName;
 				tmpVar.TextToShow = "..";
+				tmpVar.MIMEType = "x-fcmd/up";
 				DirContent.Add(tmpVar);
 			}
 
@@ -91,6 +92,7 @@ namespace fcmd.base_plugins.fs
 				}else{
 					tmpVar.Hidden = false;
 				}
+				tmpVar.MIMEType = "x-fcmd/directory";
 
 				DirContent.Add(tmpVar);
 				Progress += FileWeight;
@@ -110,6 +112,7 @@ namespace fcmd.base_plugins.fs
 				}else{
 					tmpVar.Hidden = false;
 				}
+				tmpVar.MIMEType = "application/octet-stream";//UNDONE: сделать определение типа файла!!!
 
 				DirContent.Add(tmpVar);
 				Progress += FileWeight;
