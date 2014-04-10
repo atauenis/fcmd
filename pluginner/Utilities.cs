@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.IO;
+using System.Windows.Forms;
 
 namespace pluginner
 {
@@ -65,6 +66,32 @@ namespace pluginner
 		public static string GetEmbeddedResource(string resourceName)
 		{
 			return GetEmbeddedResource(resourceName, Assembly.GetExecutingAssembly());
+		}
+
+		/// <summary>Search for icon of the selected MIME type</summary>
+		/// <param name="MIME">The MIME type (i.e. application/msword)</param>
+		/// <returns></returns>
+		public static Xwt.Drawing.Image GetIconForMIME(string MIME)
+		{
+			if (MIME == "x-fcmd/directory")
+				return Xwt.Drawing.Image.FromResource("pluginner.Resources.x-fcmd-directory.png");
+			
+			if (MIME == "x-fcmd/up")
+				return Xwt.Drawing.Image.FromResource("pluginner.Resources.x-fcmd-up.png");
+
+			if (System.IO.File.Exists(Application.StartupPath + "/icons/" + MIME.Replace("/","-")+".png"))
+			{
+				return Xwt.Drawing.Image.FromStream(System.IO.File.OpenRead(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png"));
+			}
+
+			//UNDONE: забубенить выдирание иконок из катАлагав /etc/mime; ~/.mime
+			//UNDONE: забубенить выдирание иконок из реестра Win32 (с выдиранием иконок из exeшников и захреначиванием в кэш)
+			//TODO: сделать поддержку MacOS X.
+
+#if DEBUG
+			Console.WriteLine("utilities: Can't find an icon for " + MIME);
+#endif
+			return Xwt.Drawing.Image.FromResource("pluginner.Resources.application-octet-stream.png");
 		}
 	}
 }

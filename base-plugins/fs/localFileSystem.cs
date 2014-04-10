@@ -12,12 +12,12 @@ namespace fcmd.base_plugins.fs
 {
 	public partial class localFileSystem : pluginner.IFSPlugin
 	{
-		/* ЗАМЕТКА РАЗРАБОТЧИКУ			 DEVELOPER NOTES
+		/* ЗАМЕТКА РАЗРАБОТЧИКУ				DEVELOPER NOTES
 		 * В данном файле содержится код	This file contanis the local FS
-		 * плагина доступа к локальным ФС.  adapter for the File Commander.
+		 * плагина доступа к локальным ФС.	adapter for the File Commander.
 		 * Не забывайте про отличия сред	Please don't forget about the differences
-		 * Linux/BSD/MacOS от Windows.	  between *nix & Win32, the code MUST be
-		 * Код должен работать везде!	   cross-platformy.
+		 * *nix и MacOS X от Windows.		between OSX, *nix and Win32.
+		 * Код должен работать везде!		THE CODE MUST WORK EVERYWHERE!
 		 */
 		public string Name { get { return new Localizator().GetString("LocalFSVer"); } }
 		public string Version { get{return "1.0";} }

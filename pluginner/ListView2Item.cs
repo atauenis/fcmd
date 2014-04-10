@@ -68,7 +68,7 @@ namespace pluginner
 			}
 
 			if (Content.GetType() == typeof(Widget)){
-				//todo: find a time and debug this code. Not so many skills I have to anwser, should it work or not.
+				//todo: doesn't work, as the Widget is abstract class, need to find a way to identify it's childs.
 				return Content as Widget;
 			}
 

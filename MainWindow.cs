@@ -228,6 +228,7 @@ namespace fcmd
 			p2.OpenFile += new pluginner.TypedEvent<string>(Panel_OpenFile);
 
 			List<pluginner.ListView2.CollumnInfo> LVCols = new List<pluginner.ListView2.CollumnInfo>();
+			LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = "", Tag = "Icon", Width = 16, Visible = true });
 			LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = "URL", Tag = "Path", Width = 0, Visible = false });
 			LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = Locale.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
 			LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = Locale.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
@@ -437,7 +438,9 @@ namespace fcmd
 			string AboutString = string.Format(Locale.GetString("FileCommanderVer"), "File Commander", Winforms.Application.ProductVersion) +
 								   "\n(C) 2013-14, the File Commander team:\nhttps://github.com/atauenis/fcmd\n"+
 								   "New contributors are welcome!\n" +
-								   "Using Xamarin Window Toolkit (Xwt):\nhttps://github.com/mono/xwt\n\n" + Environment.OSVersion + "\nFramework version: " + Environment.Version;
+								   "Using Xamarin Window Toolkit (Xwt):\nhttps://github.com/mono/xwt\n" +
+								   "Using icons from Tango project:\nhttp://tango.freedesktop.org/\n\n" +
+								   Environment.OSVersion + "\nFramework version: " + Environment.Version;
 			Xwt.MessageDialog.ShowMessage(AboutString);
 
 		}

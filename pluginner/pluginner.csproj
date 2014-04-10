@@ -112,5 +112,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\search.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\application-octet-stream.png" />
+    <EmbeddedResource Include="Resources\x-fcmd-directory.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\x-fcmd-up.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -17,10 +17,11 @@ namespace pluginner
 	/// <summary>Filelist panel</summary>
 	public class FileListPanel : Xwt.VBox
 	{
-		public int dfURL = 0;
-		public int dfDisplayName = 1;
-		public int dfSize = 2;
-		public int dfChanged = 3;
+		public int dfIcon = 0;
+		public int dfURL = 1;
+		public int dfDisplayName = 2;
+		public int dfSize = 3;
+		public int dfChanged = 4;
 
 		public pluginner.IFSPlugin FS;
 		public Xwt.TextEntry UrlBox = new Xwt.TextEntry();
@@ -306,7 +307,7 @@ namespace pluginner
 		{
 			if (e.Key == Xwt.Key.Return && ListingView.SelectedRow > -1)
 			{
-				NavigateTo(ListingView.PointedItem.Data[0].ToString());
+				NavigateTo(ListingView.PointedItem.Data[dfURL].ToString());
 			}
 			if ((int)e.Key < 65000) //keys before 65000th are characters, numbers & other human stuff
 			{
@@ -319,7 +320,7 @@ namespace pluginner
 		void ListingView_ButtonPressed(object sender, Xwt.ButtonEventArgs e)
 		{//FIXME: possibly unreachable code, archaism from Winforms/Xwt ListView-based ListPanel
 			if (e.MultiplePress == 2)//double click
-				NavigateTo(ListingView.PointedItem.Data[0].ToString());
+				NavigateTo(ListingView.PointedItem.Data[dfURL].ToString());
 		}
 
 		/// <summary>
@@ -412,6 +413,7 @@ namespace pluginner
 				foreach (DirItem di in dis)
 				{
 					List<Object> Data = new List<Object>();
+					Data.Add(Utilities.GetIconForMIME(di.MIMEType));
 					Data.Add(di.Path);
 					Data.Add(di.TextToShow);
 					if (di.TextToShow == "..")
