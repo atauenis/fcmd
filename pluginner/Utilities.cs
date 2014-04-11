@@ -11,6 +11,8 @@ using System.Text;
 using System.Reflection;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace pluginner
 {
@@ -79,19 +81,237 @@ namespace pluginner
 			if (MIME == "x-fcmd/up")
 				return Xwt.Drawing.Image.FromResource("pluginner.Resources.x-fcmd-up.png");
 
-			if (System.IO.File.Exists(Application.StartupPath + "/icons/" + MIME.Replace("/","-")+".png"))
-			{
+			if (System.IO.File.Exists(Application.StartupPath + "/icons/" + MIME.Replace("/","-")+".png")){
+				return Xwt.Drawing.Image.FromStream(System.IO.File.OpenRead(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png"));
+			}
+
+			//подбор иконки по миме типу
+
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT){
+				//On win32, to get the icon, it is need to go through the ass and exit from the nose
+
+				/* Предисловие.
+				 * На платформе Windows поиск иконки для файлов по MIME-типу без обращения к WinAPI - весёлая история.
+				 * Мазохизм на примере application/msword (Word for Windows 97-2003):
+				 * \\\Registry\HKEY_CLASSES_ROOT\MIME\Database\Content Type\application/msword\Extension
+				 * \\\Registry\HKEY_CLASSES_ROOT\.doc\(Default)
+				 * \\\Registry\HKEY_CLASSES_ROOT\Word.Document.8\DefaultIcon\(Default)
+				 * Извлечь ресурс №1 из C:\\Windows\\Installer\\{90110419-6000-11D3-8CFE-0150048383C9}\\wordicon.exe
+				 * Сконвертировать ICO в рисунок 16x16 px подходящего формата.
+				 */
+
+				//Глава 1. Определение расширения.
+				string Win32extension = null;
+				try
+				{
+					Win32extension =
+						Microsoft.Win32.Registry.ClassesRoot
+						.OpenSubKey(@"MIME\Database\Content Type\" + MIME)
+						.GetValue("Extension")
+						.ToString();
+				}
+				catch
+				{ Console.WriteLine("Warning: No extension associated for " + MIME + " in the Windows registry"); }
+
+				if (Win32extension == null) goto mime_icon_fallback;
+
+				//Глава 2. Определение Windows'овского названия типа.
+				string Win32name = null;
+				try
+				{
+					Win32name =
+						Microsoft.Win32.Registry.ClassesRoot
+						.OpenSubKey(Win32extension)
+						.GetValue("")
+						.ToString();
+				}
+				catch
+				{ Console.WriteLine("Warning: No filetype associated at HKEY_CLASSES_ROOT\\{0} ({1}) in the Windows registry", Win32extension, MIME); }
+
+				if (Win32name == null) goto mime_icon_fallback;
+
+				//Глава 3. Определение ассоциированного файла-хранителя иконки.
+				string PathToIcon = null;
+				try
+				{
+					PathToIcon =
+						Microsoft.Win32.Registry.ClassesRoot
+						.OpenSubKey(Win32name)
+						.OpenSubKey("DefaultIcon")
+						.GetValue("")
+						.ToString();
+				}
+				catch
+				{ Console.WriteLine("Warning: No default icon is stored at HKEY_CLASSES_ROOT\\{0}\\DefaultIcon (for {1}) in the Windows registry", Win32name, MIME); }
+
+				if (PathToIcon == null) goto mime_icon_fallback;
+
+				//Глава 4. Извлечение иконки 16х16.
+				System.Drawing.Icon ic =
+				ExtractIconFromFile(PathToIcon, false);
+
+				//Глава 5. Сохранение иконки в кэш и выдача готовой.
+				if (ic == null) { Console.WriteLine("Extracted icon wasn't received for {0}; posssibly broken EXE/DLL or a 32/64-bit mistake", PathToIcon); goto mime_icon_fallback; }
+				ic.ToBitmap().Save(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png");
 				return Xwt.Drawing.Image.FromStream(System.IO.File.OpenRead(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png"));
 			}
 
 			//UNDONE: забубенить выдирание иконок из катАлагав /etc/mime; ~/.mime
-			//UNDONE: забубенить выдирание иконок из реестра Win32 (с выдиранием иконок из exeшников и захреначиванием в кэш)
 			//TODO: сделать поддержку MacOS X.
-
+			
+			mime_icon_fallback:
 #if DEBUG
+			if(MIME != "application/octet-stream")
 			Console.WriteLine("utilities: Can't find an icon for " + MIME);
 #endif
 			return Xwt.Drawing.Image.FromResource("pluginner.Resources.application-octet-stream.png");
+		}
+
+		/// <summary>Finds a MIME content-type of a file</summary>
+		/// <param name="Extension">The file's extension</param>
+		/// <returns>The content type</returns>
+		public static string GetContentType(string Extension)
+		{
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+			{
+				string CT = "application/octet-stream";
+
+				RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(
+					Extension.ToLower()
+					);
+
+				if (regKey != null)
+				{
+					object contentType = regKey.GetValue("Content Type");
+
+					if (contentType != null)
+						CT = contentType.ToString();
+				}
+
+				return CT;
+			}
+			throw new Exception("Win32 only"); //todo: сделать поддержку запросов к shared-mime-info на линуксах и чётамнизнаю на макоси
+		}
+
+		//the following code was copypasted from http://www.codeproject.com/Articles/29137/Get-Registered-File-Types-and-Their-Associated-Ico
+
+		/// <summary>
+		/// Structure that encapsulates basic information of icon embedded in a file.
+		/// </summary>
+		public struct EmbeddedIconInfo
+		{
+			public string FileName;
+			public int IconIndex;
+		}
+
+		/// <summary>
+		/// Parses the parameters string to the structure of EmbeddedIconInfo.
+		/// </summary>
+		/// <param name="fileAndParam">The params string, such as ex: 
+		///    "C:\\Program Files\\NetMeeting\\conf.exe,1".</param>
+		public static EmbeddedIconInfo getEmbeddedIconInfo(string fileAndParam)
+		{
+			EmbeddedIconInfo embeddedIcon = new EmbeddedIconInfo();
+
+			if (String.IsNullOrEmpty(fileAndParam))
+				return embeddedIcon;
+
+			//Use to store the file contains icon.
+			string fileName = String.Empty;
+
+			//The index of the icon in the file.
+			int iconIndex = 0;
+			string iconIndexString = String.Empty;
+
+			int commaIndex = fileAndParam.IndexOf(",");
+			//if fileAndParam is some thing likes this: 
+				 //"C:\\Program Files\\NetMeeting\\conf.exe,1".
+			if (commaIndex > 0)
+			{
+				fileName = fileAndParam.Substring(0, commaIndex);
+				iconIndexString = fileAndParam.Substring(commaIndex + 1);
+			}
+			else
+				fileName = fileAndParam;
+    
+			if (!String.IsNullOrEmpty(iconIndexString))
+			{
+				//Get the index of icon.
+				iconIndex = int.Parse(iconIndexString);
+				if (iconIndex < 0)
+					iconIndex = 0;  //To avoid the invalid index.
+			}
+    
+			embeddedIcon.FileName = fileName;
+			embeddedIcon.IconIndex = iconIndex;
+
+			return embeddedIcon;
+		}
+
+		[DllImport("shell32.dll", CharSet = CharSet.Auto)]
+		private static extern uint ExtractIconEx 
+			(string szFileName, int nIconIndex, 
+			IntPtr[] phiconLarge, IntPtr[] phiconSmall, uint nIcons);
+
+		[DllImport("user32.dll", EntryPoint = "DestroyIcon", SetLastError = true)]
+		private static unsafe extern int DestroyIcon (IntPtr hIcon);
+		
+		/// <summary>
+		/// Extract the icon from file.
+		/// </summary>
+		/// <param name="fileAndParam">The params string, such as ex: 
+		///    "C:\\Program Files\\NetMeeting\\conf.exe,1".</param>
+		/// <param name="isLarge">Determines the returned icon is a large 
+		///    (may be 32x32 px) or small icon (16x16 px).</param>
+		public static System.Drawing.Icon ExtractIconFromFile(string fileAndParam, bool isLarge)
+		{
+			unsafe
+			{
+				uint readIconCount = 0;
+				IntPtr[] hDummy = new IntPtr[1] { IntPtr.Zero };
+				IntPtr[] hIconEx = new IntPtr[1] { IntPtr.Zero };
+
+				try
+				{
+					EmbeddedIconInfo embeddedIcon =
+						getEmbeddedIconInfo(fileAndParam);
+
+					if (isLarge)
+						readIconCount = ExtractIconEx
+						(embeddedIcon.FileName, 0, hIconEx, hDummy, 1);
+					else
+						readIconCount = ExtractIconEx
+						(embeddedIcon.FileName, 0, hDummy, hIconEx, 1);
+
+					if (readIconCount > 0 && hIconEx[0] != IntPtr.Zero)
+					{
+						//Get first icon.
+						System.Drawing.Icon extractedIcon =
+						(System.Drawing.Icon)System.Drawing.Icon.FromHandle(hIconEx[0]).Clone();
+
+						return extractedIcon;
+					}
+					else //No icon read.
+						return null;
+				}
+				catch (Exception exc)
+				{
+					//Extract icon error.
+					throw new ApplicationException
+						("Could not extract icon", exc);
+				}
+				finally
+				{
+					//Release resources.
+					foreach (IntPtr ptr in hIconEx)
+						if (ptr != IntPtr.Zero)
+							DestroyIcon(ptr);
+
+					foreach (IntPtr ptr in hDummy)
+						if (ptr != IntPtr.Zero)
+							DestroyIcon(ptr);
+				}
+			}
 		}
 	}
 }

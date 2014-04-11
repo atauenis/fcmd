@@ -437,6 +437,9 @@ namespace pluginner
 			}
 			catch (Exception ex)
 			{
+				if(ex.Message == "Object reference not set to an instance of an object."){
+					Xwt.MessageDialog.ShowWarning(ex.Message, ex.StackTrace + "\nInner exception: " + ex.InnerException.Message ?? "none");
+				}else
 				Xwt.MessageDialog.ShowWarning(ex.Message);
 			}
 			ListingView.Sensitive = true;
