@@ -18,6 +18,8 @@ namespace pluginner
 {
 	public static class Utilities
 	{
+		static string PathToIcons = null;
+
 		public static int Hex2Dec(string hex)
 		{
 			return Convert.ToInt32(hex, 16);
@@ -89,6 +91,7 @@ namespace pluginner
 
 			if (Environment.OSVersion.Platform == PlatformID.Win32NT){
 				//On win32, to get the icon, it is need to go through the ass and exit from the nose
+				//if you are unhappy, possibly you will exit through genitalia or ear
 
 				/* Предисловие.
 				 * На платформе Windows поиск иконки для файлов по MIME-типу без обращения к WinAPI - весёлая история.
@@ -98,8 +101,51 @@ namespace pluginner
 				 * \\\Registry\HKEY_CLASSES_ROOT\Word.Document.8\DefaultIcon\(Default)
 				 * Извлечь ресурс №1 из C:\\Windows\\Installer\\{90110419-6000-11D3-8CFE-0150048383C9}\\wordicon.exe
 				 * Сконвертировать ICO в рисунок 16x16 px подходящего формата.
+				 * 
+				 * Недостаток данного метода в том, что не все расширения в Windows связаны с MIME-типом. Яркий
+				 * пример - файлы Visual Studio/VC#/VB.NET. Их можно представить в виде zz-application/zz-winassoc-xxx,
+				 * где ххх - расширение. Поэтому, используется второй метод определения иконки.
 				 */
 
+				//Том 1. Определение по расширению.
+				if (MIME.StartsWith("zz-application/zz-winassoc"))
+				{
+					string w32type = null, w32icon = null;
+					try
+					{
+						//определение типа Win32 (Word.Document.8)
+						w32type =
+							Microsoft.Win32.Registry.ClassesRoot
+							.OpenSubKey("."+MIME.Substring(27))
+							.GetValue("")
+							.ToString();
+
+						//определение пути к иконке
+						w32icon =
+							Microsoft.Win32.Registry.ClassesRoot
+							.OpenSubKey(w32type)
+							.OpenSubKey("DefaultIcon")
+							.GetValue("")
+							.ToString();
+
+						//извлечение иконки, сохренение в кэш и загрузка в виде XWT Image
+						if (w32icon == null) goto mime_icon_fallback;
+						System.Drawing.Icon i =
+						ExtractIconFromFile(w32icon, false);
+
+						if (i == null) { Console.WriteLine("Extracted icon wasn't received for {0}; posssibly broken EXE/DLL or a 32/64-bit mistake", w32icon); goto mime_icon_fallback; }
+						i.ToBitmap().Save(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png");
+						return Xwt.Drawing.Image.FromStream(System.IO.File.OpenRead(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png"));
+
+					}
+					catch
+					{ Console.WriteLine("Warning: FC is unable to get icon for .{0}", w32type); }
+
+					if (w32type == null) goto mime_icon_fallback;
+					if (w32icon == null) goto mime_icon_fallback;
+				}
+
+				//Том 2. Опеределение по MIME-типу.
 				//Глава 1. Определение расширения.
 				string Win32extension = null;
 				try
@@ -148,7 +194,7 @@ namespace pluginner
 
 				//Глава 4. Извлечение иконки 16х16.
 				System.Drawing.Icon ic =
-				ExtractIconFromFile(PathToIcon, false);
+				ExtractIconFromFile(PathToIcon, false); //SEE BUG #7
 
 				//Глава 5. Сохранение иконки в кэш и выдача готовой.
 				if (ic == null) { Console.WriteLine("Extracted icon wasn't received for {0}; posssibly broken EXE/DLL or a 32/64-bit mistake", PathToIcon); goto mime_icon_fallback; }
@@ -172,25 +218,31 @@ namespace pluginner
 		/// <returns>The content type</returns>
 		public static string GetContentType(string Extension)
 		{
+			if (Extension.Length == 0)
+			{
+				return "application/octet-stream";
+			}
+
 			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
 			{
+				//win32 way
 				string CT = "application/octet-stream";
 
 				RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(
 					Extension.ToLower()
 					);
 
-				if (regKey != null)
-				{
+				if (regKey != null){
 					object contentType = regKey.GetValue("Content Type");
 
 					if (contentType != null)
 						CT = contentType.ToString();
+						return CT;
 				}
-
-				return CT;
 			}
-			throw new Exception("Win32 only"); //todo: сделать поддержку запросов к shared-mime-info на линуксах и чётамнизнаю на макоси
+			//todo: Linux/BSD (shared-mime-info) way and an macosx way
+
+			return "zz-application/zz-winassoc-" + Extension;
 		}
 
 		//the following code was copypasted from http://www.codeproject.com/Articles/29137/Get-Registered-File-Types-and-Their-Associated-Ico
@@ -238,8 +290,10 @@ namespace pluginner
 			{
 				//Get the index of icon.
 				iconIndex = int.Parse(iconIndexString);
-				if (iconIndex < 0)
+				/*if (iconIndex < 0)
 					iconIndex = 0;  //To avoid the invalid index.
+				 * may cause unexpeced benaviour
+				 */
 			}
     
 			embeddedIcon.FileName = fileName;
@@ -278,10 +332,10 @@ namespace pluginner
 
 					if (isLarge)
 						readIconCount = ExtractIconEx
-						(embeddedIcon.FileName, 0, hIconEx, hDummy, 1);
+						(embeddedIcon.FileName, embeddedIcon.IconIndex, hIconEx, hDummy, 1);
 					else
 						readIconCount = ExtractIconEx
-						(embeddedIcon.FileName, 0, hDummy, hIconEx, 1);
+						(embeddedIcon.FileName, embeddedIcon.IconIndex, hDummy, hIconEx, 1);
 
 					if (readIconCount > 0 && hIconEx[0] != IntPtr.Zero)
 					{

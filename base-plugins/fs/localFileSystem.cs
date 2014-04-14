@@ -112,10 +112,10 @@ namespace fcmd.base_plugins.fs
 				}else{
 					tmpVar.Hidden = false;
 				}
-				if(curFile.LastIndexOf('.') > 0)
-				tmpVar.MIMEType = pluginner.Utilities.GetContentType(curFile.Substring(curFile.LastIndexOf('.')));
+				if (curFile.LastIndexOf('.') > 0)
+					tmpVar.MIMEType = pluginner.Utilities.GetContentType(curFile.Substring(curFile.LastIndexOf('.')+1));
 				else
-				tmpVar.MIMEType = "application/octet-stream";
+					tmpVar.MIMEType = "application/octet-stream";
 
 				DirContent.Add(tmpVar);
 				Progress += FileWeight;
