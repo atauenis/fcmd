@@ -18,7 +18,7 @@ namespace pluginner
 {
 	public static class Utilities
 	{
-		static string PathToIcons = null;
+		static string PathToIcons = Application.StartupPath + Path.DirectorySeparatorChar + "icons";
 
 		public static int Hex2Dec(string hex)
 		{
@@ -83,8 +83,8 @@ namespace pluginner
 			if (MIME == "x-fcmd/up")
 				return Xwt.Drawing.Image.FromResource("pluginner.Resources.x-fcmd-up.png");
 
-			if (System.IO.File.Exists(Application.StartupPath + "/icons/" + MIME.Replace("/","-")+".png")){
-				return Xwt.Drawing.Image.FromStream(System.IO.File.OpenRead(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png"));
+			if (CheckForIcon(MIME.Replace("/","-"))){
+				return GetIconFromCache(MIME.Replace("/", "-"));
 			}
 
 			//подбор иконки по миме типу
@@ -134,9 +134,8 @@ namespace pluginner
 						ExtractIconFromFile(w32icon, false);
 
 						if (i == null) { Console.WriteLine("Extracted icon wasn't received for {0}; posssibly broken EXE/DLL or a 32/64-bit mistake", w32icon); goto mime_icon_fallback; }
-						i.ToBitmap().Save(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png");
-						return Xwt.Drawing.Image.FromStream(System.IO.File.OpenRead(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png"));
-
+						SaveIconToCache(i,MIME.Replace("/", "-"));
+						return GetIconFromCache(MIME.Replace("/", "-"));
 					}
 					catch
 					{ Console.WriteLine("Warning: FC is unable to get icon for .{0}", w32type); }
@@ -198,8 +197,8 @@ namespace pluginner
 
 				//Глава 5. Сохранение иконки в кэш и выдача готовой.
 				if (ic == null) { Console.WriteLine("Extracted icon wasn't received for {0}; posssibly broken EXE/DLL or a 32/64-bit mistake", PathToIcon); goto mime_icon_fallback; }
-				ic.ToBitmap().Save(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png");
-				return Xwt.Drawing.Image.FromStream(System.IO.File.OpenRead(Application.StartupPath + Path.DirectorySeparatorChar + "icons" + Path.DirectorySeparatorChar + MIME.Replace("/", "-") + ".png"));
+				SaveIconToCache(ic, MIME.Replace("/", "-"));
+				return GetIconFromCache(MIME.Replace("/", "-"));
 			}
 
 			//UNDONE: забубенить выдирание иконок из катАлагав /etc/mime; ~/.mime
@@ -245,7 +244,49 @@ namespace pluginner
 			return "zz-application/zz-winassoc-" + Extension;
 		}
 
-		//the following code was copypasted from http://www.codeproject.com/Articles/29137/Get-Registered-File-Types-and-Their-Associated-Ico
+		#region Icon Cache utilities
+		/// <summary>Save a Windows icon to cache</summary>
+		/// <param name="sdi">The System.Drawing.Icon, which needs to be saved</param>
+		/// <param name="name">The icon name</param>
+		/// <param name="size">The icon size</param>
+		public static void SaveIconToCache(System.Drawing.Icon sdi, string name, int size = 16)
+		{
+			if (!Directory.Exists(PathToIcons + Path.DirectorySeparatorChar + size))
+			{
+				Directory.CreateDirectory(PathToIcons + Path.DirectorySeparatorChar + size);
+			}
+
+			string IconPath = PathToIcons + Path.DirectorySeparatorChar + size + Path.DirectorySeparatorChar + name + ".png";
+			sdi.ToBitmap().Save(IconPath);
+		}
+
+		/// <summary>Reads an icon from icon cache</summary>
+		/// <param name="name">The icon name</param>
+		/// <param name="size">The icon size</param>
+		/// <returns>The icon as an XWT Image.</returns>
+		public static Xwt.Drawing.Image GetIconFromCache(string name, int size = 16)
+		{
+			string IconPath = PathToIcons + Path.DirectorySeparatorChar + size + Path.DirectorySeparatorChar + name + ".png";
+
+			if(!System.IO.File.Exists(IconPath))
+				return Xwt.Drawing.Image.FromResource("pluginner.Resources.application-octet-stream.png");
+			else
+				return Xwt.Drawing.Image.FromStream(System.IO.File.OpenRead(IconPath));
+				//this way is better than Xwt.Drawing.Image.FromFile because of some GTK# issues
+		}
+
+		/// <summary>Check for existing of an icon</summary>
+		/// <param name="name">The icon name</param>
+		/// <param name="size">The icon preferred size</param>
+		/// <returns>True or false, or there is other boolean values???</returns>
+		public static bool CheckForIcon(string name, int size = 16){
+			string IconPath = PathToIcons + Path.DirectorySeparatorChar + size + Path.DirectorySeparatorChar + name + ".png";
+			return System.IO.File.Exists(IconPath);//todo: replace with better detection code, with support for low-res icon finding
+		}
+		#endregion
+
+		#region Extractor for icons inside Win32 PE files (EXE, DLL)
+		//the following code based on code from http://www.codeproject.com/Articles/29137/Get-Registered-File-Types-and-Their-Associated-Ico
 
 		/// <summary>
 		/// Structure that encapsulates basic information of icon embedded in a file.
@@ -367,5 +408,6 @@ namespace pluginner
 				}
 			}
 		}
+		#endregion
 	}
 }
