@@ -30,7 +30,7 @@ namespace pluginner
 		public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
 		public ListView2 ListingView = new ListView2();
 		public Xwt.HBox QuickSearchBox = new Xwt.HBox();
-		public Xwt.SearchTextEntry QuickSearchText = new Xwt.SearchTextEntry();
+		public Xwt.TextEntry QuickSearchText = new Xwt.TextEntry();
 		public Xwt.Label StatusBar = new Xwt.Label();
 		public Xwt.Table StatusTable = new Xwt.Table();
 		public Xwt.ProgressBar StatusProgressbar = new Xwt.ProgressBar();
@@ -308,13 +308,17 @@ namespace pluginner
 			if (e.Key == Xwt.Key.Return && ListingView.SelectedRow > -1)
 			{
 				NavigateTo(ListingView.PointedItem.Data[dfURL].ToString());
+				return;
 			}
 			if ((int)e.Key < 65000) //keys before 65000th are characters, numbers & other human stuff
 			{
 				QuickSearchText.Text += e.Key.ToString();
 				QuickSearchBox.Visible = true;
 				QuickSearchText.SetFocus();
+				return;
 			}
+			if(Utilities.GetXwtBackendName() == "WPF")
+			ListingView.OnKeyPressed(e);
 		}
 
 		void ListingView_ButtonPressed(object sender, Xwt.ButtonEventArgs e)

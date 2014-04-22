@@ -225,6 +225,13 @@ namespace pluginner
 
 		//PUBLIC MEMBERS
 
+		/// <summary>Imitates a press of a keyboard key</summary>
+		/// <param name="kea">The key to be "pressed"</param>
+		public new void OnKeyPressed(Xwt.KeyEventArgs kea)
+		{
+			base.OnKeyPressed(kea);
+		}
+
 		/// <summary>Add a new item</summary>
 		/// <param name="Data">The item's content</param>
 		/// <param name="Tag">The tag for the new item (optional)</param>

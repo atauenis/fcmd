@@ -72,6 +72,13 @@ namespace pluginner
 			return GetEmbeddedResource(resourceName, Assembly.GetExecutingAssembly());
 		}
 
+		/// <summary>Returns current XWT backend name (WPF, Gtk, Mon(o.Mac), Coc(oa) etc)</summary>
+		/// <returns>WPF if WPF, Gtk if GTK, Mon if MonoMac, Coc if Cocoa</returns>
+		public static string GetXwtBackendName()
+		{
+			return Xwt.Toolkit.CurrentEngine.GetSafeBackend (new Xwt.Window()).ToString().Substring(4,3);
+		}
+
 		/// <summary>Search for icon of the selected MIME type</summary>
 		/// <param name="MIME">The MIME type (i.e. application/msword)</param>
 		/// <returns></returns>
