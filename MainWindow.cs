@@ -67,9 +67,9 @@ namespace fcmd
 		Xwt.MenuItem mnuToolsEditUserMenu = new Xwt.MenuItem() { Tag = "mnuToolsEditUserMenu" };
 		Xwt.MenuItem mnuToolsKeychains = new Xwt.MenuItem() { Tag="mnuToolsKeychains" };
 		Xwt.MenuItem mnuToolsConfigEdit = new Xwt.MenuItem() { Tag = "mnuToolsConfigEdit" };
-		Xwt.CheckBoxMenuItem mnuToolsKeybrdHelp = new Xwt.CheckBoxMenuItem() { Tag = "mnuToolsKeybrdHelp" };
-		Xwt.CheckBoxMenuItem mnuToolsInfobar = new Xwt.CheckBoxMenuItem() { Tag = "mnuToolsInfobar" };
-		Xwt.CheckBoxMenuItem mnuToolsDiskButtons = new Xwt.CheckBoxMenuItem() { Tag = "mnuToolsDiskButtons" };
+		Xwt.CheckBoxMenuItem mnuViewKeybrdHelp = new Xwt.CheckBoxMenuItem() { Tag = "mnuViewKeybrdHelp" };
+		Xwt.CheckBoxMenuItem mnuViewInfobar = new Xwt.CheckBoxMenuItem() { Tag = "mnuViewInfobar" };
+		Xwt.CheckBoxMenuItem mnuViewDiskButtons = new Xwt.CheckBoxMenuItem() { Tag = "mnuViewDiskButtons" };
 		Xwt.MenuItem mnuToolsDiskLabel = new Xwt.MenuItem() { Tag = "mnuToolsDiskLabel" };
 		Xwt.MenuItem mnuToolsFormat = new Xwt.MenuItem() { Tag = "mnuToolsFormat" };
 		Xwt.MenuItem mnuToolsSysInfo = new Xwt.MenuItem() { Tag = "mnuToolsSysInfo" };
@@ -144,6 +144,10 @@ namespace fcmd
 			mnuView.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
 			mnuView.SubMenu.Items.Add(mnuViewNoFilter);
 			mnuView.SubMenu.Items.Add(mnuViewWithFilter);
+			mnuView.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+			mnuView.SubMenu.Items.Add(mnuViewKeybrdHelp); //these checkboxes are don't work, because no code was written
+			mnuView.SubMenu.Items.Add(mnuViewInfobar);
+			mnuView.SubMenu.Items.Add(mnuViewDiskButtons);
 
 			mnuNavigate.SubMenu = new Xwt.Menu();
 			mnuNavigate.SubMenu.Items.Add(mnuNavigateTree);
@@ -157,10 +161,6 @@ namespace fcmd
 			mnuTools.SubMenu.Items.Add(mnuToolsEditUserMenu);
 			mnuTools.SubMenu.Items.Add(mnuToolsKeychains);
 			mnuTools.SubMenu.Items.Add(mnuToolsConfigEdit);
-			mnuTools.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
-			mnuTools.SubMenu.Items.Add(mnuToolsKeybrdHelp); //todo: move to View menu
-			mnuTools.SubMenu.Items.Add(mnuToolsInfobar);
-			mnuTools.SubMenu.Items.Add(mnuToolsDiskButtons);
 			mnuTools.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
 			mnuTools.SubMenu.Items.Add(mnuToolsDiskLabel);
 			mnuTools.SubMenu.Items.Add(mnuToolsFormat);
@@ -262,7 +262,7 @@ namespace fcmd
 			KeybHelpButtons[8].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F8, Xwt.ModifierKeys.None, false, 0)); };
 			KeybHelpButtons[9].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F9, Xwt.ModifierKeys.None, false, 0)); };
 			KeybHelpButtons[10].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F10, Xwt.ModifierKeys.None, false, 0)); };
-			//todo: implement "object Xwt.Widget.Tag" in XWT (like Winforms's any Control.Tag)
+			//todo: replace this shit-code with huge using of KeybHelpButtons[n].Tag property (note that it's difficult to be realized due to c# restrictions)
 
 			//apply user's settings
 			//window size
@@ -614,7 +614,6 @@ namespace fcmd
 					Xwt.Application.Exit();
 					//todo: handle Alt+F10 (directory tree)
 					return;
-				//todo: case Xwt.Key.q: quick search
 			}
 #if DEBUG
 			Console.WriteLine("KEYBOARD DEBUG: the key isn't handled");

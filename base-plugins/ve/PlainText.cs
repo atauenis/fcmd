@@ -27,7 +27,6 @@ namespace fcmd.base_plugins.ve
 		public PlainText() //constructor
 		{
 			ScrollBox = new Xwt.ScrollView(RTV);
-			ScrollBox.HeightRequest = 350;//todo: read from settings
 			Layout.Add(ScrollBox, 0, 1, 1, 3, true, true);
 
 			Layout.Add(lblFileName, 0, 0);

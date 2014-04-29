@@ -30,7 +30,7 @@ namespace pluginner
 		public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
 		public ListView2 ListingView = new ListView2();
 		public Xwt.HBox QuickSearchBox = new Xwt.HBox();
-		public Xwt.TextEntry QuickSearchText = new Xwt.TextEntry();
+		public Xwt.TextEntry QuickSearchText = new Xwt.TextEntry();//по возможность заменить на SearchTextEntry (не раб. на wpf, see xwt bug 330)
 		public Xwt.Label StatusBar = new Xwt.Label();
 		public Xwt.Table StatusTable = new Xwt.Table();
 		public Xwt.ProgressBar StatusProgressbar = new Xwt.ProgressBar();
@@ -352,9 +352,7 @@ namespace pluginner
 			}
 			catch (pluginner.PleaseSwitchPluginException)
 			{
-				//todo: raise event (mainwindow should handle&refind plugin)
-				Console.WriteLine("Случилося PleaseSwitchPluginException на " + url);
-
+				throw; //delegate authority to the mainwindow (it is it's business).
 			}
 			catch (Exception ex)
 			{

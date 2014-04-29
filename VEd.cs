@@ -133,7 +133,7 @@ namespace fcmd
 			mnuEditFindNext.Clicked += (o, ea) => { SendCommand("findreplace last"); };
 			mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
 
-			this.CloseRequested += (o, ea) => { SendCommand("unload"); this.Hide(); };
+			this.CloseRequested += VEd_CloseRequested;
 			this.Shown += new EventHandler(VEd_Shown);
 
 #if !MONO
@@ -143,6 +143,15 @@ namespace fcmd
 #endif
 
 			BuildLayout();
+		}
+
+		void VEd_CloseRequested(object sender, Xwt.CloseRequestedEventArgs args)
+		{
+			fcmd.Properties.Settings.Default.VEWinHeight = this.Height;
+			fcmd.Properties.Settings.Default.VEWinWidth = this.Width;
+
+			SendCommand("unload");
+			this.Hide();
 		}
 
 		void VEd_Shown(object sender, EventArgs e)
@@ -227,7 +236,6 @@ namespace fcmd
 			try{
 				if (fcmd.Properties.Settings.Default.UseExternalEditor && AllowEdit || fcmd.Properties.Settings.Default.UseExternalViewer && !AllowEdit && URL.StartsWith("file:")){
 					CanBeShowed = false;
-					//todo: add fs check (ext. editor may not support filesystems, which are powered by FC plugins)
 					if (AllowEdit){
 						ExecuteProgram(fcmd.Properties.Settings.Default.ExternalEditor.Replace("$", "\"" + URL));
 					}
@@ -300,6 +308,10 @@ namespace fcmd
 			if(fcmd.Properties.Settings.Default.ShowKeybrdHelp) Layout.PackStart(KeyBoardHelp, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, 6, -12, -12);
 			//the values -12, -6 and 6 are need for 0px margins, and found experimentally.
 			//as those experiments showed, these values is measured in pixels. Live and learn!
+
+			this.Height = fcmd.Properties.Settings.Default.VEWinHeight;
+			this.Width = fcmd.Properties.Settings.Default.VEWinWidth;
+			this.Resizable = true; //for stupid xwt toolkits.
 
 			//UI color scheme
 			string ColorSchemeText = null;
