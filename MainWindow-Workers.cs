@@ -84,8 +84,22 @@ namespace fcmd
 			}
 
 			if(DestinationFS.FileExists (DestinationURL)){
+
 				ReplaceQuestionDialog rpd = new ReplaceQuestionDialog(DestinationFS.GetFile(DestinationURL,new double()).Name);
-				switch(rpd.Run()){
+				var ClickedButton = ReplaceQuestionDialog.ClickedButton.Skip;
+				bool ready = false;
+				Xwt.Application.Invoke(
+					new Action(
+						delegate
+						{
+							ClickedButton = rpd.Run();
+							ready = true;
+						}
+					)
+				);
+				do {} while (!ready);
+
+				switch(ClickedButton){
 				case ReplaceQuestionDialog.ClickedButton.Replace:
 					//continue execution
 					Feedback = rpd.ChoosedButton;

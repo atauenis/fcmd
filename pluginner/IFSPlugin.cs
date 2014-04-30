@@ -93,8 +93,6 @@ namespace pluginner
 		/// <param name="Content">The file's content</param>
 		[Obsolete("Replacing to Touch+WriteFileContent (но ПОКА ЧТО много где используется старый вызов)")]
 		void WriteFile(File NewFile, int Progress, byte[] Content);
-		//todo:void WriteFileMetadata(FileMetadata md);
-		//todo: переписать всё, убрать инт прогресс и ускорить работу путём секционирования файлов
 
 		/// <summary>Writes bytes into a file</summary>
 		/// <param name="URL">The URL of the file</param>
@@ -216,7 +214,10 @@ namespace pluginner
 	/// <summary>Common directory item info.</summary>
 	public struct DirItem
 	{
-		//TODO: pluginner.DirItem sometimes duplicates pluginner.File, it's need to do something to DRY.
+		/* TODO: pluginner.DirItem sometimes duplicates pluginner.File, it's need to do something to DRY.
+		 * The one of ways is to remove most of the Size,Date,Rules(Permissions),Mimetype and other obsolete fields
+		 * and replace with a one FSEntryMetadata field.
+		 */
 		/// <summary>
 		/// The path of the file.
 		/// </summary>
@@ -238,7 +239,7 @@ namespace pluginner
 		public DateTime Date;
 
 		/// <summary>
-		/// The file's accessrules.
+		/// The file's access rights.
 		/// </summary>
 		public string Rules;
 
@@ -293,6 +294,8 @@ namespace pluginner
 
 		/// <summary>Is the file configured for read only</summary>
 		public bool IsReadOnly;
+
+		//todo: implement Permissions enum and property (to work samely on *nix, win32, ftp, and permission-less systems)
 
 		/// <summary>Returns uniform resource locator of the file</summary>
 		public override string ToString()
