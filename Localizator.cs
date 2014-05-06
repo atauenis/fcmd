@@ -21,16 +21,16 @@ namespace fcmd
 						"LocalFSVer=Модуль доступа к локальным ФС [встроенный]\n" +
 						"TxtViewerVer=Просмоторщик текстовых файлов [встроенный]\n" +
 						"VEptxtVer=Простой текст\n" +
-						"FCF1=F1 Справка\n" +
-						"FCF2=F2 Меню\n" +
-						"FCF3=F3 Чтение\n" +
-						"FCF4=F4 Правка\n" +
-						"FCF5=F5 Копия\n" +
-						"FCF6=F6 Перенос\n" +
-						"FCF7=F7 Каталог\n" +
-						"FCF8=F8 Удал-е\n" +
-						"FCF9=F9 Оп-ции\n" +
-					   "FCF10=F10 Выход\n" + //todo: перевести в читаемый вид
+						"FCF1=Справка\n" +
+						"FCF2=Меню\n" +
+						"FCF3=Чтение\n" +
+						"FCF4=Правка\n" +
+						"FCF5=Копия\n" +
+						"FCF6=Перенос\n" +
+						"FCF7=Каталог\n" +
+						"FCF8=Удал-е\n" +
+						"FCF9=Оп-ции\n" +
+					   "FCF10=Выход\n" + //todo: перевести в читаемый вид
 						"FCmnuFile=_Файл\nFCmnuView=_Вид\nFCmnuNav=_Навигация\nFCmnuTools=С_ервис\nFCmnuHelp=_Справка\n" +
 						"FCmnuFileUserMenu=Меню пользователя\nFCmnuFileView=Просмотреть файл\nFCmnuFileEdit=Редактировать файл\nFCmnuFileCompare=Сравнить файлы\nFCmnuFileCopy=Копирование\nFCmnuFileMove=Перенос/переименование\nFCmnuFileNewDir=Новый каталог\nFCmnuFileRemove=Удалить\nFCmnuFileAtributes=Свойства...\nFCmnuFileQuickSelect=Выделить группу...\nFCmnuFileQuickUnselect=Снять выделение группы...\nFCmnuFileSelectAll=Выделить всё\nFCmnuFileUnselect=Снять выделение\nFCmnuFileInvertSelection=Инвертировать выделение\nFCmnuFileExit=Выxод\n" +
 						"FCmnuViewShort=Краткий (список)\nFCmnuViewDetails=Полный (таблица)\nFCmnuViewIcons=Икноки (значки)\nFCmnuViewThumbs=Эскизы изображений\nFCmnuViewQuickView=Быстрый просмотр выделенного в сосед. панели\nFCmnuViewTree=Древо каталогов\nFCmnuViewPCPCconnect=Прямая связь ПК-ПК\nFCmnuViewPCNETPCconnect=Мини HTTP сервер\nFCmnuViewByName=По имени\nFCmnuViewByType=По расширению\nFCmnuViewByDate=По дате\nFCmnuViewBySize=По размеру\nFCmnuViewNoFilter=Без фильтра (*.*)\nFCmnuViewWithFilter=Применить фильтр имени...\nFCmnuViewToolbar=Панель инструментов\nFCmnuViewKeybrdHelp=Подсказки клавиш F\nFCmnuViewInfobar=Сводные строки\nFCmnuViewDiskButtons=Кнопки дисков\n" +
@@ -70,16 +70,16 @@ namespace fcmd
 						"QuickUnselect=Укажите шаблон имён для снятия выделения (например, *.bat или e*.exe)\n"+
 						"FCVTitle=Просмотр - {0}\n" +
 						"FCETitle=Редактор - {0}\n" +
-						"FCVE_F1=F1 Справка\n" +
-						"FCVE_F2=F2\n" +
-						"FCVE_F3=F3\n" +
-						"FCVE_F4=F4 Вид\n" +
-						"FCVE_F5=F5 Обновить\n" +
-						"FCVE_F6=F6\n" +
-						"FCVE_F7=F7 Поиск\n" +
-						"FCVE_F8=F8 Формат\n" +
-						"FCVE_F9=F9\n" +
-					   "FCVE_F10=F10 Выход\n" +
+						"FCVE_F1=Справка\n" +
+						"FCVE_F2=\n" +
+						"FCVE_F3=\n" +
+						"FCVE_F4=Вид\n" +
+						"FCVE_F5=Обновить\n" +
+						"FCVE_F6=\n" +
+						"FCVE_F7=Поиск\n" +
+						"FCVE_F8=Формат\n" +
+						"FCVE_F9=\n" +
+					   "FCVE_F10=Выход\n" +
 						"FCVE_mnuFile=_Файл\nFCVE_mnuFileNew=Созд_ать\nFCVE_mnuFileOpen=_Открыть\nFCVE_mnuFileReload=Пере_загрузить\nFCVE_mnuFileSave=_Сохранить\nFCVE_mnuFileSaveAs=Со_хранить как...\n" +
 						"FCVE_mnuFilePrint=_Печать\nFCVE_mnuFilePrintPreview=Пред_варительный просмотр...\nFCVE_mnuFilePrintSettings=Пара_метры страницы...\nFCVE_mnuFileClose=В_ыход\n" +
 						"FCVE_mnuEdit=_Правка\nFCVE_mnuEditCut=_Вырезать\nFCVE_mnuEditCopy=_Копировать\nFCVE_mnuEditPaste=Вст_авить\nFCVE_mnuEditSelAll=_Выделить всё\nFCVE_mnuEditSearch=_Найти...\nFCVE_mnuEditSearchNext=Искать дальше\n" +

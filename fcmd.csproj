@@ -88,6 +88,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="InputBox.cs" />
+    <Compile Include="KeyboardHelpButton.cs" />
     <Compile Include="ListPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>

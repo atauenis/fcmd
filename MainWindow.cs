@@ -92,7 +92,7 @@ namespace fcmd
 		pluginner.FileListPanel PassivePanel;
 
 		Xwt.HBox KeyBoardHelp = new Xwt.HBox();
-		Xwt.Button[] KeybHelpButtons = new Xwt.Button[11]; //одна лишняя, которая нумбер [0]
+		KeyboardHelpButton[] KeybHelpButtons = new KeyboardHelpButton[11];//одна лишняя, которая нумбер [0]
 
 
 		public MainWindow()
@@ -195,7 +195,8 @@ namespace fcmd
 			mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
 			
 			Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -6, -12,12);
-			Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Start,-12,-12,-12,-12);
+			Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Start,-12,-12,-12);
+
 			
 			this.Content = Layout;
 			
@@ -246,11 +247,11 @@ namespace fcmd
 			//build keyboard help bar
 			for (int i = 1; i < 11; i++)
 			{
-				KeybHelpButtons[i] = new Xwt.Button(Locale.GetString("FCF" + i));
-				KeybHelpButtons[i].Style = Xwt.ButtonStyle.Flat;
+				KeybHelpButtons[i] = new KeyboardHelpButton();
+				KeybHelpButtons[i].FKey = "F" + i;
+				KeybHelpButtons[i].Text = Locale.GetString("FCF" + i);
 				KeybHelpButtons[i].CanGetFocus = false;
-				//KeybHelpButtons[i].Clicked += (o, ea) => { Xwt.MessageDialog.ShowMessage("Button " + i); };//anywhere shows "Button 11"...what the fucks?
-				KeyBoardHelp.PackStart(KeybHelpButtons[i]);
+				KeyBoardHelp.PackStart(KeybHelpButtons[i],true,Xwt.WidgetPlacement.Fill,Xwt.WidgetPlacement.Fill,0,-6,0,-3);
 			}
 			KeybHelpButtons[1].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this,new Xwt.KeyEventArgs(Xwt.Key.F1,Xwt.ModifierKeys.None,false,0)); };
 			KeybHelpButtons[2].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F2, Xwt.ModifierKeys.None, false, 0)); };

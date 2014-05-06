@@ -52,15 +52,17 @@ namespace fcmd
 		Xwt.Widget PluginBody;
 		Xwt.TextEntry CommandBox = new Xwt.TextEntry();
 		Xwt.HBox KeyBoardHelp = new Xwt.HBox();
-		Xwt.Button[] KeybHelpButtons = new Xwt.Button[11]; //одна лишняя, которая [0]
+		KeyboardHelpButton[] KeybHelpButtons = new KeyboardHelpButton[11]; //одна лишняя, которая [0]
 
 		public VEd()
 		{
-			for (int i = 1; i < 11; i++){
-				KeybHelpButtons[i] = new Xwt.Button(Locale.GetString("FCVE_F"+i));
-				KeybHelpButtons[i].Style = Xwt.ButtonStyle.Flat;
+			for (int i = 1; i < 11; i++)
+			{
+				KeybHelpButtons[i] = new KeyboardHelpButton();
+				KeybHelpButtons[i].FKey = "F" + i;
+				KeybHelpButtons[i].Text = Locale.GetString("FCVE_F" + i);
 				KeybHelpButtons[i].CanGetFocus = false;
-				KeyBoardHelp.PackStart(KeybHelpButtons[i]);
+				KeyBoardHelp.PackStart(KeybHelpButtons[i], true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, 0,1,0,1);
 			}
 
 			this.Title = Locale.GetString("File Commander VE");
