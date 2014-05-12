@@ -25,13 +25,28 @@ namespace pluginner
 			return Convert.ToInt32(hex, 16);
 		}
 
-		public static Xwt.Drawing.Color Rgb2XwtColor(string RGBhex)
+		/// <summary>Convert a string to a XWT color</summary>
+		/// <param name="ColorName">The color name or the color hexadecimal RGB</param>
+		/// <returns>Xwt.Drawing.Color that corresponds the requested colour</returns>
+		public static Xwt.Drawing.Color GetXwtColor(string ColorName)
 		{
-			if (RGBhex.Length != 6) throw new ArgumentOutOfRangeException("RGBhex", "The color should be in the following format: HHHHHH (where H is any hexacedimal number)");
+			if (ColorName.ToLowerInvariant() == "transparent")
+			{
+				return Xwt.Drawing.Colors.Transparent;
+			}
+
+			string rgbhex;
+			if (ColorName.StartsWith("#"))
+				rgbhex = ColorName.Substring(1);
+			else
+				rgbhex = ColorName;
+			if (rgbhex.Length != 6) return Xwt.Drawing.Color.FromName(ColorName);
+			//todo: add support of rgba, hsl
+
 			string[] colors16 = new string[3];
-			colors16[0] = RGBhex.Substring(0, 1) + RGBhex.Substring(1, 1);
-			colors16[1] = RGBhex.Substring(2, 1) + RGBhex.Substring(3, 1);
-			colors16[2] = RGBhex.Substring(4, 1) + RGBhex.Substring(5, 1);
+			colors16[0] = rgbhex.Substring(0, 1) + rgbhex.Substring(1, 1);
+			colors16[1] = rgbhex.Substring(2, 1) + rgbhex.Substring(3, 1);
+			colors16[2] = rgbhex.Substring(4, 1) + rgbhex.Substring(5, 1);
 			int[] colors10 = new int[3];
 			for (int i = 0; i < 3; i++)
 			{

@@ -14,6 +14,7 @@ namespace fcmd
 	class VEsettings : Xwt.Dialog
 	{
 		Localizator Locale = new Localizator();
+		pluginner.Stylist s = new pluginner.Stylist();
 		Xwt.VBox Layout = new Xwt.VBox();
 		Xwt.CheckBox chkShowToolbar = new Xwt.CheckBox();
 		Xwt.CheckBox chkShowCmdBar = new Xwt.CheckBox();
@@ -24,6 +25,9 @@ namespace fcmd
 			this.Buttons.Add(new Xwt.Command("Ok"), new Xwt.Command("Cancel"));
 			this.Buttons[0].Clicked += (o, ea) => { Save(); };
 			this.Buttons[1].Clicked += (o, ea) => { this.Hide(); };
+
+			s.Stylize(chkShowToolbar);
+			s.Stylize(chkShowCmdBar);
 
 			chkShowToolbar.Label = Locale.GetString("FCVES_ShowToolbar");
 			chkShowToolbar.State = CBSfromBool(Properties.Settings.Default.VE_ShowToolbar);

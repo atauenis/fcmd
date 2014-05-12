@@ -20,6 +20,7 @@ namespace fcmd.base_plugins.ve
 		Xwt.MenuButton mbMode = new Xwt.MenuButton("Text") { Sensitive = false, Type = Xwt.ButtonType.Normal, Style = Xwt.ButtonStyle.Flat };
 		Xwt.MenuButton mbCodepage = new Xwt.MenuButton("codepage") { Type = Xwt.ButtonType.DropDown, Style = Xwt.ButtonStyle.Flat };
 		
+		pluginner.Stylist s = new pluginner.Stylist("");
 		int Codepage = Encoding.Default.CodePage;
 		byte[] fileContent;
 		string Txt = "";
@@ -42,6 +43,12 @@ namespace fcmd.base_plugins.ve
 				mnuFormat.Items.Add(mi);
 			}
 			mbCodepage.Menu = mnuFormat;
+
+			s.Stylize(Layout);
+			s.Stylize(ScrollBox);
+			s.Stylize(lblFileName);
+			s.Stylize(mbMode);
+			s.Stylize(mbCodepage);
 		}
 
 		void Codepage_Clicked(object sender, EventArgs e)

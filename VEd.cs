@@ -341,9 +341,9 @@ namespace fcmd
 			{
 				try
 				{
-					try { fcolor = pluginner.Utilities.Rgb2XwtColor(x.Attributes["forecolor"].Value); }
+					try { fcolor = pluginner.Utilities.GetXwtColor(x.Attributes["forecolor"].Value); }
 					catch { }
-					try { bgcolor = pluginner.Utilities.Rgb2XwtColor(x.Attributes["backcolor"].Value); }
+					try { bgcolor = pluginner.Utilities.GetXwtColor(x.Attributes["backcolor"].Value); }
 					catch { }
 
 					switch (x.Attributes["id"].Value)

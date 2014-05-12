@@ -1,0 +1,37 @@
+﻿/* The File Commander - plugin API
+ * The File Commander and it's plugins' UI default theme.
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
+ * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
+ * Contributors should place own signs here.
+ */
+
+ /*переписать на нормальную!!!*/
+
+/*Common*/
+Widget {
+	background-color: #FFFFFF;
+	color: #b6ff00;
+	font-family: sans-serif;
+	display: normal;
+}
+
+Widget:hover{
+	background-color: #FF0000;
+	color: #000000;
+	font-family: sans-serif;
+	display: normal;
+}
+
+Widget:active{
+	background-color: #00ff21;
+	color: #AAAAAA;
+	font-family: sans-serif;
+	display: normal;
+}
+
+Widget:focus{
+	background-color: #00FF00;
+	color: #AAAAAA;
+	font-family: sans-serif;
+	display: normal;
+}

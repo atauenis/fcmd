@@ -1,4 +1,4 @@
-In this folder is placed some compiled open source DLLs
+﻿In this folder is placed some compiled open source DLLs
 of the Xamarin XWT Widget Toolkit (github.com/mono/xwt)
 Xwt.dll - the XWT Window Toolkit
 Xwt.Gtk.dll - the XWT GTK backend
@@ -17,3 +17,6 @@ XWT is main UI toolkit in the File Commander and all of
 it's plugins. It feels natively on any OS (Windows,
 Linux/GTK, MacOS X) and allows embedding of system native
 controls (i.e. WPF controls on Win32 or GTK widgets on *nix).
+
+Also here is placed files of μCSS (mucss.dll & mucss.dll.pdb),
+the File Commander CSS parser:https://github.com/atauenis/mucss

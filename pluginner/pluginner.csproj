@@ -50,6 +50,9 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="mucss">
+      <HintPath>..\stolen-opensource-libs\mucss.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -67,6 +70,7 @@
     <Compile Include="ListView2Item.cs" />
     <Compile Include="Pluginner.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Stylist.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="LightScroller.cs" />
   </ItemGroup>
@@ -120,6 +124,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\x-fcmd-up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Default.css" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -228,9 +228,9 @@ namespace pluginner
 				this.Remove(defaultcolors);
 				defaultcolors = null;
 
-				try { fcolor = Utilities.Rgb2XwtColor(x.Attributes["forecolor"].Value); }
+				try { fcolor = Utilities.GetXwtColor(x.Attributes["forecolor"].Value); }
 				catch { }
-				try { bgcolor = Utilities.Rgb2XwtColor(x.Attributes["backcolor"].Value); }
+				try { bgcolor = Utilities.GetXwtColor(x.Attributes["backcolor"].Value); }
 				catch { }
 
 					switch (x.Attributes["id"].Value)
