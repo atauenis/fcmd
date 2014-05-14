@@ -47,6 +47,7 @@ namespace pluginner
 		private string QABarXML;
 		private string ColorSXML;
 		private string SBtext1, SBtext2;
+		private Stylist s = new Stylist();
 
 		public FileListPanel(string BookmarkXML = null, string PanelColorSchemeXML = null, string InfobarText1 = "{Name}", string InfobarText2 = "F: {FileS}, D: {DirS}")
 		{
@@ -190,6 +191,7 @@ namespace pluginner
 							NewBtn.Style = Xwt.ButtonStyle.Flat;
 							NewBtn.Margin = -3;
 							NewBtn.Cursor = Xwt.CursorType.Hand;
+							s.Stylize(NewBtn);
 							DiskList.PackStart(NewBtn);
 							/* todo: rewrite the code; possibly change the XWT to add toolbars
 							 */
@@ -199,82 +201,17 @@ namespace pluginner
 				}
 			}
 
-			//COLORS
-			if (PanelColorSchemeXML == null){
-				if (ColorSXML == null){
-					ColorSXML = Utilities.GetEmbeddedResource("MidnorkovColorScheme.xml");
-				}
-			}
-			else ColorSXML = PanelColorSchemeXML;
-
-			if (!ColorSXML.StartsWith("<PanelColorScheme"))
+			foreach (Xwt.Button b in DiskButtons)
 			{
-				int start = ColorSXML.IndexOf("<PanelColorScheme");
-				string Cut1 = ColorSXML.Substring(start);
-				int stop = Cut1.IndexOf("</PanelColorScheme>");
-				if (start < 0) throw new Exception("PLUGINNER: Invalid color scheme. It should start with \"<PanelColorScheme>\" and end with \"</PanelColorScheme>\" XML tags");
-				ColorSXML = Cut1.Substring(0, stop + 19);
+				s.Stylize(b);
 			}
-
-			XmlDocument csDoc = new XmlDocument();
-			csDoc.LoadXml(ColorSXML);
-			XmlNodeList csNodes = csDoc.GetElementsByTagName("Brush");
-			foreach (XmlNode x in csNodes){
-				try{
-				Xwt.Label defaultcolors = new Xwt.Label("The explorer for default system colors");
-				this.PackStart(defaultcolors);
-				Xwt.Drawing.Color fcolor = defaultcolors.TextColor;
-				Xwt.Drawing.Color bgcolor = defaultcolors.BackgroundColor;
-				this.Remove(defaultcolors);
-				defaultcolors = null;
-
-				try { fcolor = Utilities.GetXwtColor(x.Attributes["forecolor"].Value); }
-				catch { }
-				try { bgcolor = Utilities.GetXwtColor(x.Attributes["backcolor"].Value); }
-				catch { }
-
-					switch (x.Attributes["id"].Value)
-					{
-						case "ThePanel":
-							this.BackgroundColor = bgcolor;
-							break;
-						case "QuickAccessBar":
-							DiskList.BackgroundColor = bgcolor;
-							DiskBox.BackgroundColor = bgcolor;
-							foreach (Xwt.Button btn in DiskButtons){
-								btn.BackgroundColor = bgcolor;
-								//todo: доработать XWT и запилить забытое (?) свойство ForeColor.
-							}
-							break;
-						case "UrlBar":
-							UrlBox.BackgroundColor = bgcolor;
-							//todo: доработать XWT и запилить забытое (?) свойство ForeColor.
-							UrlBox.ShowFrame =  Convert.ToBoolean(x.Attributes["border"].Value);
-							break;
-						case "FileList":
-							ListingView.BackgroundColor = bgcolor;
-							ListingView.BorderVisible = Convert.ToBoolean(x.Attributes["border"].Value);
-							break;
-						case "StatusBar":
-							StatusBar.BackgroundColor = bgcolor;
-							StatusBar.TextColor = fcolor;
-							StatusTable.BackgroundColor = bgcolor;
-							break;
-						case "CLIoutput":
-							CLIoutput.BackgroundColor = bgcolor;
-							CLIoutput.ShowFrame = Convert.ToBoolean(x.Attributes["border"].Value);
-							break;
-						case "CLIprompt":
-							CLIprompt.BackgroundColor = bgcolor;
-							CLIprompt.ShowFrame = Convert.ToBoolean(x.Attributes["border"].Value);
-							break;
-					}
-				}
-				catch (NullReferenceException)
-				{
-					Console.WriteLine("WARNING: Something is wrong in the color scheme: " + x.OuterXml);
-				}
-			}
+			s.Stylize(DiskBox);
+			s.Stylize(UrlBox);
+			s.Stylize(ListingView);
+			s.Stylize(QuickSearchBox);
+			s.Stylize(CLIoutput);
+			s.Stylize(CLIprompt);
+			s.Stylize(StatusBar);
 
 			ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
 			ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
@@ -587,7 +524,6 @@ namespace pluginner
 		}
 
 		/// <summary>Add autobookmark "system disks" onto disk toolbar</summary>
-		/// <param name="DiskList"></param>
 		private void AddSysDrives()
 		{
 			foreach (System.IO.DriveInfo di in System.IO.DriveInfo.GetDrives())
@@ -636,10 +572,12 @@ namespace pluginner
 				if (d.StartsWith("/proc")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
 				if (d == "/") NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.root-folder.png");
 
+				s.Stylize(NewBtn);
 				DiskList.PackStart(NewBtn);
 			}
 		}
-
+		
+		/// <summary>Add buttons of mounted medias (*nix)</summary>
 		private void AddLinuxMounts()
 		{
 			if (Directory.Exists(@"/mnt"))
@@ -653,6 +591,8 @@ namespace pluginner
 					NewBtn.Margin = -3;
 					NewBtn.Cursor = Xwt.CursorType.Hand;
 					NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
+
+					s.Stylize(NewBtn);
 					DiskList.PackStart(NewBtn);
 				}
 			}

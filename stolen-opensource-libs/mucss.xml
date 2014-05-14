@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>mucss</name>
+    </assembly>
+    <members>
+        <member name="T:mucss.Stylesheet">
+            <summary>μCSS</summary>
+        </member>
+        <member name="M:mucss.Stylesheet.#ctor(System.String)">
+            <summary>Initialize the μCSS and load the <paramref name="CSS"/> into it.</summary>
+            <param name="CSS">The cascade style sheets to be loaded</param>
+        </member>
+        <member name="M:mucss.Stylesheet.GetAllSelectors">
+            <summary>Get all parsed selectors</summary>
+        </member>
+        <member name="M:mucss.Stylesheet.Get(System.String)">
+            <summary>Gets CSS style for selector that can be found by <paramref name="Query"/></summary>
+            <param name="Query">The query which be used to find corresponding CSS Selector (regular expressions are supported)</param>
+            <returns>The CSS style</returns>
+        </member>
+        <member name="M:mucss.Stylesheet.RegisterSelector(mucss.Selector)">
+            <summary>Save the parsed selector(s) in the memory</summary>
+            <param name="s">The selector</param>
+        </member>
+        <member name="P:mucss.Stylesheet.Item(System.String)">
+            <summary>Get a selector</summary>
+            <param name="Pattern">The pattern that corresponds the required selector</param>
+            <returns>The requested selector</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">An ArgumentOutOfRangeException will be thrown if the selector is't present.</exception>
+        </member>
+        <member name="P:mucss.Stylesheet.Item(System.String,System.String)">
+            <summary>Get a declaration</summary>
+            <param name="Pattern">The pattern that corresponds the required selector</param>
+            <param name="Property">The property name that should be finded in the selector and to be returned</param>
+            <returns>The property declaration</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">An ArgumentOutOfRangeException will be thrown if the selector is't present.</exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">An KeyNotFoundException will be thrown if the property cannot be found</exception>
+        </member>
+        <member name="T:mucss.Selector">
+            <summary>CSS selector (i.e. a:hover{})</summary>
+        </member>
+        <member name="F:mucss.Selector.Pattern">
+            <summary>The pattern of this selector (i.e. "a:hover")</summary>
+        </member>
+        <member name="F:mucss.Selector.Declarations">
+            <summary>The stuff of this selector</summary>
+        </member>
+        <member name="F:mucss.Selector.InnerCSS">
+            <summary>The full inner content of the selector</summary>
+        </member>
+        <member name="F:mucss.Selector.OuterCSS">
+            <summary>The full body of the selector</summary>
+        </member>
+        <member name="T:mucss.Declaration">
+            <summary>CSS declarations (i.e. color: #ABCDEF)</summary>
+        </member>
+        <member name="F:mucss.Declaration.Property">
+            <summary>The declaration's property name</summary>
+        </member>
+        <member name="F:mucss.Declaration.Value">
+            <summary>The declaration's property value</summary>
+        </member>
+        <member name="F:mucss.Declaration.InnerCSS">
+            <summary>The full content of the declaration</summary>
+        </member>
+    </members>
+</doc>

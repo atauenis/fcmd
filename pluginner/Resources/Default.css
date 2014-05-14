@@ -7,31 +7,43 @@
 
  /*переписать на нормальную!!!*/
 
-/*Common*/
+/*Windows*/
+Window, Window:hover, Window:active, Window:focus{
+	background-color: #ffd800;
+	color: black;
+	font-family: Sans;
+	display: normal;
+}
+
+/*Widgets - common*/
 Widget {
 	background-color: #FFFFFF;
 	color: #b6ff00;
-	font-family: sans-serif;
+	font-family: Sans;
 	display: normal;
 }
 
 Widget:hover{
 	background-color: #FF0000;
 	color: #000000;
-	font-family: sans-serif;
+	font-family: Sans;
 	display: normal;
 }
 
 Widget:active{
 	background-color: #00ff21;
 	color: #AAAAAA;
-	font-family: sans-serif;
+	font-family: Sans;
 	display: normal;
 }
 
 Widget:focus{
 	background-color: #00FF00;
 	color: #AAAAAA;
-	font-family: sans-serif;
+	font-family:  Sans;
 	display: normal;
+}
+
+Widget, Widget:hover, Widget:focus, Widget:active{
+	border-style: none;
 }

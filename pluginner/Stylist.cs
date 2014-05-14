@@ -17,7 +17,7 @@ namespace pluginner
 	public class Stylist
 	{
 		/// <summary>The μCSS parser that is the kernel of the Stylist</summary>
-		public mucss.Parser Parser;
+		public mucss.Stylesheet CSS;
 
 		bool semaphore = false;
 
@@ -29,9 +29,9 @@ namespace pluginner
 
 			if (DefaultStyle == null) Environment.FailFast("File Commander has been crashed: the default theme's stylesheet is unable to load. Possibly there is a failure of the pluginner.dll body or RAM banks. Try to reinstall FC.", new InvalidProgramException("Default style isn't loading"));
 			if(CSS_File != null && CSS_File != "")
-				{ Parser = new Parser(System.IO.File.ReadAllText(CSS_File) + DefaultStyle); }
+				{ CSS = new Stylesheet(System.IO.File.ReadAllText(CSS_File) + DefaultStyle); }
 			else
-			 Parser = new Parser(DefaultStyle);
+				CSS = new Stylesheet(DefaultStyle);
 		}
 
 		/// <summary>Enable theming of the widget</summary>
@@ -41,10 +41,10 @@ namespace pluginner
 			if (!semaphore) {
 				semaphore = true;
 				Stylize(Widget, "Widget"); //apply default style for all widgets
-				try { 
-				Stylize(Widget,Widget.GetType().ToString().Substring(4)); //apply default style for the widget type
+				try {
+					Stylize(Widget, Widget.GetType().ToString().Substring(Widget.GetType().ToString().IndexOf('.') + 1)); //apply default style for the widget type
 				}
-				catch { Console.WriteLine("NOTICE: No style is set for " + Widget.GetType().ToString().Substring(4) + "s"); }
+				catch { Console.WriteLine("NOTICE: No style is set for widgets of type " + Widget.GetType().ToString().Substring(Widget.GetType().ToString().IndexOf('.') + 1)); }
 				semaphore = false;
 			}
 
@@ -77,14 +77,16 @@ namespace pluginner
 			};
 		}
 
+
 		/// <summary>Apply the specified selector (style) to the specified widget</summary>
 		/// <param name="Widget">The widget that should "got" the style</param>
 		/// <param name="Style">The specified selector with the desired style</param>
 		public void ApplyStyle(Xwt.Widget Widget, string Pattern)
 		{
-			if(Widget.GetType() == typeof(Xwt.Label)) { ApplyStyle((Xwt.Label)Widget, Pattern); return; }
+			if (Widget.GetType() == typeof(Xwt.Label)) { ApplyStyle((Xwt.Label)Widget, Pattern); return; }
+			if (Widget.GetType() == typeof(Xwt.Box)) { ApplyStyle((Xwt.Box)Widget, Pattern); return; }
 
-			Selector Selector = Parser.Get(Pattern);
+			Selector Selector = CSS[Pattern];
 			Widget.BackgroundColor =
 			Utilities.GetXwtColor(
 				Selector.Declarations["background-color"].Value
@@ -103,7 +105,7 @@ namespace pluginner
 		/// <param name="Style">The specified selector with the desired style</param>
 		public void ApplyStyle(Xwt.Label Widget, string Pattern)
 		{
-			Selector Selector = Parser.Get(Pattern);
+			Selector Selector = CSS[Pattern];
 			Widget.BackgroundColor =
 			Utilities.GetXwtColor(
 				Selector.Declarations["background-color"].Value
@@ -119,6 +121,55 @@ namespace pluginner
 			);
 
 			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
+		}
+
+		/// <summary>Apply the specified selector (style) to the specified widget</summary>
+		/// <param name="Widget">The widget that should "got" the style</param>
+		/// <param name="Style">The specified selector with the desired style</param>
+		public void ApplyStyle(Xwt.Box Widget, string Pattern)
+		{
+			Selector Selector = CSS[Pattern];
+			Widget.BackgroundColor =
+			Utilities.GetXwtColor(
+				Selector.Declarations["background-color"].Value
+			);
+
+			foreach (Xwt.Widget Child in Widget.Children)
+			{
+				ApplyStyle(Child,Pattern);
+			}
+
+			
+
+			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
+		}
+
+		/// <summary>Apply the specified selector (style) to the specified widget</summary>
+		/// <param name="Widget">The widget that should "got" the style</param>
+		/// <param name="Style">The specified selector with the desired style</param>
+		public void ApplyStyle(Xwt.Button Widget, string Pattern)
+		{
+			Selector Selector = CSS[Pattern];
+			Widget.BackgroundColor =
+			Utilities.GetXwtColor(
+				Selector.Declarations["background-color"].Value
+			);
+
+
+			if (GetBorder(Selector.Declarations["border-style"].Value))
+				Widget.Style = Xwt.ButtonStyle.Normal;
+			else
+				Widget.Style = Xwt.ButtonStyle.Borderless;
+
+
+			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
+		}
+
+
+		private bool GetBorder(string borderStyle)
+		{
+			if (borderStyle != "none")  return false; else return true;
+			//it's need to understand all css borderstyles
 		}
 
 		private string DefaultStyle;
