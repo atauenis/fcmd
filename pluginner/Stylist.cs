@@ -36,7 +36,7 @@ namespace pluginner
 
 		/// <summary>Enable theming of the widget</summary>
 		/// <param name="Widget">The widget that needs to be themized</param>
-		/// <param name="Selector">The selector</param>
+		/// <param name="Selector">The selector pattern</param>
 		public void Stylize(Xwt.Widget Widget, string Selector = "Widget"){
 			if (!semaphore) {
 				semaphore = true;
@@ -75,6 +75,41 @@ namespace pluginner
 				if (Widget.HasFocus)
 					ApplyStyle(Widget, Selector + ":focus");
 			};
+		}
+
+		/// <summary>Enable theming of the ListView2</summary>
+		/// <param name="Widget">The ListView2 that needs to be themized</param>
+		/// <param name="Selector">The selector pattern</param>
+		public void Stylize(ListView2 Widget, string Selector = "FileList")
+		{
+			Stylize(Widget as Xwt.Widget,Selector);
+			Selector all = CSS[Selector];
+			Selector row1 = CSS[Selector+"RowA"];
+			Selector row2 = CSS[Selector+"RowB"];
+			Selector sel = CSS[Selector+"Row:checked"];
+			Selector point = CSS[Selector+"Row:active"];
+			if (all.Declarations["font-family"].Value != "inherit")
+				Widget.Font = Xwt.Drawing.Font.FromName(
+					all.Declarations["font-family"].Value
+				);
+			if (all.Declarations["background-color"].Value != "inherit")
+				Widget.BackgroundColor = Utilities.GetXwtColor(all.Declarations["background-color"].Value);
+			if (row1.Declarations["background-color"].Value != "inherit")
+				Widget.NormalBgColor1 = Utilities.GetXwtColor(row1.Declarations["background-color"].Value);
+			if (row2.Declarations["background-color"].Value != "inherit")
+				Widget.NormalBgColor2 = Utilities.GetXwtColor(row2.Declarations["background-color"].Value);
+			if (row1.Declarations["color"].Value != "inherit")
+				Widget.NormalFgColor1 = Utilities.GetXwtColor(row1.Declarations["color"].Value);
+			if (row2.Declarations["color"].Value != "inherit") 
+				Widget.NormalFgColor2 = Utilities.GetXwtColor(row2.Declarations["color"].Value);
+			if (point.Declarations["background-color"].Value != "inherit")
+				Widget.PointedBgColor = Utilities.GetXwtColor(point.Declarations["background-color"].Value);
+			if (point.Declarations["color"].Value != "inherit") 
+				Widget.PointedFgColor = Utilities.GetXwtColor(point.Declarations["color"].Value);
+			if (sel.Declarations["background-color"].Value != "inherit") 
+				Widget.SelectedBgColor = Utilities.GetXwtColor(sel.Declarations["background-color"].Value);
+			if (sel.Declarations["color"].Value != "inherit")
+				Widget.SelectedFgColor = Utilities.GetXwtColor(sel.Declarations["color"].Value);
 		}
 
 

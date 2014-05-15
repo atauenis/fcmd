@@ -5,6 +5,35 @@
  * Contributors should place own signs here.
  */
 
+/*File list*/
+FileListRowA{
+	background-color: inherit;
+	color: inherit;
+}
+
+FileListRowB{
+	background-color: inherit;
+	color: inherit;
+}
+/*Pointed*/
+FileListRow:active{
+	background-color: inherit;
+	color: inherit;
+}
+/*Selected*/
+FileListRow:checked{
+	background-color: inherit;
+	color: inherit;
+}
+
+FileList, FileList:active, FileList:hover, FileList:focus, FileListRowA, FileListRowB{
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
+	display: normal;
+}
+
+
 /*Viewer/Editor window (common)*/
 VE, VE:hover, VE:active, VE:focus{
 	background-color: inherit;
