@@ -1,49 +1,69 @@
-﻿/* The File Commander - plugin API
- * The File Commander and it's plugins' UI default theme.
+﻿/* The File Commander
+ * The default theme of the File Commander and its plugins.
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
 
- /*переписать на нормальную!!!*/
+/*Viewer/Editor window (common)*/
+VE, VE:hover, VE:active, VE:focus{
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
+	display: normal;
 
-/*Windows*/
-Window, Window:hover, Window:active, Window:focus{
-	background-color: #ffd800;
-	color: black;
-	font-family: Sans;
+	height: auto;
+	width: auto;
+}
+
+/*Viewer/Editor plugins' working area (not the "body", meaning the content displaying/editing box)*/
+VEWorkingArea, VEWorkingArea:hover, VEWorkingArea:active, VEWorkingArea:focus{
+	background-color: inherit;
+	color: inherit;
+	font-family: monospace;
 	display: normal;
 }
 
 /*Widgets - common*/
 Widget {
-	background-color: #FFFFFF;
-	color: #b6ff00;
-	font-family: Sans;
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
 	display: normal;
 }
 
 Widget:hover{
-	background-color: #FF0000;
-	color: #000000;
-	font-family: Sans;
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
 	display: normal;
 }
 
 Widget:active{
-	background-color: #00ff21;
-	color: #AAAAAA;
-	font-family: Sans;
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
 	display: normal;
 }
 
 Widget:focus{
-	background-color: #00FF00;
-	color: #AAAAAA;
-	font-family:  Sans;
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
 	display: normal;
 }
 
 Widget, Widget:hover, Widget:focus, Widget:active{
 	border-style: none;
+}
+
+/*Common styles for windows*/
+Window, Window:hover, Window:active, Window:focus{
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
+	display: normal;
+
+	height: auto;
+	width: auto;
 }

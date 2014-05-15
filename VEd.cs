@@ -16,6 +16,7 @@ namespace fcmd
 	class VEd : Xwt.Window
 	{
 		Localizator Locale = new Localizator();
+		pluginner.Stylist s = new pluginner.Stylist();//undone: add support for external stylesheet
 		pluginner.IVEPlugin Plugin;
 		pluginner.IFSPlugin FSPlugin;
 		bool CanBeShowed = true;
@@ -305,66 +306,25 @@ namespace fcmd
 		public void BuildLayout()
 		{
 			Layout.Clear();
-			Layout.PackStart(PluginBody, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -12, -12);
-			Layout.PackStart(CommandBox, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -6, -12, -12);
-			if(fcmd.Properties.Settings.Default.ShowKeybrdHelp) Layout.PackStart(KeyBoardHelp, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, 6, -12, -12);
+			Layout.PackStart(PluginBody, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill);
+			Layout.PackStart(CommandBox, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,-6);
+			if(fcmd.Properties.Settings.Default.ShowKeybrdHelp) Layout.PackStart(KeyBoardHelp, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,-6);
 			//the values -12, -6 and 6 are need for 0px margins, and found experimentally.
 			//as those experiments showed, these values is measured in pixels. Live and learn!
 
-			this.Height = fcmd.Properties.Settings.Default.VEWinHeight;
-			this.Width = fcmd.Properties.Settings.Default.VEWinWidth;
-			this.Resizable = true; //for stupid xwt toolkits.
+			this.Resizable = true; //fix for some stupid xwt toolkits.
 
-			//UI color scheme
-			string ColorSchemeText = null;
-			if (fcmd.Properties.Settings.Default.ColorScheme != null && fcmd.Properties.Settings.Default.ColorScheme.Length > 0)
-			{
-				ColorSchemeText = System.IO.File.ReadAllText(fcmd.Properties.Settings.Default.ColorScheme, Encoding.UTF8);
+			mucss.Selector sel = s.CSS["VE"];
+			this.Height = (sel.Declarations["height"].Value == "auto" ? fcmd.Properties.Settings.Default.VEWinHeight : Convert.ToDouble(sel.Declarations["height"].Value));
+			this.Width = (sel.Declarations["width"].Value == "auto" ? fcmd.Properties.Settings.Default.VEWinWidth : Convert.ToDouble(sel.Declarations["width"].Value));
+			if (sel.Declarations["background-color"].Value != "inherit")
+			{ 
+				Layout.BackgroundColor =
+				pluginner.Utilities.GetXwtColor(
+					sel.Declarations["background-color"].Value
+				);
 			}
-			else
-			{
-				ColorSchemeText = pluginner.Utilities.GetEmbeddedResource("MidnorkovColorScheme.xml");
-				//Midnorkov is the default, Midnight/Norton/Volkov Commander-like color scheme, included into Pluginner as a fallback
-			}
-			
-			Xwt.Label defaultcolors = new Xwt.Label("The explorer for default system colors");
-			Layout.PackStart(defaultcolors);
-			Xwt.Drawing.Color fcolor = defaultcolors.TextColor;
-			Xwt.Drawing.Color bgcolor = Layout.BackgroundColor; //defaultcolors.BackgroundColor;
-			Layout.Remove(defaultcolors);
-			defaultcolors = null;
-
-			XmlDocument csDoc = new XmlDocument();
-			csDoc.LoadXml(ColorSchemeText);
-			XmlNodeList csNodes = csDoc.GetElementsByTagName("Brush");
-			foreach (XmlNode x in csNodes)
-			{
-				try
-				{
-					try { fcolor = pluginner.Utilities.GetXwtColor(x.Attributes["forecolor"].Value); }
-					catch { }
-					try { bgcolor = pluginner.Utilities.GetXwtColor(x.Attributes["backcolor"].Value); }
-					catch { }
-
-					switch (x.Attributes["id"].Value)
-					{
-						case "Window":
-							Layout.BackgroundColor = bgcolor;
-							break;
-						case "PluginBody":
-							PluginBody.BackgroundColor = bgcolor;
-							break;
-						case "KeybrdHelp":
-							KeyBoardHelp.BackgroundColor = bgcolor;
-							//todo: раскрасить кнопки F-клавиш
-							break;
-					}
-				}
-				catch (NullReferenceException)
-				{
-					Console.WriteLine("WARNING: Something is wrong in the color scheme: " + x.OuterXml);
-				}
-			}
+			this.PaddingTop = PaddingBottom = PaddingLeft = PaddingRight = 0;
 		}
 
 

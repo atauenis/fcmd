@@ -44,11 +44,12 @@ namespace fcmd.base_plugins.ve
 			}
 			mbCodepage.Menu = mnuFormat;
 
-			s.Stylize(Layout);
-			s.Stylize(ScrollBox);
-			s.Stylize(lblFileName);
-			s.Stylize(mbMode);
-			s.Stylize(mbCodepage);
+			s.Stylize(RTV,"VEWorkingArea");
+
+			foreach (Xwt.Widget w in Layout.Children)
+			{
+				s.Stylize(w);
+			}
 		}
 
 		void Codepage_Clicked(object sender, EventArgs e)

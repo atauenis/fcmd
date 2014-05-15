@@ -87,11 +87,14 @@ namespace pluginner
 			if (Widget.GetType() == typeof(Xwt.Box)) { ApplyStyle((Xwt.Box)Widget, Pattern); return; }
 
 			Selector Selector = CSS[Pattern];
+
+			if (Selector.Declarations["background-color"].Value != "inherit")
 			Widget.BackgroundColor =
 			Utilities.GetXwtColor(
 				Selector.Declarations["background-color"].Value
 			);
 
+			if (Selector.Declarations["font-family"].Value != "inherit")
 			Widget.Font = Xwt.Drawing.Font.FromName(
 				Selector.Declarations["font-family"].Value
 			);
@@ -106,16 +109,20 @@ namespace pluginner
 		public void ApplyStyle(Xwt.Label Widget, string Pattern)
 		{
 			Selector Selector = CSS[Pattern];
+
+			if (Selector.Declarations["background-color"].Value != "inherit")
 			Widget.BackgroundColor =
 			Utilities.GetXwtColor(
 				Selector.Declarations["background-color"].Value
 			);
 
+			if (Selector.Declarations["color"].Value != "inherit")
 			Widget.TextColor =
 			Utilities.GetXwtColor(
 				Selector.Declarations["color"].Value
 			);
 
+			if (Selector.Declarations["font-family"].Value != "inherit")
 			Widget.Font = Xwt.Drawing.Font.FromName(
 				Selector.Declarations["font-family"].Value
 			);
@@ -129,6 +136,8 @@ namespace pluginner
 		public void ApplyStyle(Xwt.Box Widget, string Pattern)
 		{
 			Selector Selector = CSS[Pattern];
+
+			if (Selector.Declarations["background-color"].Value != "inherit")
 			Widget.BackgroundColor =
 			Utilities.GetXwtColor(
 				Selector.Declarations["background-color"].Value
@@ -139,7 +148,6 @@ namespace pluginner
 				ApplyStyle(Child,Pattern);
 			}
 
-			
 
 			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
 		}
@@ -150,12 +158,14 @@ namespace pluginner
 		public void ApplyStyle(Xwt.Button Widget, string Pattern)
 		{
 			Selector Selector = CSS[Pattern];
+
+			if (Selector.Declarations["background-color"].Value != "inherit")
 			Widget.BackgroundColor =
 			Utilities.GetXwtColor(
 				Selector.Declarations["background-color"].Value
 			);
 
-
+			if (Selector.Declarations["border-style"].Value != "inherit")
 			if (GetBorder(Selector.Declarations["border-style"].Value))
 				Widget.Style = Xwt.ButtonStyle.Normal;
 			else

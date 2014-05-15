@@ -25,11 +25,6 @@ namespace fcmd
 			this.Buttons.Add(new Xwt.Command("Ok"), new Xwt.Command("Cancel"));
 			this.Buttons[0].Clicked += (o, ea) => { Save(); };
 			this.Buttons[1].Clicked += (o, ea) => { this.Hide(); };
-			
-			//убрать (введено для отладки стилиста)
-			s.Stylize(Layout, "Window");
-			s.Stylize(chkShowToolbar);
-			s.Stylize(chkShowCmdBar);
 
 			chkShowToolbar.Label = Locale.GetString("FCVES_ShowToolbar");
 			chkShowToolbar.State = CBSfromBool(Properties.Settings.Default.VE_ShowToolbar);
