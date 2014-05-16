@@ -45,15 +45,14 @@ namespace pluginner
 		public SizeDisplayPolicy CurShortenKB, CurShortenMB, CurShortenGB;
 		private bool ProgressShown = false;
 		private string QABarXML;
-		private string ColorSXML;
 		private string SBtext1, SBtext2;
 		private Stylist s = new Stylist(); //todo: add support for reading fcmd settings (fcmd.Properties.Settings.Default.UserTheme)
 
-		public FileListPanel(string BookmarkXML = null, string PanelColorSchemeXML = null, string InfobarText1 = "{Name}", string InfobarText2 = "F: {FileS}, D: {DirS}")
+		public FileListPanel(string BookmarkXML = null, string InfobarText1 = "{Name}", string InfobarText2 = "F: {FileS}, D: {DirS}")
 		{
 			SBtext1 = InfobarText1;
 			SBtext2 = InfobarText2;
-			BuildUI(BookmarkXML, PanelColorSchemeXML);
+			BuildUI(BookmarkXML);
 			DiskBox.Content = DiskList;
 			DiskBox.CanScrollByY = false;
 
@@ -135,8 +134,7 @@ namespace pluginner
 
 		/// <summary>Make the panel's widgets</summary>
 		/// <param name="BookmarkXML">Bookmark list XML data</param>
-		/// <param name="PanelColorSchemeXML">The panel's color scheme XML data (PanelColorScheme section)</param>
-		public void BuildUI(string BookmarkXML = null, string PanelColorSchemeXML= null)
+		public void BuildUI(string BookmarkXML = null)
 		{
 			//URL BOX
 			UrlBox.ShowFrame = false;

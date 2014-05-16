@@ -111,11 +111,6 @@
     <EmbeddedResource Include="DefaultBookmarks.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MidnorkovColorScheme.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\search.png" />
   </ItemGroup>
   <ItemGroup>

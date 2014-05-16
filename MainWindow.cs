@@ -208,21 +208,9 @@ namespace fcmd
 				BookmarksStore = File.ReadAllText(fcmd.Properties.Settings.Default.BookmarksFile, Encoding.UTF8);
 
 			}
-			//apply color scheme to panels
-			string ColorSchemeText = null;
-			if (fcmd.Properties.Settings.Default.ColorScheme != null && fcmd.Properties.Settings.Default.ColorScheme.Length > 0)
-			{
-				ColorSchemeText = File.ReadAllText(fcmd.Properties.Settings.Default.ColorScheme, Encoding.UTF8);
-			}
-			else
-			{
-				ColorSchemeText = pluginner.Utilities.GetEmbeddedResource("MidnorkovColorScheme.xml");
-				//Midnorkov is the default, Midnight/Norton/Volkov Commander-like color scheme, included into Pluginner as a fallback
-			}
-
 			//build panels
-			PanelLayout.Panel1.Content = new pluginner.FileListPanel(BookmarksStore, ColorSchemeText, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
-			PanelLayout.Panel2.Content = new pluginner.FileListPanel(BookmarksStore, ColorSchemeText, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2);
+			PanelLayout.Panel1.Content = new pluginner.FileListPanel(BookmarksStore, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
+			PanelLayout.Panel2.Content = new pluginner.FileListPanel(BookmarksStore, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2);
 
 			p1 = (PanelLayout.Panel1.Content as pluginner.FileListPanel);
 			p2 = (PanelLayout.Panel2.Content as pluginner.FileListPanel);
@@ -301,41 +289,6 @@ namespace fcmd
 					break;
 			}
 			//this.Show();
-			//UI color scheme
-			Xwt.Label defaultcolors = new Xwt.Label("The explorer for default system colors");
-			Layout.PackStart(defaultcolors);
-			Xwt.Drawing.Color fcolor = defaultcolors.TextColor;
-			Xwt.Drawing.Color bgcolor = Layout.BackgroundColor; //defaultcolors.BackgroundColor;
-			Layout.Remove(defaultcolors);
-			defaultcolors = null;
-
-			XmlDocument csDoc = new XmlDocument();
-			csDoc.LoadXml(ColorSchemeText);
-			XmlNodeList csNodes = csDoc.GetElementsByTagName("Brush");
-			foreach (XmlNode x in csNodes)
-			{
-				try{
-				try { fcolor = pluginner.Utilities.GetXwtColor(x.Attributes["forecolor"].Value); }
-				catch { }
-				try { bgcolor = pluginner.Utilities.GetXwtColor(x.Attributes["backcolor"].Value); }
-				catch { }
-
-				switch (x.Attributes["id"].Value)
-				{
-					case "Window":
-						Layout.BackgroundColor = bgcolor;
-						break;
-					case "KeybrdHelp":
-						KeyBoardHelp.BackgroundColor = bgcolor;
-						//todo: раскрасить кнопки F-клавиш
-						break;
-				}
-				}
-				catch (NullReferenceException){
-					Console.WriteLine("WARNING: Something is wrong in the color scheme: "+x.OuterXml);
-				}
-			}
-
 		}
 
 		void mnuViewWithFilter_Clicked(object sender, EventArgs e)
