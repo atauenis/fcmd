@@ -352,5 +352,17 @@ namespace fcmd.Properties {
                 this["VEWinWidth"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(null)]
+        public string UserTheme {
+            get {
+                return ((string)(this["UserTheme"]));
+            }
+            set {
+                this["UserTheme"] = value;
+            }
+        }
     }
 }

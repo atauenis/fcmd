@@ -19,8 +19,8 @@ namespace fcmd.base_plugins.ve
 		Xwt.Label lblFileName = new Xwt.Label("file name");
 		Xwt.MenuButton mbMode = new Xwt.MenuButton("Text") { Sensitive = false, Type = Xwt.ButtonType.Normal, Style = Xwt.ButtonStyle.Flat };
 		Xwt.MenuButton mbCodepage = new Xwt.MenuButton("codepage") { Type = Xwt.ButtonType.DropDown, Style = Xwt.ButtonStyle.Flat };
-		
-		pluginner.Stylist s = new pluginner.Stylist("");
+
+		pluginner.Stylist s = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
 		int Codepage = Encoding.Default.CodePage;
 		byte[] fileContent;
 		string Txt = "";

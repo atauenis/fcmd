@@ -101,6 +101,7 @@ namespace fcmd
 						"SWTMWItext1=Текст, когда нет выделенных файлов:\n"+
 						"SWTMWItext2=Текст, когда выделены файлы:\n"+
 						"SWTMWIhelp=Допускается использование масок.{n}Допустимые маски для подстановки значений:{n}{FullName} - полное имя файла: filename.ext{n}{AutoSize} - размер файла: 18 KB{n}{Date} - дата изменения файла: 01.01.1970{n}{Time} - время изменения файла: 00:00:00{n}{SelectedItems} - сколько строк выделено{n}\n" +
+						"swtMainWindowThemes=	Темы оформления\nSWTMWTusethemes=Использовать тему оформления:\n" +
 						"ReplaceQDTitle=Обнаружен конфликт имён файлов\nReplaceQDText=Существует одноимённый файл {0}. Выберите действие:\n"+
 						"ReplaceQDReplace=Заменить\nReplaceQDReplaceAll=Заменить все\n"+
 						"ReplaceQDSkip=Пропустить\nReplaceQDSkipAll=Пропустить все\n"+

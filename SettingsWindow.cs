@@ -34,6 +34,7 @@ namespace fcmd
 			TabList.Items.Add(new SettingsWindowTabs.swtMainWindow(),Locale.GetString("swtMainWindow"));
 			TabList.Items.Add(new SettingsWindowTabs.swtMainWindowColumns(), Locale.GetString("swtMainWindowColumns"));
 			TabList.Items.Add(new SettingsWindowTabs.swtMainWindowInfobar(), Locale.GetString("SWTMWinfobar"));
+			TabList.Items.Add(new SettingsWindowTabs.swtMainWindowThemes(), Locale.GetString("swtMainWindowThemes"));
 			TabList.Items.Add(new SettingsWindowTabs.swtViewerEditor(), Locale.GetString("swtViewerEditor"));
 
 			TabList.SelectionChanged += new EventHandler(TabList_SelectionChanged);

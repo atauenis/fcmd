@@ -17,7 +17,7 @@ namespace fcmd
 	partial class MainWindow : Xwt.Window
 	{
 		Localizator Locale = new Localizator();
-		pluginner.Stylist stylist = new pluginner.Stylist();
+		pluginner.Stylist stylist = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
 		Xwt.Menu WindowMenu = new Xwt.Menu();
 
 		Xwt.MenuItem mnuFile = new Xwt.MenuItem() { Tag="mnuFile" };

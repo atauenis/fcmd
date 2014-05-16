@@ -16,7 +16,7 @@ namespace fcmd
 	class VEd : Xwt.Window
 	{
 		Localizator Locale = new Localizator();
-		pluginner.Stylist s = new pluginner.Stylist();//undone: add support for external stylesheet
+		pluginner.Stylist s = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
 		pluginner.IVEPlugin Plugin;
 		pluginner.IFSPlugin FSPlugin;
 		bool CanBeShowed = true;

@@ -47,7 +47,7 @@ namespace pluginner
 		private string QABarXML;
 		private string ColorSXML;
 		private string SBtext1, SBtext2;
-		private Stylist s = new Stylist();
+		private Stylist s = new Stylist(); //todo: add support for reading fcmd settings (fcmd.Properties.Settings.Default.UserTheme)
 
 		public FileListPanel(string BookmarkXML = null, string PanelColorSchemeXML = null, string InfobarText1 = "{Name}", string InfobarText2 = "F: {FileS}, D: {DirS}")
 		{
