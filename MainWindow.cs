@@ -17,7 +17,7 @@ namespace fcmd
 	partial class MainWindow : Xwt.Window
 	{
 		Localizator Locale = new Localizator();
-		pluginner.Stylist stylist = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
+		pluginner.Stylist stylist;
 		Xwt.Menu WindowMenu = new Xwt.Menu();
 
 		Xwt.MenuItem mnuFile = new Xwt.MenuItem() { Tag="mnuFile" };
@@ -101,6 +101,19 @@ namespace fcmd
 			this.Title = "File Commander";
 			this.MainMenu = WindowMenu;
 
+			//check settings
+			if (fcmd.Properties.Settings.Default.UserTheme != null) {
+				if (fcmd.Properties.Settings.Default.UserTheme != "") {
+					if (File.Exists(fcmd.Properties.Settings.Default.UserTheme))
+						stylist = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
+					else{
+							Xwt.MessageDialog.ShowError(Locale.GetString("ThemeNotFound"), fcmd.Properties.Settings.Default.UserTheme);
+							Xwt.Application.Exit();
+						}
+				}
+			}
+
+			//build user interface
 			MainMenu.Items.Add(mnuFile);
 			MainMenu.Items.Add(mnuView);
 			MainMenu.Items.Add(mnuNavigate);
@@ -196,9 +209,8 @@ namespace fcmd
 			mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
 			
 			Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -6, -12,12);
-			Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Start,-12,-12,-12);
-
-			
+			Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Fill,-12,-12,-12);
+						
 			this.Content = Layout;
 			
 			//load bookmarks
@@ -208,9 +220,10 @@ namespace fcmd
 				BookmarksStore = File.ReadAllText(fcmd.Properties.Settings.Default.BookmarksFile, Encoding.UTF8);
 
 			}
+
 			//build panels
-			PanelLayout.Panel1.Content = new pluginner.FileListPanel(BookmarksStore, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
-			PanelLayout.Panel2.Content = new pluginner.FileListPanel(BookmarksStore, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2);
+			PanelLayout.Panel1.Content = new pluginner.FileListPanel(BookmarksStore, fcmd.Properties.Settings.Default.UserTheme, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
+			PanelLayout.Panel2.Content = new pluginner.FileListPanel(BookmarksStore, fcmd.Properties.Settings.Default.UserTheme, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2);
 
 			p1 = (PanelLayout.Panel1.Content as pluginner.FileListPanel);
 			p2 = (PanelLayout.Panel2.Content as pluginner.FileListPanel);
@@ -373,7 +386,10 @@ namespace fcmd
 				"The LEFT filesystem: " + p1.FS.ToString() + " at \"" + p1.FS.CurrentDirectory + "\"\n"+
 				"The RIGHT filesystem: " + p2.FS.ToString() + " at \"" + p2.FS.CurrentDirectory + "\"\n"+
 				"Filesystems are same by type? " + (p1.FS.GetType()==p2.FS.GetType()).ToString().ToUpper() + ".\n"+
-				"Filesystems are identically? " + (p1.FS==p2.FS).ToString().ToUpper() + " (should be false).\n";
+				"Filesystems are identically? " + (p1.FS==p2.FS).ToString().ToUpper() + " (should be false).\n"+
+				"\nTheme debug:\n---------\n"+
+				"Using external theme? " + (!(fcmd.Properties.Settings.Default.UserTheme == null || fcmd.Properties.Settings.Default.UserTheme == "")).ToString().ToUpper()+"\n"+
+				"Theme's cascade style sheet file: \"" + fcmd.Properties.Settings.Default.UserTheme + "\"\n\nIf you having some troubles, please report this to https://github.com/atauenis/fcmd bug tracker or http://atauenis.ru/phpBB3/viewtopic.php?f=4&t=211 topic. \nThe End.";
 			Xwt.RichTextView rtv = new Xwt.RichTextView();
 			rtv.LoadText(txt, new Xwt.Formats.PlainTextFormat());
 			Fcdbg.Content = rtv;

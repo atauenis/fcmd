@@ -51,6 +51,7 @@ namespace fcmd
 						"CantCopySelf=Нельзя копировать файл самого в себя!\n" +
 						"CantMove=Ошибка перемещения/переименования {0}: {1}\n" +
 						"CantRunEXE=Ошибка запуска внешней программы: \n" +
+						"ThemeNotFound=Не найден файл пользовательской темы\n"+
 						"FileProgressDialogTitle=File Commander\n" +
 						"DoingRemove=Выполняется удаление:{0}{1}\n" +
 						"DoingCopy=Выполняется копирование:{0} В {1}{2}\n" +

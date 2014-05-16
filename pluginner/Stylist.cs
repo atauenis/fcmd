@@ -110,6 +110,8 @@ namespace pluginner
 				Widget.SelectedBgColor = Utilities.GetXwtColor(sel.Declarations["background-color"].Value);
 			if (sel.Declarations["color"].Value != "inherit")
 				Widget.SelectedFgColor = Utilities.GetXwtColor(sel.Declarations["color"].Value);
+
+			Widget.BorderVisible = GetBorder(all.Declarations["border-style"].Value);
 		}
 
 
@@ -210,10 +212,35 @@ namespace pluginner
 			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
 		}
 
+		/// <summary>Apply the specified selector (style) to the specified widget</summary>
+		/// <param name="Widget">The widget that should "got" the style</param>
+		/// <param name="Selector">The specified selector with the desired style</param>
+		public void ApplyStyle(Xwt.Label Widget, mucss.Selector Selector)
+		{
+			if (Selector.Declarations["background-color"].Value != "inherit")
+				Widget.BackgroundColor =
+				Utilities.GetXwtColor(
+					Selector.Declarations["background-color"].Value
+				);
+
+			if (Selector.Declarations["color"].Value != "inherit")
+				Widget.TextColor =
+				Utilities.GetXwtColor(
+					Selector.Declarations["color"].Value
+				);
+
+			if (Selector.Declarations["font-family"].Value != "inherit")
+				Widget.Font = Xwt.Drawing.Font.FromName(
+					Selector.Declarations["font-family"].Value
+				);
+
+			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
+		}
+
 
 		private bool GetBorder(string borderStyle)
 		{
-			if (borderStyle != "none")  return false; else return true;
+			if (borderStyle != "none")  return true; else return false;
 			//it's need to understand all css borderstyles
 		}
 

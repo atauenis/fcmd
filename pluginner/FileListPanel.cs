@@ -46,10 +46,16 @@ namespace pluginner
 		private bool ProgressShown = false;
 		private string QABarXML;
 		private string SBtext1, SBtext2;
-		private Stylist s = new Stylist(); //todo: add support for reading fcmd settings (fcmd.Properties.Settings.Default.UserTheme)
+		private Stylist s;
 
-		public FileListPanel(string BookmarkXML = null, string InfobarText1 = "{Name}", string InfobarText2 = "F: {FileS}, D: {DirS}")
+		/// <summary>Initialize the FLP</summary>
+		/// <param name="BookmarkXML">The bookmark database</param>
+		/// <param name="CSS">The user theme (or null if it's need to use internal theme)</param>
+		/// <param name="InfobarText1">The mask for infobar text when a file is selected</param>
+		/// <param name="InfobarText2">The mask for infobar text when no files are selected</param>
+		public FileListPanel(string BookmarkXML = null, string CSS=null, string InfobarText1 = "{Name}", string InfobarText2 = "F: {FileS}, D: {DirS}")
 		{
+			s = new Stylist(CSS);
 			SBtext1 = InfobarText1;
 			SBtext2 = InfobarText2;
 			BuildUI(BookmarkXML);
@@ -67,7 +73,6 @@ namespace pluginner
 			WriteDefaultStatusLabel();
 
 			CLIprompt.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(CLIprompt_KeyReleased);
-			ListingView.BorderVisible = true;
 
 			QuickSearchText.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
 			QuickSearchText.KeyPressed += new EventHandler<Xwt.KeyEventArgs>(QuickSearchText_KeyPressed);
@@ -207,8 +212,8 @@ namespace pluginner
 			s.Stylize(UrlBox);
 			s.Stylize(ListingView);
 			s.Stylize(QuickSearchBox);
-			s.Stylize(CLIoutput);
-			s.Stylize(CLIprompt);
+			s.Stylize(CLIoutput,"TerminalOutput");
+			s.Stylize(CLIprompt,"TerminalPrompt");
 			s.Stylize(StatusBar);
 
 			ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
@@ -216,7 +221,6 @@ namespace pluginner
 			ListingView.GotFocus += (o, ea) =>{ this.OnGotFocus(ea); };
 			ListingView.PointerMoved += new TypedEvent<ListView2Item>(ListingView_PointerMoved);
 			ListingView.SelectionChanged += new TypedEvent<List<ListView2Item>>(ListingView_SelectionChanged);
-			ListingView.BorderVisible = false;
 			StatusBar.Wrap = Xwt.WrapMode.Word;
 		}
 

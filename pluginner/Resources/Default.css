@@ -4,36 +4,7 @@
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
-
-/*File list*/
-FileListRowA{
-	background-color: inherit;
-	color: inherit;
-}
-
-FileListRowB{
-	background-color: inherit;
-	color: inherit;
-}
-/*Pointed*/
-FileListRow:active{
-	background-color: inherit;
-	color: inherit;
-}
-/*Selected*/
-FileListRow:checked{
-	background-color: inherit;
-	color: inherit;
-}
-
-FileList, FileList:active, FileList:hover, FileList:focus, FileListRowA, FileListRowB{
-	background-color: inherit;
-	color: inherit;
-	font-family: inherit;
-	display: normal;
-}
-
-
+ 
 /*Viewer/Editor window (common)*/
 VE, VE:hover, VE:active, VE:focus{
 	background-color: inherit;
@@ -52,6 +23,72 @@ VEWorkingArea, VEWorkingArea:hover, VEWorkingArea:active, VEWorkingArea:focus{
 	font-family: monospace;
 	display: normal;
 }
+
+/*Keyboard help "buttons"*/
+KeyboardHelp, KeyboardHelp:hover, KeyboardHelp:active, KeyboardHelp:focus{
+	background-color: #000;
+	color: #FFF;
+	font-family: inherit;
+	display: normal;
+}
+KeyboardHelpF, KeyboardHelpF:hover, KeyboardHelpF:active{
+	background-color: #000;
+	color: #FF0000;
+	font-family: inherit;
+	display: normal;
+}
+KeyboardHelpDescr, KeyboardHelpDescr:hover, KeyboardHelpDescr:active{
+	background-color: #808080;
+	color: #0000FF;
+	font-family: inherit;
+	display: normal;
+}
+
+/*File list*/
+FileListRowA{
+	background-color: inherit;
+	color: inherit;
+}
+
+FileListRowB{
+	background-color: inherit;
+	color: inherit;
+}
+/*File list: Pointed*/
+FileListRow:active{
+	background-color: inherit;
+	color: inherit;
+}
+/*File list: Selected*/
+FileListRow:checked{
+	background-color: inherit;
+	color: inherit;
+}
+
+FileList, FileList:active, FileList:hover, FileList:focus, FileListRowA, FileListRowB{
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
+	display: normal;
+	border-style: inset;
+}
+
+/*Virtual terminal*/
+/*todo: implement foreground color*/
+TerminalPrompt, TerminalPrompt:hover, TerminalPrompt:focus, TerminalPrompt:active{
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
+	display: normal;
+}
+
+TerminalOutput, TerminalOutput:hover, TerminalOutput:focus, TerminalOutput:active{
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
+	display: normal;
+}
+
 
 /*Widgets - common*/
 Widget {
