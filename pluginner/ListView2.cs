@@ -118,7 +118,13 @@ namespace pluginner
 					InvertSelection();
 					e.Handled = true;
 					return;
-			}
+				case Key.Home:
+					_SetPoint(Items[0]);
+					return;
+				case Key.End:
+					_SetPoint(Items[Items.Count-1]);
+					return;
+				}
 		}
 
 
@@ -220,6 +226,23 @@ namespace pluginner
 
 			if (PointerMoved != null)
 				PointerMoved(lvi);
+
+			//if need, scroll the view
+			double top = -ScrollerIn.PosY;
+			double down = ScrollerIn.Size.Height;
+			double newpos = lvi.Size.Height * lvi.RowNo;
+
+			if (top > down){
+				//если прокручено далее первой страницы
+				down = top + ScrollerIn.Size.Height;
+			}
+
+			if (newpos > down || newpos < top)
+			{
+				ScrollerIn.ScrollTo(-(lvi.Size.Height * lvi.RowNo));
+			}
+
+			//todo: add smooth scrolling
 		}
 
 

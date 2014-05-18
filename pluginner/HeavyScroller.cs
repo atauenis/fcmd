@@ -128,5 +128,15 @@ namespace pluginner
 		/// <summary>Allows/denies scrolling the content on the vertical axis</summary>
 		public bool CanScrollByY
 		{ get; set; }
+
+		public double PosX
+		{
+			get { return OffsetX; }
+		}
+
+		public double PosY
+		{
+			get { return OffsetY; }
+		}
 	}
 }
