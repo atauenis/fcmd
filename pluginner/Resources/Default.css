@@ -16,6 +16,17 @@ VE, VE:hover, VE:active, VE:focus{
 	width: auto;
 }
 
+/*Viewer/Editor plugins' toolbar (if present)*/
+VEToolbar, VEToolbar:hover, VEToolbar:active, VEToolbar:focus, VEToolbarButton, VEToolbarLabel, VEToolbarLabel:hover, VEToolbarLabel:active, VEToolbarButton:hover, VEToolbarButton:focus, VEToolbarButton:active{
+	background-color: inherit;
+	color: inherit;
+	font-family: inherit;
+	display: normal;
+
+	height: auto;
+	width: auto;
+}
+
 /*Viewer/Editor plugins' working area (not the "body", meaning the content displaying/editing box)*/
 VEWorkingArea, VEWorkingArea:hover, VEWorkingArea:active, VEWorkingArea:focus{
 	background-color: inherit;
@@ -38,7 +49,7 @@ KeyboardHelpF, KeyboardHelpF:hover, KeyboardHelpF:active{
 	display: normal;
 }
 KeyboardHelpDescr, KeyboardHelpDescr:hover, KeyboardHelpDescr:active{
-	background-color: #808080;
+	background-color: #C0C0C0;
 	color: #0000FF;
 	font-family: inherit;
 	display: normal;

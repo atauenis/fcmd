@@ -43,13 +43,6 @@ namespace fcmd.base_plugins.ve
 				mnuFormat.Items.Add(mi);
 			}
 			mbCodepage.Menu = mnuFormat;
-
-			s.Stylize(RTV,"VEWorkingArea");
-
-			foreach (Xwt.Widget w in Layout.Children)
-			{
-				s.Stylize(w);
-			}
 		}
 
 		void Codepage_Clicked(object sender, EventArgs e)
@@ -120,6 +113,24 @@ namespace fcmd.base_plugins.ve
 				lblFileName.Visible = value;
 				mbMode.Visible = value;
 				mbCodepage.Visible = value;
+			}
+		}
+
+		public pluginner.Stylist Stylist
+		{
+			set
+			{
+				s = value;
+
+				s.Stylize(RTV, "VEWorkingArea");
+				s.Stylize(Layout, "VEToolbar");
+				/*foreach (Xwt.Widget w in Layout.Children)
+				{
+					s.Stylize(w, "VEToolbar");
+				}*/
+				s.Stylize(lblFileName,"VEToolbarLabel");
+				s.Stylize(mbMode,"VEToolbarButton");
+				s.Stylize(mbCodepage,"VEToolbarButton");
 			}
 		}
 	}

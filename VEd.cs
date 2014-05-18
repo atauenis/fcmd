@@ -273,6 +273,7 @@ namespace fcmd
 			Plugin.ReadOnly = !AllowEdit;
 			Plugin.OpenFile(URL, FS);
 			Plugin.ShowToolbar = fcmd.Properties.Settings.Default.VE_ShowToolbar;
+			Plugin.Stylist = s;
 			mnuFormat.SubMenu = Plugin.FormatMenu;
 
 			bool Mode = AllowEdit;

@@ -35,7 +35,7 @@ namespace pluginner
 				return Xwt.Drawing.Colors.Transparent;
 			}
 
-			string rgbhex;
+			/*string rgbhex;
 			if (ColorName.StartsWith("#"))
 				rgbhex = ColorName.Substring(1);
 			else
@@ -52,7 +52,8 @@ namespace pluginner
 			{
 				colors10[i] = Hex2Dec(colors16[i]);
 			}
-			return new Xwt.Drawing.Color(colors10[0], colors10[1], colors10[2]);
+			return new Xwt.Drawing.Color(colors10[0], colors10[1], colors10[2]);*/
+			return Xwt.Drawing.Color.FromName(ColorName);
 		}
 
 		/// <summary>Loads embedded resource</summary>
