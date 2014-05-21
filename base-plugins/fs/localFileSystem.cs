@@ -357,7 +357,8 @@ namespace fcmd.base_plugins.fs
 			lego.Name = metadatasource.Name;
 			lego.FullURL = url;
 			try{
-			lego.UpperDirectory = metadatasource.DirectoryName;
+			lego.UpperDirectory = "file://" + metadatasource.DirectoryName;
+			lego.RootDirectory = "file://" + metadatasource.Directory.Root.FullName;
 			lego.Attrubutes = metadatasource.Attributes;
 			lego.CreationTimeUTC = metadatasource.CreationTimeUtc;
 			lego.IsReadOnly = metadatasource.IsReadOnly;

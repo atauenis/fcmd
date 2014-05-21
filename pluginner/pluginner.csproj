@@ -123,5 +123,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Default.css" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\bookmarks.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\history.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

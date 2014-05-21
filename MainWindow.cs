@@ -408,9 +408,8 @@ namespace fcmd
 		{
 			string AboutString = string.Format(Locale.GetString("FileCommanderVer"), "File Commander", Winforms.Application.ProductVersion) +
 								   "\n(C) 2013-14, the File Commander team:\nhttps://github.com/atauenis/fcmd\n"+
-								   "New contributors are welcome!\n" +
-								   "Using Xamarin Window Toolkit (Xwt):\nhttps://github.com/mono/xwt\n" +
-								   "Using icons from Tango project:\nhttp://tango.freedesktop.org/\n\n" +
+								   "New contributors are welcome!\n\n" +
+								   "About taken from other projects you may read in the COPYPASTE.md file.\n\n" +
 								   Environment.OSVersion + "\nFramework version: " + Environment.Version;
 			Xwt.MessageDialog.ShowMessage(AboutString);
 

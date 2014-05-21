@@ -145,6 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="COPYPASTE.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="fcmd.userprefs" />
     <None Include="ListPanel.resources" />
     <None Include="Properties\Settings.settings">

@@ -11,11 +11,12 @@ using System.Text;
 using System.Xml;
 using System.Reflection;
 using System.IO;
+using Xwt;
 
 namespace pluginner
 {
 	/// <summary>Filelist panel</summary>
-	public class FileListPanel : Xwt.VBox
+	public class FileListPanel : Table
 	{
 		public int dfIcon = 0;
 		public int dfURL = 1;
@@ -24,18 +25,22 @@ namespace pluginner
 		public int dfChanged = 4;
 
 		public pluginner.IFSPlugin FS;
-		public Xwt.TextEntry UrlBox = new Xwt.TextEntry();
 		public pluginner.LightScroller DiskBox = new LightScroller();
-		public Xwt.HBox DiskList = new Xwt.HBox();
+		public HBox DiskList = new HBox();
 		public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
+		public Button GoRoot = new Button("/");
+		public Button GoUp = new Button("..");
+		public TextEntry UrlBox = new TextEntry();
+		public MenuButton Bookmarks = new MenuButton(Xwt.Drawing.Image.FromResource("pluginner.Resources.bookmarks.png"));
+		public MenuButton History = new MenuButton(Xwt.Drawing.Image.FromResource("pluginner.Resources.history.png"));
 		public ListView2 ListingView = new ListView2();
-		public Xwt.HBox QuickSearchBox = new Xwt.HBox();
-		public Xwt.TextEntry QuickSearchText = new Xwt.TextEntry();//по возможность заменить на SearchTextEntry (не раб. на wpf, see xwt bug 330)
-		public Xwt.Label StatusBar = new Xwt.Label();
-		public Xwt.Table StatusTable = new Xwt.Table();
-		public Xwt.ProgressBar StatusProgressbar = new Xwt.ProgressBar();
-		Xwt.TextEntry CLIoutput = new Xwt.TextEntry() { MultiLine = true, ShowFrame = true, Visible = false, HeightRequest = 50 };
-		Xwt.TextEntry CLIprompt = new Xwt.TextEntry();
+		public HBox QuickSearchBox = new HBox();
+		public TextEntry QuickSearchText = new TextEntry();//по возможность заменить на SearchTextEntry (не раб. на wpf, see xwt bug 330)
+		public Label StatusBar = new Label("Information bar");
+		public Table StatusTable = new Table();
+		public ProgressBar StatusProgressbar = new ProgressBar();
+		TextEntry CLIoutput = new TextEntry() { MultiLine = true, ShowFrame = true, Visible = false, HeightRequest = 50 };
+		TextEntry CLIprompt = new TextEntry();
 
 		/// <summary>User navigates into another directory</summary>
 		public event TypedEvent<string> Navigate;
@@ -43,7 +48,6 @@ namespace pluginner
 		public event TypedEvent<string> OpenFile;
 
 		public SizeDisplayPolicy CurShortenKB, CurShortenMB, CurShortenGB;
-		private bool ProgressShown = false;
 		private string QABarXML;
 		private string SBtext1, SBtext2;
 		private Stylist s;
@@ -62,13 +66,25 @@ namespace pluginner
 			DiskBox.Content = DiskList;
 			DiskBox.CanScrollByY = false;
 
-			this.PackStart(DiskBox, false, true);
-			this.PackStart(UrlBox, false, true);
-			this.PackStart(ListingView, true, true);
-			this.PackStart(QuickSearchBox, false, false);
-			this.PackStart(CLIoutput);
-			this.PackStart(CLIprompt);
-			this.PackStart(StatusBar, false, true);
+			GoRoot.ExpandHorizontal = GoUp.ExpandHorizontal = Bookmarks.ExpandHorizontal = History.ExpandHorizontal = false;
+			GoRoot.Style = GoUp.Style = Bookmarks.Style = History.Style = ButtonStyle.Flat;
+			GoRoot.CanGetFocus = GoUp.CanGetFocus = Bookmarks.CanGetFocus = History.CanGetFocus = false;
+
+			this.DefaultColumnSpacing = 0;
+			this.DefaultRowSpacing = 0;
+
+			this.Add(DiskBox,0,0, 1,1,true,false,WidgetPlacement.Fill);
+			this.Add(GoRoot,1,0 ,1,1,false,false,WidgetPlacement.Fill);
+			this.Add(GoUp,2,0 ,1,1,false,false,WidgetPlacement.Fill);
+			this.Add(UrlBox,0,1, 1,1,true,false,WidgetPlacement.Fill);
+			this.Add(Bookmarks,1,1 ,1,1,false,false,WidgetPlacement.Start);
+			this.Add(History,2,1 ,1,1,false,false,WidgetPlacement.Start);
+			this.Add(ListingView,0,2 ,1,3,false,true); //hexpand will be = 'true' without seeing to this 'false'
+			this.Add(QuickSearchBox,0,3 ,1,3);
+			this.Add(StatusBar,0,4,1,3);
+			this.Add(StatusProgressbar,0,5,1,3);
+			this.Add(CLIoutput,0,6 ,1,3);
+			this.Add(CLIprompt,0,7 ,1,3);
 
 			WriteDefaultStatusLabel();
 
@@ -214,7 +230,7 @@ namespace pluginner
 			s.Stylize(QuickSearchBox);
 			s.Stylize(CLIoutput,"TerminalOutput");
 			s.Stylize(CLIprompt,"TerminalPrompt");
-			s.Stylize(StatusBar);
+			s.Stylize(StatusTable);
 
 			ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
 			ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
@@ -350,6 +366,8 @@ namespace pluginner
 				UrlBox.Text = URL;
 				FS.StatusChanged += new TypedEvent<string>(FS_StatusChanged);
 				FS.ProgressChanged += new TypedEvent<double>(FS_ProgressChanged);
+				string updir = URL + FS.DirSeparator+"..";
+				string rootdir = FS.GetMetadata(URL).RootDirectory;
 
 				foreach (DirItem di in dis)
 				{
@@ -361,6 +379,7 @@ namespace pluginner
 					{//parent dir
 						Data.Add("<↑ UP>");
 						Data.Add(FS.GetMetadata(di.Path).LastWriteTimeUTC.ToLocalTime());
+						updir = di.Path;
 					}
 					else if (di.IsDirectory)
 					{//dir
@@ -375,6 +394,9 @@ namespace pluginner
 					Data.Add(di);
 					ListingView.AddItem(Data, di.Path);
 				}
+
+				GoUp.Clicked+=(o,ea)=>{ LoadDir(updir); };
+				GoRoot.Clicked+=(o,ea)=>{ LoadDir(rootdir); };
 			}
 			catch (Exception ex)
 			{
@@ -402,35 +424,12 @@ namespace pluginner
 		void FS_ProgressChanged(double data)
 		{
 			if (data > 0 && data <= 1){
-				//show
+				StatusProgressbar.Visible = true;
 				StatusProgressbar.Fraction = data;
-				if (ProgressShown)
-				{
-					//do nothing; it's already updated
-				}
-				else
-				{
-					//show it
-					this.Remove(StatusBar);
-					this.PackStart(StatusTable);
-
-					StatusTable.Clear();
-#if !MONO //workaround for xwt/XWT bug https://github.com/mono/xwt/issues/283
-					StatusTable.Add(new Xwt.Spinner() { Animate = true }, 0, 0, 1);
-#endif
-					StatusTable.Add(StatusBar, 1, 0);
-					StatusTable.Add(StatusProgressbar, 1, 1);
-					ProgressShown = true;
-				}
 			}
-			else {
-				//hide
-				ProgressShown = false;
-				try { this.Remove(StatusTable); StatusTable.Clear(); this.Remove(StatusBar); }
-				catch { }
-
-				try{this.PackStart(StatusBar);}
-				catch { }
+			else
+			{
+				StatusProgressbar.Visible = false;
 			}
 		}
 
@@ -606,6 +605,7 @@ namespace pluginner
 		/// </summary>
 		private void WriteDefaultStatusLabel()
 		{
+			StatusProgressbar.Visible = false;
 			if(ListingView.SelectedItems.Count<1)
 			StatusBar.Text = MakeStatusbarText(SBtext1);
 			else

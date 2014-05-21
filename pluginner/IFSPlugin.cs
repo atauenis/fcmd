@@ -277,6 +277,8 @@ namespace pluginner
 		public string Name;
 		/// <summary>The file's containing directory</summary>
 		public string UpperDirectory;
+		/// <summary>The filesystem's root directory</summary>
+		public string RootDirectory;
 		/// <summary>The file's full path</summary>
 		public string FullURL;
 
