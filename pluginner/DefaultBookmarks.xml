@@ -1,8 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Bookmarks>
   <SpeedDial type="QuickAccessBar">
-	<AutoBookmarks type="System.IO.DriveInfo.GetDrives"/>
+		<AutoBookmarks type="System.IO.DriveInfo.GetDrives"/>
   </SpeedDial>
+	<SpeedDial type="BookmarksMenu">
+		<Bookmark title="Windows directory" url="file://C:/WINDOWS" />
+		<Bookmark title="Program files (32 bit)" url="file://C:/PROGRA~1" />
+		<Bookmark title="Program files (64 bit)" url="file://C:/Program Files" />
+		<Bookmark title="Documents and settings" url="file://C:/DOCUME~1" />
+		<Bookmark title="User files" url="file://C:/Users" />
+	</SpeedDial>
 </Bookmarks>
 
 <!--
@@ -11,8 +18,8 @@ Bookmarks: корневой элемент списка закладок
 SpeedDial: меню быстрого вызова (закладок)
   type=тип меню, одно из значений:
 	QuickAccessBar-панель дисков
-	BookmarksMenu-меню закладок (на 23/01/2014 не реализовано)
-	UserMenu-пользовательское меню по F2 ( -//- )
+	BookmarksMenu-меню закладок
+	UserMenu-пользовательское меню по F2 (на 23/01/2014 не реализовано)
 Bookmark: закладка в меню
   url: адрес, куда закладка указывает
   title: надпись закладки

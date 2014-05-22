@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BookmarkTools.cs" />
     <Compile Include="FileListPanel.cs" />
     <Compile Include="HeavyScroller.cs" />
     <Compile Include="IFSPlugin.cs" />
@@ -108,7 +109,9 @@
     <EmbeddedResource Include="Resources\root-folder.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DefaultBookmarks.xml" />
+    <EmbeddedResource Include="DefaultBookmarks.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\search.png" />

@@ -163,62 +163,19 @@ namespace pluginner
 			UrlBox.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
 			UrlBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(UrlBox_KeyReleased);
 
-			//QUICK ACCESS BAR
-			if (BookmarkXML == null){
-				if (QABarXML == null){
-					BookmarkXML = Utilities.GetEmbeddedResource("DefaultBookmarks.xml");
-					if (BookmarkXML == null) throw new Exception("Cannot load pluginner.dll::DefaultBookmarks.xml");
-					QABarXML = BookmarkXML;
-				}
-				else{
-					BookmarkXML = QABarXML;
-				}
-			}
-			DiskList.Clear();
-			XmlDocument bmDoc = new XmlDocument();
-			bmDoc.LoadXml(BookmarkXML);
-			XmlNodeList items = bmDoc.GetElementsByTagName("SpeedDial");
-			foreach (XmlNode x in items)
-			{//parsing speed dials
-				if (
-					x.Attributes.GetNamedItem("type") != null
-					&&
-					x.Attributes.GetNamedItem("type").Value == "QuickAccessBar"
-				)
-				{
-					foreach (XmlNode xc in x.ChildNodes)
-					{//parsing bookmark list
-						if (xc.Name == "AutoBookmarks")//автозакладка
-						{
-							switch (xc.Attributes.GetNamedItem("type").Value)
-							{
-								case "System.IO.DriveInfo.GetDrives":
-									AddSysDrives();
-									break;
-								case "LinuxMounts":
-									AddLinuxMounts();
-									break;
-								//todo: LinuxMounts (/mnt/), LinuxSystemDirs (/)
-							}
-						}
-						else if (xc.Name == "Bookmark")//простая закладка
-						{
-							string url = xc.Attributes.GetNamedItem("url").Value;
-							Xwt.Button NewBtn = new Xwt.Button(null, xc.Attributes.GetNamedItem("title").Value);
-							NewBtn.Clicked += (o, ea) => { NavigateTo(url); };
-							NewBtn.CanGetFocus = false;
-							NewBtn.Style = Xwt.ButtonStyle.Flat;
-							NewBtn.Margin = -3;
-							NewBtn.Cursor = Xwt.CursorType.Hand;
-							s.Stylize(NewBtn);
-							DiskList.PackStart(NewBtn);
-							/* todo: rewrite the code; possibly change the XWT to add toolbars
-							 */
-						}
-						//todo: bookmark folders
-					}
-				}
-			}
+			pluginner.BookmarkTools bmt = new BookmarkTools(BookmarkXML,"QuickAccessBar");
+			bmt.DisplayBookmarks(
+				DiskList,
+				(url) => { NavigateTo(url); },
+				s
+			);
+
+			bmt = new BookmarkTools(BookmarkXML);
+			Bookmarks.Menu = new Menu();
+			bmt.DisplayBookmarks(
+				Bookmarks.Menu,
+				(url) => { NavigateTo(url); }
+			);
 
 			foreach (Xwt.Button b in DiskButtons)
 			{
