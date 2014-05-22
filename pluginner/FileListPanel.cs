@@ -48,7 +48,6 @@ namespace pluginner
 		public event TypedEvent<string> OpenFile;
 
 		public SizeDisplayPolicy CurShortenKB, CurShortenMB, CurShortenGB;
-		private string QABarXML;
 		private string SBtext1, SBtext2;
 		private Stylist s;
 

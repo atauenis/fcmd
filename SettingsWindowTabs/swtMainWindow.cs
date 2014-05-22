@@ -29,6 +29,8 @@ namespace fcmd.SettingsWindowTabs
 		Xwt.CheckBox chkInfoBar = new Xwt.CheckBox();//ok
 		Xwt.CheckBox chkCmdLine = new Xwt.CheckBox(){ Sensitive = false };
 		Xwt.CheckBox chkKeybHelp = new Xwt.CheckBox();//ok
+		Xwt.Label lblBookmarks = new Xwt.Label();
+		Xwt.TextEntry txtBookmarks = new Xwt.TextEntry();
 
 		public swtMainWindow()
 		{
@@ -44,12 +46,14 @@ namespace fcmd.SettingsWindowTabs
 			chkInfoBar.Label = Locale.GetString("SWTMWinfobar");
 			chkCmdLine.Label = Locale.GetString("SWTMWcmdline");
 			chkKeybHelp.Label = Locale.GetString("SWTMWkeybhelp");
+			lblBookmarks.Text = Locale.GetString("SWTMWbookmars");
 
 			chkDiskButtons.State = CBSfromBool(fcmd.Properties.Settings.Default.ShowDiskList);
 			chkPanelTitle.State = CBSfromBool(fcmd.Properties.Settings.Default.ShowPanelUrlbox);
 			chkTableCollumns.State = CBSfromBool(fcmd.Properties.Settings.Default.ShowPanelTableCaptions);
 			chkInfoBar.State = CBSfromBool(fcmd.Properties.Settings.Default.ShowFileInfo);
 			chkKeybHelp.State = CBSfromBool(fcmd.Properties.Settings.Default.ShowKeybrdHelp);
+			txtBookmarks.Text = fcmd.Properties.Settings.Default.BookmarksFile ?? "";
 
 			fraMainBox.PackStart(chkShowToolBar);
 			fraMainBox.PackStart(chkDiskButtons);
@@ -59,6 +63,8 @@ namespace fcmd.SettingsWindowTabs
 			fraMainBox.PackStart(chkInfoBar);
 			fraMainBox.PackStart(chkCmdLine);
 			fraMainBox.PackStart(chkKeybHelp);
+			fraMainBox.PackStart(lblBookmarks);
+			fraMainBox.PackStart(txtBookmarks);
 		}
 
 		public bool SaveSettings() {
@@ -69,6 +75,7 @@ namespace fcmd.SettingsWindowTabs
 				fcmd.Properties.Settings.Default.ShowPanelTableCaptions = BoolFromCBX(chkTableCollumns);
 				fcmd.Properties.Settings.Default.ShowFileInfo = BoolFromCBX(chkInfoBar);
 				fcmd.Properties.Settings.Default.ShowKeybrdHelp = BoolFromCBX(chkKeybHelp);
+				fcmd.Properties.Settings.Default.BookmarksFile = txtBookmarks.Text;
 				return true;
 			}
 			catch(Exception ex) { Xwt.MessageDialog.ShowError(ex.Message) ;  return false; }

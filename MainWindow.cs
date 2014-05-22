@@ -101,18 +101,6 @@ namespace fcmd
 			this.Title = "File Commander";
 			this.MainMenu = WindowMenu;
 
-			//check settings
-			if (fcmd.Properties.Settings.Default.UserTheme != null) {
-				if (fcmd.Properties.Settings.Default.UserTheme != "") {
-					if (File.Exists(fcmd.Properties.Settings.Default.UserTheme))
-						stylist = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
-					else{
-							Xwt.MessageDialog.ShowError(Locale.GetString("ThemeNotFound"), fcmd.Properties.Settings.Default.UserTheme);
-							Xwt.Application.Exit();
-						}
-				}
-			}
-
 			//build user interface
 			MainMenu.Items.Add(mnuFile);
 			MainMenu.Items.Add(mnuView);
@@ -212,13 +200,27 @@ namespace fcmd
 			Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Fill,-12,-12,-12);
 						
 			this.Content = Layout;
-			
+
+			//check settings
+			if (fcmd.Properties.Settings.Default.UserTheme != null)
+			{
+				if (fcmd.Properties.Settings.Default.UserTheme != "")
+				{
+					if (File.Exists(fcmd.Properties.Settings.Default.UserTheme))
+						stylist = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
+					else
+					{
+						Xwt.MessageDialog.ShowError(Locale.GetString("ThemeNotFound"), fcmd.Properties.Settings.Default.UserTheme);
+						Xwt.Application.Exit();
+					}
+				}
+			}
+
 			//load bookmarks
 			string BookmarksStore = null;
 			if (fcmd.Properties.Settings.Default.BookmarksFile != null && fcmd.Properties.Settings.Default.BookmarksFile.Length > 0)
 			{
 				BookmarksStore = File.ReadAllText(fcmd.Properties.Settings.Default.BookmarksFile, Encoding.UTF8);
-
 			}
 
 			//build panels
