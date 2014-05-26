@@ -11,7 +11,7 @@ namespace fcmd.base_plugins.ve
 		public string Name { get { return new Localizator().GetString("VEptxtVer"); } }
 		public string Version { get { return System.Windows.Forms.Application.ProductVersion; } }
 		public string Author { get { return "Alexander Tauenis"; } }
-		public event pluginner.TypedEvent<string> APICallHost;
+		public event pluginner.TypedEvent<object[]> APICallHost;
 		#endregion
 
 		Xwt.Menu mnuFormat = new Xwt.Menu();

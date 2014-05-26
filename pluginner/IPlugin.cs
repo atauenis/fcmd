@@ -52,7 +52,7 @@ namespace pluginner{
 		/// <summary>
 		/// This event should be raised to talk something to the File Commander (to be raised by the plugin)
 		/// </summary>
-		event pluginner.TypedEvent<string> APICallHost;
+		event pluginner.TypedEvent<object[]> APICallHost;
 	}
 
 	//todo: IUIPlugin (плагины к интерфейсу File Commander)

@@ -25,7 +25,7 @@ namespace fcmd.base_plugins.fs
 		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
 		public event pluginner.TypedEvent<String> StatusChanged;
 		public event pluginner.TypedEvent<double> ProgressChanged;
-		public event pluginner.TypedEvent<string> APICallHost;
+		public event pluginner.TypedEvent<object[]> APICallHost;
 
 		List<pluginner.DirItem> DirContent = new List<pluginner.DirItem>();
 		string CurDir;
