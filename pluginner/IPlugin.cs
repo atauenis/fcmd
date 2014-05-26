@@ -33,21 +33,26 @@ namespace pluginner{
 		/// </summary>
 		string Author { get; }
 
-		//FLEXIBLE API
+		//FLEXIBLE APPLICATION PROGRAMMING INTERFACE
 		//ГИБКОЕ API
 		/// <summary>
 		/// (int[6]) Defines mimimal and maximal versions of the flexible API.
 		/// Currently it is {0,1,0, 0,1,0}
 		/// </summary>
-		int[] FlexibleAPIversion { get; }
+		int[] APICompatibility { get; }
 
 		/// <summary>
-		/// Calls a flexible API function
+		/// Talk something to the plugin (to be called by the host)
 		/// </summary>
 		/// <param name="call">The function name</param>
 		/// <param name="arguments">The argument or arguments</param>
-		/// <returns>Something, that the function returns (type is defined in the FC flexible API documentation)</returns>
-		object FlexibleAPIcall(string call, params object[] arguments);
+		/// <returns>Something, that the function returns (the type is defined in the FC flexible API documentation)</returns>
+		object APICallPlugin(string call, params object[] arguments);
+
+		/// <summary>
+		/// This event should be raised to talk something to the File Commander (to be raised by the plugin)
+		/// </summary>
+		event pluginner.TypedEvent<string> APICallHost;
 	}
 
 	//todo: IUIPlugin (плагины к интерфейсу File Commander)

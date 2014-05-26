@@ -9,9 +9,11 @@ namespace fcmd.base_plugins.ve
 	{
 		#region Metadata
 		public string Name { get { return new Localizator().GetString("VEptxtVer"); } }
-		public string Version { get { return "1.0"; } }
+		public string Version { get { return System.Windows.Forms.Application.ProductVersion; } }
 		public string Author { get { return "Alexander Tauenis"; } }
+		public event pluginner.TypedEvent<string> APICallHost;
 		#endregion
+
 		Xwt.Menu mnuFormat = new Xwt.Menu();
 		Xwt.Table Layout = new Xwt.Table() { DefaultRowSpacing = 0 };
 		Xwt.RichTextView RTV = new Xwt.RichTextView();
@@ -59,15 +61,29 @@ namespace fcmd.base_plugins.ve
 			mbCodepage.Label = Encoding.GetEncoding(Codepage).EncodingName;
 		}
 
-		public int[] FlexibleAPIversion {
+		public int[] APICompatibility {
 			get{
 				int[] fapiver = {0,1,0, 0,1,0};
 				return fapiver;
 			}
 		}
 
-		public object FlexibleAPIcall(string call, params object[] arguments)
+		public object APICallPlugin(string Command, params object[] Arguments)
 		{
+			switch (Command)
+			{
+				case "codepage":
+					ChangeCodepage(Convert.ToInt32(Arguments[1]));
+					break;
+				case "findreplace": break;
+				case "cut": break;
+				case "copy": break;
+				case "paste": break;
+				case "select": break;
+				case "print": break;
+				case "pagesetup": break;
+				default: Xwt.MessageDialog.ShowWarning("Unknown command:", Command); break;
+			}
 			return null;
 		}
 
@@ -79,23 +95,6 @@ namespace fcmd.base_plugins.ve
 		}
 
 		public void SaveFile(bool SaveAs = false) { }
-
-		public void ExecuteCommand(string Command, string[] Arguments)
-		{
-			switch(Command){
-				case "codepage":
-					ChangeCodepage(Convert.ToInt32(Arguments[1]));
-					break;
-				case "findreplace": break;
-				case "cut": break;
-				case "copy": break;
-				case "paste": break;
-				case "select": break;
-				case "print": break;
-				case "pagesetup": break;
-				default: Xwt.MessageDialog.ShowWarning("Unknown command:",Command); break;
-			}
-		}
 
 		public Xwt.Widget Body {
 			get { return Layout; }

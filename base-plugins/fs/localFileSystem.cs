@@ -25,6 +25,7 @@ namespace fcmd.base_plugins.fs
 		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
 		public event pluginner.TypedEvent<String> StatusChanged;
 		public event pluginner.TypedEvent<double> ProgressChanged;
+		public event pluginner.TypedEvent<string> APICallHost;
 
 		List<pluginner.DirItem> DirContent = new List<pluginner.DirItem>();
 		string CurDir;
@@ -370,7 +371,7 @@ namespace fcmd.base_plugins.fs
 			return lego;
 		}
 
-		public int[] FlexibleAPIversion
+		public int[] APICompatibility
 		{
 			get
 			{
@@ -379,7 +380,7 @@ namespace fcmd.base_plugins.fs
 			}
 		}
 
-		public object FlexibleAPIcall(string call, params object[] arguments)
+		public object APICallPlugin(string call, params object[] arguments)
 		{
 			return null;
 		}

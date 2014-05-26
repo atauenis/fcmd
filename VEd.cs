@@ -183,7 +183,7 @@ namespace fcmd
 		/// <param name="Cmd">the command in DOS/*NIX-style: NAME ARG1 ARG2 ARG3</param>
 		void SendCommand(string Cmd)
 		{
-			Plugin.ExecuteCommand(Cmd.Split(" ".ToCharArray())[0], Cmd.Split(" ".ToCharArray(),StringSplitOptions.RemoveEmptyEntries));
+			Plugin.APICallPlugin(Cmd.Split(" ".ToCharArray())[0], Cmd.Split(" ".ToCharArray(),StringSplitOptions.RemoveEmptyEntries));
 			CommandBox.Text = "";
 		}
 

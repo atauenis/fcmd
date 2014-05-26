@@ -24,11 +24,6 @@ namespace pluginner
 		/// <param name="SaveAs">(optional) Save with new URL ("save as").</param>
 		void SaveFile(bool SaveAs = false);
 
-		/// <summary>Execute command in the plugin</summary>
-		/// <param name="Command">The command's name</param>
-		/// <param name="Arguments">The command's arguments (cmd line arguments)</param>
-		void ExecuteCommand(string Command, string[] Arguments);
-
 		/// <summary>The body of the displayed part of the plugin</summary>
 		Xwt.Widget Body {get;}
 
