@@ -368,7 +368,7 @@ namespace fcmd
 				{
 					Xwt.MessageDialog.ShowMessage(ex.Message);
 				}
-			}
+			}//todo: else {download to HDD and open locally, if modified, upload back after closing the editor}
 		}
 
 		void ShowDebugInfo (object sender, EventArgs e)

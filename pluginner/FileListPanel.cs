@@ -13,6 +13,7 @@ using System.Reflection;
 using System.IO;
 using Xwt;
 
+
 namespace pluginner
 {
 	/// <summary>Filelist panel</summary>
@@ -31,8 +32,8 @@ namespace pluginner
 		public Button GoRoot = new Button("/");
 		public Button GoUp = new Button("..");
 		public TextEntry UrlBox = new TextEntry();
-		public MenuButton Bookmarks = new MenuButton(Xwt.Drawing.Image.FromResource("pluginner.Resources.bookmarks.png"));
-		public MenuButton History = new MenuButton(Xwt.Drawing.Image.FromResource("pluginner.Resources.history.png"));
+		public MenuButton BookmarksButton = new MenuButton(Xwt.Drawing.Image.FromResource("pluginner.Resources.bookmarks.png"));
+		public MenuButton HistoryButton = new MenuButton(Xwt.Drawing.Image.FromResource("pluginner.Resources.history.png"));
 		public ListView2 ListingView = new ListView2();
 		public HBox QuickSearchBox = new HBox();
 		public TextEntry QuickSearchText = new TextEntry();//по возможность заменить на SearchTextEntry (не раб. на wpf, see xwt bug 330)
@@ -65,9 +66,11 @@ namespace pluginner
 			DiskBox.Content = DiskList;
 			DiskBox.CanScrollByY = false;
 
-			GoRoot.ExpandHorizontal = GoUp.ExpandHorizontal = Bookmarks.ExpandHorizontal = History.ExpandHorizontal = false;
-			GoRoot.Style = GoUp.Style = Bookmarks.Style = History.Style = ButtonStyle.Flat;
-			GoRoot.CanGetFocus = GoUp.CanGetFocus = Bookmarks.CanGetFocus = History.CanGetFocus = false;
+			GoRoot.ExpandHorizontal = GoUp.ExpandHorizontal = BookmarksButton.ExpandHorizontal = HistoryButton.ExpandHorizontal = false;
+			GoRoot.Style = GoUp.Style = BookmarksButton.Style = HistoryButton.Style = ButtonStyle.Flat;
+			GoRoot.CanGetFocus = GoUp.CanGetFocus = BookmarksButton.CanGetFocus = HistoryButton.CanGetFocus = false;
+
+			HistoryButton.Menu = new Menu();
 
 			this.DefaultColumnSpacing = 0;
 			this.DefaultRowSpacing = 0;
@@ -76,8 +79,8 @@ namespace pluginner
 			this.Add(GoRoot,1,0 ,1,1,false,false,WidgetPlacement.Fill);
 			this.Add(GoUp,2,0 ,1,1,false,false,WidgetPlacement.Fill);
 			this.Add(UrlBox,0,1, 1,1,true,false,WidgetPlacement.Fill);
-			this.Add(Bookmarks,1,1 ,1,1,false,false,WidgetPlacement.Start);
-			this.Add(History,2,1 ,1,1,false,false,WidgetPlacement.Start);
+			this.Add(BookmarksButton,1,1 ,1,1,false,false,WidgetPlacement.Start);
+			this.Add(HistoryButton,2,1 ,1,1,false,false,WidgetPlacement.Start);
 			this.Add(ListingView,0,2 ,1,3,false,true); //hexpand will be = 'true' without seeing to this 'false'
 			this.Add(QuickSearchBox,0,3 ,1,3);
 			this.Add(StatusBar,0,4,1,3);
@@ -170,9 +173,9 @@ namespace pluginner
 			);
 
 			bmt = new BookmarkTools(BookmarkXML);
-			Bookmarks.Menu = new Menu();
+			BookmarksButton.Menu = new Menu();
 			bmt.DisplayBookmarks(
-				Bookmarks.Menu,
+				BookmarksButton.Menu,
 				(url) => { NavigateTo(url); }
 			);
 
@@ -238,14 +241,26 @@ namespace pluginner
 				NavigateTo(ListingView.PointedItem.Data[dfURL].ToString());
 		}
 
-		/// <summary>
-		/// Open the FS item at <paramref name="url"/> (if it's file, load; if it's directory, go to)
-		/// </summary>
-		private void NavigateTo(string url)
+		/// <summary>Open the FS item at <paramref name="url"/> (if it's file, load; if it's directory, go to)</summary>
+		/// <param name="clearhistory">The number of history entrie after that all entries must be removed</param>
+		private void NavigateTo(string url, int? ClearHistory = null)
 		{
+			Xwt.Menu hm = HistoryButton.Menu;
+
+			if (ClearHistory == null){
+				//register current directory in history
+				MenuItem hmi = new MenuItem(url);
+				hmi.Clicked+=(o,ea)=>{ NavigateTo(url,(int)hmi.Tag); };
+				hmi.Tag = hm.Items.Count;
+				hm.Items.Add(hmi);
+			}
+			if (ClearHistory != null){
+				//loading from history menu, thus don't making duplicates.
+			}
+
+
 			try
 			{
-
 				if (FS.DirectoryExists(url))
 				{//it's directory
 					if (Navigate != null) Navigate(url); //raise event
@@ -263,7 +278,7 @@ namespace pluginner
 			}
 			catch (pluginner.PleaseSwitchPluginException)
 			{
-				throw; //delegate authority to the mainwindow (it is it's business).
+				throw; //delegate authority to the mainwindow (it is it's jurisdiction).
 			}
 			catch (Exception ex)
 			{
@@ -312,6 +327,16 @@ namespace pluginner
 		/// <param name="ShortenGB">How gigabyte sizes should be humanized</param> //плохой перевод? "так nбайтные размеры должны очеловечиваться"
 		public void LoadDir(string URL, List<DirItem> dis, SizeDisplayPolicy ShortenKB, SizeDisplayPolicy ShortenMB, SizeDisplayPolicy ShortenGB)
 		{
+			if (FS.CurrentDirectory == null){
+				//if this is first call in the session (the FLP is just initialized)
+				using (Menu hm = HistoryButton.Menu) { 
+					MenuItem hmi = new MenuItem(URL);
+					hmi.Clicked += (o, ea) => { NavigateTo(URL, (int)hmi.Tag); };
+					hmi.Tag = hm.Items.Count;
+					hm.Items.Add(hmi);
+				}
+			}
+
 			ListingView.Cursor = Xwt.CursorType.IBeam;//todo: modify XWT and add hourglass cursor
 			ListingView.Sensitive = false;
 
