@@ -88,6 +88,8 @@ namespace fcmd
 		/// </summary>
 		public string Rm(string url)
 		{
+			if (ActivePanel.GetValue<string>(ActivePanel.dfDisplayName) == "..") { return "Cannot remove .."; }
+
 			if (!Xwt.MessageDialog.Confirm(
 				String.Format(Locale.GetString("FCDelAsk"), url, null),
 				Xwt.Command.Remove,
@@ -140,6 +142,8 @@ namespace fcmd
 		/// </summary>
 		public void Cp()
 		{
+			if (ActivePanel.GetValue<string>(ActivePanel.dfDisplayName) == "..") { return; }
+
 			int Progress = 0;
 			string SourceURL = ActivePanel.GetValue<string>(ActivePanel.dfURL);
 			pluginner.IFSPlugin SourceFS = ActivePanel.FS;
@@ -211,6 +215,8 @@ namespace fcmd
 		/// </summary>
 		void Mv()
 		{
+			if (ActivePanel.GetValue<string>(ActivePanel.dfDisplayName) == "..") { return; }
+
 			pluginner.IFSPlugin SourceFS = ActivePanel.FS;
 			pluginner.IFSPlugin DestinationFS = PassivePanel.FS;
 
