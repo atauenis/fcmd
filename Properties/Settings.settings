@@ -62,9 +62,6 @@
     <Setting Name="WinWidth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">750</Value>
     </Setting>
-    <Setting Name="ColorScheme" Description="URL to the file which contains the color scheme" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SysColorS.xml</Value>
-    </Setting>
     <Setting Name="VE_ShowToolbar" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>

@@ -273,22 +273,6 @@ namespace fcmd.Properties {
             }
         }
         
-        /// <summary>
-        /// URL to the file which contains the color scheme
-        /// </summary>
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.SettingsDescriptionAttribute("URL to the file which contains the color scheme")]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SysColorS.xml")]
-        public string ColorScheme {
-            get {
-                return ((string)(this["ColorScheme"]));
-            }
-            set {
-                this["ColorScheme"] = value;
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
@@ -355,7 +339,7 @@ namespace fcmd.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(null)]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string UserTheme {
             get {
                 return ((string)(this["UserTheme"]));
