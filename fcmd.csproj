@@ -69,6 +69,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="AsyncCopy.cs" />
     <Compile Include="base-plugins\fs\localFileSystem-CLI.cs" />
     <Compile Include="base-plugins\ve\PlainText.cs" />
     <Compile Include="FileChooser.cs">

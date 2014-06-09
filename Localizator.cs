@@ -54,7 +54,8 @@ namespace fcmd
 						"ThemeNotFound=Не найден файл пользовательской темы\n"+
 						"FileProgressDialogTitle=File Commander\n" +
 						"DoingRemove=Выполняется удаление:{0}{1}\n" +
-						"DoingCopy=Выполняется копирование:{0} В {1}{2}\n" +
+						"DoingCopy=Выполняется копирование: {0}{n}в {1}{n}{2}\n" +
+						"CopyStatus={0} КБ из {1} КБ ({2}%)\n"+
 						"DoingMkdir=Создаётся каталог:{0}{1}\n" +
 						"DoingListdir=Чтение каталога:{0}{1}...\n" +
 						"Directory=Каталог\n" +

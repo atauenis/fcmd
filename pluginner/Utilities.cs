@@ -20,6 +20,39 @@ namespace pluginner
 	{
 		static string PathToIcons = Application.StartupPath + Path.DirectorySeparatorChar + "icons";
 
+		//These functions is partially equivalents of the Xwt.MessageDialog ones
+		//but they works at UI thread and in fact are macros.
+		//Why C# hasn't macro-templates while the stupid C++ has?
+		public static void ShowMessage(string msg1, string msg2 = null)
+		{
+			Xwt.Application.Invoke(delegate{
+				if (msg2 == null)
+					Xwt.MessageDialog.ShowMessage(msg1);
+				else
+					Xwt.MessageDialog.ShowMessage(msg1,msg2);
+			});
+		}
+
+		public static void ShowError(string msg1, string msg2 = null)
+		{
+			Xwt.Application.Invoke(delegate{
+				if (msg2 == null)
+					Xwt.MessageDialog.ShowError(msg1);
+				else
+					Xwt.MessageDialog.ShowError(msg1,msg2);
+			});
+		}
+
+		public static void ShowWarning(string msg1, string msg2 = null)
+		{
+			Xwt.Application.Invoke(delegate{
+				if (msg2 == null)
+					Xwt.MessageDialog.ShowWarning(msg1);
+				else
+					Xwt.MessageDialog.ShowWarning(msg1,msg2);
+			});
+		}
+
 		public static int Hex2Dec(string hex)
 		{
 			return Convert.ToInt32(hex, 16);

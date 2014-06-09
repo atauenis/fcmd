@@ -84,9 +84,18 @@ namespace pluginner
 		/// <param name="URL">The URL of the file</param>
 		/// <param name="Start">The starting point in the file at which to begin reading</param>
 		/// <param name="Length">The number of bytes to read</param>
+		[Obsolete("Replaced to GetStream().Read()")]
 		byte[] GetFileContent(string URL, Int32 Start, Int32 Length);
 		//in future versions, the Int32 will be replaced with a longer type
 		//(currently, the temporary system.io call is limited to 4GB files)
+
+		/// <summary>
+		/// Gets a Stream that can be used to read and write the file
+		/// </summary>
+		/// <param name="URL">The URL of the file</param>
+		/// <param name="Lock">Because some systems doesn't allow writing to non-locked file streams, set to <value>1</value> if writing to the stream is planned.</param>
+		/// <returns></returns>
+		System.IO.Stream GetStream(string URL, bool Lock = false);
 
 		/// <summary>Writes a file.</summary>
 		/// <param name='NewFile'>The file</param>

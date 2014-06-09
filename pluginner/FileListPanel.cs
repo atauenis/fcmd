@@ -245,7 +245,7 @@ namespace pluginner
 		/// <param name="clearhistory">The number of history entrie after that all entries must be removed</param>
 		private void NavigateTo(string url, int? ClearHistory = null)
 		{
-			if (url.Contains("://")){
+			if (!url.Contains("://")){
 				//the path is relative
 				NavigateTo(FS.CurrentDirectory + FS.DirSeparator + url);
 			}

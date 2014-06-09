@@ -13,6 +13,7 @@ namespace fcmd{
 	/// <summary>
 	/// Show system message box
 	/// </summary>
+	[Obsolete("Obsolete due to architecture change at the autumn of 2013. Use Xwt MessageDialog.Show*** and Pluginner.Utilities.Show*** instead.")]
 	class MsgBox{
 		public enum MsgBoxType{
 			/// <summary>

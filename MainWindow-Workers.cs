@@ -42,10 +42,17 @@ namespace fcmd
 		/// <param name='DestinationURL'>
 		/// Destination URL.
 		/// </param>
+		[Obsolete]
 		void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL)
 		{
 			ReplaceQuestionDialog.ClickedButton Placeholder = ReplaceQuestionDialog.ClickedButton.Cancel;
-			DoCp(SourceFS,DestinationFS,SourceFile,DestinationURL,ref Placeholder);
+			DoCp(
+				SourceFS,
+				DestinationFS,
+				SourceFile,
+				DestinationURL,
+				ref Placeholder,new AsyncCopy()
+			);
 		}
 
 		/// <summary>
@@ -69,7 +76,7 @@ namespace fcmd
 		/// <param name='ReplaceAll'>
 		/// The referenced variable will be set to TRUE if user chooses "Replace all"
 		/// </param>
-		void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL, ref ReplaceQuestionDialog.ClickedButton Feedback)
+		void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL, ref ReplaceQuestionDialog.ClickedButton Feedback, AsyncCopy AC)
 		{
 			pluginner.File NewFile = SourceFile;
 			NewFile.Path = DestinationURL;
@@ -79,7 +86,7 @@ namespace fcmd
 				string toshow = string.Format(Locale.GetString("CantCopy"), SourceFile.Name, itself);
 				
 				Xwt.Application.Invoke(new Action(delegate { Xwt.MessageDialog.ShowWarning(toshow); }));
-				//calling the msgbox in non-main threads causes some UI bugs, thus push this call into main thread
+				//calling the msgbox in non-main threads causes some UI bugs, so push this call into main thread
 				return;
 			}
 
@@ -126,21 +133,32 @@ namespace fcmd
 
 			try
 			{
-				byte[] content = SourceFS.GetFileContent(SourceFile.Path);//todo: разобрать на копирование по частям, дабы не забивать файлы сразу целиком в ОЗУ
 				pluginner.FSEntryMetadata md = SourceFS.GetMetadata(SourceFile.Path);
 				md.FullURL = NewFile.Path;
 
+				System.IO.Stream SrcStream = SourceFS.GetStream(SourceFile.Path);
 				DestinationFS.Touch(md);
-				DestinationFS.WriteFileContent(DestinationURL, content);
-			}
-			catch (pluginner.PleaseSwitchPluginException)
-			{
-				Xwt.MessageDialog.ShowError("Не совпадают файловые системы. Копирование из ФС в ФС в разработке...типа как.");
-				//todo: different-filesystem copying
+				System.IO.Stream DestStream = DestinationFS.GetStream(DestinationURL,true);
+
+				if(AC == null) AC = new AsyncCopy();
+				bool CpComplete = false;
+
+				AC.OnComplete+=(rezultat)=>{ CpComplete = true; };
+
+				//warning: due to some GTK# bugs, buffer sizes lesser than 128KB may cause
+				//an StackOverflowException at UI update code
+				AC.CopyFile(SrcStream, DestStream, 131072); //buffer is 1/8 megabyte
+
+				do{ /*nothing*/	}
+				while(!CpComplete); //don't stop this thread until the copy is finished
+				return;
 			}
 			catch (Exception ex)
 			{
-				Xwt.MessageDialog.ShowMessage(string.Format(Locale.GetString("CantCopy"),SourceFile.Name,ex.Message));
+				if (ex.GetType() != typeof(System.Threading.ThreadAbortException)) { 
+					pluginner.Utilities.ShowMessage(string.Format(Locale.GetString("CantCopy"),SourceFile.Name,ex.Message));
+					Console.WriteLine("Cannot copy because of {0}({1}) at \n{2}.", ex.GetType(), ex.Message, ex.StackTrace);
+				}
 			}
 		}
 
@@ -186,7 +204,7 @@ namespace fcmd
 			}
 			catch (Exception err)
 			{
-				new MsgBox(err.Message, null, MsgBox.MsgBoxType.Error);
+				Utilities.ShowError(err.Message, null);
 			}
 		}
 

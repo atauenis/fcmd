@@ -193,6 +193,16 @@ namespace fcmd.base_plugins.fs
 			Touch(newmd);
 		}
 
+		public System.IO.Stream GetStream(string url, bool Lock = false)
+		{ //запрос потока для файла
+			_CheckProtocol(url);
+			string InternalURL = url.Replace("file://", "");
+
+			FileAccess fa = (Lock ? FileAccess.ReadWrite : FileAccess.Read);
+
+			return new FileStream(InternalURL, FileMode.Open, fa);
+		}
+
 		public pluginner.File GetFile(string url, double Progress)
 		{ //чтение файла
 			_CheckProtocol(url);

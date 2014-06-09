@@ -155,17 +155,39 @@ namespace fcmd
 				if (ibx.ShowDialog())
 				{
 					String DestinationFilePath = ibx.Result;
-					Thread CpThread = new Thread(delegate() { DoCp(ActivePanel.FS, PassivePanel.FS, SourceFile, DestinationFilePath); });
+					string StatusMask = Locale.GetString("DoingCopy");
+
+					ReplaceQuestionDialog.ClickedButton dummy = ReplaceQuestionDialog.ClickedButton.Cancel;
+					AsyncCopy AC = new AsyncCopy();
+
+					Thread CpThread = new Thread(delegate() { DoCp(ActivePanel.FS, PassivePanel.FS, SourceFile, DestinationFilePath, ref dummy, AC); });
 					FileProcessDialog fpd = new FileProcessDialog();
 					fpd.InitialLocation = Xwt.WindowLocation.CenterParent;
-					fpd.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.GetValue<string>(ActivePanel.dfURL) + "\n", ibx.Result, null);
+					fpd.lblStatus.Text = String.Format(StatusMask, ActivePanel.GetValue<string>(ActivePanel.dfURL), ibx.Result, null); 
 					fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
+
+					AC.ReportMessage = Locale.GetString("CopyStatus");
+					AC.OnProgress+=(msg,proc)=>
+					{
+						Xwt.Application.Invoke(
+							delegate{
+								try {
+									fpd.pbrProgress.Fraction = (double) ((double) proc / (double) 100);
+									fpd.lblStatus.Text = String.Format(StatusMask, ActivePanel.GetValue<string>(ActivePanel.dfURL), ibx.Result, msg);
+									}
+								catch { }
+								}
+						);
+					};
 
 					fpd.Show();
 					CpThread.Start();
 
-					do {Xwt.Application.MainLoop.DispatchPendingEvents(); fpd.pbrProgress.Fraction = Progress; }
+					do {
+						Xwt.Application.MainLoop.DispatchPendingEvents();
+					}
 					while (CpThread.ThreadState == ThreadState.Running);
+					//todo: замер и показ скорости, пауза, запрос отмены, вывод в фоновый поток (кнопка "в фоне").
 
 					PassivePanel.LoadDir();
 					fpd.Hide();
