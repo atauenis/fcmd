@@ -42,8 +42,11 @@ namespace fcmd
 		/// <param name='DestinationURL'>
 		/// Destination URL.
 		/// </param>
+		/// <param name="AC">
+		/// Asynchronus copier
+		/// </param>
 		[Obsolete]
-		void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL)
+		void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL, AsyncCopy AC)
 		{
 			ReplaceQuestionDialog.ClickedButton Placeholder = ReplaceQuestionDialog.ClickedButton.Cancel;
 			DoCp(
@@ -51,7 +54,8 @@ namespace fcmd
 				DestinationFS,
 				SourceFile,
 				DestinationURL,
-				ref Placeholder,new AsyncCopy()
+				ref Placeholder,
+				AC
 			);
 		}
 
@@ -181,7 +185,7 @@ namespace fcmd
 					FSEntryMetadata md1 = fsa.GetMetadata(s1);
 					string s2 = destination + fsb.DirSeparator + md1.Name; //destination url
 
-					DoCp(fsa, fsb, fsa.GetFile(s1, new double()), s2);
+					DoCp(fsa, fsb, fsa.GetFile(s1, new double()), s2, new AsyncCopy());
 				}
 				else if (di.IsDirectory)
 				{

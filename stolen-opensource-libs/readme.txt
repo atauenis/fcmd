@@ -8,7 +8,7 @@ Xwt.WPF.dll - the XWT WPF backend
 (C) Xamarin corporation and third-party contributors.
 
 The files are updated manually (Xamarin doesn't provide
-up-to-date binaries, the files are compiled by A.T.).
+up-to-date binaries, so the DLLs are compiled by A.T.).
 The latest version of the XWT DLLs can be compiled from
 the project's Git repository: https://github.com/mono/xwt
 at any time. The newer binaries should work same as these.
