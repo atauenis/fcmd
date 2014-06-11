@@ -275,6 +275,16 @@ namespace pluginner
 		 * x-fcmd/link: link to a file or directory
 		 * x-fcmd-win32-shortcut-XXX/YYY: a shortcut to file with XXX/YYY type
 		 */
+
+		 /// <summary>
+		 /// The file's small icon
+		 /// </summary>
+		 public Xwt.Drawing.Image IconSmall;
+
+		 /// <summary>
+		 /// The file's big icon
+		 /// </summary>
+		 public Xwt.Drawing.Image IconBig;
 	}
 
 	/// <summary>

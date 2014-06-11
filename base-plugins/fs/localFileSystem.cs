@@ -78,6 +78,7 @@ namespace fcmd.base_plugins.fs
 				tmpVar.Path = "file://" + curdir.Parent.FullName;
 				tmpVar.TextToShow = "..";
 				tmpVar.MIMEType = "x-fcmd/up";
+				tmpVar.IconSmall = pluginner.Utilities.GetIconForMIME("x-fcmd/up");
 				DirContent.Add(tmpVar);
 			}
 
@@ -94,6 +95,7 @@ namespace fcmd.base_plugins.fs
 					tmpVar.Hidden = false;
 				}
 				tmpVar.MIMEType = "x-fcmd/directory";
+				tmpVar.IconSmall = pluginner.Utilities.GetIconForMIME("x-fcmd/directory");
 
 				DirContent.Add(tmpVar);
 				Progress += FileWeight;
@@ -113,10 +115,13 @@ namespace fcmd.base_plugins.fs
 				}else{
 					tmpVar.Hidden = false;
 				}
+
 				if (curFile.LastIndexOf('.') > 0)
 					tmpVar.MIMEType = pluginner.Utilities.GetContentType(curFile.Substring(curFile.LastIndexOf('.')+1));
 				else
 					tmpVar.MIMEType = "application/octet-stream";
+
+				tmpVar.IconSmall = pluginner.Utilities.GetIconForMIME(tmpVar.MIMEType);
 
 				DirContent.Add(tmpVar);
 				Progress += FileWeight;

@@ -358,7 +358,7 @@ namespace pluginner
 				foreach (DirItem di in dis)
 				{
 					List<Object> Data = new List<Object>();
-					Data.Add(Utilities.GetIconForMIME(di.MIMEType));
+					Data.Add(di.IconSmall ?? Xwt.Drawing.Image.FromResource("pluginner.Resources.image-missing.png"));
 					Data.Add(di.Path);
 					Data.Add(di.TextToShow);
 					if (di.TextToShow == "..")
