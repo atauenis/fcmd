@@ -311,13 +311,18 @@ namespace fcmd
 			Layout.PackStart(CommandBox, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,-6);
 			if(fcmd.Properties.Settings.Default.ShowKeybrdHelp) Layout.PackStart(KeyBoardHelp, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,-6);
 			//the values -12, -6 and 6 are need for 0px margins, and found experimentally.
-			//as those experiments showed, these values is measured in pixels. Live and learn!
+			//as those experiments showed, at 90dpi these values is measured in pixels, but (in WPF) at >90dpi
+            //or if the Windows user theme has large fonts the values works as need, with "scaling". Live and learn!
 
 			this.Resizable = true; //fix for some stupid xwt toolkits.
 
 			mucss.Selector sel = s.CSS["VE"];
-			this.Height = (sel.Declarations["height"].Value == "auto" ? fcmd.Properties.Settings.Default.VEWinHeight : Convert.ToDouble(sel.Declarations["height"].Value));
-			this.Width = (sel.Declarations["width"].Value == "auto" ? fcmd.Properties.Settings.Default.VEWinWidth : Convert.ToDouble(sel.Declarations["width"].Value));
+            try
+            {
+                this.Height = (sel.Declarations["height"].Value == "auto" ? fcmd.Properties.Settings.Default.VEWinHeight : Convert.ToDouble(sel.Declarations["height"].Value));
+                this.Width = (sel.Declarations["width"].Value == "auto" ? fcmd.Properties.Settings.Default.VEWinWidth : Convert.ToDouble(sel.Declarations["width"].Value));
+            }
+            catch { } //a dirty workaround for a Xwt.WPF bug (""-1" не является допустимым значением для свойства "Width"." (System.ArgumentException))
 			if (sel.Declarations["background-color"].Value != "inherit")
 			{ 
 				Layout.BackgroundColor =

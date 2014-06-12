@@ -17,7 +17,7 @@ namespace fcmd
 			Console.WriteLine("The File Commander, version " + Application.ProductVersion + "\n(C) 2013-14, Alexander Tauenis and the FC development team (https://github.com/atauenis/fcmd).\nThe FC is licensed \"as is,\" with  no  warranties regarding product performance or non-infringement of third party intellectual property rights; the software may be modified without restrictions");
 #if DEBUG
 			try { 
-				Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
+				Xwt.Application.Initialize(Xwt.ToolkitType.Wpf);
 			}
 			catch (Exception ex)
 			{

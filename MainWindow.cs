@@ -603,6 +603,13 @@ namespace fcmd
 			string PanelName = (NewPanel == p1) ? "LEFT" : "RIGHT";
 			Console.WriteLine("FOCUS DEBUG: The " + PanelName + " panel (" + NewPanel.FS.CurrentDirectory + ") got focus");
 #endif
+            this.Title = string.Format(
+                "{0} {1} - {2}",
+                Winforms.Application.ProductName,
+                Winforms.Application.ProductVersion,
+                ActivePanel.FS.CurrentDirectory
+            );
+
 			PassivePanel.UrlBox.BackgroundColor = Xwt.Drawing.Colors.LightBlue;
 			ActivePanel.UrlBox.BackgroundColor = Xwt.Drawing.Colors.DodgerBlue;
 		}
