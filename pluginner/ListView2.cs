@@ -402,8 +402,12 @@ namespace pluginner
 			ScrollerIn.ScrollTo(Y);
 		}
 
+        //PUBLIC EVENTS
+
 		public event TypedEvent<pluginner.ListView2Item> PointerMoved;
 		public event TypedEvent<List<pluginner.ListView2Item>> SelectionChanged;
+
+        //PUBLIC PROPERTIES
 
 		/// <summary>Sets collumn configuration</summary>
 		public CollumnInfo[] Collumns
@@ -434,6 +438,22 @@ namespace pluginner
 			get { return PointedItem.RowNo; }
 			set { _SetPoint(Items[value]); }
 		}
+
+        /// <summary>Gets the list of the rows that currently are choosed by the user</summary>
+        public List<ListView2Item> ChoosedRows
+        {
+            get
+            {
+                if (SelectedItems.Count == 0){
+                    List<ListView2Item> list_one = new List<ListView2Item>();
+                    list_one.Add(PointedItem);
+                    return list_one;
+                }
+                else{
+                    return SelectedItems;
+                }
+            }
+        }
 
 
 		//ENUMS & STRUCTS

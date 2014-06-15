@@ -21,8 +21,16 @@ namespace fcmd
 		Xwt.Button cmdCompare = new Xwt.Button(){Sensitive=false};
 		public ClickedButton ChoosedButton;
 
+        /// <summary>Initialize RPD. Please be careful with threads - run only in the UI thread! Otherwise there will be bugs</summary>
+        /// <param name="filename">The both files' name</param>
 		public ReplaceQuestionDialog (string filename)
 		{
+            /* Why the warning about threads? When calling the RPD form thread, different than that where it's created,
+             * an exception throws (due to illegal cross-thread call). If the RPD is created in a thread,
+             * that is not the program's main thread (UI thread), the RPD works, but the window's or widgets'
+             * sizes may be (and, at many times, are) invalid. To prevent this, the best practice is
+             * to create & use the RPD instances only in the UI thread. A.T. 14 jun 2014. */
+
 			this.Content = Layout;
 			Layout.Add(cmdReplace,0,1);
 			Layout.Add(cmdReplaceAll,0,2);

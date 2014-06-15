@@ -40,13 +40,20 @@ namespace fcmd{
 
 		/// <summary>Shows dialog</summary>
 		/// <returns><value>True</value> if user want to proceed current operation, and <value>False</value> if user don't.</returns>
-		public bool ShowDialog()
+		public bool ShowDialog(Xwt.WindowFrame parent = null)
 		{
 			Build();
-			Xwt.Command DialogResult = this.Run();//4beginners: xwtdialog.Run() = winform.ShowDialog() = winform.Show(vbModal);
+            Xwt.Command DialogResult = null;
+            if (parent == null){
+                DialogResult = this.Run();
+            }
+            else{
+                DialogResult = this.Run(parent);
+            }
+            //4beginners: xwtdialog.Run() == winform.ShowDialog() == vb6form.Show(vbModal);
 
 			if (DialogResult == null) return false;
-			switch (DialogResult.Id)
+			switch (DialogResult.Id) //hack due to C# limitation (it's unable to do switch(){} on custon types) 
 			{
 				case "Add":
 				case "Apply":

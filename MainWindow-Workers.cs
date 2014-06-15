@@ -96,9 +96,22 @@ namespace fcmd
 
 			if(DestinationFS.FileExists (DestinationURL)){
 
-				ReplaceQuestionDialog rpd = new ReplaceQuestionDialog(DestinationFS.GetFile(DestinationURL,new double()).Name);
-				var ClickedButton = ReplaceQuestionDialog.ClickedButton.Skip;
-				bool ready = false;
+                ReplaceQuestionDialog rpd = null;
+                bool ready = false;
+
+                Xwt.Application.Invoke(
+                    new Action(
+                        delegate
+                        {
+                            rpd = new ReplaceQuestionDialog(DestinationFS.GetFile(DestinationURL, new double()).Name);
+                            ready = true;
+                        }
+                    )
+                );
+                do { } while (!ready);
+                ready = false;
+				
+                var ClickedButton = ReplaceQuestionDialog.ClickedButton.Skip;
 				Xwt.Application.Invoke(
 					new Action(
 						delegate
@@ -108,6 +121,7 @@ namespace fcmd
 						}
 					)
 				);
+
 				do {} while (!ready);
 
 				switch(ClickedButton){

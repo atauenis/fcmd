@@ -578,8 +578,8 @@ namespace fcmd
 				case Xwt.Key.F8: //F8: delete
 					if (URL1 == null)
 						return;
-					Rm(ActivePanel.GetValue(ActivePanel.dfURL));
-					//todo: handle Shit+F8 (Move to trash can/recycle bin)
+                    Rm();
+					//todo: move to trash can/recycle bin & handle Shit+F8 (remove completely)
 					return;
 				case Xwt.Key.F10: //F10: Exit
 					//todo: ask user, are it really want to close FC?
