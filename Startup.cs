@@ -1,5 +1,5 @@
 ﻿/* The File Commander
- * Entry point for the fcmd.exe
+ * The entry point for the fcmd.exe
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
@@ -11,7 +11,7 @@ namespace fcmd
 {
 	class Startup
 	{
-		[STAThread] //need because of unfixed wpf elementhost bug
+		[STAThread] //it's required due to WPF restrictions (without this, the Xwt.Wpf.dll backend is unable to start)
 		static void Main(string[] Commands)
 		{
 			Console.WriteLine("The File Commander, version " + Application.ProductVersion + "\n(C) 2013-14, Alexander Tauenis and the FC development team (https://github.com/atauenis/fcmd).\nThe FC is licensed \"as is,\" with  no  warranties regarding product performance or non-infringement of third party intellectual property rights; the software may be modified without restrictions");
@@ -54,14 +54,8 @@ namespace fcmd
 			}
 #endif
 			new MainWindow().Show();
-#if OLDMAIN
-			Application.Run(new frmMain());
-#else
+			//todo: add splash screen
 			Xwt.Application.Run();
-#endif
-
-			//note that the "MainWindow" is the modern main window (made using XWT)
-			//and the "frmMain" is the old main window (made with Windows Forms)
 		}
 	}
 }

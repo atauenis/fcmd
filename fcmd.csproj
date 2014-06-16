@@ -81,30 +81,9 @@
     <Compile Include="AsyncCopy.cs" />
     <Compile Include="base-plugins\fs\localFileSystem-CLI.cs" />
     <Compile Include="base-plugins\ve\PlainText.cs" />
-    <Compile Include="FileChooser.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FileChooser.Designer.cs">
-      <DependentUpon>FileChooser.cs</DependentUpon>
-    </Compile>
     <Compile Include="FileProcessDialog.cs" />
-    <Compile Include="frmMain-Actions.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmMain-Workers.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="InputBox.cs" />
     <Compile Include="KeyboardHelpButton.cs" />
-    <Compile Include="ListPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ListPanel.Designer.cs">
-      <DependentUpon>ListPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Localizator.cs" />
     <Compile Include="MainWindow-Actions.cs" />
     <Compile Include="MainWindow-Workers.cs" />
@@ -159,30 +138,17 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="fcmd.userprefs" />
-    <None Include="ListPanel.resources" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="README-DEV.md" />
     <None Include="README.md" />
-    <None Include="frmMain.resources" />
     <None Include="stolen-opensource-libs\Xwt.Gtk.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FileChooser.resx">
-      <DependentUpon>FileChooser.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmMain.resx">
-      <DependentUpon>frmMain.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ListPanel.resx">
-      <DependentUpon>ListPanel.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

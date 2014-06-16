@@ -297,10 +297,11 @@ namespace fcmd
 
 		private void OpenFile()
 		{
-			FileChooser OpenFileDialog = new FileChooser(FSPlugin);
+			/*FileChooser OpenFileDialog = new FileChooser(FSPlugin);
 			if (OpenFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel || OpenFileDialog.SelectedFile == null) return;
 			SendCommand("unload");
-			LoadFile(OpenFileDialog.SelectedFile, OpenFileDialog.listPanel1.FSProvider, IsEditor);
+			LoadFile(OpenFileDialog.SelectedFile, OpenFileDialog.listPanel1.FSProvider, IsEditor);*/
+			//UNDONE: Файл->Открыть
 		}
 
 		/// <summary>(Re)builds the "Layout" vbox</summary>
