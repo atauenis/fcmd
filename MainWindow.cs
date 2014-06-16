@@ -408,11 +408,14 @@ namespace fcmd
 
 		void mnuHelpAbout_Clicked(object sender, EventArgs e)
 		{
-			string AboutString = string.Format(Locale.GetString("FileCommanderVer"), "File Commander", Winforms.Application.ProductVersion) +
-								   "\n(C) 2013-14, the File Commander team:\nhttps://github.com/atauenis/fcmd\n"+
-								   "New contributions are welcome!\n\n" +
-								   "About taken from other projects you may read in the COPYPASTE.md file.\n\n" +
-								   Environment.OSVersion + "\nFramework version: " + Environment.Version + (Environment.Is64BitProcess ? " x64" : "");
+			string AboutString = string.Format(
+				Locale.GetString("FileCommanderVer"),
+				"File Commander",
+				Winforms.Application.ProductVersion,
+				"\nhttps://github.com/atauenis/fcmd",
+				Environment.OSVersion,
+				Environment.Version + (Environment.Is64BitProcess ? " x86-64" : " x86")
+				);
 			Xwt.MessageDialog.ShowMessage(AboutString);
 
 		}

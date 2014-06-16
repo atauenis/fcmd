@@ -15,7 +15,7 @@ namespace fcmd
 		}
 
 		List<string> UIFileContent = new List<string>();
-		string RusUI = "FileCommanderVer=Файловый менеджер {0}, версия {1}\n" +
+		string RusUI = "FileCommanderVer=Файловый менеджер {0}, версия {1}{n}© 2013-14 Группа разработки {0}:{2}{n}{n}Условия лицензирования см. в файле LICENSE.{n}О взятом из других открытых проектов см. в файле COPYPASTE.md.{n}{n}ОС: {3}{n}Framework: {4}\n" +
 						"FCViewVer=Просмоторщик файлов, версия {0}\n" +
 						"FCVEVer1=Встроенный просмоторщик и редактор файлов FC {0}.\nFCVEVer2=Загружен модуль просмотра: {0}, версия {1}.{2}(C) 2013-14, разработчики FC и {3}\n" +
 						"LocalFSVer=Модуль доступа к локальным ФС [встроенный]\n" +
