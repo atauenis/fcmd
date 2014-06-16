@@ -19,11 +19,14 @@ namespace pluginner
 	/// <summary>Filelist panel</summary>
 	public class FileListPanel : Table
 	{
+		//Data Field Numbers
+		//they aren't const because they may change when the collumns are reordered
 		public int dfIcon = 0;
 		public int dfURL = 1;
 		public int dfDisplayName = 2;
 		public int dfSize = 3;
 		public int dfChanged = 4;
+		public int dfDirItem = 5;
 
 		public pluginner.IFSPlugin FS;
 		public pluginner.LightScroller DiskBox = new LightScroller();
@@ -601,9 +604,8 @@ namespace pluginner
 		private string MakeStatusbarText(string Template)
 		{
 			string txt = Template;
-			try
-			{
-				DirItem di = (DirItem)ListingView.PointedItem.Data[4];
+			if (ListingView.PointedItem != null) { 
+				DirItem di = (DirItem)ListingView.PointedItem.Data[dfDirItem];
 				txt = txt.Replace("{FullName}", di.TextToShow);
 				txt = txt.Replace("{AutoSize}", KiloMegaGigabyteConvert(di.Size,CurShortenKB,CurShortenMB,CurShortenMB));
 				txt = txt.Replace("{Date}", di.Date.ToShortDateString());
@@ -611,7 +613,6 @@ namespace pluginner
 				txt = txt.Replace("{SelectedItems}", ListingView.SelectedItems.Count.ToString());
 				//todo: add masks SizeB, SizeKB, SizeMB, TimeUTC, Name, Extension
 			}
-			catch { }
 			return txt;
 		}
 
