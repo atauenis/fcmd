@@ -66,7 +66,7 @@ namespace fcmd.base_plugins.fs
 				catch (Exception ex)
 				{
 					CLIsomethingIsRunning = false;
-					if (CLIstderrDataReceived != null) return;
+					if (CLIstderrDataReceived != null)
 					CLIstderrDataReceived(new Localizator().GetString("CantRunEXE") + StdIn + "\n" + ex.Message);
 				}
 			}

@@ -141,6 +141,7 @@ namespace pluginner
 				CLIoutput.Visible = true;
 				string stdin = CLIprompt.Text;
 				CLIprompt.Text = "";
+				CLIoutput.Text += stdin;
 				FS.CLIstdinWriteLine(stdin);
 			}
 		}
@@ -314,6 +315,7 @@ namespace pluginner
 
 			//неспешное TODO:придумать, куда лучше закорячить; не забываем, что во время работы FS может меняться полностью
 			FS.CLIstdoutDataReceived += new TypedEvent<string>(FS_CLIstdoutDataReceived);
+			FS.CLIstderrDataReceived+=(stderr)=>{ CLIoutput.Text += "\n" + stderr; pluginner.Utilities.ShowWarning(stderr); };
 			FS.CLIpromptChanged += new TypedEvent<string>(FS_CLIpromptChanged);
 
 			LoadDir(
