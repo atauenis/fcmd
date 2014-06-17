@@ -138,6 +138,13 @@ namespace pluginner
 		void CLIprompt_KeyReleased(object sender, Xwt.KeyEventArgs e)
 		{
 			if (e.Key == Xwt.Key.Return){
+				if (System.Text.RegularExpressions.Regex.Match(CLIprompt.Text, "cd|chdir|md|rd|del|deltree|move|copy|cls").Success)
+				{
+					CLIprompt.Text = "";
+					//todo: обработка встроенных комманд
+					return;
+				}
+
 				CLIoutput.Visible = true;
 				string stdin = CLIprompt.Text;
 				CLIprompt.Text = "";

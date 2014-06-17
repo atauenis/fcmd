@@ -68,6 +68,7 @@ namespace fcmd.base_plugins.fs
 					CLIsomethingIsRunning = false;
 					if (CLIstderrDataReceived != null)
 					CLIstderrDataReceived(new Localizator().GetString("CantRunEXE") + StdIn + "\n" + ex.Message);
+					//todo: add at win32 systems calling "cmd.exe /C" if the program can't start
 				}
 			}
 			else{
