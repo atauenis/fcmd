@@ -1,3 +1,9 @@
+fcmd (0.0.0-alpha-201406b18-2) trusty; urgency=medium
+
+  * Removed dh_makeclilibs
+
+ -- kekekeks <kekekeks@KeksMPC>  Wed, 18 Jun 2014 21:35:18 +0400
+
 fcmd (0.0.0-alpha-20140618-1) trusty; urgency=medium
 
   * Initial packaging
