@@ -94,6 +94,8 @@ namespace pluginner
 
 		void Layout_KeyPressed(object sender, KeyEventArgs e)
 		{
+		    //See GH issue #10
+			Console.WriteLine("LV2 DEBUG: pressed {0}, repeat={1}, handled={2}",e.Key,e.IsRepeat,e.Handled); //УБРАТЬ!!!
 			//currently, the keyboard feel is same as in Norton & Total Commanders
 			switch (e.Key)
 			{
