@@ -1,0 +1,14 @@
+Source: fcmd
+Section: editors
+Priority: optional
+Maintainer: Nikita Tsukanov <keks9n@gmail.com>
+Build-Depends: mono-complete, mono-devel, libglib2.0-cil-dev, libgtk2.0-cil-dev,libglade2.0-cil-dev, cli-common-dev (>= 0.8~), debhelper
+Homepage: https://github.com/atauenis/fcmd
+Vcs-Git: https://github.com/atauenis/fcmd.git
+Vcs-Browser: https://github.com/atauenis/fcmd
+
+Package: fcmd
+Architecture: all
+Depends: ${cli:Depends}, ${misc:Depends}
+Description: A customizable and extendable cross-platform two-panel file manager
+ Please note that the FC is in early stage on development and has many bugs. We giving no warranties about the safety of your data or installed software. Use at your own risk.

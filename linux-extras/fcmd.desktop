@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=The File Commander
+Comment=A customizable and extendable cross-platform two-panel file manager 
+Exec=fcmd
+Icon=system-file-manager
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=GNOME;GTK;Utility;Core;
+MimeType=inode/directory;application/x-gnome-saved-search;
+Actions=Window;
+X-Unity-IconBackgroundColor=#af4853
+

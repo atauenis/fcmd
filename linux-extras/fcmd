@@ -1,0 +1,2 @@
+#!/bin/bash
+exec -a fcmd mono --runtime=v4.0 /usr/lib/fcmd/fcmd.exe 
