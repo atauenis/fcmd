@@ -173,6 +173,8 @@ namespace fcmd
 		{
 			if (e.Key == Xwt.Key.Return)
 			{
+				if(CommandBox.Text == "q") { this.Close(); return; } 
+				if(CommandBox.Text == "q!") { Plugin.SaveFile(); this.Close(); return; } 
 				SendCommand(CommandBox.Text);
 			}
 		}
@@ -291,6 +293,7 @@ namespace fcmd
 			ProgressDialog.Hide();
 			
 			PluginBody.KeyReleased += (sender, e) => {
+				if(e.Key == Xwt.Key.Escape) CommandBox.SetFocus();
 				if(e.Key == Xwt.Key.q) this.OnCloseRequested();
 			};
 		}

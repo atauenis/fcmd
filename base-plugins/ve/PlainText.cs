@@ -72,6 +72,10 @@ namespace fcmd.base_plugins.ve
 		{
 			switch (Command)
 			{
+				//todo: add vim-style commands together with VBScript like ones
+				case "i": //i - insert (edit) mode
+					RTV.SetFocus();
+					break;
 				case "codepage":
 					ChangeCodepage(Convert.ToInt32(Arguments[1]));
 					break;
