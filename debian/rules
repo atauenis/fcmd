@@ -1,0 +1,56 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+# export DH_VERBOSE=1
+
+TARGETDIR := $(CURDIR)/debian/fcmd
+TARGETDLLDIR := $(CURDIR)/debian/fcmd/usr/lib/fcmd
+
+
+export DH_OPTIONS
+
+clean:
+	rm -rf build
+	dh clean
+
+build:
+	
+	dh_testdir
+	rm -rf bin
+	xbuild /p:Configuration=Release
+
+binary:
+	dh_testroot
+	dh_prep
+	mkdir -p $(TARGETDLLDIR)
+	cp -R bin/Release/* $(TARGETDLLDIR)
+	cp bin/Release/stolen-opensource-libs/* $(TARGETDLLDIR)
+	rm -rf $(TARGETDLLDIR)/stolen-opensource-libs
+	rm $(TARGETDLLDIR)/Xwt.WPF.dll
+	install -D linux-extras/fcmd $(TARGETDIR)/usr/bin/fcmd
+	install -D -m 664 linux-extras/fcmd.desktop $(TARGETDIR)/usr/share/applications/fcmd.desktop
+	dh_installdirs
+	dh_install
+	dh_installdocs
+	dh_installchangelogs
+	dh_installexamples
+	dh_installman
+	dh_installcatalogs
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_strip
+	dh_shlibdeps
+	dh_clideps --exclude-moduleref=/usr/lib/libobjc.dylib --exclude-moduleref=gtksharpglue-2 --exclude-moduleref=libgtk-quartz-2.0
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+
+%:
+	dh $@
+
+
+.PHONY: install clean binary

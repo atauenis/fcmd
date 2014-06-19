@@ -1,0 +1,6 @@
+tar-ignore = ".git/*"
+tar-ignore = "bin/*"
+tar-ignore = ".git"
+tar-ignore = "bin"
+tar-ignore = "debian/substvars"
+tar-ignore = "debian/debhelper.log"
