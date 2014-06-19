@@ -1,5 +1,5 @@
 ﻿/* The File Commander
- * Module for UI translation into different languages
+ * Module, that does the translation of the UI into some different languages
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
@@ -11,10 +11,9 @@ namespace fcmd
 {
 	class Localizator{
 		public Localizator() {
-			LoadUI(fcmd.Properties.Settings.Default.Language);
+			LoadLanguage(fcmd.Properties.Settings.Default.Language);
 		}
 
-		List<string> UIFileContent = new List<string>();
 		string RusUI = "FileCommanderVer=Файловый менеджер {0}, версия {1}{n}© 2013-14 Группа разработки {0}:{2}{n}{n}Условия лицензирования см. в файле LICENSE.{n}О взятом из других открытых проектов см. в файле COPYPASTE.md.{n}{n}ОС: {3}{n}Framework: {4}\n" +
 						"FCViewVer=Просмоторщик файлов, версия {0}\n" +
 						"FCVEVer1=Встроенный просмоторщик и редактор файлов FC {0}.\nFCVEVer2=Загружен модуль просмотра: {0}, версия {1}.{2}(C) 2013-14, разработчики FC и {3}\n" +
@@ -30,7 +29,7 @@ namespace fcmd
 						"FCF7=Каталог\n" +
 						"FCF8=Удал-е\n" +
 						"FCF9=Оп-ции\n" +
-					   "FCF10=Выход\n" + //todo: перевести в читаемый вид
+					   "FCF10=Выход\n" + //todo: перевести в читаемый вид и вывести в ресурс
 						"FCmnuFile=_Файл\nFCmnuView=_Вид\nFCmnuNav=_Навигация\nFCmnuTools=С_ервис\nFCmnuHelp=_Справка\n" +
 						"FCmnuFileUserMenu=Меню пользователя\nFCmnuFileView=Просмотреть файл\nFCmnuFileEdit=Редактировать файл\nFCmnuFileCompare=Сравнить файлы\nFCmnuFileCopy=Копирование\nFCmnuFileMove=Перенос/переименование\nFCmnuFileNewDir=Новый каталог\nFCmnuFileRemove=Удалить\nFCmnuFileAtributes=Свойства...\nFCmnuFileQuickSelect=Выделить группу...\nFCmnuFileQuickUnselect=Снять выделение группы...\nFCmnuFileSelectAll=Выделить всё\nFCmnuFileUnselect=Снять выделение\nFCmnuFileInvertSelection=Инвертировать выделение\nFCmnuFileExit=Выxод\n" +
 						"FCmnuViewShort=Краткий (список)\nFCmnuViewDetails=Полный (таблица)\nFCmnuViewIcons=Икноки (значки)\nFCmnuViewThumbs=Эскизы изображений\nFCmnuViewQuickView=Быстрый просмотр выделенного в сосед. панели\nFCmnuViewTree=Древо каталогов\nFCmnuViewPCPCconnect=Прямая связь ПК-ПК\nFCmnuViewPCNETPCconnect=Мини HTTP сервер\nFCmnuViewByName=По имени\nFCmnuViewByType=По расширению\nFCmnuViewByDate=По дате\nFCmnuViewBySize=По размеру\nFCmnuViewNoFilter=Без фильтра (*.*)\nFCmnuViewWithFilter=Применить фильтр имени...\nFCmnuViewToolbar=Панель инструментов\nFCmnuViewKeybrdHelp=Подсказки клавиш F\nFCmnuViewInfobar=Сводные строки\nFCmnuViewDiskButtons=Кнопки дисков\n" +
@@ -110,45 +109,46 @@ namespace fcmd
 						"ReplaceQDReplaceOld=Заменять устаревшие\nReplaceQDCompare=Сравнить\n";
 		Dictionary<string, string> Localization = new Dictionary<string, string>();
 		
-		/// <summary>
-		/// Получить строку с переводом
-		/// </summary>
-		/// <param name="Key"></param>
-		/// <returns></returns>
+		/// <summary>Get a string that corresponds the key in the dictionary</summary>
+		/// <param name="Key">The string name (see Localizator.cs for the list of they)</param>
 		public string GetString(string Key){
+			if(Localization == null) throw new InvalidOperationException("The Localizator is not fed with a language file!");
 			try{
 				return Localization[Key].Replace("{n}", "\n");
 			}
-			catch (Exception ex) { Console.WriteLine("LOCALIZATION KEY WASN'T FOUND: " + Key + " (" + ex.Message + ")"); return Key; }
+			catch (Exception ex) { Console.WriteLine("WARNING: Locale string is not found for key: " + Key + " (" + ex.Message + ")"); return Key; }
 		}
 
-		/// <summary>
-		/// Загрузка файла интерфейса
-		/// </summary>
-		/// <param name="url"></param>
-		private void LoadUI(string url){
-			UIFileContent.Clear();
+		/// <summary>Load the requested localization file</summary>
+		private void LoadLanguage(string url){
 			if (url.StartsWith("(internal)")){
-				switch(url){
-					case "(internal)rus": UIFileContent.AddRange(RusUI.Split("\n".ToCharArray())); break;
+				switch(url)
+				{
+					case "(internal)ru_RU":
+						ParseLangFile(RusUI);
+						break;
 				}
 			}
 			else{
-				UIFileContent.AddRange(System.IO.File.ReadAllLines(url));
+				ParseLangFile(System.IO.File.ReadAllText(url));
 			}
-			
+		}
 
-			//парсинг файла (uifilecontent)
-
-			foreach (string UIFRow in UIFileContent)
+		/// <summary>Load the strings form the language file body into the memory</summary>
+		/// <param name="LangFile">The language file content</param>
+		private void ParseLangFile(string LangFile)
+		{
+			foreach (string UIFRow in LangFile.Split('\n'))
 			{
-				string[] Parts = new string[2];
-				Parts = UIFRow.Split("=".ToCharArray());
 				try
 				{
+					string[] Parts = new string[2];
+					Parts = UIFRow.Split("=".ToCharArray());
+					if(Parts.Length != 2) continue; //invalid rows, INI-section start rows and comment rows should be skipped
+					if(UIFRow.StartsWith(";") || UIFRow.StartsWith("[")) continue;
 					Localization[Parts[0]] = Parts[1];
 				}
-				catch(Exception){} //почти On Error Resume Next :-)
+				catch { } //almost the best thing in the classic Visual Basic, the "On Error Resume Next" statement :-)
 			}
 		}
 	}

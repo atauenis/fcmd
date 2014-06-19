@@ -49,7 +49,7 @@ namespace fcmd.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("(internal)rus")]
+        [global::System.Configuration.DefaultSettingValueAttribute("(internal)ru_RU")]
         public string Language {
             get {
                 return ((string)(this["Language"]));
