@@ -53,7 +53,7 @@ namespace fcmd
 				return;
 			}
 #endif
-			new MainWindow().Show();
+			new MainWindow(Commands).Show();
 			//todo: add splash screen
 			Xwt.Application.Run();
 		}

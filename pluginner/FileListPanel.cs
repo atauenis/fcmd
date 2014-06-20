@@ -172,7 +172,6 @@ namespace pluginner
 		{
 			//URL BOX
 			UrlBox.ShowFrame = false;
-			UrlBox.Text = @"file://C:\NC";
 			UrlBox.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
 			UrlBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(UrlBox_KeyReleased);
 
@@ -352,6 +351,17 @@ namespace pluginner
 					hmi.Tag = hm.Items.Count;
 					hm.Items.Add(hmi);
 				}
+			}
+
+			if (URL == "." & FS.CurrentDirectory == null){
+				LoadDir(
+					"file://"+System.IO.Directory.GetCurrentDirectory(),
+					dis,
+					ShortenKB,
+					ShortenMB,
+					ShortenGB
+				);
+				return;
 			}
 
 			ListingView.Cursor = Xwt.CursorType.IBeam;//todo: modify XWT and add hourglass cursor

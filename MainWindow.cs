@@ -96,7 +96,7 @@ namespace fcmd
 		KeyboardHelpButton[] KeybHelpButtons = new KeyboardHelpButton[11];//одна лишняя, которая нумбер [0]
 
 
-		public MainWindow()
+		public MainWindow(string[] argv)
 		{
 			this.Title = "File Commander";
 			this.MainMenu = WindowMenu;
@@ -276,16 +276,16 @@ namespace fcmd
 			//file size display policy
 			char[] Policies = fcmd.Properties.Settings.Default.SizeShorteningPolicy.ToCharArray();
 
-			//default directories
+			//load last directory or the current directory if the last directory hasn't remembered
 			if (Properties.Settings.Default.Panel1URL.Length != 0)
 				p1.LoadDir(Properties.Settings.Default.Panel1URL, ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
 			else
-				p1.LoadDir("file://" + System.Windows.Forms.Application.StartupPath, ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
+				p1.LoadDir("file://" + System.IO.Directory.GetCurrentDirectory(), ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
 
 			if (Properties.Settings.Default.Panel2URL.Length != 0)
 				p2.LoadDir(Properties.Settings.Default.Panel2URL, ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
 			else
-				p2.LoadDir("file://"+System.Windows.Forms.Application.StartupPath,ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
+				p2.LoadDir("file://" + System.IO.Directory.GetCurrentDirectory(), ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
 
 			//default panel
 			switch (fcmd.Properties.Settings.Default.LastActivePanel)
@@ -293,14 +293,17 @@ namespace fcmd
 				case 1:
 					p1.ListingView.SetFocus();
 					ActivePanel = p1; PassivePanel = p2;
+					if(argv.Count() == 1) p1.LoadDir(argv[0]);
 					break;
 				case 2:
 					p2.ListingView.SetFocus();
 					ActivePanel = p2; PassivePanel = p1;
+					if (argv.Count() == 1) p2.LoadDir(argv[0]);
 					break;
 				default:
 					p1.ListingView.SetFocus();
 					ActivePanel = p1; PassivePanel = p2;
+					if (argv.Count() == 1) p1.LoadDir(argv[0]);
 					break;
 			}
 			//this.Show();
