@@ -80,12 +80,15 @@ namespace fcmd
 				if (System.Text.RegularExpressions.Regex.IsMatch(UrlParts[0], Parts[0]))
 				{
 					//оно!
+
+					System.Configuration.Configuration conf = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal);
+
 					if (Parts[1].StartsWith("(internal)"))
 					{//плагин встроенный
 						switch (Parts[1])
 						{
 							case "(internal)LocalFS":
-								return new fcmd.base_plugins.fs.localFileSystem();
+								return new fcmd.base_plugins.fs.localFileSystem() { FCConfig = conf };
 						}
 					}
 					else

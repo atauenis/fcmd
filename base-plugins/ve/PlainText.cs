@@ -11,6 +11,8 @@ namespace fcmd.base_plugins.ve
 		public string Name { get { return new Localizator().GetString("VEptxtVer"); } }
 		public string Version { get { return System.Windows.Forms.Application.ProductVersion; } }
 		public string Author { get { return "Alexander Tauenis"; } }
+		public System.Configuration.Configuration FCConfig { set { } } //it can be a placeholder because the PT can use the fcmd.Properties.Settings...
+
 		public event pluginner.TypedEvent<object[]> APICallHost;
 		#endregion
 

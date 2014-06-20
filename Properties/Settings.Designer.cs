@@ -47,12 +47,15 @@ namespace fcmd.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("(internal)ru_RU")]
         public string Language {
             get {
                 return ((string)(this["Language"]));
+            }
+            set {
+                this["Language"] = value;
             }
         }
         

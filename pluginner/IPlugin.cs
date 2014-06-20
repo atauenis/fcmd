@@ -53,6 +53,11 @@ namespace pluginner{
 		/// This event should be raised to talk something to the File Commander (to be raised by the plugin)
 		/// </summary>
 		event pluginner.TypedEvent<object[]> APICallHost;
+
+		/// <summary>
+		/// This property is used to access the current FC User Settings from the Plugin
+		/// </summary>
+		System.Configuration.Configuration FCConfig { set; }
 	}
 
 	//todo: IUIPlugin (плагины к интерфейсу File Commander)

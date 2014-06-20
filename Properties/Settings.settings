@@ -8,7 +8,7 @@
     <Setting Name="ShowDiskList" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Language" Type="System.String" Scope="Application">
+    <Setting Name="Language" Type="System.String" Scope="User">
       <Value Profile="(Default)">(internal)ru_RU</Value>
     </Setting>
     <Setting Name="ShowHidedFiles" Type="System.Boolean" Scope="User">

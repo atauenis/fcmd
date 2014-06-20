@@ -240,6 +240,7 @@ namespace fcmd
 			LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = Locale.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
 
 			p1.FS = new base_plugins.fs.localFileSystem();
+
 			p1.ListingView.Collumns = LVCols.ToArray();
 
 			p2.FS = new base_plugins.fs.localFileSystem();
@@ -376,6 +377,10 @@ namespace fcmd
 
 		void ShowDebugInfo (object sender, EventArgs e)
 		{
+			System.Configuration.Configuration confLR = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal);
+			System.Configuration.Configuration confR = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoaming);
+			System.Configuration.Configuration confEXE = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.None);
+
 			Xwt.Dialog Fcdbg = new Xwt.Dialog();
 			Fcdbg.Buttons.Add(Xwt.Command.Close);
 			Fcdbg.Buttons[0].Clicked += (o, ea) => {Fcdbg.Hide();};
@@ -384,22 +389,33 @@ namespace fcmd
 				"===THE FILE COMMANDER, VERSION " + Winforms.Application.ProductVersion + (Environment.Is64BitProcess ? " 64-BIT" : " 32-BIT") + "===\n"+
 				Environment.CommandLine + " @ .NET fw " + Environment.Version + (Environment.Is64BitOperatingSystem ? " 64-bit" : " 32-bit") + " on " + Environment.MachineName + "-" + Environment.OSVersion + " (" + Environment.OSVersion.Platform + " v" + Environment.OSVersion.Version.Major + "." + Environment.OSVersion.Version.Minor + ")\n" +
 				"The current drawing toolkit is " + Xwt.Toolkit.CurrentEngine.GetSafeBackend (this) + "\n" +
+				"\nCONFIGuration files:\n---------\n"+
+				"Local: "+confLR.FilePath + " (exists? " + b2s(confLR.HasFile) +")\n"+
+				"Roaming: " + confR.FilePath + " (exists? " + b2s(confR.HasFile) + ")\n" +
+				"Overall: " + confEXE.FilePath + " (exists? " + b2s(confEXE.HasFile) + ")\n" +
 				"\nPanel debug:\n---------\n"+
 				"The active panel is: " + ((ActivePanel == p1) ? "LEFT\n" : "RIGHT\n") +
 				"The passive panel is: " + ((ActivePanel == p2) ? "LEFT\n" : "RIGHT\n")+
-				"They are different? "+ (ActivePanel != PassivePanel).ToString().ToUpper() + " (should be true)\n"+
+				"They are different? "+ b2s(ActivePanel != PassivePanel) + " (should be yes)\n"+
 				"The LEFT filesystem: " + p1.FS.ToString() + " at \"" + p1.FS.CurrentDirectory + "\"\n"+
 				"The RIGHT filesystem: " + p2.FS.ToString() + " at \"" + p2.FS.CurrentDirectory + "\"\n"+
-				"Filesystems are same by type? " + (p1.FS.GetType()==p2.FS.GetType()).ToString().ToUpper() + ".\n"+
-				"Filesystems are identically? " + (p1.FS==p2.FS).ToString().ToUpper() + " (should be false).\n"+
+				"Filesystems are same by type? " + b2s(p1.FS.GetType()==p2.FS.GetType()) + ".\n"+
+				"Filesystems are identically? " + b2s(p1.FS==p2.FS) + " (should be no).\n"+
 				"\nTheme debug:\n---------\n"+
-				"Using external theme? " + (!(fcmd.Properties.Settings.Default.UserTheme == null || fcmd.Properties.Settings.Default.UserTheme == "")).ToString().ToUpper()+"\n"+
+				"Using external theme? " + b2s(!(fcmd.Properties.Settings.Default.UserTheme == null || fcmd.Properties.Settings.Default.UserTheme == ""))+"\n"+
 				"Theme's cascade style sheet file: \"" + fcmd.Properties.Settings.Default.UserTheme + "\"\n\nIf you having some troubles, please report this to https://github.com/atauenis/fcmd bug tracker or http://atauenis.ru/phpBB3/viewtopic.php?f=4&t=211 topic. \nThe End.";
 			Xwt.RichTextView rtv = new Xwt.RichTextView();
 			rtv.LoadText(txt, new Xwt.Formats.PlainTextFormat());
-			Fcdbg.Content = rtv;
+			Xwt.ScrollView sv = new Xwt.ScrollView(rtv);
+			Fcdbg.Content = sv;
 			Fcdbg.Width = 500;
 			Fcdbg.Run();
+		}
+
+		// for ShowDebugInfo bool-value displaing purposes
+		private string b2s(bool b)
+		{
+			return (b == true) ? "YES" : "NO";
 		}
 
 		void mnuToolsOptions_Clicked(object sender, EventArgs e)
@@ -411,16 +427,17 @@ namespace fcmd
 
 		void mnuHelpAbout_Clicked(object sender, EventArgs e)
 		{
+			System.Configuration.Configuration conf = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal);
 			string AboutString = string.Format(
 				Locale.GetString("FileCommanderVer"),
 				"File Commander",
 				Winforms.Application.ProductVersion,
 				"\nhttps://github.com/atauenis/fcmd",
+				conf.FilePath,
 				Environment.OSVersion,
 				Environment.Version + (Environment.Is64BitProcess ? " x86-64" : " x86")
 				);
 			Xwt.MessageDialog.ShowMessage(AboutString);
-
 		}
 
 		void MainWindow_CloseRequested(object sender, Xwt.CloseRequestedEventArgs args)

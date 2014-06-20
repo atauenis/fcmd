@@ -82,6 +82,7 @@
       <HintPath>..\stolen-opensource-libs\mucss.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="Xwt">

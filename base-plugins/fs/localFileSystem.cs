@@ -22,6 +22,7 @@ namespace fcmd.base_plugins.fs
 		public string Name { get { return new Localizator().GetString("LocalFSVer"); } }
 		public string Version { get{return "1.0";} }
 		public string Author { get{return "A.T.";} }
+		public System.Configuration.Configuration FCConfig { set {} } //it can be a placeholder because the LFS can use the fcmd.Properties.Settings...
 		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
 		public event pluginner.TypedEvent<String> StatusChanged;
 		public event pluginner.TypedEvent<double> ProgressChanged;
