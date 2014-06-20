@@ -206,6 +206,7 @@ namespace pluginner
 			ListingView.GotFocus += (o, ea) =>{ this.OnGotFocus(ea); };
 			ListingView.PointerMoved += new TypedEvent<ListView2Item>(ListingView_PointerMoved);
 			ListingView.SelectionChanged += new TypedEvent<List<ListView2Item>>(ListingView_SelectionChanged);
+            ListingView.PointedItemDoubleClicked += new TypedEvent<ListView2Item>(pointed_item => { OpenPointedItem(); });
 			StatusBar.Wrap = Xwt.WrapMode.Word;
 		}
 
@@ -231,7 +232,7 @@ namespace pluginner
 		{
 			if (e.Key == Xwt.Key.Return && ListingView.SelectedRow > -1)
 			{
-				NavigateTo(ListingView.PointedItem.Data[dfURL].ToString());
+                OpenPointedItem();
 				return;
 			}
 			if ((int)e.Key < 65000) //keys before 65000th are characters, numbers & other human stuff
@@ -244,6 +245,11 @@ namespace pluginner
 			if(Utilities.GetXwtBackendName() == "WPF")
 			ListingView.OnKeyPressed(e);
 		}
+
+        void OpenPointedItem()
+        {
+            NavigateTo(ListingView.PointedItem.Data[dfURL].ToString());
+        }
 
 		void ListingView_ButtonPressed(object sender, Xwt.ButtonEventArgs e)
 		{//FIXME: possibly unreachable code, archaism from Winforms/Xwt ListView-based ListPanel

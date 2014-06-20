@@ -28,6 +28,9 @@ namespace pluginner
 		private List<CollumnInfo> _Collumns = new List<CollumnInfo>();
 		private int Through10Counter = 0; //для устранения зависания UI при загрузке длинных списков
 		private bool Color2 = false; //для обеспечения чередования цветов строк
+        private DateTime PointedItemLastClickTime = DateTime.Now; //for double click detecting
+
+        public static double MillisecondsForDoubleClick = 1000; //Depends on user settings
 
 		//Color sheme
 		public Xwt.Drawing.Color NormalBgColor1 = Xwt.Drawing.Colors.White;
@@ -88,7 +91,19 @@ namespace pluginner
 			}
 			if (e.Button == PointerButton.Left)//left click - point & don't touch selection
 			{
-				_SetPoint(lvi);
+                if (lvi == PointedItem)
+                {
+                    double MillisecondsPassed = (DateTime.Now - PointedItemLastClickTime).TotalMilliseconds;
+                    if (MillisecondsPassed < MillisecondsForDoubleClick)
+                    {
+                        PointedItemDoubleClicked(this.PointedItem);
+                    }
+                }
+                else
+                {
+                    _SetPoint(lvi);
+                }
+                PointedItemLastClickTime = DateTime.Now;
 			}
 		}
 
@@ -408,6 +423,7 @@ namespace pluginner
 
 		public event TypedEvent<pluginner.ListView2Item> PointerMoved;
 		public event TypedEvent<List<pluginner.ListView2Item>> SelectionChanged;
+        public event TypedEvent<pluginner.ListView2Item> PointedItemDoubleClicked;
 
         //PUBLIC PROPERTIES
 

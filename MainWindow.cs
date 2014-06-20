@@ -271,6 +271,8 @@ namespace fcmd
 			//todo: replace this shit-code with huge using of KeybHelpButtons[n].Tag property (note that it's difficult to be realized due to c# restrictions)
 
 			//apply user's settings
+            //milliseconds for double click
+            pluginner.ListView2.MillisecondsForDoubleClick = fcmd.Properties.Settings.Default.MillisecondsForDoubleClick;
 			//window size
 			this.Width = fcmd.Properties.Settings.Default.WinWidth;
 			this.Height = fcmd.Properties.Settings.Default.WinHeight;
