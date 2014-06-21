@@ -28,7 +28,7 @@ namespace pluginner
 		private List<CollumnInfo> _Collumns = new List<CollumnInfo>();
 		private int Through10Counter = 0; //для устранения зависания UI при загрузке длинных списков
 		private bool Color2 = false; //для обеспечения чередования цветов строк
-		private DateTime PointedItemLastClickTime = DateTime.Now; //for double click detecting
+		private DateTime PointedItemLastClickTime = DateTime.Now.AddDays(-1); //for double click detecting
 
 		public static double MillisecondsForDoubleClick = 1000; //Depends on user settings
 
@@ -97,13 +97,19 @@ namespace pluginner
 					if (MillisecondsPassed < MillisecondsForDoubleClick)
 					{
 						PointedItemDoubleClicked(this.PointedItem);
+						// The last click was so long long ago that the next one can't be double click
+						PointedItemLastClickTime = DateTime.Now.AddDays(-1);
+					}
+					else
+					{
+						PointedItemLastClickTime = DateTime.Now;
 					}
 				}
 				else
 				{
 					_SetPoint(lvi);
+					PointedItemLastClickTime = DateTime.Now;
 				}
-				PointedItemLastClickTime = DateTime.Now;
 			}
 		}
 
