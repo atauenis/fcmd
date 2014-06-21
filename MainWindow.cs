@@ -272,7 +272,7 @@ namespace fcmd
 
 			//apply user's settings
 			//milliseconds for double click
-			pluginner.ListView2.MillisecondsForDoubleClick = fcmd.Properties.Settings.Default.MillisecondsForDoubleClick;
+			pluginner.ListView2.MillisecondsForDoubleClick = Winforms.SystemInformation.DoubleClickTime;
 			//window size
 			this.Width = fcmd.Properties.Settings.Default.WinWidth;
 			this.Height = fcmd.Properties.Settings.Default.WinHeight;

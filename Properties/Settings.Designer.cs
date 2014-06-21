@@ -351,17 +351,5 @@ namespace fcmd.Properties {
                 this["UserTheme"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public double MillisecondsForDoubleClick {
-            get {
-                return ((double)(this["MillisecondsForDoubleClick"]));
-            }
-            set {
-                this["MillisecondsForDoubleClick"] = value;
-            }
-        }
     }
 }
