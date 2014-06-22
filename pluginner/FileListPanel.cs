@@ -201,7 +201,6 @@ namespace pluginner
 			s.Stylize(CLIprompt,"TerminalPrompt");
 			s.Stylize(StatusTable);
 
-			ListingView.ButtonPressed += new EventHandler<Xwt.ButtonEventArgs>(ListingView_ButtonPressed);
 			ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
 			ListingView.GotFocus += (o, ea) =>{ this.OnGotFocus(ea); };
 			ListingView.PointerMoved += new TypedEvent<ListView2Item>(ListingView_PointerMoved);
@@ -250,13 +249,7 @@ namespace pluginner
 		{
 			NavigateTo(ListingView.PointedItem.Data[dfURL].ToString());
 		}
-
-		void ListingView_ButtonPressed(object sender, Xwt.ButtonEventArgs e)
-		{//FIXME: possibly unreachable code, archaism from Winforms/Xwt ListView-based ListPanel
-			if (e.MultiplePress == 2)//double click
-				NavigateTo(ListingView.PointedItem.Data[dfURL].ToString());
-		}
-
+		
 		/// <summary>Open the FS item at <paramref name="url"/> (if it's file, load; if it's directory, go to)</summary>
 		/// <param name="clearhistory">The number of history entrie after that all entries must be removed</param>
 		private void NavigateTo(string url, int? ClearHistory = null)
