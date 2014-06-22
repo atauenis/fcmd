@@ -271,6 +271,8 @@ namespace fcmd
 			//todo: replace this shit-code with huge using of KeybHelpButtons[n].Tag property (note that it's difficult to be realized due to c# restrictions)
 
 			//apply user's settings
+			//milliseconds for double click
+			pluginner.ListView2.MillisecondsForDoubleClick = Winforms.SystemInformation.DoubleClickTime;
 			//window size
 			this.Width = fcmd.Properties.Settings.Default.WinWidth;
 			this.Height = fcmd.Properties.Settings.Default.WinHeight;
@@ -601,7 +603,7 @@ namespace fcmd
 				case Xwt.Key.F8: //F8: delete
 					if (URL1 == null)
 						return;
-                    Rm();
+					Rm();
 					//todo: move to trash can/recycle bin & handle Shit+F8 (remove completely)
 					return;
 				case Xwt.Key.F10: //F10: Exit
@@ -626,12 +628,12 @@ namespace fcmd
 			string PanelName = (NewPanel == p1) ? "LEFT" : "RIGHT";
 			Console.WriteLine("FOCUS DEBUG: The " + PanelName + " panel (" + NewPanel.FS.CurrentDirectory + ") got focus");
 #endif
-            this.Title = string.Format(
-                "{0} {1} - {2}",
-                Winforms.Application.ProductName,
-                Winforms.Application.ProductVersion,
-                ActivePanel.FS.CurrentDirectory
-            );
+			this.Title = string.Format(
+				"{0} {1} - {2}",
+				Winforms.Application.ProductName,
+				Winforms.Application.ProductVersion,
+				ActivePanel.FS.CurrentDirectory
+			);
 
 			PassivePanel.UrlBox.BackgroundColor = Xwt.Drawing.Colors.LightBlue;
 			ActivePanel.UrlBox.BackgroundColor = Xwt.Drawing.Colors.DodgerBlue;

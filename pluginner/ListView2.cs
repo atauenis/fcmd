@@ -28,6 +28,9 @@ namespace pluginner
 		private List<CollumnInfo> _Collumns = new List<CollumnInfo>();
 		private int Through10Counter = 0; //для устранения зависания UI при загрузке длинных списков
 		private bool Color2 = false; //для обеспечения чередования цветов строк
+		private DateTime PointedItemLastClickTime = DateTime.Now.AddDays(-1); //for double click detecting
+
+		public static double MillisecondsForDoubleClick = 1000; //Depends on user settings
 
 		//Color sheme
 		public Xwt.Drawing.Color NormalBgColor1 = Xwt.Drawing.Colors.White;
@@ -88,13 +91,31 @@ namespace pluginner
 			}
 			if (e.Button == PointerButton.Left)//left click - point & don't touch selection
 			{
-				_SetPoint(lvi);
+				if (lvi == PointedItem)
+				{
+					double MillisecondsPassed = (DateTime.Now - PointedItemLastClickTime).TotalMilliseconds;
+					if (MillisecondsPassed < MillisecondsForDoubleClick)
+					{
+						PointedItemDoubleClicked(this.PointedItem);
+						// The last click was so long long ago that the next one can't be double click
+						PointedItemLastClickTime = DateTime.Now.AddDays(-1);
+					}
+					else
+					{
+						PointedItemLastClickTime = DateTime.Now;
+					}
+				}
+				else
+				{
+					_SetPoint(lvi);
+					PointedItemLastClickTime = DateTime.Now;
+				}
 			}
 		}
 
 		void Layout_KeyPressed(object sender, KeyEventArgs e)
 		{
-		    //See GH issue #10
+			//See GH issue #10
 			Console.WriteLine("LV2 DEBUG: pressed {0}, repeat={1}, handled={2}",e.Key,e.IsRepeat,e.Handled); //УБРАТЬ!!!
 			//currently, the keyboard feel is same as in Norton & Total Commanders
 			switch (e.Key)
@@ -404,12 +425,13 @@ namespace pluginner
 			ScrollerIn.ScrollTo(Y);
 		}
 
-        //PUBLIC EVENTS
+		//PUBLIC EVENTS
 
 		public event TypedEvent<pluginner.ListView2Item> PointerMoved;
 		public event TypedEvent<List<pluginner.ListView2Item>> SelectionChanged;
+		public event TypedEvent<pluginner.ListView2Item> PointedItemDoubleClicked;
 
-        //PUBLIC PROPERTIES
+		//PUBLIC PROPERTIES
 
 		/// <summary>Sets collumn configuration</summary>
 		public CollumnInfo[] Collumns
@@ -441,21 +463,21 @@ namespace pluginner
 			set { _SetPoint(Items[value]); }
 		}
 
-        /// <summary>Gets the list of the rows that currently are choosed by the user</summary>
-        public List<ListView2Item> ChoosedRows
-        {
-            get
-            {
-                if (SelectedItems.Count == 0){
-                    List<ListView2Item> list_one = new List<ListView2Item>();
-                    list_one.Add(PointedItem);
-                    return list_one;
-                }
-                else{
-                    return SelectedItems;
-                }
-            }
-        }
+		/// <summary>Gets the list of the rows that currently are choosed by the user</summary>
+		public List<ListView2Item> ChoosedRows
+		{
+			get
+			{
+				if (SelectedItems.Count == 0){
+					List<ListView2Item> list_one = new List<ListView2Item>();
+					list_one.Add(PointedItem);
+					return list_one;
+				}
+				else{
+					return SelectedItems;
+				}
+			}
+		}
 
 
 		//ENUMS & STRUCTS

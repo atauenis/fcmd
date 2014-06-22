@@ -142,8 +142,7 @@ namespace fcmd
 			{
 				try
 				{
-					string[] Parts = new string[2];
-					Parts = UIFRow.Split("=".ToCharArray());
+					string[] Parts = UIFRow.Split("=".ToCharArray());
 					if(Parts.Length != 2) continue; //invalid rows, INI-section start rows and comment rows should be skipped
 					if(UIFRow.StartsWith(";") || UIFRow.StartsWith("[")) continue;
 					Localization[Parts[0]] = Parts[1];
