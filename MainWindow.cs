@@ -309,7 +309,9 @@ namespace fcmd
 					if (argv.Count() == 1) p1.LoadDir(argv[0]);
 					break;
 			}
-			//this.Show();
+#if DEBUG
+			Console.WriteLine("DEBUG: MainWindow initialization has been completed.");
+#endif
 		}
 
 		void mnuViewWithFilter_Clicked(object sender, EventArgs e)

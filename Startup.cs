@@ -16,8 +16,12 @@ namespace fcmd
 		{
 			Console.WriteLine("The File Commander, version " + Application.ProductVersion + "\n(C) 2013-14, Alexander Tauenis and the FC development team (https://github.com/atauenis/fcmd).\nThe FC is licensed \"as is,\" with  no  warranties regarding product performance or non-infringement of third party intellectual property rights; the software may be modified without restrictions");
 #if DEBUG
-			try { 
-				Xwt.Application.Initialize(Xwt.ToolkitType.Wpf);
+			try 
+			{ 
+				if(Environment.OSVersion.Platform == PlatformID.Unix)
+					Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
+				else
+					Xwt.Application.Initialize(Xwt.ToolkitType.Wpf); //on Windows, you may set WPF or GTK as toolkit type for debugging purposes
 			}
 			catch (Exception ex)
 			{
@@ -28,8 +32,6 @@ namespace fcmd
 				return;
 			}
 #else
-			
-			//todo: xwt.application.run together with winforms.application.run
 			try { 
 				switch (Environment.OSVersion.Platform)
 				{
