@@ -613,8 +613,9 @@ namespace fcmd
 					return;
 			}
 #if DEBUG
-			Console.WriteLine("KEYBOARD DEBUG: the key isn't handled");
+			Console.WriteLine("KEYBOARD DEBUG: the key wasn't handled");
 #endif
+			e.Handled = true;
 		}
 
 		/// <summary>Switches the active panel</summary>
