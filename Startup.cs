@@ -55,9 +55,28 @@ namespace fcmd
 				return;
 			}
 #endif
+#if !DEBUG
+			try{
+#endif
 			new MainWindow(Commands).Show();
 			//todo: add splash screen
 			Xwt.Application.Run();
+#if !DEBUG
+			}
+			catch (Exception ex)
+			{
+				string msg = "The File Commander has been crashed:\n" + ex.Message + "\n" + ex.StackTrace;
+				string inex = "";
+				if(ex.InnerException != null) inex = "\n Inner exception" + ex.InnerException.Message + "\n" + ex.StackTrace;
+				msg+=inex;
+
+				System.Windows.Forms.MessageBox.Show(
+					msg,
+					"The File Commander " + Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Crash"
+				);
+				return;
+			}
+#endif
 		}
 	}
 }
