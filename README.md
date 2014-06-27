@@ -29,4 +29,4 @@ If a segfault has been thrown on other native calls and your PC RAM is not corru
 
 New contributions are welcomed! For full info, see the README-DEV.md file.
 
-System requirements: Windows XP or newer, Linux or Mac; Microsoft .NET Framework v4.X or Mono Runtime 3.2+. GTK# is required for Linux.
+System requirements: Windows XP or newer, Linux or Mac; Microsoft .NET Framework v4.X or Mono Runtime 3.2+. GTK# is required if you're using Linux.
