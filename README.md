@@ -3,7 +3,7 @@ The File Commander
 
 A customizable and extendable cross-platform two-panel file manager - The File Commander.
 
-The File Commander can be downloaded as sources (it's the preferable way) from this repository and then compiled, or can be downloaded as a 7z archive from [Yandex.Disk](https://yadi.sk/d/XNZXI4MkTucdB). Note that the FC requires .NET Framework 4/4.5 being installed (pre-installed on Windows 8 and available for other version) or Mono Runtime. Users of Ubuntu/other Debian-based distributions are able to install File Commander from PPA:
+The File Commander can be downloaded as sources (it's the preferable way) from this repository and then compiled, or can be downloaded as a 7z archive from [Yandex.Disk](https://yadi.sk/d/XNZXI4MkTucdB). Note that the FC requires .NET Framework 4/4.5 being installed (pre-installed on Windows 8 and available for Windows XP and later) or Mono Runtime. Users of Ubuntu/other Debian-based distributions are able to install File Commander from PPA:
 
     deb http://ppa.launchpad.net/keks9n/fcmd/ubuntu trusty main 
     deb-src http://ppa.launchpad.net/keks9n/fcmd/ubuntu trusty main 
@@ -12,7 +12,7 @@ Add these repositories, update APT cache and install the "fcmd" package.
 
 Please note that the FC is in the early stage of development and has many bugs. We give no warranty on the safety of your data or installed software. Use this at your own risk.
 
-At the moment FC contains only russian language file. If you're searching for an english version of FC, stop it. For now it doesn't exist and it will not be implemented in the near future (the string list is unstable, it gets updates almost every commit)
+At the moment FC contains only russian language file. If you're searching for an english version of FC, stop the unpromising activity. For now it doesn't exist and it will not be implemented in the near future (the string list is unstable, it gets updates almost every commit)
 
 ##How to compile:
 
