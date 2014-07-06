@@ -11,6 +11,7 @@ using System.Reflection;
 
 namespace pluginner{
 	public delegate void TypedEvent<T>(T data);
+	public delegate void TypedEvent<T1, T2>(T1 sender, T2 data);
 
 	/// <summary>
 	/// Default plugin interface.

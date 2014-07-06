@@ -81,6 +81,7 @@
     <Compile Include="AsyncCopy.cs" />
     <Compile Include="base-plugins\fs\localFileSystem-CLI.cs" />
     <Compile Include="base-plugins\ve\PlainText.cs" />
+    <Compile Include="base-plugins\ve\PlainXml.cs" />
     <Compile Include="FileProcessDialog.cs" />
     <Compile Include="InputBox.cs" />
     <Compile Include="KeyboardHelpButton.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="VEd.cs" />
     <Compile Include="VEsettings.cs" />
     <Compile Include="ReplaceQuestionDialog.cs" />
+    <Compile Include="XmlDisplay.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mucss, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

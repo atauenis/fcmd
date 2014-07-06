@@ -153,7 +153,10 @@ namespace fcmd
 			fcmd.Properties.Settings.Default.VEWinHeight = this.Height;
 			fcmd.Properties.Settings.Default.VEWinWidth = this.Width;
 
+			try {
 			SendCommand("unload");
+			}
+			catch (Exception e) { Xwt.MessageDialog.ShowError(e.Message, e.StackTrace + "\n   on " + Plugin.Name + " (" + Plugin.GetType().ToString() + ")"); }
 			this.Hide();
 		}
 
@@ -270,25 +273,33 @@ namespace fcmd
 			Xwt.Application.MainLoop.DispatchPendingEvents();
 
 			if (!CanBeShowed) return;
+			
+			try { 
+				Plugin = plugin;
+				Plugin.ReadOnly = !AllowEdit;
+				Plugin.OpenFile(URL, FS);
+				Plugin.ShowToolbar = fcmd.Properties.Settings.Default.VE_ShowToolbar;
+				Plugin.Stylist = s;
+				mnuFormat.SubMenu = Plugin.FormatMenu;
 
-			Plugin = plugin;
-			Plugin.ReadOnly = !AllowEdit;
-			Plugin.OpenFile(URL, FS);
-			Plugin.ShowToolbar = fcmd.Properties.Settings.Default.VE_ShowToolbar;
-			Plugin.Stylist = s;
-			mnuFormat.SubMenu = Plugin.FormatMenu;
+				bool Mode = AllowEdit;
 
-			bool Mode = AllowEdit;
+				if (!Plugin.CanEdit && AllowEdit)
+				{
+					Xwt.MessageDialog.ShowWarning(String.Format(Locale.GetString("FCVEpluginro1"), Plugin.Name + " " + Plugin.Version), Locale.GetString("FCVEpluginro2"));
+					Mode = false;
+				}
 
-			if (!Plugin.CanEdit && AllowEdit)
-			{
-				Xwt.MessageDialog.ShowWarning(String.Format(Locale.GetString("FCVEpluginro1"), Plugin.Name + " " + Plugin.Version), Locale.GetString("FCVEpluginro2"));
-				Mode = false;
-			}
+				FSPlugin = FS;
+				PluginBody = Plugin.Body;
 
-			FSPlugin = FS;
-			PluginBody = Plugin.Body;
 			SetVEMode(Mode);
+			}
+			catch (Exception ex)
+			{
+				Xwt.MessageDialog.ShowWarning(ex.Message);
+				if(PluginBody.GetType() == typeof(Xwt.Spinner)) { ProgressDialog.Hide(); this.CanBeShowed = false; return;}
+			}
 			BuildLayout();
 			ProgressDialog.Hide();
 			

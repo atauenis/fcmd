@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BookmarkTools.cs" />
+    <Compile Include="EditableLabel.cs" />
     <Compile Include="FileListPanel.cs" />
     <Compile Include="HeavyScroller.cs" />
     <Compile Include="IFSPlugin.cs" />

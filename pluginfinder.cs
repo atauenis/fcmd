@@ -47,7 +47,9 @@ namespace fcmd
 					VEPlugins.Add(vp);
 				}
 			}
-			VEPlugins.Add(".*;(internal)PlainText;" + new Localizator().GetString("FCVViewModeText")); //зырилку по-умолчанию в конец списка
+			VEPlugins.Add(
+			@"<?xml ;(internal)PlainXml;XML\n"+
+			".*;(internal)PlainText;" + new Localizator().GetString("FCVViewModeText")); //зырилки по-умолчанию в конец списка
 
 		}
 
@@ -139,6 +141,8 @@ namespace fcmd
 				{
 					case "(internal)PlainText":
 						return new base_plugins.ve.PlainText();
+					case "(internal)PlainXml":
+						return new base_plugins.ve.PlainXml();
 					/* ==INTERNAL PLUGINS, THAT NEEDS TO BE CREATED==
 					 * a simple raster image viewer/editor based on xwt drawing possibilities
 					 * a markdown viewer based on Xwt.MarkdownView (readonly)
