@@ -386,7 +386,7 @@ namespace pluginner
 					Data.Add(di.TextToShow); EditableFileds.Add(true);
 					if (di.TextToShow == "..")
 					{//parent dir
-						Data.Add("<↑ UP>"); EditableFileds.Add(false);
+						Data.Add("<↑ UP>"); EditableFileds.Add(false); EditableFileds[2] = false;
 						Data.Add(FS.GetMetadata(di.Path).LastWriteTimeUTC.ToLocalTime()); EditableFileds.Add(false);
 						updir = di.Path;
 					}
@@ -409,7 +409,7 @@ namespace pluginner
 			}
 			catch (Exception ex)
 			{
-				if(ex.Message == "Object reference not set to an instance of an object."){
+				if(ex.Message == "Object reference not set to an instance of an object."){ //говнокод убрать!
 					Xwt.MessageDialog.ShowWarning(ex.Message, ex.StackTrace + "\nInner exception: " + ex.InnerException.Message ?? "none");
 				}else
 				Xwt.MessageDialog.ShowWarning(ex.Message);
