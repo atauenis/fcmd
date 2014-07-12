@@ -280,8 +280,9 @@ namespace pluginner
 
 		/// <summary>Add a new item</summary>
 		/// <param name="Data">The item's content</param>
+		/// <param name="EditableFields">List of editable fields</param>
 		/// <param name="Tag">The tag for the new item (optional)</param>
-		public void AddItem(List<Object> Data, string Tag = null)
+		public void AddItem(List<Object> Data, List<Boolean> EditableFields, string Tag = null)
 		{
 			ListView2Item lvi = new ListView2Item(
 				LastRow,
@@ -295,6 +296,7 @@ namespace pluginner
 			lvi.SelectionBgColor = SelectedBgColor;
 			lvi.SelectionFgColor = SelectedFgColor;
 			lvi.State = ItemStates.Default;
+			lvi.EditableFields = EditableFields;
 			AddItem(lvi);
 		}
 

@@ -379,27 +379,29 @@ namespace pluginner
 				foreach (DirItem di in dis)
 				{
 					List<Object> Data = new List<Object>();
-					Data.Add(di.IconSmall ?? Xwt.Drawing.Image.FromResource("pluginner.Resources.image-missing.png"));
-					Data.Add(di.Path);
-					Data.Add(di.TextToShow);
+					List<Boolean> EditableFileds = new List<bool>();
+
+					Data.Add(di.IconSmall ?? Xwt.Drawing.Image.FromResource("pluginner.Resources.image-missing.png")); EditableFileds.Add(false);
+					Data.Add(di.Path); EditableFileds.Add(false);
+					Data.Add(di.TextToShow); EditableFileds.Add(true);
 					if (di.TextToShow == "..")
 					{//parent dir
-						Data.Add("<↑ UP>");
-						Data.Add(FS.GetMetadata(di.Path).LastWriteTimeUTC.ToLocalTime());
+						Data.Add("<↑ UP>"); EditableFileds.Add(false);
+						Data.Add(FS.GetMetadata(di.Path).LastWriteTimeUTC.ToLocalTime()); EditableFileds.Add(false);
 						updir = di.Path;
 					}
 					else if (di.IsDirectory)
 					{//dir
-						Data.Add("<DIR>");
-						Data.Add(di.Date);
+						Data.Add("<DIR>"); EditableFileds.Add(false);
+						Data.Add(di.Date); EditableFileds.Add(false);
 					}
 					else
 					{//file
-						Data.Add(KiloMegaGigabyteConvert(di.Size, ShortenKB, ShortenMB, ShortenGB));
-						Data.Add(di.Date);
+						Data.Add(KiloMegaGigabyteConvert(di.Size, ShortenKB, ShortenMB, ShortenGB)); EditableFileds.Add(false);
+						Data.Add(di.Date); EditableFileds.Add(false);
 					}
 					Data.Add(di);
-					ListingView.AddItem(Data, di.Path);
+					ListingView.AddItem(Data, EditableFileds, di.Path);
 				}
 
 				GoUp.Clicked+=(o,ea)=>{ LoadDir(updir); };

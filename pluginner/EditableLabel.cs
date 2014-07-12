@@ -22,6 +22,15 @@ namespace pluginner
 		Label l = new Label();
 		TextEntry t = new TextEntry();
 		bool IsEditable = true;
+
+		public EditableLabel(string text, bool editable = true)
+		{
+			Text = text;
+			Editable = editable;
+			this.Content = l;
+			l.ButtonPressed += l_ButtonPressed;
+			t.KeyPressed += t_KeyPressed;
+		}
 		public EditableLabel ()
 		{
 			this.Content = l;
@@ -61,6 +70,17 @@ namespace pluginner
 		{
 			get { return l.TextColor; }
 			set { l.TextColor = value; }
+		}
+
+		public new Xwt.Drawing.Color BackgroundColor
+		{
+			get { return base.BackgroundColor; }
+			set
+			{
+				base.BackgroundColor = value;
+				l.BackgroundColor = value;
+				t.BackgroundColor = value;
+			}
 		}
 
 		/// <summary>

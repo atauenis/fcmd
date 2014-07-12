@@ -16,6 +16,8 @@ namespace pluginner
 	{
 		/// <summary>Data store</summary>
 		private Object[] _Values;
+		/// <summary>"Is the Field Editable" data store</summary>
+		private bool[] _Editables;
 		/// <summary>Collumn info store</summary>
 		private ListView2.CollumnInfo[] _Cols;
 		/// <summary>Selection state</summary>
@@ -41,10 +43,18 @@ namespace pluginner
 				Widget lbl;
 
 				lbl = MakeWidget(Item);
+
+				if (_Editables != null && _Editables.Count() >= i){
+					if (lbl.GetType() == typeof(EditableLabel))
+					(lbl as EditableLabel).Editable = _Editables[i];
+				}
+				else{
+					if (lbl.GetType() == typeof(EditableLabel))
+					(lbl as EditableLabel).Editable = false;
+				}
 				
 				//lbl.BackgroundColor = Xwt.Drawing.Colors.Chocolate;
-				if (_Cols.Count() > i && i != _Cols.Count() - 1)
-				{
+				if (_Cols.Count() > i && i != _Cols.Count() - 1){
 					lbl.WidthRequest = _Cols[i].Width;
 					lbl.Visible = _Cols[i].Visible;
 				}
@@ -72,7 +82,7 @@ namespace pluginner
 				return Content as Widget;
 			}
 
-			return new Label(Content.ToString());
+			return new EditableLabel(Content.ToString());
 		}
 
 		public void OnDblClick()
@@ -271,6 +281,18 @@ namespace pluginner
 					throw new Exception("Please set collumns first!");
 				}
 				_Values = value.ToArray();
+				Rebuild();
+			}
+		}
+
+		public List<Boolean> EditableFields
+		{
+			get { return _Editables.ToList<Boolean>(); }
+			set { 
+				if (_Cols == null) {
+					throw new Exception("Please set collumns first!");
+				}
+				_Editables = value.ToArray();
 				Rebuild();
 			}
 		}
