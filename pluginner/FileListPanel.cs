@@ -206,7 +206,25 @@ namespace pluginner
 			ListingView.PointerMoved += new TypedEvent<ListView2Item>(ListingView_PointerMoved);
 			ListingView.SelectionChanged += new TypedEvent<List<ListView2Item>>(ListingView_SelectionChanged);
 			ListingView.PointedItemDoubleClicked += new TypedEvent<ListView2Item>(pointed_item => { OpenPointedItem(); });
+			ListingView.EditComplete += ListingView_EditComplete;
 			StatusBar.Wrap = Xwt.WrapMode.Word;
+		}
+
+		void ListingView_EditComplete(EditableLabel el, ListView2 lv)
+		{
+			string Url1 = FS.CurrentDirectory + FS.DirSeparator + ListingView.PointedItem.Data[dfDisplayName].ToString();
+			string Url2 = FS.CurrentDirectory + FS.DirSeparator + el.Text;
+			try { 
+				if(FS.DirectoryExists(Url1))
+					FS.MoveDirectory(Url1, Url2);
+				else
+					FS.MoveFile(Url1, Url2);
+				StatusBar.Text = ListingView.PointedItem.Data[dfDisplayName].ToString() + " → " + el.Text;
+			}
+			catch(Exception ex) {
+				MessageDialog.ShowWarning(ex.Message);
+				el.Text = ListingView.PointedItem.Data[dfDisplayName].ToString();
+			}
 		}
 
 		void ListingView_SelectionChanged(List<ListView2Item> data)

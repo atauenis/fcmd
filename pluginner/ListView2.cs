@@ -317,6 +317,7 @@ namespace pluginner
 			Items.Add(Item);
 			Grid.Add(Item, LastCol, LastRow,1,1,true);
 			Item.ButtonPressed += new EventHandler<ButtonEventArgs>(Item_ButtonPressed);
+			Item.EditComplete+=(sender)=>{ if (this.EditComplete != null) EditComplete(sender, this); };
 			Item.CanGetFocus = true;
 			if (LastRow == 0) _SetPoint(Item);
 			LastRow++;
@@ -432,6 +433,7 @@ namespace pluginner
 		public event TypedEvent<pluginner.ListView2Item> PointerMoved;
 		public event TypedEvent<List<pluginner.ListView2Item>> SelectionChanged;
 		public event TypedEvent<pluginner.ListView2Item> PointedItemDoubleClicked;
+		public event TypedEvent<EditableLabel, ListView2> EditComplete;
 
 		//PUBLIC PROPERTIES
 

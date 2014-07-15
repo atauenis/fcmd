@@ -38,6 +38,7 @@ namespace pluginner
 			t.KeyPressed += t_KeyPressed;
 		}
 
+		//todo: doesn't fire every time when Enter (Return) is pressing, thus it's need to be fixed. Possibly, due to XWT peculiarity (input focus doesn't sets as fully as required).
 		void t_KeyPressed(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Escape)
@@ -72,6 +73,9 @@ namespace pluginner
 			set { l.TextColor = value; }
 		}
 
+		/// <summary>
+		/// The text's background color
+		/// </summary>
 		public new Xwt.Drawing.Color BackgroundColor
 		{
 			get { return base.BackgroundColor; }
@@ -117,11 +121,15 @@ namespace pluginner
 			{
 				case true:
 					this.Content = t;
+					t.SetFocus();
 					return;
 				case false:
 					this.Content = l;
+					if(EditComplete != null) EditComplete(this);
 					return;
 			}
 		}
+
+		public event TypedEvent<EditableLabel> EditComplete;
 	}
 }

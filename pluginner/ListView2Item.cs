@@ -296,5 +296,8 @@ namespace pluginner
 				Rebuild();
 			}
 		}
+
+		[Obsolete("Not obsolete, but not implemented yet, do not use!")]
+		public event TypedEvent<EditableLabel> EditComplete;
 	}
 }
