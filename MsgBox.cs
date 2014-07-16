@@ -2,12 +2,11 @@
  * Abstract message box		 Абстрактный message box
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using fcmd.Helpers;
 
 namespace fcmd{
 	/// <summary>
@@ -53,18 +52,8 @@ namespace fcmd{
 		/// <param name="dialogtype">The dialog type (error, info, etc)</param>
 		public MsgBox(string text, string title, MsgBoxType dialogtype){
 			//initialize xwt
-			switch (Environment.OSVersion.Platform){
-				case PlatformID.Win32NT:
-					Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Wpf);
-					break;
-				case PlatformID.MacOSX: //i don't sure that Mono detect OSX as OSX, not Unix; see http://mono.wikia.com/wiki/Detecting_the_execution_platform
-					Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Cocoa);
-					break;
-				default:
-				case PlatformID.Unix: //gtk fallback for unknown oses
-					Xwt.Application.InitializeAsGuest(Xwt.ToolkitType.Gtk);
-					break;
-			}
+			var toolkitType = PlatformHelper.GetToolkitType();
+			Xwt.Application.InitializeAsGuest(toolkitType);
 
 			//show the msgbox
 			switch (dialogtype){

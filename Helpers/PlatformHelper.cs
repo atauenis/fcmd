@@ -8,11 +8,28 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using fcmd.Enums;
+using Xwt;
 
 namespace fcmd.Helpers
 {
 	public static class PlatformHelper
 	{
+		public static ToolkitType GetToolkitType()
+		{
+			var platform = GetPlatform();
+			switch (platform)
+			{
+				case PlatformEnum.Windows:
+					return ToolkitType.Wpf;
+				case PlatformEnum.Unix:
+					return ToolkitType.Gtk;
+				case PlatformEnum.OSX:
+					return ToolkitType.Cocoa;
+				default:
+					throw new NotSupportedException(string.Format("Not supported value {0} for {1} type", platform.ToString(), typeof(PlatformEnum)));
+			}
+		}
+
 		public static PlatformEnum GetPlatform()
 		{
 			switch (Environment.OSVersion.Platform)
@@ -33,10 +50,15 @@ namespace fcmd.Helpers
 		{
 			if (_platformHasDarwinKernel == null)
 			{
-				var process = new Process();
-				process.StartInfo.UseShellExecute = false;
-				process.StartInfo.RedirectStandardOutput = true;
-				process.StartInfo.FileName = "uname";
+				var process = new Process
+				{
+					StartInfo =
+					{
+						UseShellExecute = false,
+						RedirectStandardOutput = true,
+						FileName = "uname"
+					}
+				};
 
 				try
 				{
@@ -45,7 +67,7 @@ namespace fcmd.Helpers
 					_platformHasDarwinKernel = output.StartsWith("Darwin", StringComparison.InvariantCultureIgnoreCase);
 					process.WaitForExit();
 				}
-				catch (Win32Exception ex)
+				catch (Win32Exception)
 				{
 					_platformHasDarwinKernel = false;
 				}

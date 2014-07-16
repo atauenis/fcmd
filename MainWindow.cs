@@ -2,6 +2,7 @@
  * The main file manager window
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -9,8 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using fcmd.Helpers;
 using Winforms = System.Windows.Forms;
-using System.Xml;
 
 namespace fcmd
 {
@@ -391,7 +392,7 @@ namespace fcmd
 			Fcdbg.Title="FC debug output";
 			string txt = ""+
 				"===THE FILE COMMANDER, VERSION " + Winforms.Application.ProductVersion + (Environment.Is64BitProcess ? " 64-BIT" : " 32-BIT") + "===\n"+
-				Environment.CommandLine + " @ .NET fw " + Environment.Version + (Environment.Is64BitOperatingSystem ? " 64-bit" : " 32-bit") + " on " + Environment.MachineName + "-" + Environment.OSVersion + " (" + Environment.OSVersion.Platform + " v" + Environment.OSVersion.Version.Major + "." + Environment.OSVersion.Version.Minor + ")\n" +
+				Environment.CommandLine + " @ .NET fw " + Environment.Version + (Environment.Is64BitOperatingSystem ? " 64-bit" : " 32-bit") + " on " + Environment.MachineName + "-" + Environment.OSVersion + " (" + PlatformHelper.GetPlatform().ToString() + " v" + Environment.OSVersion.Version.Major.ToString() + "." + Environment.OSVersion.Version.Minor.ToString() + ")\n" +
 				"The current drawing toolkit is " + Xwt.Toolkit.CurrentEngine.GetSafeBackend (this) + "\n" +
 				"\nCONFIGuration files:\n---------\n"+
 				"Local: "+confLR.FilePath + " (exists? " + b2s(confLR.HasFile) +")\n"+
@@ -406,7 +407,7 @@ namespace fcmd
 				"Filesystems are same by type? " + b2s(p1.FS.GetType()==p2.FS.GetType()) + ".\n"+
 				"Filesystems are identically? " + b2s(p1.FS==p2.FS) + " (should be no).\n"+
 				"\nTheme debug:\n---------\n"+
-				"Using external theme? " + b2s(!(fcmd.Properties.Settings.Default.UserTheme == null || fcmd.Properties.Settings.Default.UserTheme == ""))+"\n"+
+				"Using external theme? " + b2s(!string.IsNullOrEmpty(fcmd.Properties.Settings.Default.UserTheme))+"\n"+
 				"Theme's cascade style sheet file: \"" + fcmd.Properties.Settings.Default.UserTheme + "\"\n\nIf you having some troubles, please report this to https://github.com/atauenis/fcmd bug tracker or http://atauenis.ru/phpBB3/viewtopic.php?f=4&t=211 topic. \nThe End.";
 			Xwt.RichTextView rtv = new Xwt.RichTextView();
 			rtv.LoadText(txt, new Xwt.Formats.PlainTextFormat());

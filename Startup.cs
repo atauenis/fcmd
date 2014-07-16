@@ -41,19 +41,7 @@ namespace fcmd
 #else
 			try
 			{
-				switch (PlatformHelper.GetPlatform())
-				{
-					case PlatformEnum.Windows:
-						Xwt.Application.Initialize(Xwt.ToolkitType.Wpf);
-						break;
-					case PlatformEnum.OSX: //i don't sure that Mono detect OSX as OSX, not Unix; see http://mono.wikia.com/wiki/Detecting_the_execution_platform
-						Xwt.Application.Initialize(Xwt.ToolkitType.Cocoa);
-						break;
-					case PlatformEnum.Unix: //gtk fallback for unknown OSes
-					default:
-						Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
-						break;
-				}
+				Xwt.Application.Initialize(PlatformHelper.GetToolkitType());
 			}
 			catch (Exception ex) {
 				System.Windows.Forms.MessageBox.Show(
