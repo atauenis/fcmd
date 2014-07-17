@@ -7,7 +7,6 @@
  */
 using System;
 using System.Windows.Forms;
-using fcmd.Enums;
 using fcmd.Helpers;
 
 namespace fcmd
@@ -21,7 +20,7 @@ namespace fcmd
 #if DEBUG
 			try 
 			{ 
-				if (PlatformHelper.GetPlatform() == PlatformEnum.Windows)
+				if (OSVersionEx.Platform == PlatformID.Win32NT)
 				{
 					Xwt.Application.Initialize(Xwt.ToolkitType.Wpf); //on Windows, you may set WPF or GTK as toolkit type for debugging purposes
 				}
@@ -41,7 +40,7 @@ namespace fcmd
 #else
 			try
 			{
-				Xwt.Application.Initialize(PlatformHelper.GetToolkitType());
+				Xwt.Application.Initialize(OSVersionEx.GetToolkitType());
 			}
 			catch (Exception ex) {
 				System.Windows.Forms.MessageBox.Show(

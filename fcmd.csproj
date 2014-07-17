@@ -119,8 +119,7 @@
     <Compile Include="VEsettings.cs" />
     <Compile Include="ReplaceQuestionDialog.cs" />
     <Compile Include="XmlDisplay.cs" />
-    <Compile Include="Helpers\PlatformHelper.cs" />
-    <Compile Include="Enums\PlatformEnum.cs" />
+    <Compile Include="Helpers\OSVersionEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mucss, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -211,10 +210,5 @@
     <Content Include="stolen-opensource-libs\Xwt.WPF.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-    <Folder Include="Enums\" />
   </ItemGroup>
 </Project>

@@ -52,7 +52,7 @@ namespace fcmd{
 		/// <param name="dialogtype">The dialog type (error, info, etc)</param>
 		public MsgBox(string text, string title, MsgBoxType dialogtype){
 			//initialize xwt
-			var toolkitType = PlatformHelper.GetToolkitType();
+			var toolkitType = OSVersionEx.GetToolkitType();
 			Xwt.Application.InitializeAsGuest(toolkitType);
 
 			//show the msgbox
