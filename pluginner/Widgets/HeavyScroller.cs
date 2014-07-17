@@ -4,13 +4,11 @@
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xwt;
 
-namespace pluginner
+namespace pluginner.Widgets
 {
 	/// <summary>A scrollable panel, that can be 100% controlled by the host</summary>
 	public class HeavyScroller : Xwt.Widget

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using pluginner.Widgets;
 
 namespace fcmd
 {
@@ -87,8 +88,8 @@ namespace fcmd
         public void Rm()
         {
             if (ActivePanel.GetValue(ActivePanel.dfDisplayName) == "..") { return; }
-            pluginner.ListView2Item[] chdrws = ActivePanel.ListingView.ChoosedRows.ToArray();//because the List may change due the process, we getting the copy of the list (as array, but how else?)
-            foreach (pluginner.ListView2Item selitem in chdrws)
+            ListView2Item[] chdrws = ActivePanel.ListingView.ChoosedRows.ToArray();//because the List may change due the process, we getting the copy of the list (as array, but how else?)
+            foreach (ListView2Item selitem in chdrws)
             {
                 string URL = selitem.Data[ActivePanel.dfURL].ToString();
                 Rm(URL);
@@ -156,7 +157,7 @@ namespace fcmd
 		{
 			if (ActivePanel.GetValue<string>(ActivePanel.dfDisplayName) == "..") { return; }
 
-            foreach (pluginner.ListView2Item selitem in ActivePanel.ListingView.ChoosedRows)
+            foreach (ListView2Item selitem in ActivePanel.ListingView.ChoosedRows)
             {
                 int Progress = 0;
                 string SourceURL = selitem.Data[ActivePanel.dfURL].ToString();
@@ -264,7 +265,7 @@ namespace fcmd
 			pluginner.IFSPlugin SourceFS = ActivePanel.FS;
 			pluginner.IFSPlugin DestinationFS = PassivePanel.FS;
 
-            foreach (pluginner.ListView2Item selitem in ActivePanel.ListingView.ChoosedRows)
+            foreach (ListView2Item selitem in ActivePanel.ListingView.ChoosedRows)
             {
                 //Getting useful URL parts
                 string SourceName = selitem.Data[ActivePanel.dfDisplayName].ToString(); //ActivePanel.GetValue<string>(ActivePanel.dfDisplayName);

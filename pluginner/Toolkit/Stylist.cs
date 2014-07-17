@@ -5,13 +5,12 @@
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using mucss;
 
-namespace pluginner
+using System;
+using mucss;
+using pluginner.Widgets;
+
+namespace pluginner.Toolkit
 {
 	/// <summary>Simplifies CSS-based theming of some Xwt widgets</summary>
 	public class Stylist

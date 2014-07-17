@@ -91,19 +91,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BookmarkTools.cs" />
-    <Compile Include="EditableLabel.cs" />
-    <Compile Include="FileListPanel.cs" />
-    <Compile Include="HeavyScroller.cs" />
+    <Compile Include="Toolkit\BookmarkTools.cs" />
+    <Compile Include="Widgets\EditableLabel.cs" />
+    <Compile Include="Widgets\FileListPanel.cs" />
+    <Compile Include="Widgets\HeavyScroller.cs" />
+    <Compile Include="Toolkit\OSVersionEx.cs" />
     <Compile Include="IFSPlugin.cs" />
     <Compile Include="IVEPlugin.cs" />
-    <Compile Include="ListView2.cs" />
-    <Compile Include="ListView2Item.cs" />
+    <Compile Include="Widgets\ListView2.cs" />
+    <Compile Include="Widgets\ListView2Item.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Stylist.cs" />
-    <Compile Include="Utilities.cs" />
-    <Compile Include="LightScroller.cs" />
+    <Compile Include="Toolkit\Stylist.cs" />
+    <Compile Include="Toolkit\Utilities.cs" />
+    <Compile Include="Widgets\LightScroller.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\battery.png" />

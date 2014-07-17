@@ -8,13 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using pluginner.Toolkit;
 
 namespace fcmd
 {
 	class VEsettings : Xwt.Dialog
 	{
 		Localizator Locale = new Localizator();
-		pluginner.Stylist s = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
+		Stylist s = new Stylist(fcmd.Properties.Settings.Default.UserTheme);
 		Xwt.VBox Layout = new Xwt.VBox();
 		Xwt.CheckBox chkShowToolbar = new Xwt.CheckBox();
 		Xwt.CheckBox chkShowCmdBar = new Xwt.CheckBox();

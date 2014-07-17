@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using pluginner.Toolkit;
 using Xwt;
 using mucss;
 
@@ -47,7 +48,7 @@ namespace fcmd
 		HBox hb = new HBox();
 		Label lblF = new Label(); //F key
 		Label lblD = new Label(); //Description
-		pluginner.Stylist s = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
+		Stylist s = new Stylist(fcmd.Properties.Settings.Default.UserTheme);
 
 		string fkey = "", text = "";
 

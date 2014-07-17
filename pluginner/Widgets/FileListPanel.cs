@@ -4,17 +4,14 @@
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Reflection;
 using System.IO;
+using pluginner.Toolkit;
 using Xwt;
 
-
-namespace pluginner
+namespace pluginner.Widgets
 {
 	/// <summary>Filelist panel</summary>
 	public class FileListPanel : Table
@@ -29,7 +26,7 @@ namespace pluginner
 		public int dfDirItem = 5;
 
 		public pluginner.IFSPlugin FS;
-		public pluginner.LightScroller DiskBox = new LightScroller();
+		public LightScroller DiskBox = new LightScroller();
 		public HBox DiskList = new HBox();
 		public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
 		public Button GoRoot = new Button("/");
@@ -175,7 +172,7 @@ namespace pluginner
 			UrlBox.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
 			UrlBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(UrlBox_KeyReleased);
 
-			pluginner.BookmarkTools bmt = new BookmarkTools(BookmarkXML,"QuickAccessBar");
+			BookmarkTools bmt = new BookmarkTools(BookmarkXML,"QuickAccessBar");
 			bmt.DisplayBookmarks(
 				DiskList,
 				(url) => { NavigateTo(url); },
@@ -338,7 +335,7 @@ namespace pluginner
 
 			//неспешное TODO:придумать, куда лучше закорячить; не забываем, что во время работы FS может меняться полностью
 			FS.CLIstdoutDataReceived += new TypedEvent<string>(FS_CLIstdoutDataReceived);
-			FS.CLIstderrDataReceived+=(stderr)=>{ CLIoutput.Text += "\n" + stderr; pluginner.Utilities.ShowWarning(stderr); };
+			FS.CLIstderrDataReceived+=(stderr)=>{ CLIoutput.Text += "\n" + stderr; Utilities.ShowWarning(stderr); };
 			FS.CLIpromptChanged += new TypedEvent<string>(FS_CLIpromptChanged);
 
 			LoadDir(

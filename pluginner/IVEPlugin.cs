@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using pluginner.Toolkit;
 
 namespace pluginner
 {
@@ -40,7 +41,7 @@ namespace pluginner
 		bool ShowToolbar { set; }
 
 		/// <summary>UI theme applicator.</summary>
-		pluginner.Stylist Stylist { set; }
+		Stylist Stylist { set; }
 		//note that the plugin color scheme must rely on VEWorkingArea selector
 	}
 }

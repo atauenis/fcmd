@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using pluginner;
+using pluginner.Toolkit;
 
 namespace fcmd
 {
@@ -174,7 +175,7 @@ namespace fcmd
 			catch (Exception ex)
 			{
 				if (ex.GetType() != typeof(System.Threading.ThreadAbortException)) { 
-					pluginner.Utilities.ShowMessage(string.Format(Locale.GetString("CantCopy"),SourceFile.Name,ex.Message));
+					Utilities.ShowMessage(string.Format(Locale.GetString("CantCopy"),SourceFile.Name,ex.Message));
 					Console.WriteLine("Cannot copy because of {0}({1}) at \n{2}.", ex.GetType(), ex.Message, ex.StackTrace);
 				}
 			}

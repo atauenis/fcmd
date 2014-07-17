@@ -10,7 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using fcmd.Helpers;
+using pluginner.Toolkit;
+using pluginner.Widgets;
 using Winforms = System.Windows.Forms;
 
 namespace fcmd
@@ -18,7 +19,7 @@ namespace fcmd
 	partial class MainWindow : Xwt.Window
 	{
 		Localizator Locale = new Localizator();
-		pluginner.Stylist stylist;
+		Stylist stylist;
 		Xwt.Menu WindowMenu = new Xwt.Menu();
 
 		Xwt.MenuItem mnuFile = new Xwt.MenuItem() { Tag="mnuFile" };
@@ -85,13 +86,13 @@ namespace fcmd
 		Xwt.VBox Layout = new Xwt.VBox();
 		Xwt.HPaned PanelLayout = new Xwt.HPaned();
 
-		pluginner.FileListPanel p1;
-		pluginner.FileListPanel p2;
+		FileListPanel p1;
+		FileListPanel p2;
 		
 		/// <summary>The current active panel</summary>
-		pluginner.FileListPanel ActivePanel;
+		FileListPanel ActivePanel;
 		/// <summary>The current inactive panel</summary>
-		pluginner.FileListPanel PassivePanel;
+		FileListPanel PassivePanel;
 
 		Xwt.HBox KeyBoardHelp = new Xwt.HBox();
 		KeyboardHelpButton[] KeybHelpButtons = new KeyboardHelpButton[11];//одна лишняя, которая нумбер [0]
@@ -208,7 +209,7 @@ namespace fcmd
 				if (fcmd.Properties.Settings.Default.UserTheme != "")
 				{
 					if (File.Exists(fcmd.Properties.Settings.Default.UserTheme))
-						stylist = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
+						stylist = new Stylist(fcmd.Properties.Settings.Default.UserTheme);
 					else
 					{
 						Xwt.MessageDialog.ShowError(Locale.GetString("ThemeNotFound"), fcmd.Properties.Settings.Default.UserTheme);
@@ -225,20 +226,20 @@ namespace fcmd
 			}
 
 			//build panels
-			PanelLayout.Panel1.Content = new pluginner.FileListPanel(BookmarksStore, fcmd.Properties.Settings.Default.UserTheme, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
-			PanelLayout.Panel2.Content = new pluginner.FileListPanel(BookmarksStore, fcmd.Properties.Settings.Default.UserTheme, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2);
+			PanelLayout.Panel1.Content = new FileListPanel(BookmarksStore, fcmd.Properties.Settings.Default.UserTheme, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
+			PanelLayout.Panel2.Content = new FileListPanel(BookmarksStore, fcmd.Properties.Settings.Default.UserTheme, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2);
 
-			p1 = (PanelLayout.Panel1.Content as pluginner.FileListPanel);
-			p2 = (PanelLayout.Panel2.Content as pluginner.FileListPanel);
+			p1 = (PanelLayout.Panel1.Content as FileListPanel);
+			p2 = (PanelLayout.Panel2.Content as FileListPanel);
 			p1.OpenFile += new pluginner.TypedEvent<string>(Panel_OpenFile);
 			p2.OpenFile += new pluginner.TypedEvent<string>(Panel_OpenFile);
 
-			List<pluginner.ListView2.CollumnInfo> LVCols = new List<pluginner.ListView2.CollumnInfo>();
-			LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = "", Tag = "Icon", Width = 16, Visible = true });
-			LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = "URL", Tag = "Path", Width = 0, Visible = false });
-			LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = Locale.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
-			LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = Locale.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
-			LVCols.Add(new pluginner.ListView2.CollumnInfo() { Title = Locale.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
+			List<ListView2.CollumnInfo> LVCols = new List<ListView2.CollumnInfo>();
+			LVCols.Add(new ListView2.CollumnInfo() { Title = "", Tag = "Icon", Width = 16, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo() { Title = "URL", Tag = "Path", Width = 0, Visible = false });
+			LVCols.Add(new ListView2.CollumnInfo() { Title = Locale.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo() { Title = Locale.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo() { Title = Locale.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
 
 			p1.FS = new base_plugins.fs.localFileSystem();
 
@@ -273,7 +274,7 @@ namespace fcmd
 
 			//apply user's settings
 			//milliseconds for double click
-			pluginner.ListView2.MillisecondsForDoubleClick = Winforms.SystemInformation.DoubleClickTime;
+			ListView2.MillisecondsForDoubleClick = Winforms.SystemInformation.DoubleClickTime;
 			//window size
 			this.Width = fcmd.Properties.Settings.Default.WinWidth;
 			this.Height = fcmd.Properties.Settings.Default.WinHeight;
@@ -461,8 +462,8 @@ namespace fcmd
 		void PanelLayout_KeyReleased(object sender, Xwt.KeyEventArgs e)
 		{
 #if DEBUG
-			pluginner.FileListPanel p1 = (PanelLayout.Panel1.Content as pluginner.FileListPanel);
-			pluginner.FileListPanel p2 = (PanelLayout.Panel2.Content as pluginner.FileListPanel);
+			FileListPanel p1 = (PanelLayout.Panel1.Content as FileListPanel);
+			FileListPanel p2 = (PanelLayout.Panel2.Content as FileListPanel);
 			Console.WriteLine("KEYBOARD DEBUG: " + e.Modifiers.ToString() + "+" + e.Key.ToString() + " was pressed. Panels focuses: " + (ActivePanel == p1) + " | " + (ActivePanel == p2));
 #endif
 			if (e.Key == Xwt.Key.Return) return;//ENTER presses are handled by other event
@@ -502,7 +503,7 @@ namespace fcmd
 						System.Text.RegularExpressions.Regex re = new System.Text.RegularExpressions.Regex(Filter);
 
 						int Count = 0;
-						foreach (pluginner.ListView2Item lvi in ActivePanel.ListingView.Items)
+						foreach (ListView2Item lvi in ActivePanel.ListingView.Items)
 						{
 							if (re.IsMatch(lvi.Data[1].ToString())){
 								ActivePanel.ListingView.Select(lvi);
@@ -537,7 +538,7 @@ namespace fcmd
 						System.Text.RegularExpressions.Regex re = new System.Text.RegularExpressions.Regex(Filter_qus);
 
 						int Count_qus = 0;
-						foreach (pluginner.ListView2Item lvi in ActivePanel.ListingView.Items)
+						foreach (ListView2Item lvi in ActivePanel.ListingView.Items)
 						{
 							if (re.IsMatch(lvi.Data[1].ToString()))
 							{
@@ -623,7 +624,7 @@ namespace fcmd
 
 		/// <summary>Switches the active panel</summary>
 		/// <param name="NewPanel">The new active panel</param>
-		private void SwitchPanel(pluginner.FileListPanel NewPanel)
+		private void SwitchPanel(FileListPanel NewPanel)
 		{
 			if (NewPanel == ActivePanel) return;
 			PassivePanel = ActivePanel;
@@ -644,18 +645,18 @@ namespace fcmd
 		}
 
 		/// <summary>Converts size display policy (as string) to FLP.SizeDisplayPolicy</summary>
-		private pluginner.FileListPanel.SizeDisplayPolicy ConvertSDP(char SizeDisplayPolicy)
+		private FileListPanel.SizeDisplayPolicy ConvertSDP(char SizeDisplayPolicy)
 		{
 			switch (SizeDisplayPolicy.ToString())
 			{
 				case "0":
-					return pluginner.FileListPanel.SizeDisplayPolicy.DontShorten;
+					return FileListPanel.SizeDisplayPolicy.DontShorten;
 				case "1":
-					return pluginner.FileListPanel.SizeDisplayPolicy.OneNumeral;
+					return FileListPanel.SizeDisplayPolicy.OneNumeral;
 				case "2":
-					return pluginner.FileListPanel.SizeDisplayPolicy.TwoNumeral;
+					return FileListPanel.SizeDisplayPolicy.TwoNumeral;
 				default:
-					return pluginner.FileListPanel.SizeDisplayPolicy.OneNumeral;
+					return FileListPanel.SizeDisplayPolicy.OneNumeral;
 			}
 		}
 

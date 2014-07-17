@@ -4,14 +4,13 @@
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Xml;
 
-namespace pluginner
+namespace pluginner.Toolkit
 {
 	/// <summary>Bookmark menu tools</summary>
 	public class BookmarkTools

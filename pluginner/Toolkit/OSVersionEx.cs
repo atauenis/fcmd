@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Xwt;
 
-namespace fcmd.Helpers
+namespace pluginner.Toolkit
 {
 	// ReSharper disable once InconsistentNaming
 	public static class OSVersionEx

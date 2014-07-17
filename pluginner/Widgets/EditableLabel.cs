@@ -4,13 +4,10 @@
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using Xwt;
 
-namespace pluginner
+namespace pluginner.Widgets
 {
 	/// <summary>
 	/// Editable label (like the file name label in the wide-used file managers)

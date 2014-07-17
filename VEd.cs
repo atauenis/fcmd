@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using pluginner.Toolkit;
 
 namespace fcmd
 {
@@ -16,7 +17,7 @@ namespace fcmd
 	class VEd : Xwt.Window
 	{
 		Localizator Locale = new Localizator();
-		pluginner.Stylist s = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
+		Stylist s = new Stylist(fcmd.Properties.Settings.Default.UserTheme);
 		pluginner.IVEPlugin Plugin;
 		pluginner.IFSPlugin FSPlugin;
 		bool CanBeShowed = true;
@@ -341,7 +342,7 @@ namespace fcmd
 			if (sel.Declarations["background-color"].Value != "inherit")
 			{ 
 				Layout.BackgroundColor =
-				pluginner.Utilities.GetXwtColor(
+				Utilities.GetXwtColor(
 					sel.Declarations["background-color"].Value
 				);
 			}

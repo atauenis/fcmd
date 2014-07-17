@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using pluginner.Toolkit;
 using Xwt;
 
 namespace fcmd.SettingsWindowTabs
@@ -15,7 +16,7 @@ namespace fcmd.SettingsWindowTabs
 	class swtMainWindowThemes : ISettingsWindowTab
 	{
 		Localizator Locale = new Localizator();
-		pluginner.Stylist s = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme); //todo: add wysiwyg css editor
+		Stylist s = new Stylist(fcmd.Properties.Settings.Default.UserTheme); //todo: add wysiwyg css editor
 
 		Table layout = new Table();
 		CheckBox chkUseThemes = new CheckBox("yuz kastom temez fo zi pogam's intefeys");

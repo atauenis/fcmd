@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using pluginner.Toolkit;
 
 namespace fcmd.base_plugins.ve
 {
@@ -30,7 +31,7 @@ namespace fcmd.base_plugins.ve
 		Xwt.MenuButton mbMode = new Xwt.MenuButton("Text") { Sensitive = false, Type = Xwt.ButtonType.Normal, Style = Xwt.ButtonStyle.Flat };
 		Xwt.MenuButton mbCodepage = new Xwt.MenuButton("codepage") { Type = Xwt.ButtonType.DropDown, Style = Xwt.ButtonStyle.Flat };
 
-		pluginner.Stylist s = new pluginner.Stylist(fcmd.Properties.Settings.Default.UserTheme);
+		Stylist s = new Stylist(fcmd.Properties.Settings.Default.UserTheme);
 		int Codepage = Encoding.Default.CodePage;
 		byte[] fileContent;
 		string Txt = "";
@@ -127,7 +128,7 @@ namespace fcmd.base_plugins.ve
 			}
 		}
 
-		public pluginner.Stylist Stylist
+		public Stylist Stylist
 		{
 			set
 			{

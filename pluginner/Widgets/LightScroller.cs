@@ -4,10 +4,10 @@
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
-using System;
+
 using Xwt;
 
-namespace pluginner
+namespace pluginner.Widgets
 {
 	/// <summary>A lightweight scrollable panel</summary>
 	public class LightScroller : Xwt.Canvas

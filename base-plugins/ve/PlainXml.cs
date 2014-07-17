@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using pluginner;
+using pluginner.Toolkit;
 using Xwt;
 using Winforms=System.Windows.Forms;
 
