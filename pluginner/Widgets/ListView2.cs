@@ -114,8 +114,10 @@ namespace pluginner.Widgets
 
 		void Layout_KeyPressed(object sender, KeyEventArgs e)
 		{
-			//See GH issue #10
-			Console.WriteLine("LV2 DEBUG: pressed {0}, repeat={1}, handled={2}",e.Key,e.IsRepeat,e.Handled); //УБРАТЬ!!!
+			#if DEBUG
+				//initiated by GH issue #10, but may give a help in the future too...
+				Console.WriteLine("LV2 DEBUG: pressed {0}, repeat={1}, handled={2}",e.Key,e.IsRepeat,e.Handled);
+			#endif
 			//currently, the keyboard feel is same as in Norton & Total Commanders
 			switch (e.Key)
 			{
@@ -288,14 +290,16 @@ namespace pluginner.Widgets
 				LastCol,
 				Tag,
 				_Collumns.ToArray(),
-				Data);
-			lvi.EditableFields = EditableFields;
-			lvi.Font = Xwt.Drawing.Font.SystemSansSerifFont.WithWeight(Xwt.Drawing.FontWeight.Heavy);
-			lvi.PointerBgColor = PointedBgColor;
-			lvi.PointerFgColor = PointedFgColor;
-			lvi.SelectionBgColor = SelectedBgColor;
-			lvi.SelectionFgColor = SelectedFgColor;
-			lvi.State = ItemStates.Default;
+				Data)
+			{
+				EditableFields = EditableFields,
+				Font = Xwt.Drawing.Font.SystemSansSerifFont.WithWeight(Xwt.Drawing.FontWeight.Heavy),
+				PointerBgColor = PointedBgColor,
+				PointerFgColor = PointedFgColor,
+				SelectionBgColor = SelectedBgColor,
+				SelectionFgColor = SelectedFgColor,
+				State = ItemStates.Default
+			};
 			AddItem(lvi);
 		}
 

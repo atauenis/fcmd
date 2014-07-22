@@ -240,6 +240,7 @@ namespace fcmd
 			LVCols.Add(new ListView2.CollumnInfo() { Title = Locale.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
 			LVCols.Add(new ListView2.CollumnInfo() { Title = Locale.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
 			LVCols.Add(new ListView2.CollumnInfo() { Title = Locale.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo() { Title = "Directory item info", Tag = "DirItem", Width = 0, Visible = false });
 
 			p1.FS = new base_plugins.fs.localFileSystem();
 
