@@ -288,14 +288,16 @@ namespace pluginner.Widgets
 				LastCol,
 				Tag,
 				_Collumns.ToArray(),
-				Data);
-			lvi.EditableFields = EditableFields;
-			lvi.Font = Xwt.Drawing.Font.SystemSansSerifFont.WithWeight(Xwt.Drawing.FontWeight.Heavy);
-			lvi.PointerBgColor = PointedBgColor;
-			lvi.PointerFgColor = PointedFgColor;
-			lvi.SelectionBgColor = SelectedBgColor;
-			lvi.SelectionFgColor = SelectedFgColor;
-			lvi.State = ItemStates.Default;
+				Data)
+			{
+				EditableFields = EditableFields,
+				Font = Xwt.Drawing.Font.SystemSansSerifFont.WithWeight(Xwt.Drawing.FontWeight.Heavy),
+				PointerBgColor = PointedBgColor,
+				PointerFgColor = PointedFgColor,
+				SelectionBgColor = SelectedBgColor,
+				SelectionFgColor = SelectedFgColor,
+				State = ItemStates.Default
+			};
 			AddItem(lvi);
 		}
 

@@ -9,10 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xwt;
+using Xwt.Drawing;
 
 namespace pluginner.Widgets
 {
-	public class ListView2Item : Xwt.Widget
+	public class ListView2Item : Canvas
 	{
 		/// <summary>Data store</summary>
 		private Object[] _Values;
@@ -22,8 +23,6 @@ namespace pluginner.Widgets
 		private ListView2.CollumnInfo[] _Cols;
 		/// <summary>Selection state</summary>
 		private ListView2.ItemStates _State;
-		/// <summary>Widget layout host</summary>
-		private HBox Layout = new HBox();
 
 		private Xwt.Drawing.Color DefBgColor;
 		private Xwt.Drawing.Color DefFgColor;
@@ -32,34 +31,45 @@ namespace pluginner.Widgets
 		private Xwt.Drawing.Color SelBgColor;
 		private Xwt.Drawing.Color SelFgColor;
 
-		private void Rebuild()
+		private Xwt.Drawing.Color CurFgColor;
+
+		protected override void OnDraw(Xwt.Drawing.Context ctx, Rectangle dirtyRect)
 		{
-			Layout.Clear();
-			//Layout.BackgroundColor = Xwt.Drawing.Colors.Bisque;
+			base.OnDraw(ctx, dirtyRect);
+			if (_Values.Count() > _Cols.Count()) return; //if the collumn count is less than the count of collumns in the data, НАХУЙ ТАКУЮ РАБОТУ
+
+			double PosByX = 0;
 			for (int i = 0; i < _Values.Length; i++)
 			{
-				Object Item = _Values[i];
+				var Value = _Values[i];
+				if (_Cols[i].Visible)
+					Draw(Value, PosByX, ctx);
 
-				Widget lbl;
-
-				lbl = MakeWidget(Item);
-
-				if (_Editables != null && _Editables.Count() >= i){
-					if (lbl.GetType() == typeof(EditableLabel))
-					(lbl as EditableLabel).Editable = _Editables[i];
+				if (_Cols.Count() > i && i != _Cols.Count() - 1)
+				{
+					PosByX += _Cols[i].Width;
 				}
-				else{
-					if (lbl.GetType() == typeof(EditableLabel))
-					(lbl as EditableLabel).Editable = false;
-				}
-				
-				//lbl.BackgroundColor = Xwt.Drawing.Colors.Chocolate;
-				if (_Cols.Count() > i && i != _Cols.Count() - 1){
-					lbl.WidthRequest = _Cols[i].Width;
-					lbl.Visible = _Cols[i].Visible;
-				}
-				Layout.PackStart(lbl);
 			}
+		}
+
+		private void Draw(object What, double Where, Xwt.Drawing.Context On)
+		{
+			if (What.GetType() != typeof (Xwt.Drawing.Image)
+				&&
+				What.GetType() != typeof (DirItem))
+			{
+				TextLayout tl = new TextLayout(this) {Text = What.ToString(), Font = Font};
+				On.DrawTextLayout(tl, Where, 0);
+			}
+			if (What is Xwt.Drawing.Image)
+			{
+				On.DrawImage(What as Xwt.Drawing.Image, Where, 0);
+			}
+		}
+
+		private void Rebuild()
+		{
+//delete!
 		}
 
 		/// <summary>Makes a ready to display widget from an data-storage type (String, Image, DateTime or etc)</summary>
@@ -98,9 +108,12 @@ namespace pluginner.Widgets
 		/// <param name="Data">The data that should be shown in this LV2I</param>
 		public ListView2Item(int RowNumber, int ColNumber, string RowTag, ListView2.CollumnInfo[] Collumns, List<Object> Data)
 		{
-			//this.BackgroundColor = Xwt.Drawing.Colors.GreenYellow;
-			this.Content = Layout;
-			this.ExpandHorizontal = true;
+			BackgroundColor = Xwt.Drawing.Colors.Aqua;
+			MinHeight = 16;
+			HeightRequest = 16;
+			MinWidth = 500;
+			ExpandHorizontal = true;
+			ExpandVertical = true;
 
 			_Values = Data.ToArray();
 			_Cols = Collumns;
@@ -116,7 +129,7 @@ namespace pluginner.Widgets
 			set {
 				DefBgColor = value;
 				if (State == ListView2.ItemStates.Default)
-					Layout.BackgroundColor = DefBgColor;
+					BackgroundColor = DefBgColor;
 			}
 		}
 
@@ -127,11 +140,7 @@ namespace pluginner.Widgets
 			{
 				DefFgColor = value;
 				if (State == ListView2.ItemStates.Default) {
-					foreach (object w in Layout.Children){
-						if (w.GetType() == typeof(Xwt.Label)){
-							(w as Label).TextColor = value;
-						}
-					}
+//undone
 				}
 			}
 		}
@@ -143,7 +152,7 @@ namespace pluginner.Widgets
 			{
 				PointBgColor = value;
 				if ((int)State == 1){
-					Layout.BackgroundColor = value;
+					BackgroundColor = value;
 				}
 			}
 		}
@@ -155,12 +164,7 @@ namespace pluginner.Widgets
 			{
 				PointFgColor = value;
 				if ((int)State == 1){
-					foreach (object w in Layout.Children)
-					{
-						if (w.GetType() == typeof(Xwt.Label)){
-							(w as Label).TextColor = value;
-						}
-					}
+//undone
 				}
 			}
 		}
@@ -172,7 +176,7 @@ namespace pluginner.Widgets
 			{
 				SelBgColor = value;
 				if ((int)State >= 2){
-					Layout.BackgroundColor = value;
+					BackgroundColor = value;
 				}
 			}
 		}
@@ -184,12 +188,7 @@ namespace pluginner.Widgets
 			{
 				SelFgColor = value;
 				if ((int)State >= 2){
-					foreach (object w in Layout.Children)
-					{
-						if (w.GetType() == typeof(Xwt.Label)){
-							(w as Label).TextColor = value;
-						}
-					}
+//undone
 				}
 			}
 		}
@@ -197,12 +196,7 @@ namespace pluginner.Widgets
 		/// <summary>Set the font of the row</summary>
 		public new Xwt.Drawing.Font Font
 		{
-			set
-			{
-				foreach (Xwt.Widget w in Layout.Children){
-					w.Font = value;
-				}
-			}
+			get; set;
 		}
 
 		/// <summary>Set collumn list</summary>
@@ -221,48 +215,39 @@ namespace pluginner.Widgets
 				switch (value)
 				{
 					case ListView2.ItemStates.Pointed:
-						Layout.BackgroundColor = PointerBgColor;
-						foreach (object w in Layout.Children)
-						{
-							if (w.GetType() == typeof(Xwt.Label)){
-								(w as Label).TextColor = PointerFgColor;
-							}
-						}
+						BackgroundColor = PointerBgColor;
+						CurFgColor = PointFgColor;
 						break;
 					case ListView2.ItemStates.Selected:
-						Layout.BackgroundColor = SelBgColor;
-						foreach (object w in Layout.Children)
-						{
-							if (w.GetType() == typeof(Xwt.Label)){
-								(w as Label).TextColor = SelFgColor;
-							}
-						}
+						BackgroundColor = SelBgColor;
+						CurFgColor = SelFgColor;
 						break;
 					case ListView2.ItemStates.PointedAndSelected:
 						//todo: replace this buggy algorythm with better one
 						//дело в том, что xwt немного путает одинаковые цвета,
 						//на минимальные доли, но этого достаточно для color1!=color2
 						if (PointBgColor == NormalBgColor){
-							Layout.BackgroundColor = SelectionBgColor;
+							BackgroundColor = SelectionBgColor;
+							CurFgColor = SelectionFgColor;
 						}
 						else{
-							Layout.BackgroundColor =
+							BackgroundColor =
 								SelBgColor.BlendWith(
 								PointBgColor, 0.5
 								);
+							CurFgColor =
+								SelFgColor.BlendWith(
+								PointFgColor, 0.5
+								);
+
 						}
 						break;
 					default:
-						Layout.BackgroundColor = DefBgColor;
-						foreach (object w in Layout.Children)
-						{
-							if (w.GetType() == typeof(Xwt.Label))
-							{
-								(w as Label).TextColor = NormalFgColor;
-							}
-						}
+						BackgroundColor = DefBgColor;
+						CurFgColor = DefFgColor;
 						break;
 				}
+				this.QueueDraw();
 			}
 		}
 
