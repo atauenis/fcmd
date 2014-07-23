@@ -43,7 +43,7 @@ namespace pluginner.Widgets
 			{
 				var Value = _Values[i];
 				if (_Cols[i].Visible)
-					Draw(Value, PosByX, ctx);
+					Draw(Value, PosByX, ctx, _Cols[i].Width);
 
 				if (_Cols.Count() > i && i != _Cols.Count() - 1)
 				{
@@ -52,18 +52,31 @@ namespace pluginner.Widgets
 			}
 		}
 
-		private void Draw(object What, double Where, Context On)
+		/// <summary>
+		/// Draw a information on the ListView2Item
+		/// </summary>
+		/// <param name="What">What should be drawed</param>
+		/// <param name="Where">Where (position by X) should be drawed</param>
+		/// <param name="On">On what Drawing.Context the information should be drawed</param>
+		/// <param name="MaxWidth">The limit of the picture's width</param>
+		private void Draw(object What, double Where, Context On, double MaxWidth)
 		{
 			if (What.GetType() != typeof (Image)
 				&&
 				What.GetType() != typeof (DirItem))
 			{
-				TextLayout tl = new TextLayout(this) {Text = What.ToString(), Font = Font};
-				On.DrawTextLayout(tl, Where, 0);
+				TextLayout tl = new TextLayout(this)
+				{
+					Text = What.ToString(),
+					Font = Font,
+					Width = MaxWidth,
+					Trimming = TextTrimming.WordElipsis
+				};
+				On.DrawTextLayout(tl, Where + 4, 0);
 			}
 			if (What is Image)
 			{
-				On.DrawImage(What as Image, Where, 0);
+				On.DrawImage(What as Image, Where + 2, 0);
 			}
 		}
 
