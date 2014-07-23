@@ -6,10 +6,8 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using pluginner.Toolkit;
+using Xwt;
 
 namespace pluginner
 {
@@ -19,17 +17,17 @@ namespace pluginner
 		/// <summary>Open the file</summary>
 		/// <param name="url">URL of the file</param>
 		/// <param name="fsplugin">The FS plugin, which be used to access the file</param>
-		void OpenFile(string url, pluginner.IFSPlugin fsplugin);
+		void OpenFile(string url, IFSPlugin fsplugin);
 		
 		/// <summary>Save the current file</summary>
 		/// <param name="SaveAs">(optional) Save with new URL ("save as").</param>
 		void SaveFile(bool SaveAs = false);
 
 		/// <summary>The body of the displayed part of the plugin</summary>
-		Xwt.Widget Body {get;}
+		Widget Body {get;}
 
 		/// <summary>The Xwt menu for configuring file decoding mode in FCVE's menu "Format"</summary>
-		Xwt.Menu FormatMenu{get;}
+		Menu FormatMenu{get;}
 
 		/// <summary>Disables content editing in the plugin..</summary>
 		bool ReadOnly { get;  set; }

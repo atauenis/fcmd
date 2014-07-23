@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using Xwt;
+using Xwt.Drawing;
 
 namespace pluginner.Widgets
 {
@@ -20,26 +21,26 @@ namespace pluginner.Widgets
 		private ScrollView ScrollerOut = new ScrollView(); //horizontal scroller
 		private List<Label> CollumnTitles = new List<Label>();
 		private Table Grid = new Table();
-		private int LastRow = 0;
-		private int LastCol = 0;
+		private int LastRow;
+		private int LastCol;
 		private Views _View = Views.Details;
 		//todo: int MaxRow (для переноса при режиме Small Icons)
 		private List<CollumnInfo> _Collumns = new List<CollumnInfo>();
-		private int Through10Counter = 0; //для устранения зависания UI при загрузке длинных списков
-		private bool Color2 = false; //для обеспечения чередования цветов строк
+		private int Through10Counter; //для устранения зависания UI при загрузке длинных списков
+		private bool Color2; //для обеспечения чередования цветов строк
 		private DateTime PointedItemLastClickTime = DateTime.Now.AddDays(-1); //for double click detecting
 
 		public static double MillisecondsForDoubleClick = 1000; //Depends on user settings
 
 		//Color sheme
-		public Xwt.Drawing.Color NormalBgColor1 = Xwt.Drawing.Colors.White;
-		public Xwt.Drawing.Color NormalBgColor2 = Xwt.Drawing.Colors.WhiteSmoke;
-		public Xwt.Drawing.Color NormalFgColor1 = Xwt.Drawing.Colors.Black;
-		public Xwt.Drawing.Color NormalFgColor2 = Xwt.Drawing.Colors.Black;
-		public Xwt.Drawing.Color PointedBgColor = Xwt.Drawing.Colors.LightGray;
-		public Xwt.Drawing.Color PointedFgColor = Xwt.Drawing.Colors.Black;
-		public Xwt.Drawing.Color SelectedBgColor = Xwt.Drawing.Colors.White;
-		public Xwt.Drawing.Color SelectedFgColor = Xwt.Drawing.Colors.Red;
+		public Color NormalBgColor1 = Colors.White;
+		public Color NormalBgColor2 = Colors.WhiteSmoke;
+		public Color NormalFgColor1 = Colors.Black;
+		public Color NormalFgColor2 = Colors.Black;
+		public Color PointedBgColor = Colors.LightGray;
+		public Color PointedFgColor = Colors.Black;
+		public Color SelectedBgColor = Colors.White;
+		public Color SelectedFgColor = Colors.Red;
 		/// <summary>List of items. Please do not edit directly! Please use the AddItem and RemoveItem functions.</summary>
 		public List<ListView2Item> Items = new List<ListView2Item>();
 		/// <summary>The pointed item</summary>
@@ -51,7 +52,7 @@ namespace pluginner.Widgets
 
 		public ListView2()
 		{
-			base.Content = ScrollerOut;
+			Content = ScrollerOut;
 			Layout.Spacing = 0;
 			Grid.DefaultRowSpacing = 0;
 
@@ -64,10 +65,10 @@ namespace pluginner.Widgets
 
 			Layout.KeyPressed += Layout_KeyPressed;
 			Layout.CanGetFocus = true;
-			base.CanGetFocus = true;
-			this.KeyPressed += Layout_KeyPressed;
+			CanGetFocus = true;
+			KeyPressed += Layout_KeyPressed;
 
-			this.ScrollerIn.BackgroundColor = Xwt.Drawing.Colors.White;
+			ScrollerIn.BackgroundColor = Colors.White;
 
 			//tests for custom pointing edge setup
 			/*AllowedToPoint.Add(5);
@@ -80,8 +81,8 @@ namespace pluginner.Widgets
 
 		private void Item_ButtonPressed(object sender, ButtonEventArgs e)
 		{
-			this.SetFocus();
-			ListView2Item lvi = Items[(sender as ListView2Item).RowNo];//вырезание гланд через жопу автогеном? уточнить лучший способ, sender не работает
+			SetFocus();
+			ListView2Item lvi = Items[((ListView2Item) sender).RowNo];//вырезание гланд через жопу автогеном? уточнить лучший способ, sender не работает
 			//currently, the mouse click policy is same as in Total and Norton Commander
 			if (e.Button == PointerButton.Right)//right click - select & do nothing
 			{
@@ -95,7 +96,7 @@ namespace pluginner.Widgets
 					double MillisecondsPassed = (DateTime.Now - PointedItemLastClickTime).TotalMilliseconds;
 					if (MillisecondsPassed < MillisecondsForDoubleClick)
 					{
-						PointedItemDoubleClicked(this.PointedItem);
+						PointedItemDoubleClicked(PointedItem);
 						// The last click was so long long ago that the next one can't be double click
 						PointedItemLastClickTime = DateTime.Now.AddDays(-1);
 					}
@@ -274,7 +275,7 @@ namespace pluginner.Widgets
 
 		/// <summary>Imitates a press of a keyboard key</summary>
 		/// <param name="kea">The key to be "pressed"</param>
-		public new void OnKeyPressed(Xwt.KeyEventArgs kea)
+		public new void OnKeyPressed(KeyEventArgs kea)
 		{
 			base.OnKeyPressed(kea);
 		}
@@ -282,18 +283,17 @@ namespace pluginner.Widgets
 		/// <summary>Add a new item</summary>
 		/// <param name="Data">The item's content</param>
 		/// <param name="EditableFields">List of editable fields</param>
-		/// <param name="Tag">The tag for the new item (optional)</param>
-		public void AddItem(List<Object> Data, List<Boolean> EditableFields, string Tag = null)
+		/// <param name="ItemTag">The tag for the new item (optional)</param>
+		public void AddItem(List<Object> Data, List<Boolean> EditableFields, string ItemTag = null)
 		{
 			ListView2Item lvi = new ListView2Item(
 				LastRow,
 				LastCol,
-				Tag,
+				ItemTag,
 				_Collumns.ToArray(),
 				Data)
 			{
-				EditableFields = EditableFields,
-				Font = Xwt.Drawing.Font.SystemSansSerifFont.WithWeight(Xwt.Drawing.FontWeight.Heavy),
+				Font = Font.SystemSansSerifFont.WithWeight(FontWeight.Heavy),
 				PointerBgColor = PointedBgColor,
 				PointerFgColor = PointedFgColor,
 				SelectionBgColor = SelectedBgColor,
@@ -319,8 +319,8 @@ namespace pluginner.Widgets
 			Color2 = !Color2;
 			Items.Add(Item);
 			Grid.Add(Item, LastCol, LastRow,1,1,true);
-			Item.ButtonPressed += new EventHandler<ButtonEventArgs>(Item_ButtonPressed);
-			Item.EditComplete+=(sender)=>{ if (this.EditComplete != null) EditComplete(sender, this); };
+			Item.ButtonPressed += Item_ButtonPressed;
+			Item.EditComplete+=(sender)=>{ if (EditComplete != null) EditComplete(sender, this); };
 			Item.CanGetFocus = true;
 			if (LastRow == 0) _SetPoint(Item);
 			LastRow++;
@@ -328,7 +328,7 @@ namespace pluginner.Widgets
 			Through10Counter++;
 			if (Through10Counter == 250)
 			{
-				Xwt.Application.MainLoop.DispatchPendingEvents();
+				Application.MainLoop.DispatchPendingEvents();
 				Through10Counter = 0;
 			}
 		}
@@ -450,7 +450,7 @@ namespace pluginner.Widgets
 				foreach (CollumnInfo ci in value)
 				{
 					_Collumns.Add(ci);
-					CollumnTitles.Add(new Xwt.Label(ci.Title) { WidthRequest = ci.Width, Visible = ci.Visible});
+					CollumnTitles.Add(new Label(ci.Title) { WidthRequest = ci.Width, Visible = ci.Visible});
 					CollumnRow.PackStart(CollumnTitles[CollumnTitles.Count-1]);
 				}
 			}
@@ -476,10 +476,10 @@ namespace pluginner.Widgets
 			get
 			{
 				if (SelectedItems.Count == 0){
-					List<ListView2Item> list_one = new List<ListView2Item>();
-					list_one.Add(PointedItem);
+					List<ListView2Item> list_one = new List<ListView2Item> {PointedItem};
 					return list_one;
 				}
+				// ReSharper disable once RedundantIfElseBlock //to ease readability
 				else{
 					return SelectedItems;
 				}

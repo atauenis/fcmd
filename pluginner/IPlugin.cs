@@ -5,9 +5,8 @@
  * Contributors should place own signs here.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
+using System.Configuration;
+using System.Runtime.Serialization;
 
 namespace pluginner{
 	public delegate void TypedEvent<T>(T data);
@@ -53,12 +52,12 @@ namespace pluginner{
 		/// <summary>
 		/// This event should be raised to talk something to the File Commander (to be raised by the plugin)
 		/// </summary>
-		event pluginner.TypedEvent<object[]> APICallHost;
+		event TypedEvent<object[]> APICallHost;
 
 		/// <summary>
 		/// This property is used to access the current FC User Settings from the Plugin
 		/// </summary>
-		System.Configuration.Configuration FCConfig { set; }
+		Configuration FCConfig { set; }
 	}
 
 	//todo: IUIPlugin (плагины к интерфейсу File Commander)
@@ -70,8 +69,8 @@ namespace pluginner{
 	/// For example, when a filesystem plugin tried to be used with uncompatible filesystem or a image viewer plugin tried to show a text file.
 	/// The File Commander should catch this exception and find a new plugin (see pluginfinder.cs file)
 	/// </summary>
-	[System.Serializable]
-	public class PleaseSwitchPluginException : System.Exception
+	[Serializable]
+	public class PleaseSwitchPluginException : Exception
 	{
 		/// <summary>
 		/// Informs the File Commander that the plugin cannot be used now and must be changed
@@ -93,7 +92,7 @@ namespace pluginner{
 		/// </summary>
 		/// <param name="message">A <see cref="T:System.String"/> that describes the exception. </param>
 		/// <param name="inner">The exception that is the cause of the current exception. </param>
-		public PleaseSwitchPluginException (string message, System.Exception inner) : base (message, inner)
+		public PleaseSwitchPluginException (string message, Exception inner) : base (message, inner)
 		{
 		}
 		
@@ -102,7 +101,7 @@ namespace pluginner{
 		/// </summary>
 		/// <param name="context">The contextual information about the source or destination.</param>
 		/// <param name="info">The object that holds the serialized object data.</param>
-		protected PleaseSwitchPluginException (System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		protected PleaseSwitchPluginException (SerializationInfo info, StreamingContext context) : base (info, context)
 		{
 		}
 	#endregion

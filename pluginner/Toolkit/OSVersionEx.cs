@@ -26,7 +26,7 @@ namespace pluginner.Toolkit
 				case PlatformID.MacOSX:
 					return ToolkitType.Cocoa;
 				default:
-					throw new NotSupportedException(string.Format("Not supported value {0} for {1} type", platform.ToString(), typeof(PlatformID)));
+					throw new NotSupportedException(string.Format("Not supported value {0} for {1} type", platform, typeof(PlatformID)));
 			}
 		}
 

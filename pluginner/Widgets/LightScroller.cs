@@ -10,14 +10,14 @@ using Xwt;
 namespace pluginner.Widgets
 {
 	/// <summary>A lightweight scrollable panel</summary>
-	public class LightScroller : Xwt.Canvas
+	public class LightScroller : Canvas
 	{
 		Widget _content;
 		Rectangle _rectal;
 
 		public LightScroller ()
 		{
-			this.MouseScrolled += (sender, e) => {
+			MouseScrolled += (sender, e) => {
 				switch(e.Direction){
 				case ScrollDirection.Down:
 					if(CanScrollByY) { ScrollBottom(); return;}
@@ -42,10 +42,10 @@ namespace pluginner.Widgets
 			get{ return _content; }
 			set{
 				_content = value;
-				this.AddChild(_content,10,10);
+				AddChild(_content,10,10);
 				_rectal = GetChildBounds(_content);
 				_rectal.Top = 0;
-				this.HeightRequest = _rectal.Height;
+				HeightRequest = _rectal.Height;
 				SetChildBounds(_content,_rectal);
 			}
 		}
@@ -57,27 +57,27 @@ namespace pluginner.Widgets
 		public bool CanScrollByY = true;
 
 		protected void ScrollUp(){
-			if(_rectal.Top > this.Bounds.Top) return;
+			if(_rectal.Top > Bounds.Top) return;
 			_rectal.Top += 5;
-			this.SetChildBounds(_content, _rectal);
+			SetChildBounds(_content, _rectal);
 		}
 
 		protected void ScrollBottom(){//может глючить, разобраться!
-			if(_rectal.Bottom > this.Bounds.Bottom) return;
+			if(_rectal.Bottom > Bounds.Bottom) return;
 			_rectal.Top -= 5;
-			this.SetChildBounds(_content, _rectal);
+			SetChildBounds(_content, _rectal);
 		}
 
 		protected void ScrollRight(){
-			if(_rectal.Right < this.Bounds.Right) return;
+			if(_rectal.Right < Bounds.Right) return;
 			_rectal.Left -= 5;
-			this.SetChildBounds(_content, _rectal);
+			SetChildBounds(_content, _rectal);
 		}
 
 		protected void ScrollLeft(){
-			if(_rectal.Left > this.Bounds.Left) return;
+			if(_rectal.Left > Bounds.Left) return;
 			_rectal.Left += 5;
-			this.SetChildBounds(_content, _rectal);
+			SetChildBounds(_content, _rectal);
 		}
 
 	}

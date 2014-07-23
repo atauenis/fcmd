@@ -22,65 +22,65 @@ namespace fcmd
 		Stylist stylist;
 		Xwt.Menu WindowMenu = new Xwt.Menu();
 
-		Xwt.MenuItem mnuFile = new Xwt.MenuItem() { Tag="mnuFile" };
-		Xwt.MenuItem mnuFileUserMenu = new Xwt.MenuItem() { Tag = "mnuFileUserMenu" };
-		Xwt.MenuItem mnuFileView = new Xwt.MenuItem() { Tag = "mnuFileView" };
-		Xwt.MenuItem mnuFileEdit = new Xwt.MenuItem() { Tag = "mnuFileEdit" };
-		Xwt.MenuItem mnuFileCompare = new Xwt.MenuItem() { Tag = "mnuFileCompare" };
-		Xwt.MenuItem mnuFileCopy = new Xwt.MenuItem() { Tag = "mnuFileCopy" };
-		Xwt.MenuItem mnuFileMove = new Xwt.MenuItem() { Tag = "mnuFileMove" };
-		Xwt.MenuItem mnuFileNewDir = new Xwt.MenuItem() { Tag = "mnuFileNewDir" };
-		Xwt.MenuItem mnuFileRemove = new Xwt.MenuItem() { Tag = "mnuFileRemove" };
-		Xwt.MenuItem mnuFileAtributes = new Xwt.MenuItem() { Tag = "mnuFileAtributes" };
-		Xwt.MenuItem mnuFileQuickSelect = new Xwt.MenuItem() { Tag = "mnuFileQuickSelect" };
-		Xwt.MenuItem mnuFileQuickUnselect = new Xwt.MenuItem() { Tag = "mnuFileQuickUnselect" };
-		Xwt.MenuItem mnuFileSelectAll = new Xwt.MenuItem() { Tag = "mnuFileSelectAll" };
-		Xwt.MenuItem mnuFileUnselect = new Xwt.MenuItem() { Tag = "mnuFileUnselect" };
-		Xwt.MenuItem mnuFileInvertSelection = new Xwt.MenuItem() { Tag = "mnuFileInvertSelection" };
-		Xwt.MenuItem mnuFileExit = new Xwt.MenuItem() { Tag = "mnuFileExit" };
+		Xwt.MenuItem mnuFile = new Xwt.MenuItem { Tag="mnuFile" };
+		Xwt.MenuItem mnuFileUserMenu = new Xwt.MenuItem { Tag = "mnuFileUserMenu" };
+		Xwt.MenuItem mnuFileView = new Xwt.MenuItem { Tag = "mnuFileView" };
+		Xwt.MenuItem mnuFileEdit = new Xwt.MenuItem { Tag = "mnuFileEdit" };
+		Xwt.MenuItem mnuFileCompare = new Xwt.MenuItem { Tag = "mnuFileCompare" };
+		Xwt.MenuItem mnuFileCopy = new Xwt.MenuItem { Tag = "mnuFileCopy" };
+		Xwt.MenuItem mnuFileMove = new Xwt.MenuItem { Tag = "mnuFileMove" };
+		Xwt.MenuItem mnuFileNewDir = new Xwt.MenuItem { Tag = "mnuFileNewDir" };
+		Xwt.MenuItem mnuFileRemove = new Xwt.MenuItem { Tag = "mnuFileRemove" };
+		Xwt.MenuItem mnuFileAtributes = new Xwt.MenuItem { Tag = "mnuFileAtributes" };
+		Xwt.MenuItem mnuFileQuickSelect = new Xwt.MenuItem { Tag = "mnuFileQuickSelect" };
+		Xwt.MenuItem mnuFileQuickUnselect = new Xwt.MenuItem { Tag = "mnuFileQuickUnselect" };
+		Xwt.MenuItem mnuFileSelectAll = new Xwt.MenuItem { Tag = "mnuFileSelectAll" };
+		Xwt.MenuItem mnuFileUnselect = new Xwt.MenuItem { Tag = "mnuFileUnselect" };
+		Xwt.MenuItem mnuFileInvertSelection = new Xwt.MenuItem { Tag = "mnuFileInvertSelection" };
+		Xwt.MenuItem mnuFileExit = new Xwt.MenuItem { Tag = "mnuFileExit" };
 
 
-		Xwt.MenuItem mnuView = new Xwt.MenuItem() { Tag="mnuView" };
-		Xwt.MenuItem mnuViewShort = new Xwt.MenuItem() { Tag="mnuViewShort" };
-		Xwt.MenuItem mnuViewDetails = new Xwt.MenuItem() { Tag="mnuViewDetails" };
-		Xwt.MenuItem mnuViewIcons = new Xwt.MenuItem() { Tag="mnuViewIcons" };
-		Xwt.MenuItem mnuViewThumbs = new Xwt.MenuItem() { Tag="mnuViewThumbs" };
-		Xwt.MenuItem mnuViewQuickView = new Xwt.MenuItem() { Tag="mnuViewQuickView" };
-		Xwt.MenuItem mnuViewTree = new Xwt.MenuItem() { Tag="mnuViewTree" };
-		Xwt.MenuItem mnuViewPCPCconnect = new Xwt.MenuItem() { Tag = "mnuViewPCPCconnect" };
-		Xwt.MenuItem mnuViewPCNETPCconnect = new Xwt.MenuItem() { Tag = "mnuViewPCNETPCconnect" };
-		Xwt.MenuItem mnuViewByName = new Xwt.MenuItem() { Tag="mnuViewByName" };
-		Xwt.MenuItem mnuViewByType = new Xwt.MenuItem() { Tag="mnuViewByType" };
-		Xwt.MenuItem mnuViewByDate = new Xwt.MenuItem() { Tag="mnuViewByDate" };
-		Xwt.MenuItem mnuViewBySize = new Xwt.MenuItem() { Tag="mnuViewBySize" };
-		Xwt.MenuItem mnuViewNoFilter = new Xwt.MenuItem() { Tag="mnuViewNoFilter" };
-		Xwt.MenuItem mnuViewWithFilter = new Xwt.MenuItem() { Tag="mnuViewWithFilter" };
+		Xwt.MenuItem mnuView = new Xwt.MenuItem { Tag="mnuView" };
+		Xwt.MenuItem mnuViewShort = new Xwt.MenuItem { Tag="mnuViewShort" };
+		Xwt.MenuItem mnuViewDetails = new Xwt.MenuItem { Tag="mnuViewDetails" };
+		Xwt.MenuItem mnuViewIcons = new Xwt.MenuItem { Tag="mnuViewIcons" };
+		Xwt.MenuItem mnuViewThumbs = new Xwt.MenuItem { Tag="mnuViewThumbs" };
+		Xwt.MenuItem mnuViewQuickView = new Xwt.MenuItem { Tag="mnuViewQuickView" };
+		Xwt.MenuItem mnuViewTree = new Xwt.MenuItem { Tag="mnuViewTree" };
+		Xwt.MenuItem mnuViewPCPCconnect = new Xwt.MenuItem { Tag = "mnuViewPCPCconnect" };
+		Xwt.MenuItem mnuViewPCNETPCconnect = new Xwt.MenuItem { Tag = "mnuViewPCNETPCconnect" };
+		Xwt.MenuItem mnuViewByName = new Xwt.MenuItem { Tag="mnuViewByName" };
+		Xwt.MenuItem mnuViewByType = new Xwt.MenuItem { Tag="mnuViewByType" };
+		Xwt.MenuItem mnuViewByDate = new Xwt.MenuItem { Tag="mnuViewByDate" };
+		Xwt.MenuItem mnuViewBySize = new Xwt.MenuItem { Tag="mnuViewBySize" };
+		Xwt.MenuItem mnuViewNoFilter = new Xwt.MenuItem { Tag="mnuViewNoFilter" };
+		Xwt.MenuItem mnuViewWithFilter = new Xwt.MenuItem { Tag="mnuViewWithFilter" };
 
 
-		Xwt.MenuItem mnuNavigate = new Xwt.MenuItem() { Tag="mnuNav" };
-		Xwt.MenuItem mnuNavigateTree = new Xwt.MenuItem() { Tag="mnuNavigateTree" };
-		Xwt.MenuItem mnuNavigateFind = new Xwt.MenuItem() { Tag="mnuNavigateFind" };
-		Xwt.MenuItem mnuNavigateHistory = new Xwt.MenuItem() { Tag="mnuNavigateHistory" };
-		Xwt.MenuItem mnuNavigateReload = new Xwt.MenuItem() { Tag="mnuNavigateReload" };
-		Xwt.MenuItem mnuNavigateFlyTo = new Xwt.MenuItem() { Tag="mnuNavigateFlyTo" };
+		Xwt.MenuItem mnuNavigate = new Xwt.MenuItem { Tag="mnuNav" };
+		Xwt.MenuItem mnuNavigateTree = new Xwt.MenuItem { Tag="mnuNavigateTree" };
+		Xwt.MenuItem mnuNavigateFind = new Xwt.MenuItem { Tag="mnuNavigateFind" };
+		Xwt.MenuItem mnuNavigateHistory = new Xwt.MenuItem { Tag="mnuNavigateHistory" };
+		Xwt.MenuItem mnuNavigateReload = new Xwt.MenuItem { Tag="mnuNavigateReload" };
+		Xwt.MenuItem mnuNavigateFlyTo = new Xwt.MenuItem { Tag="mnuNavigateFlyTo" };
 
-		Xwt.MenuItem mnuTools = new Xwt.MenuItem() { Tag="mnuTools" };
-		Xwt.MenuItem mnuToolsOptions = new Xwt.MenuItem() { Tag="mnuToolsOptions" };
-		Xwt.MenuItem mnuToolsPluginManager = new Xwt.MenuItem() { Tag="mnuToolsPluginManager" };
-		Xwt.MenuItem mnuToolsEditUserMenu = new Xwt.MenuItem() { Tag = "mnuToolsEditUserMenu" };
-		Xwt.MenuItem mnuToolsKeychains = new Xwt.MenuItem() { Tag="mnuToolsKeychains" };
-		Xwt.MenuItem mnuToolsConfigEdit = new Xwt.MenuItem() { Tag = "mnuToolsConfigEdit" };
-		Xwt.CheckBoxMenuItem mnuViewKeybrdHelp = new Xwt.CheckBoxMenuItem() { Tag = "mnuViewKeybrdHelp" };
-		Xwt.CheckBoxMenuItem mnuViewInfobar = new Xwt.CheckBoxMenuItem() { Tag = "mnuViewInfobar" };
-		Xwt.CheckBoxMenuItem mnuViewDiskButtons = new Xwt.CheckBoxMenuItem() { Tag = "mnuViewDiskButtons" };
-		Xwt.MenuItem mnuToolsDiskLabel = new Xwt.MenuItem() { Tag = "mnuToolsDiskLabel" };
-		Xwt.MenuItem mnuToolsFormat = new Xwt.MenuItem() { Tag = "mnuToolsFormat" };
-		Xwt.MenuItem mnuToolsSysInfo = new Xwt.MenuItem() { Tag = "mnuToolsSysInfo" };
+		Xwt.MenuItem mnuTools = new Xwt.MenuItem { Tag="mnuTools" };
+		Xwt.MenuItem mnuToolsOptions = new Xwt.MenuItem { Tag="mnuToolsOptions" };
+		Xwt.MenuItem mnuToolsPluginManager = new Xwt.MenuItem { Tag="mnuToolsPluginManager" };
+		Xwt.MenuItem mnuToolsEditUserMenu = new Xwt.MenuItem { Tag = "mnuToolsEditUserMenu" };
+		Xwt.MenuItem mnuToolsKeychains = new Xwt.MenuItem { Tag="mnuToolsKeychains" };
+		Xwt.MenuItem mnuToolsConfigEdit = new Xwt.MenuItem { Tag = "mnuToolsConfigEdit" };
+		Xwt.CheckBoxMenuItem mnuViewKeybrdHelp = new Xwt.CheckBoxMenuItem { Tag = "mnuViewKeybrdHelp" };
+		Xwt.CheckBoxMenuItem mnuViewInfobar = new Xwt.CheckBoxMenuItem { Tag = "mnuViewInfobar" };
+		Xwt.CheckBoxMenuItem mnuViewDiskButtons = new Xwt.CheckBoxMenuItem { Tag = "mnuViewDiskButtons" };
+		Xwt.MenuItem mnuToolsDiskLabel = new Xwt.MenuItem { Tag = "mnuToolsDiskLabel" };
+		Xwt.MenuItem mnuToolsFormat = new Xwt.MenuItem { Tag = "mnuToolsFormat" };
+		Xwt.MenuItem mnuToolsSysInfo = new Xwt.MenuItem { Tag = "mnuToolsSysInfo" };
 
-		Xwt.MenuItem mnuHelp = new Xwt.MenuItem() { Tag = "mnuHelp" };
-		Xwt.MenuItem mnuHelpHelpMe = new Xwt.MenuItem() { Tag = "mnuHelpHelpMe" };
-		Xwt.MenuItem mnuHelpDebug = new Xwt.MenuItem() { Tag="mnuHelpDebug" };
-		Xwt.MenuItem mnuHelpAbout = new Xwt.MenuItem() { Tag = "mnuHelpAbout" };
+		Xwt.MenuItem mnuHelp = new Xwt.MenuItem { Tag = "mnuHelp" };
+		Xwt.MenuItem mnuHelpHelpMe = new Xwt.MenuItem { Tag = "mnuHelpHelpMe" };
+		Xwt.MenuItem mnuHelpDebug = new Xwt.MenuItem { Tag="mnuHelpDebug" };
+		Xwt.MenuItem mnuHelpAbout = new Xwt.MenuItem { Tag = "mnuHelpAbout" };
 
 
 		Xwt.VBox Layout = new Xwt.VBox();
@@ -177,8 +177,8 @@ namespace fcmd
 
 			TranslateMenu(MainMenu);
 
-			this.CloseRequested += new Xwt.CloseRequestedHandler(MainWindow_CloseRequested);
-			PanelLayout.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(PanelLayout_KeyReleased);
+			this.CloseRequested += MainWindow_CloseRequested;
+			PanelLayout.KeyReleased += PanelLayout_KeyReleased;
 			mnuFileView.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.F3, Xwt.ModifierKeys.None, false, 0)); };
 			mnuFileEdit.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.F4, Xwt.ModifierKeys.None, false, 0)); };
 			mnuFileCopy.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.F5, Xwt.ModifierKeys.None, false, 0)); };
@@ -192,11 +192,11 @@ namespace fcmd
 			mnuFileQuickUnselect.Clicked += (o, ea) => { PanelLayout_KeyReleased(o, new Xwt.KeyEventArgs(Xwt.Key.NumPadSubtract, Xwt.ModifierKeys.None, false, 0)); };
 			mnuFileExit.Clicked += (o, ea) => { this.Close(); };
 			mnuViewNoFilter.Clicked += (o, ea) => { ActivePanel.LoadDir(); };
-			mnuViewWithFilter.Clicked += new EventHandler(mnuViewWithFilter_Clicked);
-			mnuNavigateReload.Clicked += new EventHandler(mnuNavigateReload_Clicked);
-			mnuToolsOptions.Clicked += new EventHandler(mnuToolsOptions_Clicked);
+			mnuViewWithFilter.Clicked += mnuViewWithFilter_Clicked;
+			mnuNavigateReload.Clicked += mnuNavigateReload_Clicked;
+			mnuToolsOptions.Clicked += mnuToolsOptions_Clicked;
 			mnuHelpDebug.Clicked += ShowDebugInfo;
-			mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
+			mnuHelpAbout.Clicked += mnuHelpAbout_Clicked;
 			
 			Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -6, -12,12);
 			Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Fill,-12,-12,-12);
@@ -231,16 +231,16 @@ namespace fcmd
 
 			p1 = (PanelLayout.Panel1.Content as FileListPanel);
 			p2 = (PanelLayout.Panel2.Content as FileListPanel);
-			p1.OpenFile += new pluginner.TypedEvent<string>(Panel_OpenFile);
-			p2.OpenFile += new pluginner.TypedEvent<string>(Panel_OpenFile);
+			p1.OpenFile += Panel_OpenFile;
+			p2.OpenFile += Panel_OpenFile;
 
 			List<ListView2.CollumnInfo> LVCols = new List<ListView2.CollumnInfo>();
-			LVCols.Add(new ListView2.CollumnInfo() { Title = "", Tag = "Icon", Width = 16, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo() { Title = "URL", Tag = "Path", Width = 0, Visible = false });
-			LVCols.Add(new ListView2.CollumnInfo() { Title = Locale.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo() { Title = Locale.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo() { Title = Locale.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo() { Title = "Directory item info", Tag = "DirItem", Width = 0, Visible = false });
+			LVCols.Add(new ListView2.CollumnInfo { Title = "", Tag = "Icon", Width = 16, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = "URL", Tag = "Path", Width = 0, Visible = false });
+			LVCols.Add(new ListView2.CollumnInfo { Title = Locale.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = Locale.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = Locale.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = "Directory item info", Tag = "DirItem", Width = 0, Visible = false });
 
 			p1.FS = new base_plugins.fs.localFileSystem();
 
@@ -394,7 +394,7 @@ namespace fcmd
 			Fcdbg.Title="FC debug output";
 			string txt = ""+
 				"===THE FILE COMMANDER, VERSION " + Winforms.Application.ProductVersion + (Environment.Is64BitProcess ? " 64-BIT" : " 32-BIT") + "===\n"+
-				Environment.CommandLine + " @ .NET fw " + Environment.Version + (Environment.Is64BitOperatingSystem ? " 64-bit" : " 32-bit") + " on " + Environment.MachineName + "-" + Environment.OSVersion + " (" + OSVersionEx.Platform.ToString() + " v" + Environment.OSVersion.Version.Major.ToString() + "." + Environment.OSVersion.Version.Minor.ToString() + ")\n" +
+				Environment.CommandLine + " @ .NET fw " + Environment.Version + (Environment.Is64BitOperatingSystem ? " 64-bit" : " 32-bit") + " on " + Environment.MachineName + "-" + Environment.OSVersion + " (" + OSVersionEx.Platform + " v" + Environment.OSVersion.Version.Major + "." + Environment.OSVersion.Version.Minor + ")\n" +
 				"The current drawing toolkit is " + Xwt.Toolkit.CurrentEngine.GetSafeBackend (this) + "\n" +
 				"\nCONFIGuration files:\n---------\n"+
 				"Local: "+confLR.FilePath + " (exists? " + b2s(confLR.HasFile) +")\n"+
@@ -404,8 +404,8 @@ namespace fcmd
 				"The active panel is: " + ((ActivePanel == p1) ? "LEFT\n" : "RIGHT\n") +
 				"The passive panel is: " + ((ActivePanel == p2) ? "LEFT\n" : "RIGHT\n")+
 				"They are different? "+ b2s(ActivePanel != PassivePanel) + " (should be yes)\n"+
-				"The LEFT filesystem: " + p1.FS.ToString() + " at \"" + p1.FS.CurrentDirectory + "\"\n"+
-				"The RIGHT filesystem: " + p2.FS.ToString() + " at \"" + p2.FS.CurrentDirectory + "\"\n"+
+				"The LEFT filesystem: " + p1.FS + " at \"" + p1.FS.CurrentDirectory + "\"\n"+
+				"The RIGHT filesystem: " + p2.FS + " at \"" + p2.FS.CurrentDirectory + "\"\n"+
 				"Filesystems are same by type? " + b2s(p1.FS.GetType()==p2.FS.GetType()) + ".\n"+
 				"Filesystems are identically? " + b2s(p1.FS==p2.FS) + " (should be no).\n"+
 				"\nTheme debug:\n---------\n"+
@@ -465,7 +465,7 @@ namespace fcmd
 #if DEBUG
 			FileListPanel p1 = (PanelLayout.Panel1.Content as FileListPanel);
 			FileListPanel p2 = (PanelLayout.Panel2.Content as FileListPanel);
-			Console.WriteLine("KEYBOARD DEBUG: " + e.Modifiers.ToString() + "+" + e.Key.ToString() + " was pressed. Panels focuses: " + (ActivePanel == p1) + " | " + (ActivePanel == p2));
+			Console.WriteLine("KEYBOARD DEBUG: " + e.Modifiers + "+" + e.Key + " was pressed. Panels focuses: " + (ActivePanel == p1) + " | " + (ActivePanel == p2));
 #endif
 			if (e.Key == Xwt.Key.Return) return;//ENTER presses are handled by other event
 
@@ -670,7 +670,7 @@ namespace fcmd
 				{
 					if (currentMenuItem.GetType() != typeof(Xwt.SeparatorMenuItem))
 					{ //skip separators
-						currentMenuItem.Label = Locale.GetString("FC" + currentMenuItem.Tag.ToString());
+						currentMenuItem.Label = Locale.GetString("FC" + currentMenuItem.Tag);
 						TranslateMenu(currentMenuItem.SubMenu);
 					}
 				}

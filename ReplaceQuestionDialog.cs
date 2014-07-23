@@ -18,7 +18,7 @@ namespace fcmd
 		Xwt.Button cmdReplaceOld = new Xwt.Button();
 		Xwt.Button cmdSkip = new Xwt.Button();
 		Xwt.Button cmdSkipAll = new Xwt.Button();
-		Xwt.Button cmdCompare = new Xwt.Button(){Sensitive=false};
+		Xwt.Button cmdCompare = new Xwt.Button {Sensitive=false};
 		public ClickedButton ChoosedButton;
 
         /// <summary>Initialize RPD. Please be careful with threads - run only in the UI thread! Otherwise there will be bugs</summary>

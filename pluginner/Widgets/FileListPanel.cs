@@ -8,8 +8,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using pluginner.Toolkit;
 using Xwt;
+using Xwt.Drawing;
 
 namespace pluginner.Widgets
 {
@@ -25,22 +27,22 @@ namespace pluginner.Widgets
 		public int dfChanged = 4;
 		public int dfDirItem = 5;
 
-		public pluginner.IFSPlugin FS;
+		public IFSPlugin FS;
 		public LightScroller DiskBox = new LightScroller();
 		public HBox DiskList = new HBox();
-		public List<Xwt.Button> DiskButtons = new List<Xwt.Button>();
+		public List<Button> DiskButtons = new List<Button>();
 		public Button GoRoot = new Button("/");
 		public Button GoUp = new Button("..");
 		public TextEntry UrlBox = new TextEntry();
-		public MenuButton BookmarksButton = new MenuButton(Xwt.Drawing.Image.FromResource("pluginner.Resources.bookmarks.png"));
-		public MenuButton HistoryButton = new MenuButton(Xwt.Drawing.Image.FromResource("pluginner.Resources.history.png"));
+		public MenuButton BookmarksButton = new MenuButton(Image.FromResource("pluginner.Resources.bookmarks.png"));
+		public MenuButton HistoryButton = new MenuButton(Image.FromResource("pluginner.Resources.history.png"));
 		public ListView2 ListingView = new ListView2();
 		public HBox QuickSearchBox = new HBox();
 		public TextEntry QuickSearchText = new TextEntry();//по возможность заменить на SearchTextEntry (не раб. на wpf, see xwt bug 330)
 		public Label StatusBar = new Label("Information bar");
 		public Table StatusTable = new Table();
 		public ProgressBar StatusProgressbar = new ProgressBar();
-		TextEntry CLIoutput = new TextEntry() { MultiLine = true, ShowFrame = true, Visible = false, HeightRequest = 50 };
+		TextEntry CLIoutput = new TextEntry { MultiLine = true, ShowFrame = true, Visible = false, HeightRequest = 50 };
 		TextEntry CLIprompt = new TextEntry();
 
 		/// <summary>User navigates into another directory</summary>
@@ -72,35 +74,35 @@ namespace pluginner.Widgets
 
 			HistoryButton.Menu = new Menu();
 
-			this.DefaultColumnSpacing = 0;
-			this.DefaultRowSpacing = 0;
+			DefaultColumnSpacing = 0;
+			DefaultRowSpacing = 0;
 
-			this.Add(DiskBox,0,0, 1,1,true,false,WidgetPlacement.Fill);
-			this.Add(GoRoot,1,0 ,1,1,false,false,WidgetPlacement.Fill);
-			this.Add(GoUp,2,0 ,1,1,false,false,WidgetPlacement.Fill);
-			this.Add(UrlBox,0,1, 1,1,true,false,WidgetPlacement.Fill);
-			this.Add(BookmarksButton,1,1 ,1,1,false,false,WidgetPlacement.Start);
-			this.Add(HistoryButton,2,1 ,1,1,false,false,WidgetPlacement.Start);
-			this.Add(ListingView,0,2 ,1,3,false,true); //hexpand will be = 'true' without seeing to this 'false'
-			this.Add(QuickSearchBox,0,3 ,1,3);
-			this.Add(StatusBar,0,4,1,3);
-			this.Add(StatusProgressbar,0,5,1,3);
-			this.Add(CLIoutput,0,6 ,1,3);
-			this.Add(CLIprompt,0,7 ,1,3);
+			Add(DiskBox,0,0, 1,1,true,false,WidgetPlacement.Fill);
+			Add(GoRoot,1,0 ,1,1,false,false,WidgetPlacement.Fill);
+			Add(GoUp,2,0 ,1,1,false,false,WidgetPlacement.Fill);
+			Add(UrlBox,0,1, 1,1,true,false,WidgetPlacement.Fill);
+			Add(BookmarksButton,1,1 ,1,1,false,false,WidgetPlacement.Start);
+			Add(HistoryButton,2,1 ,1,1,false,false,WidgetPlacement.Start);
+			Add(ListingView,0,2 ,1,3,false,true); //hexpand will be = 'true' without seeing to this 'false'
+			Add(QuickSearchBox,0,3 ,1,3);
+			Add(StatusBar,0,4,1,3);
+			Add(StatusProgressbar,0,5,1,3);
+			Add(CLIoutput,0,6 ,1,3);
+			Add(CLIprompt,0,7 ,1,3);
 
 			WriteDefaultStatusLabel();
 
-			CLIprompt.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(CLIprompt_KeyReleased);
+			CLIprompt.KeyReleased += CLIprompt_KeyReleased;
 
-			QuickSearchText.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
-			QuickSearchText.KeyPressed += new EventHandler<Xwt.KeyEventArgs>(QuickSearchText_KeyPressed);
+			QuickSearchText.GotFocus += (o, ea) => { OnGotFocus(ea); };
+			QuickSearchText.KeyPressed += QuickSearchText_KeyPressed;
 			QuickSearchBox.PackStart(QuickSearchText, true, true);
 			QuickSearchBox.Visible = false;
 		}
 
-		void QuickSearchText_KeyPressed(object sender, Xwt.KeyEventArgs e)
+		void QuickSearchText_KeyPressed(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Xwt.Key.Escape)
+			if (e.Key == Key.Escape)
 			{
 				QuickSearchText.Text = "";
 				QuickSearchBox.Visible = false;
@@ -132,10 +134,10 @@ namespace pluginner.Widgets
 			}
 		}
 
-		void CLIprompt_KeyReleased(object sender, Xwt.KeyEventArgs e)
+		void CLIprompt_KeyReleased(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Xwt.Key.Return){
-				if (System.Text.RegularExpressions.Regex.Match(CLIprompt.Text, "cd|chdir|md|rd|del|deltree|move|copy|cls").Success)
+			if (e.Key == Key.Return){
+				if (Regex.Match(CLIprompt.Text, "cd|chdir|md|rd|del|deltree|move|copy|cls").Success)
 				{
 					CLIprompt.Text = "";
 					//todo: обработка встроенных комманд
@@ -157,10 +159,10 @@ namespace pluginner.Widgets
 
 		void FS_CLIstdoutDataReceived(string data)
 		{
-			Xwt.Application.Invoke(new Action(delegate
+			Application.Invoke(delegate
 			{
 				CLIoutput.Text += "\n" + data;
-			}));
+			});
 		}
 
 		/// <summary>Make the panel's widgets</summary>
@@ -169,13 +171,13 @@ namespace pluginner.Widgets
 		{
 			//URL BOX
 			UrlBox.ShowFrame = false;
-			UrlBox.GotFocus += (o, ea) => { this.OnGotFocus(ea); };
-			UrlBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(UrlBox_KeyReleased);
+			UrlBox.GotFocus += (o, ea) => { OnGotFocus(ea); };
+			UrlBox.KeyReleased += UrlBox_KeyReleased;
 
 			BookmarkTools bmt = new BookmarkTools(BookmarkXML,"QuickAccessBar");
 			bmt.DisplayBookmarks(
 				DiskList,
-				(url) => { NavigateTo(url); },
+				(url => NavigateTo(url)),
 				s
 			);
 
@@ -183,10 +185,10 @@ namespace pluginner.Widgets
 			BookmarksButton.Menu = new Menu();
 			bmt.DisplayBookmarks(
 				BookmarksButton.Menu,
-				(url) => { NavigateTo(url); }
+				(url => NavigateTo(url))
 			);
 
-			foreach (Xwt.Button b in DiskButtons)
+			foreach (Button b in DiskButtons)
 			{
 				s.Stylize(b);
 			}
@@ -198,25 +200,25 @@ namespace pluginner.Widgets
 			s.Stylize(CLIprompt,"TerminalPrompt");
 			s.Stylize(StatusTable);
 
-			ListingView.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(ListingView_KeyReleased);
-			ListingView.GotFocus += (o, ea) =>{ this.OnGotFocus(ea); };
-			ListingView.PointerMoved += new TypedEvent<ListView2Item>(ListingView_PointerMoved);
-			ListingView.SelectionChanged += new TypedEvent<List<ListView2Item>>(ListingView_SelectionChanged);
-			ListingView.PointedItemDoubleClicked += new TypedEvent<ListView2Item>(pointed_item => { OpenPointedItem(); });
+			ListingView.KeyReleased += ListingView_KeyReleased;
+			ListingView.GotFocus += (o, ea) =>{ OnGotFocus(ea); };
+			ListingView.PointerMoved += ListingView_PointerMoved;
+			ListingView.SelectionChanged += ListingView_SelectionChanged;
+			ListingView.PointedItemDoubleClicked += pointed_item => { OpenPointedItem(); };
 			ListingView.EditComplete += ListingView_EditComplete;
-			StatusBar.Wrap = Xwt.WrapMode.Word;
+			StatusBar.Wrap = WrapMode.Word;
 		}
 
 		void ListingView_EditComplete(EditableLabel el, ListView2 lv)
 		{
-			string Url1 = FS.CurrentDirectory + FS.DirSeparator + ListingView.PointedItem.Data[dfDisplayName].ToString();
+			string Url1 = FS.CurrentDirectory + FS.DirSeparator + ListingView.PointedItem.Data[dfDisplayName];
 			string Url2 = FS.CurrentDirectory + FS.DirSeparator + el.Text;
 			try { 
 				if(FS.DirectoryExists(Url1))
 					FS.MoveDirectory(Url1, Url2);
 				else
 					FS.MoveFile(Url1, Url2);
-				StatusBar.Text = ListingView.PointedItem.Data[dfDisplayName].ToString() + " → " + el.Text;
+				StatusBar.Text = ListingView.PointedItem.Data[dfDisplayName] + " → " + el.Text;
 			}
 			catch(Exception ex) {
 				MessageDialog.ShowWarning(ex.Message);
@@ -234,17 +236,17 @@ namespace pluginner.Widgets
 			WriteDefaultStatusLabel();
 		}
 
-		void UrlBox_KeyReleased(object sender, Xwt.KeyEventArgs e)
+		void UrlBox_KeyReleased(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Xwt.Key.Return)
+			if (e.Key == Key.Return)
 			{
 				LoadDir(UrlBox.Text);
 			}
 		}
 
-		void ListingView_KeyReleased(object sender, Xwt.KeyEventArgs e)
+		void ListingView_KeyReleased(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Xwt.Key.Return && ListingView.SelectedRow > -1)
+			if (e.Key == Key.Return && ListingView.SelectedRow > -1)
 			{
 				OpenPointedItem();
 				return;
@@ -266,7 +268,8 @@ namespace pluginner.Widgets
 		}
 		
 		/// <summary>Open the FS item at <paramref name="url"/> (if it's file, load; if it's directory, go to)</summary>
-		/// <param name="clearhistory">The number of history entrie after that all entries must be removed</param>
+		/// <param name="url">The URL of the filesystem entry</param>
+		/// <param name="ClearHistory">The number of the history entrie after that all entries should be removed</param>
 		private void NavigateTo(string url, int? ClearHistory = null)
 		{
 			if (!url.Contains("://")){
@@ -274,7 +277,7 @@ namespace pluginner.Widgets
 				NavigateTo(FS.CurrentDirectory + FS.DirSeparator + url);
 			}
 
-			Xwt.Menu hm = HistoryButton.Menu;
+			Menu hm = HistoryButton.Menu;
 
 			if (ClearHistory == null){
 				//register current directory in history
@@ -305,16 +308,16 @@ namespace pluginner.Widgets
 				}
 
 			}
-			catch (pluginner.PleaseSwitchPluginException)
+			catch (PleaseSwitchPluginException)
 			{
 				throw; //delegate authority to the mainwindow (it is it's jurisdiction).
 			}
 			catch (Exception ex)
 			{
 				ListingView.Sensitive = true;
-				ListingView.Cursor = Xwt.CursorType.Arrow;
+				ListingView.Cursor = CursorType.Arrow;
 
-				Xwt.MessageDialog.ShowError(ex.Message);
+				MessageDialog.ShowError(ex.Message);
 				Console.WriteLine(ex.Message + "\n" + ex.StackTrace);
 				WriteDefaultStatusLabel();
 			}
@@ -334,9 +337,9 @@ namespace pluginner.Widgets
 			if (FS == null) throw new InvalidOperationException("No filesystem is binded to this FileListPanel");
 
 			//неспешное TODO:придумать, куда лучше закорячить; не забываем, что во время работы FS может меняться полностью
-			FS.CLIstdoutDataReceived += new TypedEvent<string>(FS_CLIstdoutDataReceived);
+			FS.CLIstdoutDataReceived += FS_CLIstdoutDataReceived;
 			FS.CLIstderrDataReceived+=(stderr)=>{ CLIoutput.Text += "\n" + stderr; Utilities.ShowWarning(stderr); };
-			FS.CLIpromptChanged += new TypedEvent<string>(FS_CLIpromptChanged);
+			FS.CLIpromptChanged += FS_CLIpromptChanged;
 
 			LoadDir(
 				URL,
@@ -369,7 +372,7 @@ namespace pluginner.Widgets
 
 			if (URL == "." & FS.CurrentDirectory == null){
 				LoadDir(
-					"file://"+System.IO.Directory.GetCurrentDirectory(),
+					"file://"+Directory.GetCurrentDirectory(),
 					dis,
 					ShortenKB,
 					ShortenMB,
@@ -378,7 +381,7 @@ namespace pluginner.Widgets
 				return;
 			}
 
-			ListingView.Cursor = Xwt.CursorType.IBeam;//todo: modify XWT and add hourglass cursor
+			ListingView.Cursor = CursorType.IBeam;//todo: modify XWT and add hourglass cursor
 			ListingView.Sensitive = false;
 
 			try
@@ -386,8 +389,8 @@ namespace pluginner.Widgets
 				FS.CurrentDirectory = URL;
 				ListingView.Clear();
 				UrlBox.Text = URL;
-				FS.StatusChanged += new TypedEvent<string>(FS_StatusChanged);
-				FS.ProgressChanged += new TypedEvent<double>(FS_ProgressChanged);
+				FS.StatusChanged += FS_StatusChanged;
+				FS.ProgressChanged += FS_ProgressChanged;
 				string updir = URL + FS.DirSeparator+"..";
 				string rootdir = FS.GetMetadata(URL).RootDirectory;
 
@@ -396,7 +399,7 @@ namespace pluginner.Widgets
 					List<Object> Data = new List<Object>();
 					List<Boolean> EditableFileds = new List<bool>();
 
-					Data.Add(di.IconSmall ?? Xwt.Drawing.Image.FromResource("pluginner.Resources.image-missing.png")); EditableFileds.Add(false);
+					Data.Add(di.IconSmall ?? Image.FromResource("pluginner.Resources.image-missing.png")); EditableFileds.Add(false);
 					Data.Add(di.Path); EditableFileds.Add(false);
 					Data.Add(di.TextToShow); EditableFileds.Add(true);
 					if (di.TextToShow == "..")
@@ -425,12 +428,12 @@ namespace pluginner.Widgets
 			catch (Exception ex)
 			{
 				if(ex.Message == "Object reference not set to an instance of an object."){ //говнокод убрать!
-					Xwt.MessageDialog.ShowWarning(ex.Message, ex.StackTrace + "\nInner exception: " + ex.InnerException.Message ?? "none");
+					MessageDialog.ShowWarning(ex.Message, ex.StackTrace + "\nInner exception: " + ex.InnerException.Message ?? "none");
 				}else
-				Xwt.MessageDialog.ShowWarning(ex.Message);
+				MessageDialog.ShowWarning(ex.Message);
 			}
 			ListingView.Sensitive = true;
-			ListingView.Cursor = Xwt.CursorType.Arrow;
+			ListingView.Cursor = CursorType.Arrow;
 			if (ListingView.Items.Count > 0)
 			{ ListingView.SelectedRow = 0; ListingView.ScrollerIn.ScrollTo(0, 0); }
 			ListingView.SetFocus();//one fixed bug may make many other bugs...уточнить необходимость!
@@ -476,14 +479,13 @@ namespace pluginner.Widgets
 
 		/// <summary>Converts the file size (in bytes) to human-readable string</summary>
 		/// <param name="Input">The input value</param>
-		/// <param name="ShortestNonhumanity">The miminal file size that should be shortened</param>
 		/// <returns>Human-readable string (xxx yB)</returns>
 		private string KiloMegaGigabyteConvert(long Input, SizeDisplayPolicy ShortenKB, SizeDisplayPolicy ShortenMB, SizeDisplayPolicy ShortenGB)
 		{
 			double ShortenedSize; //here will be writed the decimal value of the hum. readable size
 
 			//TeraByte (will be shortened everywhen)
-			if (Input > 1099511627776) return (Input / 1099511627776).ToString() + " TB";
+			if (Input > 1099511627776) return (Input / 1099511627776) + " TB";
 
 			//GigaByte
 			if (Input > 1073741824)
@@ -524,7 +526,7 @@ namespace pluginner.Widgets
 				}
 			}
 
-			return Input.ToString() + " B"; //if Input is less than 1k or shortening is disallowed
+			return Input + " B"; //if Input is less than 1k or shortening is disallowed
 		}
 
 		/// <summary>Defines the size shortening policy</summary>
@@ -551,15 +553,15 @@ namespace pluginner.Widgets
 		/// <summary>Add autobookmark "system disks" onto disk toolbar</summary>
 		private void AddSysDrives()
 		{
-			foreach (System.IO.DriveInfo di in System.IO.DriveInfo.GetDrives())
+			foreach (DriveInfo di in DriveInfo.GetDrives())
 			{
 				string d = di.Name;
-				Xwt.Button NewBtn = new Xwt.Button(null, d);
+				Button NewBtn = new Button(null, d);
 				NewBtn.Clicked += (o, ea) => { NavigateTo("file://" + d); };
 				NewBtn.CanGetFocus = false;
-				NewBtn.Style = Xwt.ButtonStyle.Flat;
+				NewBtn.Style = ButtonStyle.Flat;
 				NewBtn.Margin = -3;
-				NewBtn.Cursor = Xwt.CursorType.Hand;
+				NewBtn.Cursor = CursorType.Hand;
 				NewBtn.Sensitive = di.IsReady;
 				if (di.IsReady)
 				{
@@ -570,32 +572,32 @@ namespace pluginner.Widgets
 				 */
 				switch (di.DriveType)
 				{
-					case System.IO.DriveType.Fixed:
-						NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-harddisk.png");
+					case DriveType.Fixed:
+						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.drive-harddisk.png");
 						break;
-					case System.IO.DriveType.CDRom:
-						NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-optical.png");
+					case DriveType.CDRom:
+						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.drive-optical.png");
 						break;
-					case System.IO.DriveType.Removable:
-						NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
+					case DriveType.Removable:
+						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
 						break;
-					case System.IO.DriveType.Network:
-						NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.network-server.png");
+					case DriveType.Network:
+						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.network-server.png");
 						break;
-					case System.IO.DriveType.Ram:
-						NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
+					case DriveType.Ram:
+						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
 						break;
-					case System.IO.DriveType.Unknown:
-						NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.image-missing.png");
+					case DriveType.Unknown:
+						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.image-missing.png");
 						break;
 				}
 
 				//OS-specific icons
-				if (d.StartsWith("A:")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
-				if (d.StartsWith("B:")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
-				if (d.StartsWith("/dev")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.preferences-desktop-peripherals.png");
-				if (d.StartsWith("/proc")) NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
-				if (d == "/") NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.root-folder.png");
+				if (d.StartsWith("A:")) NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
+				if (d.StartsWith("B:")) NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
+				if (d.StartsWith("/dev")) NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.preferences-desktop-peripherals.png");
+				if (d.StartsWith("/proc")) NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
+				if (d == "/") NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.root-folder.png");
 
 				s.Stylize(NewBtn);
 				DiskList.PackStart(NewBtn);
@@ -609,13 +611,13 @@ namespace pluginner.Widgets
 			{
 				foreach (string dir in Directory.GetDirectories(@"/mnt/"))
 				{
-					Xwt.Button NewBtn = new Xwt.Button(null, dir.Replace("/mnt/",""));
+					Button NewBtn = new Button(null, dir.Replace("/mnt/",""));
 					NewBtn.Clicked += (o, ea) => { NavigateTo("file://" + dir); };
 					NewBtn.CanGetFocus = false;
-					NewBtn.Style = Xwt.ButtonStyle.Flat;
+					NewBtn.Style = ButtonStyle.Flat;
 					NewBtn.Margin = -3;
-					NewBtn.Cursor = Xwt.CursorType.Hand;
-					NewBtn.Image = Xwt.Drawing.Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
+					NewBtn.Cursor = CursorType.Hand;
+					NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
 
 					s.Stylize(NewBtn);
 					DiskList.PackStart(NewBtn);

@@ -90,7 +90,7 @@ namespace fcmd
 						switch (Parts[1])
 						{
 							case "(internal)LocalFS":
-								return new fcmd.base_plugins.fs.localFileSystem() { FCConfig = conf };
+								return new fcmd.base_plugins.fs.localFileSystem { FCConfig = conf };
 						}
 					}
 					else

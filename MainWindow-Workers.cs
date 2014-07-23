@@ -90,7 +90,7 @@ namespace fcmd
 				string itself = Locale.GetString("CantCopySelf");
 				string toshow = string.Format(Locale.GetString("CantCopy"), SourceFile.Name, itself);
 				
-				Xwt.Application.Invoke(new Action(delegate { Xwt.MessageDialog.ShowWarning(toshow); }));
+				Xwt.Application.Invoke(delegate { Xwt.MessageDialog.ShowWarning(toshow); });
 				//calling the msgbox in non-main threads causes some UI bugs, so push this call into main thread
 				return;
 			}
@@ -101,26 +101,22 @@ namespace fcmd
                 bool ready = false;
 
                 Xwt.Application.Invoke(
-                    new Action(
-                        delegate
-                        {
-                            rpd = new ReplaceQuestionDialog(DestinationFS.GetFile(DestinationURL, new double()).Name);
-                            ready = true;
-                        }
-                    )
+                    delegate
+                    {
+	                    rpd = new ReplaceQuestionDialog(DestinationFS.GetFile(DestinationURL, new double()).Name);
+	                    ready = true;
+                    }
                 );
                 do { } while (!ready);
                 ready = false;
 				
                 var ClickedButton = ReplaceQuestionDialog.ClickedButton.Skip;
 				Xwt.Application.Invoke(
-					new Action(
-						delegate
-						{
-							ClickedButton = rpd.Run();
-							ready = true;
-						}
-					)
+					delegate
+					{
+						ClickedButton = rpd.Run();
+						ready = true;
+					}
 				);
 
 				do {} while (!ready);

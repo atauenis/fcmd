@@ -6,11 +6,16 @@
  */
 
 using System;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using Microsoft.Win32;
+using Xwt;
+using Xwt.Drawing;
+using Application = System.Windows.Forms.Application;
+using Color = Xwt.Drawing.Color;
+using Image = Xwt.Drawing.Image;
 
 namespace pluginner.Toolkit
 {
@@ -25,9 +30,9 @@ namespace pluginner.Toolkit
 		{
 			Xwt.Application.Invoke(delegate{
 				if (msg2 == null)
-					Xwt.MessageDialog.ShowMessage(msg1);
+					MessageDialog.ShowMessage(msg1);
 				else
-					Xwt.MessageDialog.ShowMessage(msg1,msg2);
+					MessageDialog.ShowMessage(msg1,msg2);
 			});
 		}
 
@@ -35,9 +40,9 @@ namespace pluginner.Toolkit
 		{
 			Xwt.Application.Invoke(delegate{
 				if (msg2 == null)
-					Xwt.MessageDialog.ShowError(msg1);
+					MessageDialog.ShowError(msg1);
 				else
-					Xwt.MessageDialog.ShowError(msg1,msg2);
+					MessageDialog.ShowError(msg1,msg2);
 			});
 		}
 
@@ -45,9 +50,9 @@ namespace pluginner.Toolkit
 		{
 			Xwt.Application.Invoke(delegate{
 				if (msg2 == null)
-					Xwt.MessageDialog.ShowWarning(msg1);
+					MessageDialog.ShowWarning(msg1);
 				else
-					Xwt.MessageDialog.ShowWarning(msg1,msg2);
+					MessageDialog.ShowWarning(msg1,msg2);
 			});
 		}
 
@@ -59,11 +64,11 @@ namespace pluginner.Toolkit
 		/// <summary>Convert a string to a XWT color</summary>
 		/// <param name="ColorName">The color name or the color hexadecimal RGB</param>
 		/// <returns>Xwt.Drawing.Color that corresponds the requested colour</returns>
-		public static Xwt.Drawing.Color GetXwtColor(string ColorName)
+		public static Color GetXwtColor(string ColorName)
 		{
 			if (ColorName.ToLowerInvariant() == "transparent")
 			{
-				return Xwt.Drawing.Colors.Transparent;
+				return Colors.Transparent;
 			}
 
 			/*string rgbhex;
@@ -84,7 +89,7 @@ namespace pluginner.Toolkit
 				colors10[i] = Hex2Dec(colors16[i]);
 			}
 			return new Xwt.Drawing.Color(colors10[0], colors10[1], colors10[2]);*/
-			return Xwt.Drawing.Color.FromName(ColorName);
+			return Color.FromName(ColorName);
 		}
 
 		/// <summary>Loads embedded resource</summary>
@@ -123,19 +128,19 @@ namespace pluginner.Toolkit
 		/// <returns>WPF if WPF, Gtk if GTK, Mon if MonoMac, Coc if Cocoa</returns>
 		public static string GetXwtBackendName()
 		{
-			return Xwt.Toolkit.CurrentEngine.GetSafeBackend (new Xwt.Window()).ToString().Substring(4,3);
+			return Xwt.Toolkit.CurrentEngine.GetSafeBackend (new Window()).ToString().Substring(4,3);
 		}
 
 		/// <summary>Search for icon of the selected MIME type</summary>
 		/// <param name="MIME">The MIME type (i.e. application/msword)</param>
 		/// <returns></returns>
-		public static Xwt.Drawing.Image GetIconForMIME(string MIME)
+		public static Image GetIconForMIME(string MIME)
 		{
 			if (MIME == "x-fcmd/directory")
-				return Xwt.Drawing.Image.FromResource("pluginner.Resources.x-fcmd-directory.png");
+				return Image.FromResource("pluginner.Resources.x-fcmd-directory.png");
 			
 			if (MIME == "x-fcmd/up")
-				return Xwt.Drawing.Image.FromResource("pluginner.Resources.x-fcmd-up.png");
+				return Image.FromResource("pluginner.Resources.x-fcmd-up.png");
 
 			if (CheckForIcon(MIME.Replace("/","-"))){
 				return GetIconFromCache(MIME.Replace("/", "-"));
@@ -169,22 +174,23 @@ namespace pluginner.Toolkit
 					{
 						//определение типа Win32 (Word.Document.8)
 						w32type =
-							Microsoft.Win32.Registry.ClassesRoot
+							Registry.ClassesRoot
 							.OpenSubKey("."+MIME.Substring(27))
 							.GetValue("")
 							.ToString();
 
 						//определение пути к иконке
 						w32icon =
-							Microsoft.Win32.Registry.ClassesRoot
+							Registry.ClassesRoot
 							.OpenSubKey(w32type)
 							.OpenSubKey("DefaultIcon")
 							.GetValue("")
 							.ToString();
 
 						//извлечение иконки, сохренение в кэш и загрузка в виде XWT Image
+// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 						if (w32icon == null) goto mime_icon_fallback;
-						System.Drawing.Icon i =
+						Icon i =
 						ExtractIconFromFile(w32icon, false);
 
 						if (i == null) { Console.WriteLine("Extracted icon wasn't received for {0}; posssibly broken EXE/DLL or a 32/64-bit mistake", w32icon); goto mime_icon_fallback; }
@@ -204,7 +210,7 @@ namespace pluginner.Toolkit
 				try
 				{
 					Win32extension =
-						Microsoft.Win32.Registry.ClassesRoot
+						Registry.ClassesRoot
 						.OpenSubKey(@"MIME\Database\Content Type\" + MIME)
 						.GetValue("Extension")
 						.ToString();
@@ -219,7 +225,7 @@ namespace pluginner.Toolkit
 				try
 				{
 					Win32name =
-						Microsoft.Win32.Registry.ClassesRoot
+						Registry.ClassesRoot
 						.OpenSubKey(Win32extension)
 						.GetValue("")
 						.ToString();
@@ -234,7 +240,7 @@ namespace pluginner.Toolkit
 				try
 				{
 					PathToIcon =
-						Microsoft.Win32.Registry.ClassesRoot
+						Registry.ClassesRoot
 						.OpenSubKey(Win32name)
 						.OpenSubKey("DefaultIcon")
 						.GetValue("")
@@ -246,7 +252,7 @@ namespace pluginner.Toolkit
 				if (PathToIcon == null) goto mime_icon_fallback;
 
 				//Глава 4. Извлечение иконки 16х16.
-				System.Drawing.Icon ic =
+				Icon ic =
 				ExtractIconFromFile(PathToIcon, false); //SEE BUG #7
 
 				//Глава 5. Сохранение иконки в кэш и выдача готовой.
@@ -263,7 +269,7 @@ namespace pluginner.Toolkit
 			if(MIME != "application/octet-stream")
 			Console.WriteLine("utilities: Can't find an icon for " + MIME);
 #endif
-			return Xwt.Drawing.Image.FromResource("pluginner.Resources.application-octet-stream.png");
+			return Image.FromResource("pluginner.Resources.application-octet-stream.png");
 		}
 
 		/// <summary>Finds a MIME content-type of a file</summary>
@@ -303,7 +309,7 @@ namespace pluginner.Toolkit
 		/// <param name="sdi">The System.Drawing.Icon, which needs to be saved</param>
 		/// <param name="name">The icon name</param>
 		/// <param name="size">The icon size</param>
-		public static void SaveIconToCache(System.Drawing.Icon sdi, string name, int size = 16)
+		public static void SaveIconToCache(Icon sdi, string name, int size = 16)
 		{
 			if (!Directory.Exists(PathToIcons + Path.DirectorySeparatorChar + size))
 			{
@@ -318,14 +324,14 @@ namespace pluginner.Toolkit
 		/// <param name="name">The icon name</param>
 		/// <param name="size">The icon size</param>
 		/// <returns>The icon as an XWT Image.</returns>
-		public static Xwt.Drawing.Image GetIconFromCache(string name, int size = 16)
+		public static Image GetIconFromCache(string name, int size = 16)
 		{
 			string IconPath = PathToIcons + Path.DirectorySeparatorChar + size + Path.DirectorySeparatorChar + name + ".png";
 
 			if(!System.IO.File.Exists(IconPath))
-				return Xwt.Drawing.Image.FromResource("pluginner.Resources.application-octet-stream.png");
+				return Image.FromResource("pluginner.Resources.application-octet-stream.png");
 			else
-				return Xwt.Drawing.Image.FromStream(System.IO.File.OpenRead(IconPath));
+				return Image.FromStream(System.IO.File.OpenRead(IconPath));
 				//this way is better than Xwt.Drawing.Image.FromFile because of some GTK# issues
 		}
 
@@ -370,7 +376,7 @@ namespace pluginner.Toolkit
 			int iconIndex = 0;
 			string iconIndexString = String.Empty;
 
-			int commaIndex = fileAndParam.IndexOf(",");
+			int commaIndex = fileAndParam.IndexOf(",", StringComparison.Ordinal);
 			//if fileAndParam is some thing likes this: 
 				 //"C:\\Program Files\\NetMeeting\\conf.exe,1".
 			if (commaIndex > 0)
@@ -403,7 +409,7 @@ namespace pluginner.Toolkit
 			IntPtr[] phiconLarge, IntPtr[] phiconSmall, uint nIcons);
 
 		[DllImport("user32.dll", EntryPoint = "DestroyIcon", SetLastError = true)]
-		private static unsafe extern int DestroyIcon (IntPtr hIcon);
+		private static extern int DestroyIcon (IntPtr hIcon);
 		
 		/// <summary>
 		/// Extract the icon from file.
@@ -412,54 +418,51 @@ namespace pluginner.Toolkit
 		///    "C:\\Program Files\\NetMeeting\\conf.exe,1".</param>
 		/// <param name="isLarge">Determines the returned icon is a large 
 		///    (may be 32x32 px) or small icon (16x16 px).</param>
-		public static System.Drawing.Icon ExtractIconFromFile(string fileAndParam, bool isLarge)
+		public static Icon ExtractIconFromFile(string fileAndParam, bool isLarge)
 		{
-			unsafe
+			uint readIconCount = 0;
+			IntPtr[] hDummy = new IntPtr[1] { IntPtr.Zero };
+			IntPtr[] hIconEx = new IntPtr[1] { IntPtr.Zero };
+
+			try
 			{
-				uint readIconCount = 0;
-				IntPtr[] hDummy = new IntPtr[1] { IntPtr.Zero };
-				IntPtr[] hIconEx = new IntPtr[1] { IntPtr.Zero };
+				EmbeddedIconInfo embeddedIcon =
+					getEmbeddedIconInfo(fileAndParam);
 
-				try
-				{
-					EmbeddedIconInfo embeddedIcon =
-						getEmbeddedIconInfo(fileAndParam);
-
-					if (isLarge)
-						readIconCount = ExtractIconEx
+				if (isLarge)
+					readIconCount = ExtractIconEx
 						(embeddedIcon.FileName, embeddedIcon.IconIndex, hIconEx, hDummy, 1);
-					else
-						readIconCount = ExtractIconEx
+				else
+					readIconCount = ExtractIconEx
 						(embeddedIcon.FileName, embeddedIcon.IconIndex, hDummy, hIconEx, 1);
 
-					if (readIconCount > 0 && hIconEx[0] != IntPtr.Zero)
-					{
-						//Get first icon.
-						System.Drawing.Icon extractedIcon =
-						(System.Drawing.Icon)System.Drawing.Icon.FromHandle(hIconEx[0]).Clone();
-
-						return extractedIcon;
-					}
-					else //No icon read.
-						return null;
-				}
-				catch (Exception exc)
+				if (readIconCount > 0 && hIconEx[0] != IntPtr.Zero)
 				{
-					//Extract icon error.
-					throw new ApplicationException
-						("Could not extract icon", exc);
-				}
-				finally
-				{
-					//Release resources.
-					foreach (IntPtr ptr in hIconEx)
-						if (ptr != IntPtr.Zero)
-							DestroyIcon(ptr);
+					//Get first icon.
+					Icon extractedIcon =
+						(Icon)Icon.FromHandle(hIconEx[0]).Clone();
 
-					foreach (IntPtr ptr in hDummy)
-						if (ptr != IntPtr.Zero)
-							DestroyIcon(ptr);
+					return extractedIcon;
 				}
+				else //No icon read.
+					return null;
+			}
+			catch (Exception exc)
+			{
+				//Extract icon error.
+				throw new ApplicationException
+					("Could not extract icon", exc);
+			}
+			finally
+			{
+				//Release resources.
+				foreach (IntPtr ptr in hIconEx)
+					if (ptr != IntPtr.Zero)
+						DestroyIcon(ptr);
+
+				foreach (IntPtr ptr in hDummy)
+					if (ptr != IntPtr.Zero)
+						DestroyIcon(ptr);
 			}
 		}
 		#endregion

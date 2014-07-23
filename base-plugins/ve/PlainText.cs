@@ -24,7 +24,7 @@ namespace fcmd.base_plugins.ve
 		#endregion
 
 		Xwt.Menu mnuFormat = new Xwt.Menu();
-		Xwt.Table Layout = new Xwt.Table() { DefaultRowSpacing = 0 };
+		Xwt.Table Layout = new Xwt.Table { DefaultRowSpacing = 0 };
 		Xwt.RichTextView RTV = new Xwt.RichTextView();
 		Xwt.ScrollView ScrollBox;
 		Xwt.Label lblFileName = new Xwt.Label("file name");
@@ -50,7 +50,7 @@ namespace fcmd.base_plugins.ve
 				Xwt.MenuItem mi = new Xwt.MenuItem();
 				mi.Tag = cp.CodePage;
 				mi.Label = "CP" + cp.CodePage + " - " + cp.DisplayName;
-				mi.Clicked += new EventHandler(Codepage_Clicked);
+				mi.Clicked += Codepage_Clicked;
 				mnuFormat.Items.Add(mi);
 			}
 			mbCodepage.Menu = mnuFormat;

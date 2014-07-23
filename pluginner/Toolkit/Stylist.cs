@@ -9,6 +9,8 @@
 using System;
 using mucss;
 using pluginner.Widgets;
+using Xwt;
+using Xwt.Drawing;
 
 namespace pluginner.Toolkit
 {
@@ -16,15 +18,15 @@ namespace pluginner.Toolkit
 	public class Stylist
 	{
 		/// <summary>The μCSS parser that is the kernel of the Stylist</summary>
-		public mucss.Stylesheet CSS;
+		public Stylesheet CSS;
 
-		bool semaphore = false;
+		bool semaphore;
 
 		/// <summary>Initialize Stylist</summary>
 		/// <param name="CSS_File">The path to the CSS file (or null if only internal styles are need to be used)</param>
 		public Stylist(string CSS_File = null)
 		{
-			DefaultStyle = Utilities.GetEmbeddedResource("Resources.Default.css");
+			string DefaultStyle = Utilities.GetEmbeddedResource("Resources.Default.css");
 
 			if (DefaultStyle == null) Environment.FailFast("File Commander has been crashed: the default theme's stylesheet is unable to load. Possibly there is a failure of the pluginner.dll body or RAM banks. Try to reinstall FC.", new InvalidProgramException("Default style isn't loading"));
 			if(CSS_File != null && CSS_File != "")
@@ -36,10 +38,10 @@ namespace pluginner.Toolkit
 		/// <summary>Enable theming of the widget</summary>
 		/// <param name="Widget">The widget that needs to be themized</param>
 		/// <param name="Selector">The selector pattern</param>
-		public void Stylize(Xwt.Widget Widget, string Selector = "Widget"){
+		public void Stylize(Widget Widget, string Selector = "Widget"){
 			if (!semaphore) {
 				semaphore = true;
-				Stylize(Widget, "Widget"); //apply default style for all widgets
+				Stylize(Widget, Selector); //apply default style for all widgets
 				try {
 					Stylize(Widget, Widget.GetType().ToString().Substring(Widget.GetType().ToString().IndexOf('.') + 1)); //apply default style for the widget type
 				}
@@ -49,8 +51,7 @@ namespace pluginner.Toolkit
 
 			ApplyStyle(Widget, Selector);
 
-			Widget.MouseEntered+=(o,ea)=>
-			{ ApplyStyle(Widget, Selector + ":hover"); };
+			Widget.MouseEntered+=(o,ea)=> ApplyStyle(Widget, Selector + ":hover");
 
 			Widget.MouseExited+=(o,ea)=>
 			{
@@ -59,14 +60,11 @@ namespace pluginner.Toolkit
 					ApplyStyle(Widget, Selector + ":focus");
 			};
 
-			Widget.ButtonPressed+=(o,ea)=>
-			{ ApplyStyle(Widget, Selector + ":active"); };
+			Widget.ButtonPressed+=(o,ea)=> ApplyStyle(Widget, Selector + ":active");
 
-			Widget.GotFocus+=(o,ea)=>
-			{ ApplyStyle(Widget, Selector + ":focus"); };
+			Widget.GotFocus+=(o,ea)=> ApplyStyle(Widget, Selector + ":focus");
 
-			Widget.LostFocus += (o, ea) =>
-			{ ApplyStyle(Widget, Selector); };
+			Widget.LostFocus += (o, ea) => ApplyStyle(Widget, Selector);
 
 			Widget.ButtonReleased+=(o,ea)=>
 			{
@@ -81,14 +79,14 @@ namespace pluginner.Toolkit
 		/// <param name="Selector">The selector pattern</param>
 		public void Stylize(ListView2 Widget, string Selector = "FileList")
 		{
-			Stylize(Widget as Xwt.Widget,Selector);
+			Stylize(Widget as Widget,Selector);
 			Selector all = CSS[Selector];
 			Selector row1 = CSS[Selector+"RowA"];
 			Selector row2 = CSS[Selector+"RowB"];
 			Selector sel = CSS[Selector+"Row:checked"];
 			Selector point = CSS[Selector+"Row:active"];
 			if (all.Declarations["font-family"].Value != "inherit")
-				Widget.Font = Xwt.Drawing.Font.FromName(
+				Widget.Font = Font.FromName(
 					all.Declarations["font-family"].Value
 				);
 			if (all.Declarations["background-color"].Value != "inherit")
@@ -116,11 +114,11 @@ namespace pluginner.Toolkit
 
 		/// <summary>Apply the specified selector (style) to the specified widget</summary>
 		/// <param name="Widget">The widget that should "got" the style</param>
-		/// <param name="Style">The specified selector with the desired style</param>
-		public void ApplyStyle(Xwt.Widget Widget, string Pattern)
+		/// <param name="Pattern">The specified selector with the desired style</param>
+		public void ApplyStyle(Widget Widget, string Pattern)
 		{
-			if (Widget.GetType() == typeof(Xwt.Label)) { ApplyStyle((Xwt.Label)Widget, Pattern); return; }
-			if (Widget.GetType() == typeof(Xwt.Box)) { ApplyStyle((Xwt.Box)Widget, Pattern); return; }
+			if (Widget.GetType() == typeof(Label)) { ApplyStyle((Label)Widget, Pattern); return; }
+			if (Widget.GetType() == typeof(Box)) { ApplyStyle((Box)Widget, Pattern); return; }
 
 			Selector Selector = CSS[Pattern];
 
@@ -131,18 +129,18 @@ namespace pluginner.Toolkit
 			);
 
 			if (Selector.Declarations["font-family"].Value != "inherit")
-			Widget.Font = Xwt.Drawing.Font.FromName(
+			Widget.Font = Font.FromName(
 				Selector.Declarations["font-family"].Value
 			);
 
-			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
+			Widget.Visible = Selector.Declarations["display"].Value != "none";
 
 		}
 
 		/// <summary>Apply the specified selector (style) to the specified widget</summary>
 		/// <param name="Widget">The widget that should "got" the style</param>
-		/// <param name="Style">The specified selector with the desired style</param>
-		public void ApplyStyle(Xwt.Label Widget, string Pattern)
+		/// <param name="Pattern">The specified selector with the desired style</param>
+		public void ApplyStyle(Label Widget, string Pattern)
 		{
 			Selector Selector = CSS[Pattern];
 
@@ -159,17 +157,17 @@ namespace pluginner.Toolkit
 			);
 
 			if (Selector.Declarations["font-family"].Value != "inherit")
-			Widget.Font = Xwt.Drawing.Font.FromName(
+			Widget.Font = Font.FromName(
 				Selector.Declarations["font-family"].Value
 			);
 
-			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
+			Widget.Visible = Selector.Declarations["display"].Value != "none";
 		}
 
 		/// <summary>Apply the specified selector (style) to the specified widget</summary>
 		/// <param name="Widget">The widget that should "got" the style</param>
-		/// <param name="Style">The specified selector with the desired style</param>
-		public void ApplyStyle(Xwt.Box Widget, string Pattern)
+		/// <param name="Pattern">The specified selector with the desired style</param>
+		public void ApplyStyle(Box Widget, string Pattern)
 		{
 			Selector Selector = CSS[Pattern];
 
@@ -179,19 +177,19 @@ namespace pluginner.Toolkit
 				Selector.Declarations["background-color"].Value
 			);
 
-			foreach (Xwt.Widget Child in Widget.Children)
+			foreach (Widget Child in Widget.Children)
 			{
 				ApplyStyle(Child,Pattern);
 			}
 
 
-			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
+			Widget.Visible = Selector.Declarations["display"].Value != "none";
 		}
 
 		/// <summary>Apply the specified selector (style) to the specified widget</summary>
 		/// <param name="Widget">The widget that should "got" the style</param>
-		/// <param name="Style">The specified selector with the desired style</param>
-		public void ApplyStyle(Xwt.Button Widget, string Pattern)
+		/// <param name="Pattern">The specified selector with the desired style</param>
+		public void ApplyStyle(Button Widget, string Pattern)
 		{
 			Selector Selector = CSS[Pattern];
 
@@ -203,18 +201,18 @@ namespace pluginner.Toolkit
 
 			if (Selector.Declarations["border-style"].Value != "inherit")
 			if (GetBorder(Selector.Declarations["border-style"].Value))
-				Widget.Style = Xwt.ButtonStyle.Normal;
+				Widget.Style = ButtonStyle.Normal;
 			else
-				Widget.Style = Xwt.ButtonStyle.Borderless;
+				Widget.Style = ButtonStyle.Borderless;
 
 
-			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
+			Widget.Visible = Selector.Declarations["display"].Value != "none";
 		}
 
 		/// <summary>Apply the specified selector (style) to the specified widget</summary>
 		/// <param name="Widget">The widget that should "got" the style</param>
 		/// <param name="Selector">The specified selector with the desired style</param>
-		public void ApplyStyle(Xwt.Label Widget, mucss.Selector Selector)
+		public void ApplyStyle(Label Widget, Selector Selector)
 		{
 			if (Selector.Declarations["background-color"].Value != "inherit")
 				Widget.BackgroundColor =
@@ -229,11 +227,11 @@ namespace pluginner.Toolkit
 				);
 
 			if (Selector.Declarations["font-family"].Value != "inherit")
-				Widget.Font = Xwt.Drawing.Font.FromName(
+				Widget.Font = Font.FromName(
 					Selector.Declarations["font-family"].Value
 				);
 
-			Widget.Visible = Selector.Declarations["display"].Value == "none" ? false : true;
+			Widget.Visible = Selector.Declarations["display"].Value != "none";
 		}
 
 
@@ -242,7 +240,5 @@ namespace pluginner.Toolkit
 			if (borderStyle != "none")  return true; else return false;
 			//it's need to understand all css borderstyles
 		}
-
-		private string DefaultStyle;
 	}
 }

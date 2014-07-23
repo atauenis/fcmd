@@ -24,16 +24,16 @@ namespace pluginner.Widgets
 		/// <summary>Selection state</summary>
 		private ListView2.ItemStates _State;
 
-		private Xwt.Drawing.Color DefBgColor;
-		private Xwt.Drawing.Color DefFgColor;
-		private Xwt.Drawing.Color PointBgColor;
-		private Xwt.Drawing.Color PointFgColor;
-		private Xwt.Drawing.Color SelBgColor;
-		private Xwt.Drawing.Color SelFgColor;
+		private Color DefBgColor;
+		private Color DefFgColor;
+		private Color PointBgColor;
+		private Color PointFgColor;
+		private Color SelBgColor;
+		private Color SelFgColor;
 
-		private Xwt.Drawing.Color CurFgColor;
+		private Color CurFgColor;
 
-		protected override void OnDraw(Xwt.Drawing.Context ctx, Rectangle dirtyRect)
+		protected override void OnDraw(Context ctx, Rectangle dirtyRect)
 		{
 			base.OnDraw(ctx, dirtyRect);
 			if (_Values.Count() > _Cols.Count()) return; //if the collumn count is less than the count of collumns in the data, НАХУЙ ТАКУЮ РАБОТУ
@@ -52,52 +52,24 @@ namespace pluginner.Widgets
 			}
 		}
 
-		private void Draw(object What, double Where, Xwt.Drawing.Context On)
+		private void Draw(object What, double Where, Context On)
 		{
-			if (What.GetType() != typeof (Xwt.Drawing.Image)
+			if (What.GetType() != typeof (Image)
 				&&
 				What.GetType() != typeof (DirItem))
 			{
 				TextLayout tl = new TextLayout(this) {Text = What.ToString(), Font = Font};
 				On.DrawTextLayout(tl, Where, 0);
 			}
-			if (What is Xwt.Drawing.Image)
+			if (What is Image)
 			{
-				On.DrawImage(What as Xwt.Drawing.Image, Where, 0);
+				On.DrawImage(What as Image, Where, 0);
 			}
-		}
-
-		private void Rebuild()
-		{
-//delete!
-		}
-
-		/// <summary>Makes a ready to display widget from an data-storage type (String, Image, DateTime or etc)</summary>
-		/// <param name="Content">The ready for storage data (an string, Integer, DateTime, Xwt Image or et centera)</param>
-		/// <returns>The XWT widget, which can be embedded ewerywhere</returns>
-		private Widget MakeWidget(object Content)
-		{
-			if (Content.GetType() == typeof(DirItem))
-			{
-				return new Label() { Visible = false }; //non-visible placeholder
-			}
-
-			if (Content.GetType() == typeof(Xwt.Drawing.Image))
-			{
-				return new ImageView(Content as Xwt.Drawing.Image);
-			}
-
-			if (Content.GetType() == typeof(Widget)){
-				//todo: doesn't work, as the Widget is abstract class, need to find a way to identify it's childs.
-				return Content as Widget;
-			}
-
-			return new EditableLabel(Content.ToString());
 		}
 
 		public void OnDblClick()
 		{
-			this.OnButtonPressed(new ButtonEventArgs() { MultiplePress = 2 });
+			OnButtonPressed(new ButtonEventArgs { MultiplePress = 2 });
 		}
 
 		/// <summary>Creates a new ListView2Item</summary>
@@ -108,7 +80,7 @@ namespace pluginner.Widgets
 		/// <param name="Data">The data that should be shown in this LV2I</param>
 		public ListView2Item(int RowNumber, int ColNumber, string RowTag, ListView2.CollumnInfo[] Collumns, List<Object> Data)
 		{
-			BackgroundColor = Xwt.Drawing.Colors.Aqua;
+			BackgroundColor = Colors.Aqua;
 			MinHeight = 16;
 			HeightRequest = 16;
 			MinWidth = 500;
@@ -120,10 +92,11 @@ namespace pluginner.Widgets
 			Tag = RowTag;
 			RowNo = RowNumber;
 			ColNo = ColNumber;
-			Rebuild();
+
+			QueueDraw();
 		}
 
-		public Xwt.Drawing.Color NormalBgColor
+		public Color NormalBgColor
 		{
 			get { return DefBgColor; }
 			set {
@@ -133,7 +106,7 @@ namespace pluginner.Widgets
 			}
 		}
 
-		public Xwt.Drawing.Color NormalFgColor
+		public Color NormalFgColor
 		{
 			get { return DefFgColor; }
 			set
@@ -145,7 +118,7 @@ namespace pluginner.Widgets
 			}
 		}
 
-		public Xwt.Drawing.Color PointerBgColor
+		public Color PointerBgColor
 		{
 			get { return PointBgColor; }
 			set
@@ -157,7 +130,7 @@ namespace pluginner.Widgets
 			}
 		}
 
-		public Xwt.Drawing.Color PointerFgColor
+		public Color PointerFgColor
 		{
 			get { return PointFgColor; }
 			set
@@ -169,7 +142,7 @@ namespace pluginner.Widgets
 			}
 		}
 
-		public Xwt.Drawing.Color SelectionBgColor
+		public Color SelectionBgColor
 		{
 			get { return SelBgColor; }
 			set
@@ -181,7 +154,7 @@ namespace pluginner.Widgets
 			}
 		}
 
-		public Xwt.Drawing.Color SelectionFgColor
+		public Color SelectionFgColor
 		{
 			get { return SelFgColor; }
 			set
@@ -194,7 +167,7 @@ namespace pluginner.Widgets
 		}
 
 		/// <summary>Set the font of the row</summary>
-		public new Xwt.Drawing.Font Font
+		public new Font Font
 		{
 			get; set;
 		}
@@ -202,7 +175,7 @@ namespace pluginner.Widgets
 		/// <summary>Set collumn list</summary>
 		public ListView2.CollumnInfo[] Collumns
 		{
-			set { _Cols = value; Rebuild(); }
+			set { _Cols = value; QueueDraw(); }
 		}
 
 		/// <summary>Status of the item selection</summary>
@@ -247,7 +220,7 @@ namespace pluginner.Widgets
 						CurFgColor = DefFgColor;
 						break;
 				}
-				this.QueueDraw();
+				QueueDraw();
 			}
 		}
 
@@ -260,29 +233,17 @@ namespace pluginner.Widgets
 		/// </summary>
 		public List<Object> Data
 		{
-			get { return _Values.ToList<Object>(); }
+			get { return _Values.ToList(); }
 			set {
 				if (_Cols == null) {
 					throw new Exception("Please set collumns first!");
 				}
 				_Values = value.ToArray();
-				Rebuild();
+				QueueDraw();
 			}
 		}
 
-		public List<Boolean> EditableFields
-		{
-			get { return _Editables.ToList<Boolean>(); }
-			set { 
-				if (_Cols == null) {
-					throw new Exception("Please set collumns first!");
-				}
-				_Editables = value.ToArray();
-				Rebuild();
-			}
-		}
-
-		[Obsolete("Not obsolete, but not implemented yet, do not use!")]
+		[Obsolete("Not obsolete, but not implemented yet, do not use at now!")]
 		public event TypedEvent<EditableLabel> EditComplete;
 	}
 }

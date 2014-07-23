@@ -21,13 +21,13 @@ namespace fcmd.SettingsWindowTabs
 		
 		Xwt.Frame fraMain = new Xwt.Frame();
 		Xwt.VBox fraMainBox = new Xwt.VBox();
-		Xwt.CheckBox chkShowToolBar = new Xwt.CheckBox(){Sensitive = false};
+		Xwt.CheckBox chkShowToolBar = new Xwt.CheckBox {Sensitive = false};
 		Xwt.CheckBox chkDiskButtons = new Xwt.CheckBox(); //ok
-		Xwt.CheckBox chkDiskListBox = new Xwt.CheckBox(){ Sensitive = false };
+		Xwt.CheckBox chkDiskListBox = new Xwt.CheckBox { Sensitive = false };
 		Xwt.CheckBox chkPanelTitle = new Xwt.CheckBox(); //ok
 		Xwt.CheckBox chkTableCollumns = new Xwt.CheckBox();//ok
 		Xwt.CheckBox chkInfoBar = new Xwt.CheckBox();//ok
-		Xwt.CheckBox chkCmdLine = new Xwt.CheckBox(){ Sensitive = false };
+		Xwt.CheckBox chkCmdLine = new Xwt.CheckBox { Sensitive = false };
 		Xwt.CheckBox chkKeybHelp = new Xwt.CheckBox();//ok
 		Xwt.Label lblBookmarks = new Xwt.Label();
 		Xwt.TextEntry txtBookmarks = new Xwt.TextEntry();

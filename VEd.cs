@@ -24,31 +24,31 @@ namespace fcmd
 		bool IsEditor = false;
 
 		//Xwt.Menu MainMenu = new Xwt.Menu();
-		Xwt.MenuItem mnuFile = new Xwt.MenuItem() { Tag="mnuFile"};
-		Xwt.MenuItem mnuFileNew = new Xwt.MenuItem() { Tag="mnuFileNew"};
-		Xwt.MenuItem mnuFileOpen = new Xwt.MenuItem() { Tag="mnuFileOpen"};
-		Xwt.MenuItem mnuFileReload = new Xwt.MenuItem() { Tag="mnuFileReload"};
-		Xwt.MenuItem mnuFileSave = new Xwt.MenuItem() { Tag="mnuFileSave"};
-		Xwt.MenuItem mnuFilePrint = new Xwt.MenuItem() { Tag="mnuFilePrint"};
-		Xwt.MenuItem mnuFilePrintSettings = new Xwt.MenuItem() { Tag="mnuFilePrintSettings"};
-		Xwt.MenuItem mnuFilePrintPreview = new Xwt.MenuItem() { Tag="mnuFilePrintPreview"};
-		Xwt.MenuItem mnuFileClose = new Xwt.MenuItem() { Tag="mnuFileClose"};
+		Xwt.MenuItem mnuFile = new Xwt.MenuItem { Tag="mnuFile"};
+		Xwt.MenuItem mnuFileNew = new Xwt.MenuItem { Tag="mnuFileNew"};
+		Xwt.MenuItem mnuFileOpen = new Xwt.MenuItem { Tag="mnuFileOpen"};
+		Xwt.MenuItem mnuFileReload = new Xwt.MenuItem { Tag="mnuFileReload"};
+		Xwt.MenuItem mnuFileSave = new Xwt.MenuItem { Tag="mnuFileSave"};
+		Xwt.MenuItem mnuFilePrint = new Xwt.MenuItem { Tag="mnuFilePrint"};
+		Xwt.MenuItem mnuFilePrintSettings = new Xwt.MenuItem { Tag="mnuFilePrintSettings"};
+		Xwt.MenuItem mnuFilePrintPreview = new Xwt.MenuItem { Tag="mnuFilePrintPreview"};
+		Xwt.MenuItem mnuFileClose = new Xwt.MenuItem { Tag="mnuFileClose"};
 
-		Xwt.MenuItem mnuEdit = new Xwt.MenuItem() { Tag = "mnuEdit",UseMnemonic = true };
-		Xwt.MenuItem mnuEditCut = new Xwt.MenuItem() { Tag = "mnuEditCut" };
-		Xwt.MenuItem mnuEditCopy = new Xwt.MenuItem() { Tag = "mnuEditCopy" };
-		Xwt.MenuItem mnuEditPaste = new Xwt.MenuItem() { Tag = "mnuEditPaste" };
-		Xwt.MenuItem mnuEditSelectAll = new Xwt.MenuItem() { Tag = "mnuEditSelAll" };
-		Xwt.MenuItem mnuEditFindReplace = new Xwt.MenuItem() { Tag = "mnuEditSearch" };
-		Xwt.MenuItem mnuEditFindNext = new Xwt.MenuItem() { Tag = "mnuEditSearchNext" };
+		Xwt.MenuItem mnuEdit = new Xwt.MenuItem { Tag = "mnuEdit",UseMnemonic = true };
+		Xwt.MenuItem mnuEditCut = new Xwt.MenuItem { Tag = "mnuEditCut" };
+		Xwt.MenuItem mnuEditCopy = new Xwt.MenuItem { Tag = "mnuEditCopy" };
+		Xwt.MenuItem mnuEditPaste = new Xwt.MenuItem { Tag = "mnuEditPaste" };
+		Xwt.MenuItem mnuEditSelectAll = new Xwt.MenuItem { Tag = "mnuEditSelAll" };
+		Xwt.MenuItem mnuEditFindReplace = new Xwt.MenuItem { Tag = "mnuEditSearch" };
+		Xwt.MenuItem mnuEditFindNext = new Xwt.MenuItem { Tag = "mnuEditSearchNext" };
 
 		Xwt.MenuItem mnuView = new Xwt.MenuItem();
-		Xwt.MenuItem mnuViewSettings = new Xwt.MenuItem() {Tag = "mnuViewSettings"};
+		Xwt.MenuItem mnuViewSettings = new Xwt.MenuItem {Tag = "mnuViewSettings"};
 		Xwt.MenuItem mnuFormat = new Xwt.MenuItem();
 
 		Xwt.MenuItem mnuHelp = new Xwt.MenuItem();
-		Xwt.MenuItem mnuHelpHelpme = new Xwt.MenuItem() { Tag = "mnuHelpHelpme" };
-		Xwt.MenuItem mnuHelpAbout = new Xwt.MenuItem() { Tag = "mnuHelpAbout" };
+		Xwt.MenuItem mnuHelpHelpme = new Xwt.MenuItem { Tag = "mnuHelpHelpme" };
+		Xwt.MenuItem mnuHelpAbout = new Xwt.MenuItem { Tag = "mnuHelpAbout" };
 
 		Xwt.VBox Layout = new Xwt.VBox();
 		Xwt.Widget PluginBody;
@@ -70,7 +70,7 @@ namespace fcmd
 			this.Title = Locale.GetString("File Commander VE");
 			this.Content = Layout;
 
-			CommandBox.KeyReleased += new EventHandler<Xwt.KeyEventArgs>(CommandBox_KeyReleased);
+			CommandBox.KeyReleased += CommandBox_KeyReleased;
 
 			mnuFile.Label = Locale.GetString("FCVE_mnuFile");
 			mnuFile.SubMenu = new Xwt.Menu();
@@ -135,13 +135,13 @@ namespace fcmd
 			mnuEditSelectAll.Clicked += (o, ea) => { SendCommand("select *"); };
 			mnuEditFindReplace.Clicked += (o, ea) => { SendCommand("findreplace"); };
 			mnuEditFindNext.Clicked += (o, ea) => { SendCommand("findreplace last"); };
-			mnuHelpAbout.Clicked += new EventHandler(mnuHelpAbout_Clicked);
+			mnuHelpAbout.Clicked += mnuHelpAbout_Clicked;
 
 			this.CloseRequested += VEd_CloseRequested;
-			this.Shown += new EventHandler(VEd_Shown);
+			this.Shown += VEd_Shown;
 
 #if !MONO
-			PluginBody = new Xwt.Spinner() { Animate = true };
+			PluginBody = new Xwt.Spinner { Animate = true };
 #else
 			PluginBody = new Xwt.HBox(); //"workaround" for xwt/XWT bug https://github.com/mono/xwt/issues/283
 #endif
@@ -157,7 +157,7 @@ namespace fcmd
 			try {
 			SendCommand("unload");
 			}
-			catch (Exception e) { Xwt.MessageDialog.ShowError(e.Message, e.StackTrace + "\n   on " + Plugin.Name + " (" + Plugin.GetType().ToString() + ")"); }
+			catch (Exception e) { Xwt.MessageDialog.ShowError(e.Message, e.StackTrace + "\n   on " + Plugin.Name + " (" + Plugin.GetType() + ")"); }
 			this.Hide();
 		}
 
@@ -359,7 +359,7 @@ namespace fcmd
 				{
 					if (currentMenuItem.GetType() != typeof(Xwt.SeparatorMenuItem))
 					{ //skip separators
-						currentMenuItem.Label = Locale.GetString("FCVE_" + currentMenuItem.Tag.ToString());
+						currentMenuItem.Label = Locale.GetString("FCVE_" + currentMenuItem.Tag);
 						TranslateMenu(currentMenuItem.SubMenu);
 					}
 				}

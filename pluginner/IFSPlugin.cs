@@ -6,6 +6,9 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
+using Xwt.Drawing;
 
 namespace pluginner
 {
@@ -95,7 +98,7 @@ namespace pluginner
 		/// <param name="URL">The URL of the file</param>
 		/// <param name="Lock">Because some systems doesn't allow writing to non-locked file streams, set to <value>1</value> if writing to the stream is planned.</param>
 		/// <returns></returns>
-		System.IO.Stream GetStream(string URL, bool Lock = false);
+		Stream GetStream(string URL, bool Lock = false);
 
 		/// <summary>Writes a file.</summary>
 		/// <param name='NewFile'>The file</param>
@@ -167,12 +170,12 @@ namespace pluginner
 		/// <summary>
 		/// Raises when the plugin want to change text in the panel's status bar
 		/// </summary>
-		event pluginner.TypedEvent<string> StatusChanged;
+		event TypedEvent<string> StatusChanged;
 
 		/// <summary>
 		/// Raises when the plugin want to show a progressbar in the panel status bar; the argument is a number in range of 0...1; if the eventarg is 0, the progress bar will hide
 		/// </summary>
-		event pluginner.TypedEvent<double> ProgressChanged;
+		event TypedEvent<double> ProgressChanged;
 
 		/// <summary>
 		/// Start a program <paramref name="CommandLine"/> in the environment or write some data into the current program's stdin stream.
@@ -243,7 +246,7 @@ namespace pluginner
 		public long Size;
 
 		/// <summary>
-		/// The file's date&time in GMT
+		/// The file's date & time in GMT
 		/// </summary>
 		public DateTime Date;
 
@@ -279,12 +282,12 @@ namespace pluginner
 		 /// <summary>
 		 /// The file's small icon
 		 /// </summary>
-		 public Xwt.Drawing.Image IconSmall;
+		 public Image IconSmall;
 
 		 /// <summary>
 		 /// The file's big icon
 		 /// </summary>
-		 public Xwt.Drawing.Image IconBig;
+		 public Image IconBig;
 	}
 
 	/// <summary>
@@ -302,7 +305,7 @@ namespace pluginner
 		public string FullURL;
 
 		/// <summary>The file's attribbutes</summary>
-		public System.IO.FileAttributes Attrubutes;
+		public FileAttributes Attrubutes;
 		/// <summary>The file's GMT-time of creation</summary>
 		public DateTime CreationTimeUTC;
 		/// <summary>The file's GMT-time of last modification</summary>
@@ -320,7 +323,7 @@ namespace pluginner
 
 		/// <summary>Returns uniform resource locator of the file</summary>
 		public override string ToString()
-		{ return this.FullURL; }
+		{ return FullURL; }
 	}
 
 	/* Исключение выскакивает в случае установления невозможности удаления каталога
@@ -334,22 +337,15 @@ namespace pluginner
 	/// The File Commander should catch this exception and abort the directory removal procedure.
 	/// The plugin should not throw this exception until all "rule checking" changes was undoned.
 	/// </summary>
-	[global::System.Serializable]
+	[Serializable]
 	public class ThisDirCannotBeRemovedException : Exception
 	{
-		//
-		// For guidelines regarding the creation of new exception types, see
-		//	http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconerrorraisinghandlingguidelines.asp
-		// and
-		//	http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
-		//
-
 		public ThisDirCannotBeRemovedException() { }
 		public ThisDirCannotBeRemovedException(string message) : base(message) { }
 		public ThisDirCannotBeRemovedException(string message, Exception inner) : base(message, inner) { }
 		protected ThisDirCannotBeRemovedException(
-		  System.Runtime.Serialization.SerializationInfo info,
-		  System.Runtime.Serialization.StreamingContext context)
+		  SerializationInfo info,
+		  StreamingContext context)
 			: base(info, context) { }
 	}
 	#endregion

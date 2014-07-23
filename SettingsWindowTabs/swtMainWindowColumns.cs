@@ -16,13 +16,13 @@ namespace fcmd.SettingsWindowTabs
 		Xwt.VBox box = new Xwt.VBox();
 		Localizator Locale = new Localizator();
 
-		Xwt.Frame fraExtensions = new Xwt.Frame() {Sensitive = false};
+		Xwt.Frame fraExtensions = new Xwt.Frame {Sensitive = false};
 		Xwt.VBox fraExtensionsBox = new Xwt.VBox();
 		Xwt.RadioButtonGroup rbgExtensionDisplayStyle = new Xwt.RadioButtonGroup();
 		Xwt.RadioButton optDisplayExtTogether = new Xwt.RadioButton();
 		Xwt.RadioButton optDisplayExtFar = new Xwt.RadioButton();
 
-		Xwt.Frame fraTabs = new Xwt.Frame(){Sensitive = false};
+		Xwt.Frame fraTabs = new Xwt.Frame {Sensitive = false};
 		Xwt.Table fraTabsBox = new Xwt.Table();
 		Xwt.TextEntry txtTabExtension = new Xwt.TextEntry();
 		Xwt.TextEntry txtTabSize = new Xwt.TextEntry();
@@ -31,12 +31,12 @@ namespace fcmd.SettingsWindowTabs
 
 		Xwt.Frame fraOther = new Xwt.Frame();
 		Xwt.Table fraOtherBox = new Xwt.Table();
-		Xwt.CheckBox chkExpandName = new Xwt.CheckBox() {Sensitive = false};
-		Xwt.CheckBox chkShowCentury = new Xwt.CheckBox() {Sensitive = false};
-		Xwt.CheckBox chkShowTimeAs12h = new Xwt.CheckBox() {Sensitive = false};
-		Xwt.CheckBox chkShowDirsInStatus = new Xwt.CheckBox() {Sensitive = false};
+		Xwt.CheckBox chkExpandName = new Xwt.CheckBox {Sensitive = false};
+		Xwt.CheckBox chkShowCentury = new Xwt.CheckBox {Sensitive = false};
+		Xwt.CheckBox chkShowTimeAs12h = new Xwt.CheckBox {Sensitive = false};
+		Xwt.CheckBox chkShowDirsInStatus = new Xwt.CheckBox {Sensitive = false};
 		Xwt.ComboBox cmbPanelSizeDisplay = new Xwt.ComboBox();
-		Xwt.TextEntry txtMaxHumanySizeInStatus = new Xwt.TextEntry() {Sensitive = false};
+		Xwt.TextEntry txtMaxHumanySizeInStatus = new Xwt.TextEntry {Sensitive = false};
 
 		public swtMainWindowColumns()
 		{

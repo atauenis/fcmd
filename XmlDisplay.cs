@@ -27,7 +27,7 @@ namespace fcmd
 			this.node = node;
 			if (ht != null) ht.Add(node, this); //register self in the common registry of conformity between XmlNode <--> XmlDisplay
 
-			Xwt.Expander exp = new Expander() { Expanded = true, Label = node.Name, Font = Font.WithWeight(Xwt.Drawing.FontWeight.Semibold) };
+			Xwt.Expander exp = new Expander { Expanded = true, Label = node.Name, Font = Font.WithWeight(Xwt.Drawing.FontWeight.Semibold) };
 			exp.Content = layout;
 			layout.Font = Font.WithWeight(Xwt.Drawing.FontWeight.Normal); //для уверенности
 			this.Content = exp;

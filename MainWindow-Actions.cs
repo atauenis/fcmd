@@ -300,7 +300,7 @@ namespace fcmd
                     string itself = Locale.GetString("CantCopySelf");
                     string toshow = string.Format(Locale.GetString("CantMove"), SourcePath, itself);
 
-                    Xwt.Application.Invoke(new Action(delegate { Xwt.MessageDialog.ShowWarning(toshow); }));
+                    Xwt.Application.Invoke(delegate { Xwt.MessageDialog.ShowWarning(toshow); });
                     //calling the msgbox in non-main threads causes some UI bugs, thus pushing this call into main thread
                     return;
                 }

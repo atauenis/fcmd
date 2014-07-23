@@ -27,7 +27,7 @@ namespace fcmd
 			this.ShowInTaskbar = false;
 
 			this.Buttons.Add(Xwt.Command.Save, Xwt.Command.Cancel);
-			this.Buttons[0].Clicked += new EventHandler(cmdOk_Clicked);
+			this.Buttons[0].Clicked += cmdOk_Clicked;
 			this.Buttons[1].Clicked += (o, e) => { this.Hide(); };
 
 			TabList.MinHeight = 388; TabList.MinWidth = 128;
@@ -37,7 +37,7 @@ namespace fcmd
 			TabList.Items.Add(new SettingsWindowTabs.swtMainWindowThemes(), Locale.GetString("swtMainWindowThemes"));
 			TabList.Items.Add(new SettingsWindowTabs.swtViewerEditor(), Locale.GetString("swtViewerEditor"));
 
-			TabList.SelectionChanged += new EventHandler(TabList_SelectionChanged);
+			TabList.SelectionChanged += TabList_SelectionChanged;
 			TabList.SelectRow(0); //wpf hack (row №0 isn't automatical selected)
 		}
 

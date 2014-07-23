@@ -47,8 +47,8 @@ namespace fcmd.base_plugins.fs
 					if (CLIpromptChanged != null)
 						CLIpromptChanged("FC: " + procname + ">");
 					CLIproc.EnableRaisingEvents = true;
-					CLIproc.OutputDataReceived += new DataReceivedEventHandler(CLIproc_OutputDataReceived);
-					CLIproc.ErrorDataReceived += new DataReceivedEventHandler(CLIproc_ErrorDataReceived);
+					CLIproc.OutputDataReceived += CLIproc_OutputDataReceived;
+					CLIproc.ErrorDataReceived += CLIproc_ErrorDataReceived;
 					CLIproc.BeginOutputReadLine();
 					CLIproc.BeginErrorReadLine();
 
@@ -87,7 +87,7 @@ namespace fcmd.base_plugins.fs
 			if (CLIproc.HasExited || e.Data == null) return;
 			if (CLIstderrDataReceived != null) CLIstderrDataReceived(e.Data);
 			else
-				Xwt.Application.Invoke(new Action(delegate { Xwt.MessageDialog.ShowWarning(CLIproc.ProcessName, e.Data); }));
+				Xwt.Application.Invoke(delegate { Xwt.MessageDialog.ShowWarning(CLIproc.ProcessName, e.Data); });
 		}
 
 		void CLIproc_OutputDataReceived(object sender, DataReceivedEventArgs e)

@@ -11,15 +11,15 @@ using Xwt;
 namespace pluginner.Widgets
 {
 	/// <summary>A scrollable panel, that can be 100% controlled by the host</summary>
-	public class HeavyScroller : Xwt.Widget
+	public class HeavyScroller : Widget
 	{
 		Table Layout = new Table();
 		Canvas Locator = new Canvas() ;
 		Widget Child = new Label("No child is inserted");
 		HScrollbar HScroll = new HScrollbar();
 		VScrollbar VScroll = new VScrollbar();
-		double OffsetX = 0;
-		double OffsetY = 0;
+		double OffsetX;
+		double OffsetY;
 
 		public HeavyScroller()
 		{
@@ -29,10 +29,10 @@ namespace pluginner.Widgets
 			Layout.Add(HScroll, 0, 1);
 			base.Content = Layout;
 
-			BoundsChanged += new EventHandler(HeavyScroller_BoundsChanged);
-			VScroll.ValueChanged += new EventHandler(VScroll_ValueChanged);
-			HScroll.ValueChanged += new EventHandler(HScroll_ValueChanged);
-			this.MouseScrolled += new EventHandler<MouseScrolledEventArgs>(HeavyScroller_MouseScrolled);
+			BoundsChanged += HeavyScroller_BoundsChanged;
+			VScroll.ValueChanged += VScroll_ValueChanged;
+			HScroll.ValueChanged += HScroll_ValueChanged;
+			MouseScrolled += HeavyScroller_MouseScrolled;
 		}
 
 
@@ -121,7 +121,7 @@ namespace pluginner.Widgets
 
 		/// <summary>Allows/denies scrolling the content on the horizontal axis</summary>
 		public bool CanScrollByX
-		{ get; set; } //for retrogrades: this is not a bug, it's new c# style
+		{ get; set; }
 
 		/// <summary>Allows/denies scrolling the content on the vertical axis</summary>
 		public bool CanScrollByY

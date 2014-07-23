@@ -6,6 +6,7 @@
  */
 
 using Xwt;
+using Xwt.Drawing;
 
 namespace pluginner.Widgets
 {
@@ -24,13 +25,13 @@ namespace pluginner.Widgets
 		{
 			Text = text;
 			Editable = editable;
-			this.Content = l;
+			Content = l;
 			l.ButtonPressed += l_ButtonPressed;
 			t.KeyPressed += t_KeyPressed;
 		}
 		public EditableLabel ()
 		{
-			this.Content = l;
+			Content = l;
 			l.ButtonPressed += l_ButtonPressed;
 			t.KeyPressed += t_KeyPressed;
 		}
@@ -55,7 +56,7 @@ namespace pluginner.Widgets
 		/// <summary>
 		/// The text's font
 		/// </summary>
-		public new Xwt.Drawing.Font Font
+		public new Font Font
 		{
 			get { return l.Font; }
 			set { l.Font = value; t.Font = value; }
@@ -64,7 +65,7 @@ namespace pluginner.Widgets
 		/// <summary>
 		/// The text's color (Due to the XWT limitations, applied only at view mode)
 		/// </summary>
-		public Xwt.Drawing.Color TextColor
+		public Color TextColor
 		{
 			get { return l.TextColor; }
 			set { l.TextColor = value; }
@@ -73,7 +74,7 @@ namespace pluginner.Widgets
 		/// <summary>
 		/// The text's background color
 		/// </summary>
-		public new Xwt.Drawing.Color BackgroundColor
+		public new Color BackgroundColor
 		{
 			get { return base.BackgroundColor; }
 			set
@@ -99,7 +100,7 @@ namespace pluginner.Widgets
 		public bool Editable
 		{
 			get { return IsEditable; }
-			set { IsEditable = value; t.Sensitive = value; this.Content = l; }
+			set { IsEditable = value; t.Sensitive = value; Content = l; }
 		}
 
 		/// <summary>
@@ -110,18 +111,18 @@ namespace pluginner.Widgets
 		{
 			if (SetToEdit == null){
 				t.Text = l.Text;
-				this.Content = l;
+				Content = l;
 				return;
 			}
 
 			switch (SetToEdit)
 			{
 				case true:
-					this.Content = t;
+					Content = t;
 					t.SetFocus();
 					return;
 				case false:
-					this.Content = l;
+					Content = l;
 					if(EditComplete != null) EditComplete(this);
 					return;
 			}
