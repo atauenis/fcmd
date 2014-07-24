@@ -1,6 +1,7 @@
 ﻿/* The File Commander
  * Module, that does the translation of the UI into some different languages
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Zhigunov Andrew (breakneck11@gmail.com)
  * Contributors should place own signs here.
  */
 using System;
