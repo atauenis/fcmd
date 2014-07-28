@@ -1,3 +1,4 @@
+;Russian Locale, version 0.1
 ;Common
 FileCommanderVer=Файловый менеджер {0}, версия {1}{n}© 2013-14 Группа разработки {0}:{2}{n}{n}Условия лицензирования см. в файле LICENSE.{n}О взятом из других открытых проектов см. в файле COPYPASTE.md.{n}{n}Файл настроек: {3}{n}{n}ОС: {4}{n}Framework: {5}
 FCViewVer=Просмоторщик файлов, версия {0}
@@ -76,12 +77,12 @@ FName=Имя
 FSize=Размер
 FDate=Дата
 ;Errors & strings for dialog windows
-FCDelAsk=Вы действительно хотите удалить файл \"{0}\"?
+FCDelAsk=Вы действительно хотите удалить файл "{0}"?
 Canceled=Отменено пользователем
 Okay=ОК
 Cancel=Отмена
-FileNotFound=Файл \"{0}\" не найден
-ItsDir=\"{0}\" является каталогом
+FileNotFound=Файл "{0}" не найден
+ItsDir="{0}" является каталогом
 DirCantBeRemoved=Нет возможности удалить {0}
 CantRead=Не читается: {0}.{1}
 CantWrite=Не пишется: {0}.{1}
@@ -189,7 +190,7 @@ SWTMWCExt=Расширение
 SWTMWCSize=Pазмер
 SWTMWCDate=Изменено
 SWTMWCFileMode=Доступ
-SWTMWCExpandName=Расширить столбец \"Имя\"
+SWTMWCExpandName=Расширить столбец "Имя"
 SWTMWCShowCentury=Показывать век в дате (20хх)
 SWTMWCShowTimeAs12h=12-часовой формат времени (AM/PM)
 SWTMWCShowDirsInStatus=Выводить внизу кол-во папок

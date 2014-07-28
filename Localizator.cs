@@ -6,13 +6,13 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
+using fcmd.Properties;
 
 namespace fcmd
 {
 	class Localizator{
 		public Localizator() {
-			LoadLanguage(fcmd.Properties.Settings.Default.Language);
+			LoadLanguage(Settings.Default.Language);
 		}
 
 		Dictionary<string, string> Localization = new Dictionary<string, string>();
@@ -24,7 +24,7 @@ namespace fcmd
 			try {
 				return Localization[Key].Replace("{n}", "\n");
 			}
-			catch (Exception ex) { Console.WriteLine("WARNING: Locale string is not found for key: " + Key + " (" + ex.Message + ")"); return Key; }
+			catch (Exception ex) { Console.WriteLine(@"WARNING: Locale string is not found for key: {0} ({1})", Key, ex.Message); return Key; }
 		}
 
 		/// <summary>Load the requested localization file</summary>
@@ -34,7 +34,7 @@ namespace fcmd
 				{
 					case "(internal)ru_RU":
 						ParseLangFile(
-							fcmd.Properties.Resources.lang_RusUI.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries)
+							Resources.lang_RusUI.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries)
 							);
 						break;
 				}
@@ -46,7 +46,7 @@ namespace fcmd
 
 		/// <summary>Load the strings form the language file body into the memory</summary>
 		/// <param name="LangFile">The language file content</param>
-		private void ParseLangFile(string[] LangFile)
+		private void ParseLangFile(IEnumerable<string> LangFile)
 		{
 			foreach (string UIFRow in LangFile)
 			{
@@ -54,11 +54,12 @@ namespace fcmd
 				{
 					string[] Parts = UIFRow.Split('=');
 					if(Parts.Length != 2) continue; //invalid rows,
-					if (UIFRow.StartsWith(";") || UIFRow.StartsWith("[")) continue; // INI-section start rows and comment rows should be skipped
+					if (!System.Text.RegularExpressions.Regex.IsMatch(UIFRow, @"^\S*=.*")) continue;
+					//if (UIFRow.StartsWith(";") || UIFRow.StartsWith("[")) continue; // INI-section start rows and comment rows should be skipped
 					Localization[Parts[0]] = Parts[1].Replace("{n}", Environment.NewLine).TrimEnd();
 				}
-				catch {
-					Console.WriteLine(String.Format("Error during parsingc a language file, the bad string is \"{0}\"", UIFRow));
+				catch (Exception ex) {
+					Console.WriteLine(@"An error occured when parsing the language file. The invalid string is ""{0}"". It caused an error of type {1}.", UIFRow, ex.Message);
 				}
 			}
 		}
