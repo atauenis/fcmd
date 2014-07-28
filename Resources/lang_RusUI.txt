@@ -1,3 +1,4 @@
+;Common
 FileCommanderVer=Файловый менеджер {0}, версия {1}{n}© 2013-14 Группа разработки {0}:{2}{n}{n}Условия лицензирования см. в файле LICENSE.{n}О взятом из других открытых проектов см. в файле COPYPASTE.md.{n}{n}Файл настроек: {3}{n}{n}ОС: {4}{n}Framework: {5}
 FCViewVer=Просмоторщик файлов, версия {0}
 FCVEVer1=Встроенный просмоторщик и редактор файлов FC {0}.
@@ -5,6 +6,7 @@ FCVEVer2=Загружен модуль просмотра: {0}, версия {1}
 LocalFSVer=Модуль доступа к локальным ФС [встроенный]
 TxtViewerVer=Просмоторщик текстовых файлов [встроенный]
 VEptxtVer=Простой текст
+;Main window keyboard help
 FCF1=Справка
 FCF2=Меню
 FCF3=Чтение
@@ -15,6 +17,7 @@ FCF7=Каталог
 FCF8=Удал-е
 FCF9=Оп-ции
 FCF10=Выход
+;Main window menu
 FCmnuFile=_Файл
 FCmnuView=_Вид
 FCmnuNav=_Навигация
@@ -68,9 +71,11 @@ FCmnuToolsSysInfo=Сведения о системе
 FCmnuHelpHelpMe=Справка File Commander
 FCmnuHelpDebug=Отладка Файло-Коммандера
 FCmnuHelpAbout=О программе...
+;Main window file listing panel collumn headers
 FName=Имя
 FSize=Размер
 FDate=Дата
+;Errors & strings for dialog windows
 FCDelAsk=Вы действительно хотите удалить файл \"{0}\"?
 Canceled=Отменено пользователем
 Okay=ОК
@@ -103,8 +108,10 @@ NameFilterUseRegExp=_Регулярное выражение
 NameFilterError=Ошибка поиска! Проверьте запрос
 QuickSelect=Укажите шаблон имён для выделения (например, *.bat или e*.exe)
 QuickUnselect=Укажите шаблон имён для снятия выделения (например, *.bat или e*.exe)
+;Viewer/Editor (VE)
 FCVTitle=Просмотр - {0}
 FCETitle=Редактор - {0}
+;VE keyboard help
 FCVE_F1=Справка
 FCVE_F2=
 FCVE_F3=
@@ -115,6 +122,7 @@ FCVE_F7=Поиск
 FCVE_F8=Формат
 FCVE_F9=
 FCVE_F10=Выход
+;VE menus
 FCVE_mnuFile=_Файл
 FCVE_mnuFileNew=Созд_ать
 FCVE_mnuFileOpen=_Открыть
@@ -139,6 +147,7 @@ FCVE_mnuFormat=_Формат
 FCVE_mnuHelp=_Справка
 FCVE_mnuHelpHelpme=_Вызов справки
 FCVE_mnuHelpAbout=_О программе и модуле просмотра
+;VE dialog windows
 FCVWhatFind=Введите искомую строку
 FCVNothingFound=Запрошенный текст в файле не найден
 FCVELoadingMsg=Загружается файл: {0} ...
@@ -150,6 +159,7 @@ FCVE_LoadError=Ошибка загрузки файла: {0}
 FCVES_Title=Настройки просмоторщика/редактора
 FCVES_ShowToolbar=Показывать _верхнюю панель (как в FAR)
 FCVES_ShowCmdBar=Показывать _коммандную строку
+;"Settings" window
 FCS_Title=Настройки File Commander
 FCS_CantSaveSettings=Невозможно сохранить настройки. Проверьте введённые данные.
 swtMainWindow=Вид основного окна
@@ -173,7 +183,7 @@ SWTVEexternaleditor=Внешний редактор:
 swtMainWindowColumns=	Столбцы панелей
 SWTMWCFileExtView=Показывать типы (расширения) файлов:
 SWTMWCExtTogether=Сразу после имени
-WTMWCExtFar=Отдельно
+SWTMWCExtFar=Отдельно
 SWTMWCCollumns=Столбцы
 SWTMWCExt=Расширение
 SWTMWCSize=Pазмер
@@ -194,13 +204,7 @@ SizeDisplayPolicy220=плавающий (x.xx K/M)
 SWTMWinfobar=	Информационная строка
 SWTMWItext1=Текст, когда нет выделенных файлов:
 SWTMWItext2=Текст, когда выделены файлы:
-SWTMWIhelp=Допускается использование масок.
-Допустимые маски для подстановки значений:
-{FullName} - полное имя файла: filename.ext
-{AutoSize} - размер файла: 18 KB
-{Date} - дата изменения файла: 01.01.1970
-{Time} - время изменения файла: 00:00:00
-{SelectedItems} - сколько строк выделено{n}
+SWTMWIhelp=Допускается использование масок.{n}Допустимые маски для подстановки значений:{n}{FullName} - полное имя файла: filename.ext{n}{AutoSize} - размер файла: 18 KB{n}{Date} - дата изменения файла: 01.01.1970{n}{Time} - время изменения файла: 00:00:00{n}{SelectedItems} - сколько строк выделено{n}{n}
 swtMainWindowThemes=	Темы оформления
 SWTMWTusethemes=Использовать тему оформления:
 ReplaceQDTitle=Обнаружен конфликт имён файлов
