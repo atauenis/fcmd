@@ -33,9 +33,10 @@ namespace fcmd
 				switch(url)
 				{
 					case "(internal)ru_RU":
-						ParseLangFile(
-							Resources.lang_RusUI.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries)
-							);
+						ParseLangFile(Resources.lang_RusUI.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+						break;
+					case "(internal)en_US":
+						ParseLangFile(Resources.lang_EngUI.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
 						break;
 				}
 			}
