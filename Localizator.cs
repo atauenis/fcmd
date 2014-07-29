@@ -15,6 +15,9 @@ namespace fcmd
 			LoadLanguage(Settings.Default.Language);
 		}
 
+		static Dictionary<string, Dictionary<string, string>> cached_languages =
+			new Dictionary<string, Dictionary<string, string>>();
+
 		Dictionary<string, string> Localization = new Dictionary<string, string>();
 		
 		/// <summary>Get a string that corresponds the key in the dictionary</summary>
@@ -22,14 +25,19 @@ namespace fcmd
 		public string GetString(string Key){
 			if(Localization == null) throw new InvalidOperationException("The Localizator is not fed with a language file!");
 			try {
-				return Localization[Key].Replace("{n}", "\n");
+				return Localization[Key];
 			}
 			catch (Exception ex) { Console.WriteLine(@"WARNING: Locale string is not found for key: {0} ({1})", Key, ex.Message); return Key; }
 		}
 
 		/// <summary>Load the requested localization file</summary>
-		private void LoadLanguage(string url){
-			if (url.StartsWith("(internal)")){
+		private void LoadLanguage(string url) {
+			url = url.Trim();
+			if (cached_languages.ContainsKey(url)) {
+				Localization = cached_languages[url];
+				return;
+			}
+			if (url.StartsWith("(internal)")) {
 				switch(url)
 				{
 					case "(internal)ru_RU":
@@ -39,9 +47,10 @@ namespace fcmd
 						break;
 				}
 			}
-			else{
+			else {
 				ParseLangFile(System.IO.File.ReadAllLines(url));
 			}
+			cached_languages[url] = Localization;
 		}
 
 		/// <summary>Load the strings form the language file body into the memory</summary>
