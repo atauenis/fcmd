@@ -2,12 +2,14 @@
  * Tab "Main window layout"
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014 Zhigunov Andrew (breakneck11@gmail.com)
  * Contributors should place own signs here.
  */
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using fcmd.Properties;
 
 namespace fcmd.SettingsWindowTabs
 {
@@ -31,6 +33,8 @@ namespace fcmd.SettingsWindowTabs
 		Xwt.CheckBox chkKeybHelp = new Xwt.CheckBox();//ok
 		Xwt.Label lblBookmarks = new Xwt.Label();
 		Xwt.TextEntry txtBookmarks = new Xwt.TextEntry();
+		Xwt.Label lblLanguage = new Xwt.Label();
+		Xwt.ComboBox cbxLanguage = new Xwt.ComboBox();
 
 		public swtMainWindow()
 		{
@@ -47,13 +51,19 @@ namespace fcmd.SettingsWindowTabs
 			chkCmdLine.Label = Locale.GetString("SWTMWcmdline");
 			chkKeybHelp.Label = Locale.GetString("SWTMWkeybhelp");
 			lblBookmarks.Text = Locale.GetString("SWTMWbookmars");
+			lblLanguage.Text = Locale.GetString("SWTMWlanguage");
 
-			chkDiskButtons.State = CBSfromBool(fcmd.Properties.Settings.Default.ShowDiskList);
-			chkPanelTitle.State = CBSfromBool(fcmd.Properties.Settings.Default.ShowPanelUrlbox);
-			chkTableCollumns.State = CBSfromBool(fcmd.Properties.Settings.Default.ShowPanelTableCaptions);
-			chkInfoBar.State = CBSfromBool(fcmd.Properties.Settings.Default.ShowFileInfo);
-			chkKeybHelp.State = CBSfromBool(fcmd.Properties.Settings.Default.ShowKeybrdHelp);
-			txtBookmarks.Text = fcmd.Properties.Settings.Default.BookmarksFile ?? "";
+			chkDiskButtons.State = CBSfromBool(Settings.Default.ShowDiskList);
+			chkPanelTitle.State = CBSfromBool(Settings.Default.ShowPanelUrlbox);
+			chkTableCollumns.State = CBSfromBool(Settings.Default.ShowPanelTableCaptions);
+			chkInfoBar.State = CBSfromBool(Settings.Default.ShowFileInfo);
+			chkKeybHelp.State = CBSfromBool(Settings.Default.ShowKeybrdHelp);
+			txtBookmarks.Text = Settings.Default.BookmarksFile ?? "";
+
+			cbxLanguage.Items.Add("(internal)ru_RU", @"Русский");
+			cbxLanguage.Items.Add("(internal)en_US", @"English");
+			//Here may be some code loading external languages
+			cbxLanguage.SelectedItem = Settings.Default.Language;
 
 			fraMainBox.PackStart(chkShowToolBar);
 			fraMainBox.PackStart(chkDiskButtons);
@@ -65,17 +75,25 @@ namespace fcmd.SettingsWindowTabs
 			fraMainBox.PackStart(chkKeybHelp);
 			fraMainBox.PackStart(lblBookmarks);
 			fraMainBox.PackStart(txtBookmarks);
+			fraMainBox.PackStart(lblLanguage);
+			fraMainBox.PackStart(cbxLanguage);
 		}
 
 		public bool SaveSettings() {
 			try
 			{
-				fcmd.Properties.Settings.Default.ShowDiskList = BoolFromCBX(chkDiskButtons);
-				fcmd.Properties.Settings.Default.ShowPanelUrlbox = BoolFromCBX(chkPanelTitle);
-				fcmd.Properties.Settings.Default.ShowPanelTableCaptions = BoolFromCBX(chkTableCollumns);
-				fcmd.Properties.Settings.Default.ShowFileInfo = BoolFromCBX(chkInfoBar);
-				fcmd.Properties.Settings.Default.ShowKeybrdHelp = BoolFromCBX(chkKeybHelp);
-				fcmd.Properties.Settings.Default.BookmarksFile = txtBookmarks.Text;
+				Settings.Default.ShowDiskList = BoolFromCBX(chkDiskButtons);
+				Settings.Default.ShowPanelUrlbox = BoolFromCBX(chkPanelTitle);
+				Settings.Default.ShowPanelTableCaptions = BoolFromCBX(chkTableCollumns);
+				Settings.Default.ShowFileInfo = BoolFromCBX(chkInfoBar);
+				Settings.Default.ShowKeybrdHelp = BoolFromCBX(chkKeybHelp);
+				Settings.Default.BookmarksFile = txtBookmarks.Text;
+				string old_language = Settings.Default.Language, new_language = (string)(cbxLanguage.SelectedItem);
+				Settings.Default.Language = new_language;
+				if (old_language != new_language) {
+					Xwt.MessageDialog.ShowMessage("Application will be closed to apply changes, launch it again!");
+					Xwt.Application.Exit();
+				}
 				return true;
 			}
 			catch(Exception ex) { Xwt.MessageDialog.ShowError(ex.Message) ;  return false; }
