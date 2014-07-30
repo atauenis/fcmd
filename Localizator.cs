@@ -14,11 +14,10 @@ namespace fcmd
 		public Localizator() {
 			LoadLanguage(Settings.Default.Language);
 		}
+		
+		static Dictionary<string, string> Localization = new Dictionary<string, string>();
 
-		static Dictionary<string, Dictionary<string, string>> cached_languages =
-			new Dictionary<string, Dictionary<string, string>>();
-
-		Dictionary<string, string> Localization = new Dictionary<string, string>();
+		private static string CurrentDictionary;
 		
 		/// <summary>Get a string that corresponds the key in the dictionary</summary>
 		/// <param name="Key">The string name (see Localizator.cs for the list of they)</param>
@@ -31,12 +30,9 @@ namespace fcmd
 		}
 
 		/// <summary>Load the requested localization file</summary>
-		private void LoadLanguage(string url) {
+		public void LoadLanguage(string url) {
 			url = url.Trim();
-			if (cached_languages.ContainsKey(url)) {
-				Localization = cached_languages[url];
-				return;
-			}
+			if (CurrentDictionary == url) return; //the dictionary is already loaded
 			if (url.StartsWith("(internal)")) {
 				switch(url)
 				{
@@ -51,12 +47,12 @@ namespace fcmd
 			else {
 				ParseLangFile(System.IO.File.ReadAllLines(url));
 			}
-			cached_languages[url] = Localization;
+			CurrentDictionary = url;
 		}
 
 		/// <summary>Load the strings form the language file body into the memory</summary>
 		/// <param name="LangFile">The language file content</param>
-		private void ParseLangFile(IEnumerable<string> LangFile)
+		private static void ParseLangFile(IEnumerable<string> LangFile)
 		{
 			foreach (string UIFRow in LangFile)
 			{
