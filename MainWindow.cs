@@ -102,6 +102,7 @@ namespace fcmd
 		{
 			this.Title = "File Commander";
 			this.MainMenu = WindowMenu;
+			this.Padding = 0;
 
 			//build user interface
 			MainMenu.Items.Add(mnuFile);
@@ -197,9 +198,15 @@ namespace fcmd
 			mnuToolsOptions.Clicked += mnuToolsOptions_Clicked;
 			mnuHelpDebug.Clicked += ShowDebugInfo;
 			mnuHelpAbout.Clicked += mnuHelpAbout_Clicked;
-			
-			Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -6, -12,12);
-			Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Fill,-12,-12,-12);
+
+			if (Utilities.IsMac ()) {
+				Layout.PackStart (PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,3,3,3,0);
+				Layout.PackStart (KeyBoardHelp, false, Xwt.WidgetPlacement.End, Xwt.WidgetPlacement.Fill,3,0,3);
+			} else {
+				Layout.PackStart (PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, -12, -6, -12, 12);
+				Layout.PackStart (KeyBoardHelp, false, Xwt.WidgetPlacement.End, Xwt.WidgetPlacement.Fill, -12, -12, -12);
+			}
+
 						
 			this.Content = Layout;
 
