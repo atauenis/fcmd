@@ -24,6 +24,10 @@ namespace fcmd
 				{
 					Xwt.Application.Initialize(Xwt.ToolkitType.Wpf); //on Windows, you may set WPF or GTK as toolkit type for debugging purposes
 				}
+				else if (OSVersionEx.Platform == PlatformID.MacOSX)
+				{
+					Xwt.Application.Initialize(Xwt.ToolkitType.Cocoa);
+				}
 				else
 				{
 					Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
@@ -31,8 +35,14 @@ namespace fcmd
 			}
 			catch (Exception ex)
 			{
+				string errmsg = "The XWT could not be loaded:\n" + ex.InnerException.Message;
+
+				if(ex.InnerException.InnerException != null){
+					errmsg+="\n"+ex.InnerException.InnerException.Message;
+				}
+
 				System.Windows.Forms.MessageBox.Show(
-					"The XWT could not be loaded:\n" + ex.InnerException.Message,
+						errmsg,
 					"The File Commander " + Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + "-DEBUG) Startup Failure"
 				);
 				return;

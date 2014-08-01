@@ -163,6 +163,7 @@ namespace fcmd
 
 		void VEd_Shown(object sender, EventArgs e)
 		{
+			//see bug #23 пункт 3
 			this.Visible = CanBeShowed; //if VE should not be enabled, the window should not show everywhy
 		}
 
