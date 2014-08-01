@@ -14,22 +14,26 @@ namespace fcmd
 		public Localizator() {
 			LoadLanguage(Settings.Default.Language);
 		}
+		
+		static Dictionary<string, string> Localization = new Dictionary<string, string>();
 
-		Dictionary<string, string> Localization = new Dictionary<string, string>();
+		private static string CurrentDictionary;
 		
 		/// <summary>Get a string that corresponds the key in the dictionary</summary>
 		/// <param name="Key">The string name (see Localizator.cs for the list of they)</param>
 		public string GetString(string Key){
 			if(Localization == null) throw new InvalidOperationException("The Localizator is not fed with a language file!");
 			try {
-				return Localization[Key].Replace("{n}", "\n");
+				return Localization[Key];
 			}
 			catch (Exception ex) { Console.WriteLine(@"WARNING: Locale string is not found for key: {0} ({1})", Key, ex.Message); return Key; }
 		}
 
 		/// <summary>Load the requested localization file</summary>
-		private void LoadLanguage(string url){
-			if (url.StartsWith("(internal)")){
+		public void LoadLanguage(string url) {
+			url = url.Trim();
+			if (CurrentDictionary == url) return; //the dictionary is already loaded
+			if (url.StartsWith("(internal)")) {
 				switch(url)
 				{
 					case "(internal)ru_RU":
@@ -40,14 +44,15 @@ namespace fcmd
 						break;
 				}
 			}
-			else{
+			else {
 				ParseLangFile(System.IO.File.ReadAllLines(url));
 			}
+			CurrentDictionary = url;
 		}
 
 		/// <summary>Load the strings form the language file body into the memory</summary>
 		/// <param name="LangFile">The language file content</param>
-		private void ParseLangFile(IEnumerable<string> LangFile)
+		private static void ParseLangFile(IEnumerable<string> LangFile)
 		{
 			foreach (string UIFRow in LangFile)
 			{
