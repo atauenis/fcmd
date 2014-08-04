@@ -86,13 +86,12 @@ namespace fcmd.base_plugins.fs
 			}
 
 			uint counter = 0;
-			// 2 ** 17 ~= 100000 (is about 100000)
-			// so dispatching will be done every time 100000 files
-			// will have been looked throught
-			// update_every == 00...0011...11 in binary format and count of 1 is 17
-			// so (++counter & update_every) == 0 will be true after every 2 ** 17 ~= 100000
+			// 2 ** 10 ~= 1000 (is about 1000)
+			// so dispatching will be done every time 1000 files will have been looked throught
+			// update_every == 00...0011...11 in binary format and count of '1' is 10
+			// so (++counter & update_every) == 0 will be true after every 2 ** 10 ~= 1000
 			// passed files
-			const uint update_every = ~(((~(uint)0) >> 17) << 17);
+			const uint update_every = ~(((~(uint)0) >> 10) << 10);
 
 			foreach(string curDir in dirs){
 				//перебираю каталоги
