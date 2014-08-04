@@ -84,6 +84,15 @@ namespace fcmd.base_plugins.fs
 				DirContent.Add(tmpVar);
 			}
 
+			uint counter = 0;
+			// 2 ** 17 ~= 100000 (is about 100000)
+			// so dispatching will be done every time 100000 files
+			// will have been looked throught
+			// update_every == 00...0011...11 in binary format and count of 1 is 17
+			// so (++counter & update_every) == 0 will be true after every 2 ** 17 ~= 100000
+			// passed files
+			const uint update_every = ~(((~(uint)0) >> 17) << 17);
+
 			foreach(string curDir in dirs){
 				//перебираю каталоги
 				DirectoryInfo di = new DirectoryInfo(curDir);
@@ -102,7 +111,9 @@ namespace fcmd.base_plugins.fs
 				DirContent.Add(tmpVar);
 				Progress += FileWeight;
 				if (ProgressChanged != null) { ProgressChanged(Progress); }
-				Xwt.Application.MainLoop.DispatchPendingEvents();
+				if ((++counter & update_every) == 0) {
+					Xwt.Application.MainLoop.DispatchPendingEvents(); 
+				}
 			}
 
 			foreach(string curFile in files){
@@ -128,7 +139,9 @@ namespace fcmd.base_plugins.fs
 				DirContent.Add(tmpVar);
 				Progress += FileWeight;
 				if (ProgressChanged != null && Progress <= 1) { ProgressChanged(Progress); }
-				Xwt.Application.MainLoop.DispatchPendingEvents();
+				if ((++counter & update_every) == 0) {
+					Xwt.Application.MainLoop.DispatchPendingEvents();
+				}
 			}
 			if (ProgressChanged != null) { ProgressChanged(2); }
 			if (StatusChanged != null) { StatusChanged(""); };
