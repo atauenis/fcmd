@@ -2,6 +2,7 @@
  * The main part of the LocalFS FS plugin
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (С) 2014, Zhigunov Andrew (breakneck11@gmail.com)
  * Contributors should place own signs here.
  */
 using System;
