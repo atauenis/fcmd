@@ -371,6 +371,8 @@ namespace pluginner.Widgets
 					hmi.Tag = hm.Items.Count;
 					hm.Items.Add(hmi);
 				}
+				FS.StatusChanged += FS_StatusChanged;
+				FS.ProgressChanged += FS_ProgressChanged;
 			}
 
 			if (URL == "." && FS.CurrentDirectory == null){
@@ -392,8 +394,6 @@ namespace pluginner.Widgets
 				FS.CurrentDirectory = URL;
 				ListingView.Clear();
 				UrlBox.Text = URL;
-				FS.StatusChanged += FS_StatusChanged;
-				FS.ProgressChanged += FS_ProgressChanged;
 				string updir = URL + FS.DirSeparator+"..";
 				string rootdir = FS.GetMetadata(URL).RootDirectory;
 
