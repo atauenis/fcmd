@@ -6,44 +6,51 @@
  * Contributors should place own signs here.
  */
 using System;
-using System.Windows.Forms;
+using Xwt;
+using WinForms = System.Windows.Forms;
 using pluginner.Toolkit;
 
 namespace fcmd
 {
-	class Startup
+	static class Startup
 	{
 		[STAThread] //it's required due to WPF restrictions (without this, the Xwt.Wpf.dll backend is unable to start)
 		static void Main(string[] Commands)
 		{
-			Console.WriteLine("The File Commander, version " + Application.ProductVersion + "\n(C) 2013-14, Alexander Tauenis and the FC development team (https://github.com/atauenis/fcmd).\nThe FC is licensed \"as is,\" with  no  warranties regarding product performance or non-infringement of third party intellectual property rights; the software may be modified without restrictions");
+// ReSharper disable LocalizableElement
+			Console.WriteLine("The File Commander, version " + WinForms.Application.ProductVersion + "\n(C) 2013-14, the File Commander development team (https://github.com/atauenis/fcmd).\nThe FC is licensed \"as is,\" with  no  warranties regarding product performance or non-infringement of third party intellectual property rights; the software may be modified without restrictions");
 #if DEBUG
 			try 
-			{ 
-				if (OSVersionEx.Platform == PlatformID.Win32NT)
+			{
+				//for debugging purposes you may set any ToolkitType as you need
+				switch (OSVersionEx.Platform)
 				{
-					Xwt.Application.Initialize(Xwt.ToolkitType.Wpf); //on Windows, you may set WPF or GTK as toolkit type for debugging purposes
-				}
-				else
-				{
-					Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
+					case PlatformID.Win32NT:
+						Application.Initialize(ToolkitType.Wpf);
+						break;
+					case PlatformID.MacOSX:
+						Application.Initialize(ToolkitType.Cocoa);
+						break;
+					default:
+						Application.Initialize(ToolkitType.Gtk);
+						break;
 				}
 			}
 			catch (Exception ex)
 			{
-				System.Windows.Forms.MessageBox.Show(
+				WinForms.MessageBox.Show(
 					"The XWT could not be loaded:\n" + ex.InnerException.Message,
-					"The File Commander " + Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + "-DEBUG) Startup Failure"
+					"The File Commander " + WinForms.Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + "-DEBUG) Startup Failure"
 				);
 				return;
 			}
 #else
 			try
 			{
-				Xwt.Application.Initialize(OSVersionEx.GetToolkitType());
+				Application.Initialize(OSVersionEx.GetToolkitType());
 			}
 			catch (Exception ex) {
-				System.Windows.Forms.MessageBox.Show(
+				WinForms.MessageBox.Show(
 				"The XWT could not be loaded:\n" + ex.InnerException.Message,
 				"The File Commander " + Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Startup Failure"
 				);
@@ -55,11 +62,12 @@ namespace fcmd
 #endif
 			new MainWindow(Commands).Show();
 			//todo: add splash screen
-			Xwt.Application.Run();
+			Application.Run();
 #if !DEBUG
 			}
 			catch (Exception ex)
 			{
+				//startup crash handler
 				string msg = "The File Commander has been crashed:\n" + ex.Message + "\n" + ex.StackTrace;
 				string inex = "";
 				if(ex.InnerException != null) inex = "\n Inner exception" + ex.InnerException.Message + "\n" + ex.StackTrace;
