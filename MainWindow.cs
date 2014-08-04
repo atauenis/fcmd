@@ -149,7 +149,7 @@ namespace fcmd
 			mnuView.SubMenu.Items.Add(mnuViewNoFilter);
 			mnuView.SubMenu.Items.Add(mnuViewWithFilter);
 			mnuView.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
-			mnuView.SubMenu.Items.Add(mnuViewKeybrdHelp); //these checkboxes are don't work, because no code was written
+			mnuView.SubMenu.Items.Add(mnuViewKeybrdHelp); //these checkboxes don't work, because no code was written
 			mnuView.SubMenu.Items.Add(mnuViewInfobar);
 			mnuView.SubMenu.Items.Add(mnuViewDiskButtons);
 

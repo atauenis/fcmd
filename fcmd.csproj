@@ -200,6 +200,7 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <EmbeddedResource Include="Resources\lang_RusUI.txt" />
+    <EmbeddedResource Include="Resources\lang_EngUI.txt" />
     <Content Include="stolen-opensource-libs\readme.txt" />
     <Content Include="stolen-opensource-libs\Xwt.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
