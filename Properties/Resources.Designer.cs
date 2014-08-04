@@ -161,11 +161,29 @@ namespace fcmd.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FileCommanderVer=Файловый менеджер {0}, версия {1}{n}© 2013-14 Группа разработки {0}:{2}{n}{n}Условия лицензирования см. в файле LICENSE.{n}О взятом из других открытых проектов см. в файле COPYPASTE.md.{n}{n}Файл настроек: {3}{n}{n}ОС: {4}{n}Framework: {5}{n}
-        ///FCViewVer=Просмоторщик файлов, версия {0}{n}
-        ///FCVEVer1=Встроенный просмоторщик и редактор файлов FC {0}.{n}
-        ///FCVEVer2=Загружен модуль просмотра: {0}, версия {1}.{2}(C) 2013-14, разработчики FC и {3}{n}
-        ///LocalFSVer=Модуль доступа к локальным ФС [встрое [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to ;English Locale, version 0.1
+        ///;Common
+        ///FileCommanderVer=File manager {0}, version {1}{n}© 2013-14 Development team {0}:{2}{n}{n}For license agreement see LICENSE file.{n}About used open source staff see COPYPASTE.md file.{n}{n}Settings file: {3}{n}{n}OS: {4}{n}Framework: {5}
+        ///FCViewVer=File viewer, version {0}
+        ///FCVEVer1=Built-in file editor FC {0}.
+        ///FCVEVer2=View module was loaded: {0}, version {1}.{2}(C) 2013-14, FC developers and {3}
+        ///LocalFSVer=Access to local FileSystem [built-in]
+        ///TxtViewerVer=Text fil [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string lang_EngUI {
+            get {
+                return ResourceManager.GetString("lang_EngUI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ;Russian Locale, version 0.1
+        ///;Common
+        ///FileCommanderVer=Файловый менеджер {0}, версия {1}{n}© 2013-14 Группа разработки {0}:{2}{n}{n}Условия лицензирования см. в файле LICENSE.{n}О взятом из других открытых проектов см. в файле COPYPASTE.md.{n}{n}Файл настроек: {3}{n}{n}ОС: {4}{n}Framework: {5}
+        ///FCViewVer=Просмоторщик файлов, версия {0}
+        ///FCVEVer1=Встроенный просмоторщик и редактор файлов FC {0}.
+        ///FCVEVer2=Загружен модуль просмотра: {0}, версия {1}.{2}(C) 2013-14, разработчики FC и {3}
+        ///LocalFSVer=Модуль дос [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_RusUI {
             get {
