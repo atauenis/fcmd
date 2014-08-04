@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Reflection;
 using pluginner.Toolkit;
 using Xwt;
 using Xwt.Drawing;
@@ -32,7 +33,9 @@ namespace pluginner.Widgets
 		public HBox DiskList = new HBox();
 		public List<Button> DiskButtons = new List<Button>();
 		public Button GoRoot = new Button("/");
+		EventHandler goRootDelegate = null;
 		public Button GoUp = new Button("..");
+		EventHandler goUpDelegate = null;
 		public TextEntry UrlBox = new TextEntry();
 		public MenuButton BookmarksButton = new MenuButton(Image.FromResource("pluginner.Resources.bookmarks.png"));
 		public MenuButton HistoryButton = new MenuButton(Image.FromResource("pluginner.Resources.history.png"));
@@ -370,7 +373,7 @@ namespace pluginner.Widgets
 				}
 			}
 
-			if (URL == "." & FS.CurrentDirectory == null){
+			if (URL == "." && FS.CurrentDirectory == null){
 				LoadDir(
 					"file://"+Directory.GetCurrentDirectory(),
 					dis,
@@ -421,9 +424,16 @@ namespace pluginner.Widgets
 					Data.Add(di);
 					ListingView.AddItem(Data, EditableFileds, di.Path);
 				}
-
-				GoUp.Clicked+=(o,ea)=>{ LoadDir(updir); };
-				GoRoot.Clicked+=(o,ea)=>{ LoadDir(rootdir); };
+				if (goUpDelegate != null) {
+					GoUp.Clicked -= goUpDelegate;
+				}
+				goUpDelegate = (o,ea)=>{ LoadDir(updir); };
+				GoUp.Clicked += goUpDelegate;
+				if (goRootDelegate != null) {
+					GoRoot.Clicked -= goRootDelegate;
+				}
+				goRootDelegate = (o,ea)=>{ LoadDir(rootdir); };
+				GoRoot.Clicked += goRootDelegate;
 			}
 			catch (Exception ex)
 			{
