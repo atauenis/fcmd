@@ -1,11 +1,9 @@
 ;English Locale, version 0.1. Made in 2014 by Zhigunov Andrew (breakneck11@gmail.com) and Alexander Tauenis (atauenis@yandex.ru)
 ;Common
 FileCommanderVer={0} file manager, version {1}{n}© 2013-14 FC development team {0}:{2}{n}{n}For license agreement see LICENSE file.{n}For stuff used from open source projects see COPYPASTE.md file.{n}{n}Settings file: {3}{n}{n}OS: {4}{n}Framework: {5}
-FCViewVer=File viewer, version {0}
 FCVEVer1=FC built-in file viewer and editor {0}.
 FCVEVer2=Current VE plugin: {0}, version {1}.{2}(C) 2013-14, FC developers and {3}
 LocalFSVer=Module providing access to local file system [built-in]
-TxtViewerVer=Text file viewer [built-in]
 VEptxtVer=Plain text
 ;Main window keyboard help
 FCF1=Help
