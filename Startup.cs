@@ -25,7 +25,6 @@ namespace fcmd
 				//for debugging purposes you may set any ToolkitType as you need
 				switch (OSVersionEx.Platform)
 				{
-<<<<<<< Upstream, based on master
 					case PlatformID.Win32NT:
 						Application.Initialize(ToolkitType.Wpf);
 						break;
@@ -35,26 +34,10 @@ namespace fcmd
 					default:
 						Application.Initialize(ToolkitType.Gtk);
 						break;
-=======
-					Xwt.Application.Initialize(Xwt.ToolkitType.Wpf); //on Windows, you may set WPF or GTK as toolkit type for debugging purposes
-				}
-				else if (OSVersionEx.Platform == PlatformID.MacOSX)
-				{
-					Xwt.Application.Initialize(Xwt.ToolkitType.Cocoa);
-				}
-				else
-				{
-					Xwt.Application.Initialize(Xwt.ToolkitType.Gtk);
->>>>>>> 2f1d96a OSX: fix startup, semi-fix main window layout
 				}
 			}
 			catch (Exception ex)
 			{
-<<<<<<< Upstream, based on master
-				WinForms.MessageBox.Show(
-					"The XWT could not be loaded:\n" + ex.InnerException.Message,
-					"The File Commander " + WinForms.Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + "-DEBUG) Startup Failure"
-=======
 				string errmsg = "The XWT could not be loaded:\n" + ex.InnerException.Message;
 
 				if(ex.InnerException.InnerException != null){
@@ -63,8 +46,7 @@ namespace fcmd
 
 				System.Windows.Forms.MessageBox.Show(
 						errmsg,
-					"The File Commander " + Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + "-DEBUG) Startup Failure"
->>>>>>> 2f1d96a OSX: fix startup, semi-fix main window layout
+					"The File Commander " + WinForms.Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + "-DEBUG) Startup Failure"
 				);
 				return;
 			}

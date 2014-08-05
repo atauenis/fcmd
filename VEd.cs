@@ -138,7 +138,6 @@ namespace fcmd
 			mnuHelpAbout.Clicked += mnuHelpAbout_Clicked;
 
 			this.CloseRequested += VEd_CloseRequested;
-			this.Shown += VEd_Shown;
 
 #if !MONO
 			PluginBody = new Xwt.Spinner { Animate = true };
@@ -161,10 +160,9 @@ namespace fcmd
 			this.Hide();
 		}
 
-		void VEd_Shown(object sender, EventArgs e)
-		{
-			//see bug #23 пункт 3
-			this.Visible = CanBeShowed; //if VE should not be enabled, the window should not show everywhy
+		public new void Show(){
+			if (CanBeShowed)
+				base.Show ();
 		}
 
 		void mnuHelpAbout_Clicked(object sender, EventArgs e)
