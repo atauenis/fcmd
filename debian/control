@@ -9,6 +9,6 @@ Vcs-Browser: https://github.com/atauenis/fcmd
 
 Package: fcmd
 Architecture: all
-Depends: ${cli:Depends}, ${misc:Depends}
+Depends: ${cli:Depends}, ${misc:Depends}, gtk-sharp3
 Description: A customizable and extendable cross-platform two-panel file manager
  Please note that the FC is in early stage on development and has many bugs. We giving no warranties about the safety of your data or installed software. Use at your own risk.

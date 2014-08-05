@@ -12,7 +12,11 @@ Add these repositories, update APT cache and install the "fcmd" package.
 
 Please note that the FC is in the early stage of development and has many bugs. We give no warranty on the safety of your data or installed software. Use this at your own risk.
 
-At the moment FC contains only russian language file. If you're searching for an english version of FC, stop the unpromising activity. For now it doesn't exist and it will not be implemented in the near future (the string list is unstable, it gets updates almost every commit)
+The File Commander has Russian and English lanugage files, you may select your own preferred language in the Settings window.
+
+New contributions are welcome! For full info, see the README-DEV.md file.
+
+System requirements: Windows XP or newer, Linux or Mac; Microsoft .NET Framework v4.X or Mono Runtime 3.2+. GTK# 3 is required if you're using Linux or BSD environment.
 
 ##How to compile:
 
@@ -23,10 +27,5 @@ At the moment FC contains only russian language file. If you're searching for an
 4. Go to the "bin/Release" subdirectory and run "fcmd.exe".
 5. Everything is done! To launch File Commander later, create a shortcut to the "fcmd.exe" file and then use it.
 
-##Debugging SEGFAULTs
-If FC crashes on Linux with a segmentation fault at a Cairo call, you should upgrade your distro to an version with Mono 3.2 and Cairo 2.13. For details, see https://github.com/mono/xwt/issues/323.
-If a segfault has been thrown on other native calls and your PC RAM is not corrupt, try to run the `mono fcmd.exe` again for 10-20 times. There is a chance of success. :-) But a better way is to change your Linux distribution.
-
-New contributions are welcomed! For full info, see the README-DEV.md file.
-
-System requirements: Windows XP or newer, Linux or Mac; Microsoft .NET Framework v4.X or Mono Runtime 3.2+. GTK# is required if you're using Linux.
+##Why *nix edition of FC requires GTK 3.0
+The XWT Widget Toolkit, the FC user interface library, supporting both popular versions of GIMP ToolKit Plus (GTK+), 2.x and 3.x. The latest, third release of GTK+, released few years ago, supporting many cool features like window transparency and GNOME Shell support. Also, XWT has some strange bugs, that appearing only with GTK 2 and which does not appear with GTK 3. The GTK+ 3 is pre-installed in all fresh releases of all common Linux distributions. It's the reason why FC uses GTK 3.0 as the backend on *nix systems.

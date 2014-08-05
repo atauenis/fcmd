@@ -32,7 +32,7 @@ namespace fcmd
 						Application.Initialize(ToolkitType.Cocoa);
 						break;
 					default:
-						Application.Initialize(ToolkitType.Gtk);
+						Application.Initialize(ToolkitType.Gtk3);
 						break;
 				}
 			}
