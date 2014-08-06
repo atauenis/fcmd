@@ -322,13 +322,11 @@ namespace fcmd
 		/// <summary>(Re)builds the "Layout" vbox</summary>
 		public void BuildLayout()
 		{
+			this.Padding = 0;
 			Layout.Clear();
-			Layout.PackStart(PluginBody, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill);
-			Layout.PackStart(CommandBox, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,-6);
-			if(fcmd.Properties.Settings.Default.ShowKeybrdHelp) Layout.PackStart(KeyBoardHelp, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,-6);
-			//the values -12, -6 and 6 are need for 0px margins, and found experimentally.
-			//as those experiments showed, at 90dpi these values is measured in pixels, but (in WPF) at >90dpi
-            //or if the Windows user theme has large fonts the values works as need, with "scaling". Live and learn!
+			Layout.PackStart(PluginBody, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,0,0,0);
+			Layout.PackStart(CommandBox, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,0,0,-6);
+			if (fcmd.Properties.Settings.Default.ShowKeybrdHelp) Layout.PackStart(KeyBoardHelp, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, 1, 3, 1, 2);
 
 			this.Resizable = true; //fix for some stupid xwt toolkits.
 
@@ -346,7 +344,6 @@ namespace fcmd
 					sel.Declarations["background-color"].Value
 				);
 			}
-			this.PaddingTop = PaddingBottom = PaddingLeft = PaddingRight = 0;
 		}
 
 
