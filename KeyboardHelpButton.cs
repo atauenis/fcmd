@@ -65,8 +65,8 @@ namespace fcmd
 			s.Stylize(lblF,Style+"F");
 			s.Stylize(lblD,Style+"Descr");
 			
-			lblF.ButtonPressed += (o, ea) => { if (this.Clicked != null) this.Clicked(o, ea); };
-			lblD.ButtonPressed += (o,ea)=>{ if(this.Clicked!=null) this.Clicked(o,ea);};
+			lblF.ButtonPressed += (o, ea) => { if (this.Clicked != null) this.Clicked(this, ea); };
+			lblD.ButtonPressed += (o, ea)=>{ if(this.Clicked != null) this.Clicked(this, ea); };
 
 
 		}

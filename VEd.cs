@@ -5,7 +5,6 @@
  * Contributors should place own signs here.
  */
 using System;
-//using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using fcmd.base_plugins.ve;
@@ -15,6 +14,9 @@ using pluginner;
 using pluginner.Toolkit;
 using Xwt;
 using Application = System.Windows.Forms.Application;
+using KeyEventArgs = Xwt.KeyEventArgs;
+using Menu = Xwt.Menu;
+using MenuItem = Xwt.MenuItem;
 
 namespace fcmd
 {
@@ -97,6 +99,8 @@ namespace fcmd
 				KeybHelpButtons[i].FKey = "F" + i;
 				KeybHelpButtons[i].Text = Localizator.GetString("FCVE_F" + i);
 				KeybHelpButtons[i].CanGetFocus = false;
+				KeybHelpButtons[i].Clicked += KeyboardHelpButton_Clicked;
+				KeybHelpButtons[i].Tag = i;
 				KeyBoardHelp.PackStart(KeybHelpButtons[i], true, WidgetPlacement.Fill, WidgetPlacement.Fill, 0,1,0,1);
 			}
 
@@ -104,6 +108,7 @@ namespace fcmd
 			Content = Layout;
 
 			CommandBox.KeyReleased += CommandBox_KeyReleased;
+			Layout.KeyReleased += Layout_KeyReleased;
 
 			mnuFile.SubMenu = new Menu();
 			mnuFile.SubMenu.Items.Add(mnuFileNew);
@@ -170,6 +175,58 @@ namespace fcmd
 			Localize();
 		}
 
+		void Layout_KeyReleased(object sender, KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case Key.Escape:
+					CommandBox.SetFocus();
+					return;
+				case Key.F10:
+				case Key.q:
+					Close();
+					return;
+			}
+		}
+
+		void KeyboardHelpButton_Clicked(object sender, EventArgs e)
+		{
+			switch (Convert.ToInt32(((KeyboardHelpButton) sender).Tag))
+			{
+				case 1:
+					Layout_KeyReleased(sender,new KeyEventArgs(Key.F1,ModifierKeys.None, false,0));
+					break;
+				case 2:
+					Layout_KeyReleased(sender,new KeyEventArgs(Key.F2,ModifierKeys.None, false,0));
+					break;
+				case 3:
+					Layout_KeyReleased(sender, new KeyEventArgs(Key.F3, ModifierKeys.None, false, 0));
+					break;
+				case 4:
+					Layout_KeyReleased(sender, new KeyEventArgs(Key.F4, ModifierKeys.None, false, 0));
+					break;
+				case 5:
+					Layout_KeyReleased(sender, new KeyEventArgs(Key.F5, ModifierKeys.None, false, 0));
+					break;
+				case 6:
+					Layout_KeyReleased(sender, new KeyEventArgs(Key.F6, ModifierKeys.None, false, 0));
+					break;
+				case 7:
+					Layout_KeyReleased(sender, new KeyEventArgs(Key.F7, ModifierKeys.None, false, 0));
+					break;
+				case 8:
+					Layout_KeyReleased(sender, new KeyEventArgs(Key.F8, ModifierKeys.None, false, 0));
+					break;
+				case 9:
+					Layout_KeyReleased(sender, new KeyEventArgs(Key.F9, ModifierKeys.None, false, 0));
+					break;
+				case 10:
+					Layout_KeyReleased(sender, new KeyEventArgs(Key.F10, ModifierKeys.None, false, 0));
+					break;
+
+			}
+		}
+
 		void VEd_CloseRequested(object sender, CloseRequestedEventArgs args)
 		{
 			Settings.Default.VEWinHeight = Height;
@@ -179,7 +236,6 @@ namespace fcmd
 			SendCommand("unload");
 			}
 			catch (Exception e) { MessageDialog.ShowError(e.Message, e.StackTrace + "\n   on " + Plugin.Name + " (" + Plugin.GetType() + ")"); }
-			Hide();
 		}
 
 		void VEd_Shown(object sender, EventArgs e)
@@ -290,8 +346,8 @@ namespace fcmd
 			FileProcessDialog ProgressDialog = new FileProcessDialog();
 			string ProgressInitialText = String.Format(Localizator.GetString("FCVELoadingMsg"),URL);
 			ProgressDialog.lblStatus.Text = ProgressInitialText;
-			FS.ProgressChanged += (d) => { ProgressDialog.pbrProgress.Fraction = (d >= 0 && d <= 1) ? d : ProgressDialog.pbrProgress.Fraction; Xwt.Application.MainLoop.DispatchPendingEvents();  };
-			FS.StatusChanged += (d) => { ProgressDialog.lblStatus.Text = ProgressInitialText + "\n" + d; Xwt.Application.MainLoop.DispatchPendingEvents(); };
+			FS.ProgressChanged += d => { ProgressDialog.pbrProgress.Fraction = (d >= 0 && d <= 1) ? d : ProgressDialog.pbrProgress.Fraction; Xwt.Application.MainLoop.DispatchPendingEvents();  };
+			FS.StatusChanged += d => { ProgressDialog.lblStatus.Text = ProgressInitialText + "\n" + d; Xwt.Application.MainLoop.DispatchPendingEvents(); };
 			ProgressDialog.cmdCancel.Clicked += (o, ea) => { CanBeShowed = false; ProgressDialog.Hide(); };
 			ProgressDialog.Show();
 			Xwt.Application.MainLoop.DispatchPendingEvents();
@@ -326,11 +382,6 @@ namespace fcmd
 			}
 			BuildLayout();
 			ProgressDialog.Hide();
-			
-			PluginBody.KeyReleased += (sender, e) => {
-				if(e.Key == Key.Escape) CommandBox.SetFocus();
-				if(e.Key == Key.q) OnCloseRequested();
-			};
 		}
 
 		private void OpenFile()
