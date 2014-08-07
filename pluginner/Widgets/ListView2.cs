@@ -82,7 +82,7 @@ namespace pluginner.Widgets
 		private void Item_ButtonPressed(object sender, ButtonEventArgs e)
 		{
 			SetFocus();
-			ListView2Item lvi = Items[((ListView2Item) sender).RowNo];//вырезание гланд через жопу автогеном? уточнить лучший способ, sender не работает
+			ListView2Item lvi = sender as ListView2Item;
 			//currently, the mouse click policy is same as in Total and Norton Commander
 			if (e.Button == PointerButton.Right)//right click - select & do nothing
 			{
