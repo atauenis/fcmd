@@ -1,4 +1,4 @@
-﻿/* The File Commander
+/* The File Commander
  * The entry point for the fcmd.exe
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
@@ -38,8 +38,14 @@ namespace fcmd
 			}
 			catch (Exception ex)
 			{
-				WinForms.MessageBox.Show(
-					"The XWT could not be loaded:\n" + ex.InnerException.Message,
+				string errmsg = "The XWT could not be loaded:\n" + ex.InnerException.Message;
+
+				if(ex.InnerException.InnerException != null){
+					errmsg+="\n"+ex.InnerException.InnerException.Message;
+				}
+
+				System.Windows.Forms.MessageBox.Show(
+						errmsg,
 					"The File Commander " + WinForms.Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + "-DEBUG) Startup Failure"
 				);
 				return;

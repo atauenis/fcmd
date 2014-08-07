@@ -166,7 +166,6 @@ namespace fcmd
 			mnuHelpAbout.Clicked += mnuHelpAbout_Clicked;
 
 			CloseRequested += VEd_CloseRequested;
-			Shown += VEd_Shown;
 
 			Localizator.LocalizationChanged += (o, ea) => Localize();
 			
@@ -238,9 +237,9 @@ namespace fcmd
 			catch (Exception e) { MessageDialog.ShowError(e.Message, e.StackTrace + "\n   on " + Plugin.Name + " (" + Plugin.GetType() + ")"); }
 		}
 
-		void VEd_Shown(object sender, EventArgs e)
-		{
-			Visible = CanBeShowed; //if VE should not be enabled, the window should not show everywhy
+		public new void Show(){
+			if(CanBeShowed)
+			base.Show ();
 		}
 
 		void mnuHelpAbout_Clicked(object sender, EventArgs e)
@@ -348,7 +347,7 @@ namespace fcmd
 			ProgressDialog.lblStatus.Text = ProgressInitialText;
 			FS.ProgressChanged += d => { ProgressDialog.pbrProgress.Fraction = (d >= 0 && d <= 1) ? d : ProgressDialog.pbrProgress.Fraction; Xwt.Application.MainLoop.DispatchPendingEvents();  };
 			FS.StatusChanged += d => { ProgressDialog.lblStatus.Text = ProgressInitialText + "\n" + d; Xwt.Application.MainLoop.DispatchPendingEvents(); };
-			ProgressDialog.cmdCancel.Clicked += (o, ea) => { CanBeShowed = false; ProgressDialog.Hide(); };
+			ProgressDialog.cmdCancel.Clicked += (o, ea) => { CanBeShowed = false; ProgressDialog.Close(); };
 			ProgressDialog.Show();
 			Xwt.Application.MainLoop.DispatchPendingEvents();
 
@@ -378,10 +377,10 @@ namespace fcmd
 			catch (Exception ex)
 			{
 				MessageDialog.ShowWarning(ex.Message);
-				if(PluginBody.GetType() == typeof(Spinner)) { ProgressDialog.Hide(); CanBeShowed = false; return;}
+				if(PluginBody.GetType() == typeof(Spinner)) { ProgressDialog.Close(); CanBeShowed = false; return;}
 			}
 			BuildLayout();
-			ProgressDialog.Hide();
+			ProgressDialog.Close();
 		}
 
 		private void OpenFile()
@@ -441,7 +440,7 @@ namespace fcmd
 		private void Exit()
 		{
 			SendCommand("unload");
-			Hide();
+			Close();
 		}
 
 		/// <summary>

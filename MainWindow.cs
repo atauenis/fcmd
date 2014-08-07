@@ -199,7 +199,7 @@ namespace fcmd
 			mnuToolsOptions.Clicked += mnuToolsOptions_Clicked;
 			mnuHelpDebug.Clicked += ShowDebugInfo;
 			mnuHelpAbout.Clicked += mnuHelpAbout_Clicked;
-			
+
 			Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,0,0,0);
 			Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Fill,1,3,1,2);
 						

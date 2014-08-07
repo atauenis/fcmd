@@ -43,7 +43,7 @@ namespace pluginner.Widgets
 			{
 				var Value = _Values[i];
 				if (_Cols[i].Visible)
-					Draw(Value, PosByX, ctx, _Cols[i].Width);
+					Draw(Value, PosByX, ctx, _Cols[i].Width, CurFgColor);
 
 				if (_Cols.Count() > i && i != _Cols.Count() - 1)
 				{
@@ -59,7 +59,8 @@ namespace pluginner.Widgets
 		/// <param name="Where">Where (position by X) should be drawed</param>
 		/// <param name="On">On what Drawing.Context the information should be drawed</param>
 		/// <param name="MaxWidth">The limit of the picture's width</param>
-		private void Draw(object What, double Where, Context On, double MaxWidth)
+		/// <param name="TextColor">The text foreground color</param>
+		private void Draw(object What, double Where, Context On, double MaxWidth, Color TextColor)
 		{
 			if (What.GetType() != typeof (Image)
 				&&
@@ -72,6 +73,7 @@ namespace pluginner.Widgets
 					Width = MaxWidth,
 					Trimming = TextTrimming.WordElipsis
 				};
+				On.SetColor (TextColor);
 				On.DrawTextLayout(tl, Where + 4, 0);
 			}
 			if (What is Image)
@@ -93,7 +95,6 @@ namespace pluginner.Widgets
 		/// <param name="Data">The data that should be shown in this LV2I</param>
 		public ListView2Item(int RowNumber, int ColNumber, string RowTag, ListView2.CollumnInfo[] Collumns, List<Object> Data)
 		{
-			BackgroundColor = Colors.Aqua;
 			MinHeight = 16;
 			HeightRequest = 16;
 			MinWidth = 500;
@@ -126,7 +127,8 @@ namespace pluginner.Widgets
 			{
 				DefFgColor = value;
 				if (State == ListView2.ItemStates.Default) {
-//undone
+					CurFgColor = value;
+					QueueDraw ();
 				}
 			}
 		}

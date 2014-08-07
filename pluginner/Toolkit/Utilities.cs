@@ -466,5 +466,9 @@ namespace pluginner.Toolkit
 			}
 		}
 		#endregion
+
+		public static bool IsMac(){
+			return OSVersionEx.Platform == PlatformID.MacOSX;
+		}
 	}
 }
