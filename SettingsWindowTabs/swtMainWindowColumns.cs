@@ -5,38 +5,41 @@
  * Contributors should place own signs here.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using fcmd.Properties;
+using Xwt;
 
 namespace fcmd.SettingsWindowTabs
 {
 	class swtMainWindowColumns : ISettingsWindowTab
 	{
-		Xwt.VBox box = new Xwt.VBox();
-		Localizator Locale = new Localizator();
+		VBox box = new VBox();
 
-		Xwt.Frame fraExtensions = new Xwt.Frame {Sensitive = false};
-		Xwt.VBox fraExtensionsBox = new Xwt.VBox();
-		Xwt.RadioButtonGroup rbgExtensionDisplayStyle = new Xwt.RadioButtonGroup();
-		Xwt.RadioButton optDisplayExtTogether = new Xwt.RadioButton();
-		Xwt.RadioButton optDisplayExtFar = new Xwt.RadioButton();
+		Frame fraExtensions = new Frame {Sensitive = false};
+		VBox fraExtensionsBox = new VBox();
+		RadioButtonGroup rbgExtensionDisplayStyle = new RadioButtonGroup();
+		RadioButton optDisplayExtTogether = new RadioButton();
+		RadioButton optDisplayExtFar = new RadioButton();
 
-		Xwt.Frame fraTabs = new Xwt.Frame {Sensitive = false};
-		Xwt.Table fraTabsBox = new Xwt.Table();
-		Xwt.TextEntry txtTabExtension = new Xwt.TextEntry();
-		Xwt.TextEntry txtTabSize = new Xwt.TextEntry();
-		Xwt.TextEntry txtTabDate = new Xwt.TextEntry();
-		Xwt.TextEntry txtTabFilemode = new Xwt.TextEntry();
+		Frame fraTabs = new Frame {Sensitive = false};
+		Table fraTabsBox = new Table();
+		Label lblTabExt = new Label();
+		Label lblTabSize = new Label();
+		Label lblTabDate = new Label();
+		Label lblTabPermission = new Label();
+		TextEntry txtTabExtension = new TextEntry();
+		TextEntry txtTabSize = new TextEntry();
+		TextEntry txtTabDate = new TextEntry();
+		TextEntry txtTabFilemode = new TextEntry();
 
-		Xwt.Frame fraOther = new Xwt.Frame();
-		Xwt.Table fraOtherBox = new Xwt.Table();
-		Xwt.CheckBox chkExpandName = new Xwt.CheckBox {Sensitive = false};
-		Xwt.CheckBox chkShowCentury = new Xwt.CheckBox {Sensitive = false};
-		Xwt.CheckBox chkShowTimeAs12h = new Xwt.CheckBox {Sensitive = false};
-		Xwt.CheckBox chkShowDirsInStatus = new Xwt.CheckBox {Sensitive = false};
-		Xwt.ComboBox cmbPanelSizeDisplay = new Xwt.ComboBox();
-		Xwt.TextEntry txtMaxHumanySizeInStatus = new Xwt.TextEntry {Sensitive = false};
+		Frame fraOther = new Frame();
+		Table fraOtherBox = new Table();
+		CheckBox chkExpandName = new CheckBox {Sensitive = false};
+		CheckBox chkShowCentury = new CheckBox {Sensitive = false};
+		CheckBox chkShowTimeAs12h = new CheckBox {Sensitive = false};
+		CheckBox chkShowDirsInStatus = new CheckBox {Sensitive = false};
+		Label lblSizeDisplayStyle = new Label();
+		ComboBox cmbPanelSizeDisplay = new ComboBox();
+		TextEntry txtMaxHumanySizeInStatus = new TextEntry {Sensitive = false};
 
 		public swtMainWindowColumns()
 		{
@@ -44,48 +47,68 @@ namespace fcmd.SettingsWindowTabs
 			box.PackStart(fraTabs);
 			box.PackStart(fraOther);
 			fraExtensions.Content = fraExtensionsBox;
-			fraExtensions.Label = Locale.GetString("SWTMWCFileExtView");
 			fraTabs.Content = fraTabsBox;
-			fraTabs.Label = Locale.GetString("SWTMWCCollumns");
 			fraOther.Content = fraOtherBox;
 
 			optDisplayExtTogether.Group = rbgExtensionDisplayStyle;
 			optDisplayExtFar.Group = rbgExtensionDisplayStyle;
-			optDisplayExtTogether.Label = Locale.GetString("SWTMWCExtTogether");
-			optDisplayExtFar.Label = Locale.GetString("SWTMWCExtFar");
 			fraExtensionsBox.PackStart(optDisplayExtTogether);
 			fraExtensionsBox.PackStart(optDisplayExtFar);
 
-			fraTabsBox.Add(new Xwt.Label(Locale.GetString("SWTMWCExt")), 0, 0);
+			fraTabsBox.Add(lblTabExt, 0, 0);
 			fraTabsBox.Add(txtTabExtension, 1, 0);
 
-			fraTabsBox.Add(new Xwt.Label(Locale.GetString("SWTMWCSize")), 0, 1);
+			fraTabsBox.Add(lblTabSize, 0, 1);
 			fraTabsBox.Add(txtTabSize, 1, 1);
 
-			fraTabsBox.Add(new Xwt.Label(Locale.GetString("SWTMWCDate")), 0, 2);
+			fraTabsBox.Add(lblTabDate, 0, 2);
 			fraTabsBox.Add(txtTabDate, 1, 2);
 
-			fraTabsBox.Add(new Xwt.Label(Locale.GetString("SWTMWCFileMode")), 0, 3);
+			fraTabsBox.Add(lblTabPermission, 0, 3);
 			fraTabsBox.Add(txtTabFilemode, 1, 3);
-
-
-			chkExpandName.Label = Locale.GetString("SWTMWCExpandName");
-			chkShowCentury.Label = Locale.GetString("SWTMWCShowCentury");
-			chkShowTimeAs12h.Label = Locale.GetString("SWTMWCShowTimeAs12h");
-			chkShowDirsInStatus.Label = Locale.GetString("SWTMWCShowDirsInStatus");
 
 			fraOtherBox.Add(chkExpandName, 0, 0);
 			fraOtherBox.Add(chkShowCentury, 0, 1);
 			fraOtherBox.Add(chkShowTimeAs12h, 0, 2);
 			fraOtherBox.Add(chkShowDirsInStatus, 0, 3);
 
-			cmbPanelSizeDisplay.Items.Add("000", Locale.GetString("SizeDisplayPolicy000"));
-			cmbPanelSizeDisplay.Items.Add("100", Locale.GetString("SizeDisplayPolicy100"));
-			cmbPanelSizeDisplay.Items.Add("200", Locale.GetString("SizeDisplayPolicy200"));
-			cmbPanelSizeDisplay.Items.Add("111", Locale.GetString("SizeDisplayPolicy111"));
-			cmbPanelSizeDisplay.Items.Add("222", Locale.GetString("SizeDisplayPolicy222"));
-			cmbPanelSizeDisplay.Items.Add("110", Locale.GetString("SizeDisplayPolicy110"));
-			cmbPanelSizeDisplay.Items.Add("220", Locale.GetString("SizeDisplayPolicy220"));
+			fraOtherBox.Add(lblSizeDisplayStyle, 0, 4);
+			fraOtherBox.Add(cmbPanelSizeDisplay, 1, 4);
+			fraOtherBox.Add(new Label(Localizator.GetString("SWTMWCMaxHumanSizeStatus")), 0, 5);
+			fraOtherBox.Add(txtMaxHumanySizeInStatus, 1, 5); //устаревшая реализация сокращения размера в инфобаре, todo: заменить на аналогичную вышестоящей настройке
+
+
+			//load settings
+			//todo
+
+			Localizator.LocalizationChanged += Localizator_LocalizationChanged;
+			Localizator_LocalizationChanged(null,null);
+		}
+
+		void Localizator_LocalizationChanged(object sender, EventArgs e)
+		{
+			fraExtensions.Label = Localizator.GetString("SWTMWCFileExtView");
+			fraTabs.Label = Localizator.GetString("SWTMWCCollumns");
+			optDisplayExtTogether.Label = Localizator.GetString("SWTMWCExtTogether");
+			optDisplayExtFar.Label = Localizator.GetString("SWTMWCExtFar");
+			lblSizeDisplayStyle.Text = Localizator.GetString("SWTMWCSizeDisplay");
+			lblTabPermission.Text = Localizator.GetString("SWTMWCFileMode");
+			lblTabDate.Text = Localizator.GetString("SWTMWCDate");
+			lblTabSize.Text = Localizator.GetString("SWTMWCSize");
+			lblTabExt.Text = Localizator.GetString("SWTMWCExt");
+			chkExpandName.Label = Localizator.GetString("SWTMWCExpandName");
+			chkShowCentury.Label = Localizator.GetString("SWTMWCShowCentury");
+			chkShowTimeAs12h.Label = Localizator.GetString("SWTMWCShowTimeAs12h");
+			chkShowDirsInStatus.Label = Localizator.GetString("SWTMWCShowDirsInStatus");
+
+			cmbPanelSizeDisplay.Items.Clear();
+			cmbPanelSizeDisplay.Items.Add("000", Localizator.GetString("SizeDisplayPolicy000"));
+			cmbPanelSizeDisplay.Items.Add("100", Localizator.GetString("SizeDisplayPolicy100"));
+			cmbPanelSizeDisplay.Items.Add("200", Localizator.GetString("SizeDisplayPolicy200"));
+			cmbPanelSizeDisplay.Items.Add("111", Localizator.GetString("SizeDisplayPolicy111"));
+			cmbPanelSizeDisplay.Items.Add("222", Localizator.GetString("SizeDisplayPolicy222"));
+			cmbPanelSizeDisplay.Items.Add("110", Localizator.GetString("SizeDisplayPolicy110"));
+			cmbPanelSizeDisplay.Items.Add("220", Localizator.GetString("SizeDisplayPolicy220"));
 
 			/*
 			SizeDisplayPolicy000=bytes
@@ -97,15 +120,8 @@ namespace fcmd.SettingsWindowTabs
 			SizeDisplayPolicy220=dynamic (x.xx K/M)
 			*/
 
-			fraOtherBox.Add(new Xwt.Label(Locale.GetString("SWTMWCSizeDisplay")), 0, 4);
-			fraOtherBox.Add(cmbPanelSizeDisplay, 1, 4);
-			fraOtherBox.Add(new Xwt.Label(Locale.GetString("SWTMWCMaxHumanSizeStatus")), 0, 5);
-			fraOtherBox.Add(txtMaxHumanySizeInStatus, 1, 5);
-
-
-			//load settings
-
-			switch (fcmd.Properties.Settings.Default.SizeShorteningPolicy){
+			switch (Settings.Default.SizeShorteningPolicy)
+			{
 				case "000":
 					cmbPanelSizeDisplay.SelectedIndex = 0;
 					break;
@@ -130,14 +146,14 @@ namespace fcmd.SettingsWindowTabs
 			}
 		}
 
-		public Xwt.Widget Content
+		public Widget Content
 		{
 			get { return box; }
 		}
 
 		public bool SaveSettings()
 		{
-			fcmd.Properties.Settings.Default.SizeShorteningPolicy = cmbPanelSizeDisplay.SelectedItem.ToString();
+			Settings.Default.SizeShorteningPolicy = cmbPanelSizeDisplay.SelectedItem.ToString();
 			return true;//undone
 		}
 	}

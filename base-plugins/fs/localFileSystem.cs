@@ -21,7 +21,7 @@ namespace fcmd.base_plugins.fs
 		 * *nix и MacOS X от Windows.		between OSX, *nix and Win32.
 		 * Код должен работать везде!		THE CODE MUST WORK EVERYWHERE!
 		 */
-		public string Name { get { return new Localizator().GetString("LocalFSVer"); } }
+		public string Name { get { return Localizator.GetString("LocalFSVer"); } }
 		public string Version { get{return "1.0";} }
 		public string Author { get{return "A.T.";} }
 		public System.Configuration.Configuration FCConfig { set {} } //it can be a placeholder because the LFS can use the fcmd.Properties.Settings...
@@ -66,7 +66,7 @@ namespace fcmd.base_plugins.fs
 			_CheckProtocol(url);
 			DirContent.Clear();
 			string InternalURL = url.Replace("file://", "");
-			if (StatusChanged != null) StatusChanged(string.Format(new Localizator().GetString("DoingListdir"), "", InternalURL));
+			if (StatusChanged != null) StatusChanged(string.Format(Localizator.GetString("DoingListdir"), "", InternalURL));
 
 			pluginner.DirItem tmpVar = new pluginner.DirItem();
 

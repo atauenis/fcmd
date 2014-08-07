@@ -4,16 +4,14 @@
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+using Xwt;
 
 namespace fcmd.SettingsWindowTabs
 {
 	interface ISettingsWindowTab
 	{
-		Xwt.Widget Content { get; }
+		Widget Content { get; }
 		bool SaveSettings();
 	}
 }

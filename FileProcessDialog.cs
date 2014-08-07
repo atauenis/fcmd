@@ -19,9 +19,8 @@ namespace fcmd
 		/// <summary>Initialize FileProcessDialog with four-row label</summary>
 		public FileProcessDialog()
 		{
-			Localizator locale = new Localizator();
-			Title = locale.GetString("FileProgressDialogTitle");
-			cmdCancel.Label = locale.GetString("Cancel");
+			Title = Localizator.GetString("FileProgressDialogTitle");
+			cmdCancel.Label = Localizator.GetString("Cancel");
 			//this.Decorated = false;
 			Resizable = false;
 
@@ -37,9 +36,8 @@ namespace fcmd
 		/// <param name="ProgressBox">Link to the xwt widget, which should be displayed in the FileProcessDialog.</param>
 		public FileProcessDialog(ref Widget ProgressBox)
 		{
-			Localizator locale = new Localizator();
-			Title = locale.GetString("FileProgressDialogTitle");
-			cmdCancel.Label = locale.GetString("Cancel");
+			Title = Localizator.GetString("FileProgressDialogTitle");
+			cmdCancel.Label = Localizator.GetString("Cancel");
 			Decorated = false;
 
 			Layout.PackStart(ProgressBox, true, true);

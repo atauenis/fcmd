@@ -5,56 +5,89 @@
  * Contributors should place own signs here.
  */
 using System;
-using System.Collections.Generic;
+//using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Xml;
+using fcmd.base_plugins.ve;
+using fcmd.Properties;
+using mucss;
+using pluginner;
 using pluginner.Toolkit;
+using Xwt;
+using Application = System.Windows.Forms.Application;
 
 namespace fcmd
 {
 	/// <summary>Viewer-Editor</summary>
-	class VEd : Xwt.Window
+	class VEd : Window
 	{
-		Localizator Locale = new Localizator();
-		Stylist s = new Stylist(fcmd.Properties.Settings.Default.UserTheme);
-		pluginner.IVEPlugin Plugin;
-		pluginner.IFSPlugin FSPlugin;
-		bool CanBeShowed = true;
-		bool IsEditor = false;
+		Stylist s = new Stylist(Settings.Default.UserTheme);
+		IVEPlugin Plugin;
+		IFSPlugin FSPlugin;
+		bool CanBeShowed = true; //if any errors occur, this variable prevents broken VE window to show
+		bool IsEditor;
+		private string FileNameForTitle;
 
 		//Xwt.Menu MainMenu = new Xwt.Menu();
-		Xwt.MenuItem mnuFile = new Xwt.MenuItem { Tag="mnuFile"};
-		Xwt.MenuItem mnuFileNew = new Xwt.MenuItem { Tag="mnuFileNew"};
-		Xwt.MenuItem mnuFileOpen = new Xwt.MenuItem { Tag="mnuFileOpen"};
-		Xwt.MenuItem mnuFileReload = new Xwt.MenuItem { Tag="mnuFileReload"};
-		Xwt.MenuItem mnuFileSave = new Xwt.MenuItem { Tag="mnuFileSave"};
-		Xwt.MenuItem mnuFilePrint = new Xwt.MenuItem { Tag="mnuFilePrint"};
-		Xwt.MenuItem mnuFilePrintSettings = new Xwt.MenuItem { Tag="mnuFilePrintSettings"};
-		Xwt.MenuItem mnuFilePrintPreview = new Xwt.MenuItem { Tag="mnuFilePrintPreview"};
-		Xwt.MenuItem mnuFileClose = new Xwt.MenuItem { Tag="mnuFileClose"};
+		MenuItem mnuFile = new MenuItem { Tag="mnuFile"};
+		MenuItem mnuFileNew = new MenuItem { Tag="mnuFileNew"};
+		MenuItem mnuFileOpen = new MenuItem { Tag="mnuFileOpen"};
+		MenuItem mnuFileReload = new MenuItem { Tag="mnuFileReload"};
+		MenuItem mnuFileSave = new MenuItem { Tag="mnuFileSave"};
+		MenuItem mnuFilePrint = new MenuItem { Tag="mnuFilePrint"};
+		MenuItem mnuFilePrintSettings = new MenuItem { Tag="mnuFilePrintSettings"};
+		MenuItem mnuFilePrintPreview = new MenuItem { Tag="mnuFilePrintPreview"};
+		MenuItem mnuFileClose = new MenuItem { Tag="mnuFileClose"};
 
-		Xwt.MenuItem mnuEdit = new Xwt.MenuItem { Tag = "mnuEdit",UseMnemonic = true };
-		Xwt.MenuItem mnuEditCut = new Xwt.MenuItem { Tag = "mnuEditCut" };
-		Xwt.MenuItem mnuEditCopy = new Xwt.MenuItem { Tag = "mnuEditCopy" };
-		Xwt.MenuItem mnuEditPaste = new Xwt.MenuItem { Tag = "mnuEditPaste" };
-		Xwt.MenuItem mnuEditSelectAll = new Xwt.MenuItem { Tag = "mnuEditSelAll" };
-		Xwt.MenuItem mnuEditFindReplace = new Xwt.MenuItem { Tag = "mnuEditSearch" };
-		Xwt.MenuItem mnuEditFindNext = new Xwt.MenuItem { Tag = "mnuEditSearchNext" };
+		MenuItem mnuEdit = new MenuItem { Tag = "mnuEdit",UseMnemonic = true };
+		MenuItem mnuEditCut = new MenuItem { Tag = "mnuEditCut" };
+		MenuItem mnuEditCopy = new MenuItem { Tag = "mnuEditCopy" };
+		MenuItem mnuEditPaste = new MenuItem { Tag = "mnuEditPaste" };
+		MenuItem mnuEditSelectAll = new MenuItem { Tag = "mnuEditSelAll" };
+		MenuItem mnuEditFindReplace = new MenuItem { Tag = "mnuEditSearch" };
+		MenuItem mnuEditFindNext = new MenuItem { Tag = "mnuEditSearchNext" };
 
-		Xwt.MenuItem mnuView = new Xwt.MenuItem();
-		Xwt.MenuItem mnuViewSettings = new Xwt.MenuItem {Tag = "mnuViewSettings"};
-		Xwt.MenuItem mnuFormat = new Xwt.MenuItem();
+		MenuItem mnuView = new MenuItem();
+		MenuItem mnuViewSettings = new MenuItem {Tag = "mnuViewSettings"};
+		MenuItem mnuFormat = new MenuItem();
 
-		Xwt.MenuItem mnuHelp = new Xwt.MenuItem();
-		Xwt.MenuItem mnuHelpHelpme = new Xwt.MenuItem { Tag = "mnuHelpHelpme" };
-		Xwt.MenuItem mnuHelpAbout = new Xwt.MenuItem { Tag = "mnuHelpAbout" };
+		MenuItem mnuHelp = new MenuItem();
+		MenuItem mnuHelpHelpme = new MenuItem { Tag = "mnuHelpHelpme" };
+		MenuItem mnuHelpAbout = new MenuItem { Tag = "mnuHelpAbout" };
 
-		Xwt.VBox Layout = new Xwt.VBox();
-		Xwt.Widget PluginBody;
-		Xwt.TextEntry CommandBox = new Xwt.TextEntry();
-		Xwt.HBox KeyBoardHelp = new Xwt.HBox();
+		VBox Layout = new VBox();
+		Widget PluginBody;
+		TextEntry CommandBox = new TextEntry();
+		HBox KeyBoardHelp = new HBox();
 		KeyboardHelpButton[] KeybHelpButtons = new KeyboardHelpButton[11]; //одна лишняя, которая [0]
+
+		/// <summary>
+		/// Write UI labels dependencing on the current UI language
+		/// </summary>
+		private void Localize()
+		{
+			if(KeybHelpButtons.Count() == 11)
+			for (int i = 1; i < 11; i++)
+			{
+				KeybHelpButtons[i].FKey = "F" + i;
+				KeybHelpButtons[i].Text = Localizator.GetString("FCVE_F" + i);
+			}
+
+			mnuFile.Label = Localizator.GetString("FCVE_mnuFile");
+			TranslateMenu(mnuFile.SubMenu);
+			mnuEdit.Label = Localizator.GetString("FCVE_mnuEdit");
+			TranslateMenu(mnuEdit.SubMenu);
+			mnuView.Label = Localizator.GetString("FCVE_mnuView");
+			TranslateMenu(mnuView.SubMenu);
+			mnuFormat.Label = Localizator.GetString("FCVE_mnuFormat");
+			mnuHelp.Label = Localizator.GetString("FCVE_mnuHelp");
+			TranslateMenu(mnuHelp.SubMenu);
+
+			if (IsEditor)
+				Title = string.Format(Localizator.GetString("FCETitle"), FileNameForTitle);
+			else
+				Title = string.Format(Localizator.GetString("FCVTitle"), FileNameForTitle);
+		}
 
 		public VEd()
 		{
@@ -62,67 +95,57 @@ namespace fcmd
 			{
 				KeybHelpButtons[i] = new KeyboardHelpButton();
 				KeybHelpButtons[i].FKey = "F" + i;
-				KeybHelpButtons[i].Text = Locale.GetString("FCVE_F" + i);
+				KeybHelpButtons[i].Text = Localizator.GetString("FCVE_F" + i);
 				KeybHelpButtons[i].CanGetFocus = false;
-				KeyBoardHelp.PackStart(KeybHelpButtons[i], true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, 0,1,0,1);
+				KeyBoardHelp.PackStart(KeybHelpButtons[i], true, WidgetPlacement.Fill, WidgetPlacement.Fill, 0,1,0,1);
 			}
 
-			this.Title = Locale.GetString("File Commander VE");
-			this.Content = Layout;
+			Title = "File Commander VE";
+			Content = Layout;
 
 			CommandBox.KeyReleased += CommandBox_KeyReleased;
 
-			mnuFile.Label = Locale.GetString("FCVE_mnuFile");
-			mnuFile.SubMenu = new Xwt.Menu();
+			mnuFile.SubMenu = new Menu();
 			mnuFile.SubMenu.Items.Add(mnuFileNew);
 			mnuFile.SubMenu.Items.Add(mnuFileOpen);
 			mnuFile.SubMenu.Items.Add(mnuFileReload);
 			mnuFile.SubMenu.Items.Add(mnuFileSave);
-			mnuFile.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+			mnuFile.SubMenu.Items.Add(new SeparatorMenuItem());
 			mnuFile.SubMenu.Items.Add(mnuFilePrint);
 			mnuFile.SubMenu.Items.Add(mnuFilePrintPreview);
 			mnuFile.SubMenu.Items.Add(mnuFilePrintSettings);
-			mnuFile.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+			mnuFile.SubMenu.Items.Add(new SeparatorMenuItem());
 			mnuFile.SubMenu.Items.Add(mnuFileClose);
-			TranslateMenu(mnuFile.SubMenu);
 
-			mnuEdit.Label = Locale.GetString("FCVE_mnuEdit");
-			mnuEdit.SubMenu = new Xwt.Menu();
+			mnuEdit.SubMenu = new Menu();
 			mnuEdit.SubMenu.Items.Add(mnuEditCut);
 			mnuEdit.SubMenu.Items.Add(mnuEditCopy);
 			mnuEdit.SubMenu.Items.Add(mnuEditPaste);
-			mnuEdit.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+			mnuEdit.SubMenu.Items.Add(new SeparatorMenuItem());
 			mnuEdit.SubMenu.Items.Add(mnuEditSelectAll);
-			mnuEdit.SubMenu.Items.Add(new Xwt.SeparatorMenuItem());
+			mnuEdit.SubMenu.Items.Add(new SeparatorMenuItem());
 			mnuEdit.SubMenu.Items.Add(mnuEditFindReplace);
 			mnuEdit.SubMenu.Items.Add(mnuEditFindNext);
-			TranslateMenu(mnuEdit.SubMenu);
 
-			mnuView.Label = Locale.GetString("FCVE_mnuView");
 			mnuViewSettings.Clicked += (o, ea) => {
 				new VEsettings().Run();
-				Plugin.ShowToolbar = fcmd.Properties.Settings.Default.VE_ShowToolbar;
-				KeyBoardHelp.Visible = Properties.Settings.Default.ShowKeybrdHelp;
-				CommandBox.Visible = Properties.Settings.Default.VE_ShowCmdBar;
+				Plugin.ShowToolbar = Settings.Default.VE_ShowToolbar;
+				KeyBoardHelp.Visible = Settings.Default.ShowKeybrdHelp;
+				CommandBox.Visible = Settings.Default.VE_ShowCmdBar;
 			};
-			mnuView.SubMenu = new Xwt.Menu();
+			mnuView.SubMenu = new Menu();
 			mnuView.SubMenu.Items.Add(mnuViewSettings);
-			TranslateMenu(mnuView.SubMenu);
 
-			mnuFormat.Label = Locale.GetString("FCVE_mnuFormat");
-
-			mnuHelp.Label = Locale.GetString("FCVE_mnuHelp");
-			mnuHelp.SubMenu = new Xwt.Menu();
+			mnuHelp.SubMenu = new Menu();
 			mnuHelp.SubMenu.Items.Add(mnuHelpHelpme);
 			mnuHelp.SubMenu.Items.Add(mnuHelpAbout);
-			TranslateMenu(mnuHelp.SubMenu);
 
-			this.MainMenu = new Xwt.Menu();
-			this.MainMenu.Items.Add(mnuFile);
-			this.MainMenu.Items.Add(mnuEdit);
-			this.MainMenu.Items.Add(mnuView);
-			this.MainMenu.Items.Add(mnuFormat);
-			this.MainMenu.Items.Add(mnuHelp);
+			MainMenu = new Menu();
+			MainMenu.Items.Add(mnuFile);
+			MainMenu.Items.Add(mnuEdit);
+			MainMenu.Items.Add(mnuView);
+			MainMenu.Items.Add(mnuFormat);
+			MainMenu.Items.Add(mnuHelp);
 
 			mnuFileOpen.Clicked += (o, ea) => { OpenFile(); };
 			mnuFilePrint.Clicked += (o, ea) => { SendCommand("print"); };
@@ -137,48 +160,46 @@ namespace fcmd
 			mnuEditFindNext.Clicked += (o, ea) => { SendCommand("findreplace last"); };
 			mnuHelpAbout.Clicked += mnuHelpAbout_Clicked;
 
-			this.CloseRequested += VEd_CloseRequested;
-			this.Shown += VEd_Shown;
+			CloseRequested += VEd_CloseRequested;
+			Shown += VEd_Shown;
 
-#if !MONO
-			PluginBody = new Xwt.Spinner { Animate = true };
-#else
-			PluginBody = new Xwt.HBox(); //"workaround" for xwt/XWT bug https://github.com/mono/xwt/issues/283
-#endif
-
+			Localizator.LocalizationChanged += (o, ea) => Localize();
+			
+			PluginBody = new Spinner { Animate = true };
 			BuildLayout();
+			Localize();
 		}
 
-		void VEd_CloseRequested(object sender, Xwt.CloseRequestedEventArgs args)
+		void VEd_CloseRequested(object sender, CloseRequestedEventArgs args)
 		{
-			fcmd.Properties.Settings.Default.VEWinHeight = this.Height;
-			fcmd.Properties.Settings.Default.VEWinWidth = this.Width;
+			Settings.Default.VEWinHeight = Height;
+			Settings.Default.VEWinWidth = Width;
 
 			try {
 			SendCommand("unload");
 			}
-			catch (Exception e) { Xwt.MessageDialog.ShowError(e.Message, e.StackTrace + "\n   on " + Plugin.Name + " (" + Plugin.GetType() + ")"); }
-			this.Hide();
+			catch (Exception e) { MessageDialog.ShowError(e.Message, e.StackTrace + "\n   on " + Plugin.Name + " (" + Plugin.GetType() + ")"); }
+			Hide();
 		}
 
 		void VEd_Shown(object sender, EventArgs e)
 		{
-			this.Visible = CanBeShowed; //if VE should not be enabled, the window should not show everywhy
+			Visible = CanBeShowed; //if VE should not be enabled, the window should not show everywhy
 		}
 
 		void mnuHelpAbout_Clicked(object sender, EventArgs e)
 		{
-			string AboutString1 = String.Format(Locale.GetString("FCVEVer1"), System.Windows.Forms.Application.ProductVersion); ;
-			string AboutString2 = string.Format(Locale.GetString("FCVEVer2"), Plugin.Name, Plugin.Version,"\n", Plugin.Author);
-			Xwt.MessageDialog.ShowMessage(AboutString1,AboutString2);
+			string AboutString1 = String.Format(Localizator.GetString("FCVEVer1"), Application.ProductVersion);
+			string AboutString2 = string.Format(Localizator.GetString("FCVEVer2"), Plugin.Name, Plugin.Version,"\n", Plugin.Author);
+			MessageDialog.ShowMessage(AboutString1,AboutString2);
 		}
 		
-		void CommandBox_KeyReleased(object sender, Xwt.KeyEventArgs e)
+		void CommandBox_KeyReleased(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Xwt.Key.Return)
+			if (e.Key == Key.Return)
 			{
-				if(CommandBox.Text == "q") { this.Close(); return; } 
-				if(CommandBox.Text == "q!") { Plugin.SaveFile(); this.Close(); return; } 
+				if(CommandBox.Text == "q") { Close(); return; } 
+				if(CommandBox.Text == "q!") { Plugin.SaveFile(); Close(); return; } 
 				SendCommand(CommandBox.Text);
 			}
 		}
@@ -207,7 +228,7 @@ namespace fcmd
 		/// <param name="URL">The file's URL</param>
 		/// <param name="FS">The file's filesystem</param>
 		/// <param name="AllowEdit">Mode of VE: true=editor, false=viewer</param>
-		public void LoadFile(string URL, pluginner.IFSPlugin FS, bool AllowEdit)
+		public void LoadFile(string URL, IFSPlugin FS, bool AllowEdit)
 		{
 			byte[] ContentBytes = FS.GetFileContent(URL);
 			string content = (ContentBytes != null && ContentBytes.Length > 0) ? Encoding.UTF8.GetString(ContentBytes) : "";
@@ -222,15 +243,17 @@ namespace fcmd
 			}
 			catch (pluginfinder.PluginNotFoundException ex)
 			{
+// ReSharper disable LocalizableElement
 				Console.WriteLine("ERROR: VE plugin is not loaded: " + ex.Message + "\n" + ex.StackTrace);
-				Xwt.MessageDialog.ShowError(Locale.GetString("FCVE_PluginNotFound"));
-				LoadFile(URL, FS, new base_plugins.ve.PlainText(), AllowEdit);
+
+				MessageDialog.ShowError(Localizator.GetString("FCVE_PluginNotFound"));
+				LoadFile(URL, FS, new PlainText(), AllowEdit);
 			}
 			catch (Exception ex)
 			{
-				Xwt.MessageDialog.ShowError(string.Format(Locale.GetString("FCVE_LoadError"),ex.Message));
+				MessageDialog.ShowError(string.Format(Localizator.GetString("FCVE_LoadError"),ex.Message));
 				Console.WriteLine("ERROR: VE can't load file: " + ex.Message + "\n" + ex.StackTrace);
-				return;
+// ReSharper restore LocalizableElement
 			}
 		}
 
@@ -239,37 +262,37 @@ namespace fcmd
 		/// <param name="FS">The filesystem of the file</param>
 		/// <param name="plugin">The VE plugin, which will be used to load this file</param>
 		/// <param name="AllowEdit">Allow editing the file</param>
-		public void LoadFile(string URL, pluginner.IFSPlugin FS, pluginner.IVEPlugin plugin, bool AllowEdit)
+		public void LoadFile(string URL, IFSPlugin FS, IVEPlugin plugin, bool AllowEdit)
 		{
 			//check for external editor
 			try{
-				if (fcmd.Properties.Settings.Default.UseExternalEditor && AllowEdit || fcmd.Properties.Settings.Default.UseExternalViewer && !AllowEdit && URL.StartsWith("file:")){
+				if (Settings.Default.UseExternalEditor && AllowEdit || Settings.Default.UseExternalViewer && !AllowEdit && URL.StartsWith("file:")){
 					CanBeShowed = false;
 					if (AllowEdit){
-						ExecuteProgram(fcmd.Properties.Settings.Default.ExternalEditor.Replace("$", "\"" + URL));
+						ExecuteProgram(Settings.Default.ExternalEditor.Replace("$", "\"" + URL));
 					}
 					else{
-						ExecuteProgram(fcmd.Properties.Settings.Default.ExternalViewer.Replace("$", "\"" + URL));
+						ExecuteProgram(Settings.Default.ExternalViewer.Replace("$", "\"" + URL));
 					}
 					return;
 				}
 			}
-			catch (Exception ex) { Xwt.MessageDialog.ShowError(Locale.GetString("CantRunEXE"), ex.Message); CanBeShowed = false; return; }
+			catch (Exception ex) { MessageDialog.ShowError(Localizator.GetString("CantRunEXE"), ex.Message); CanBeShowed = false; return; }
 
-			string FiNa4Title = URL.Substring(URL.LastIndexOf(FS.DirSeparator) + 1);
+			FileNameForTitle = URL.Substring(URL.LastIndexOf(FS.DirSeparator, StringComparison.Ordinal) + 1);
 			IsEditor = AllowEdit;
 
 			if(AllowEdit)
-				this.Title = string.Format(Locale.GetString("FCETitle"), FiNa4Title);
+				Title = string.Format(Localizator.GetString("FCETitle"), FileNameForTitle);
 			else
-				this.Title = string.Format(Locale.GetString("FCVTitle"), FiNa4Title);
+				Title = string.Format(Localizator.GetString("FCVTitle"), FileNameForTitle);
 
 			FileProcessDialog ProgressDialog = new FileProcessDialog();
-			string ProgressInitialText = String.Format(Locale.GetString("FCVELoadingMsg"),URL);
+			string ProgressInitialText = String.Format(Localizator.GetString("FCVELoadingMsg"),URL);
 			ProgressDialog.lblStatus.Text = ProgressInitialText;
 			FS.ProgressChanged += (d) => { ProgressDialog.pbrProgress.Fraction = (d >= 0 && d <= 1) ? d : ProgressDialog.pbrProgress.Fraction; Xwt.Application.MainLoop.DispatchPendingEvents();  };
 			FS.StatusChanged += (d) => { ProgressDialog.lblStatus.Text = ProgressInitialText + "\n" + d; Xwt.Application.MainLoop.DispatchPendingEvents(); };
-			ProgressDialog.cmdCancel.Clicked += (o, ea) => { CanBeShowed = false; ProgressDialog.Hide(); return; };
+			ProgressDialog.cmdCancel.Clicked += (o, ea) => { CanBeShowed = false; ProgressDialog.Hide(); };
 			ProgressDialog.Show();
 			Xwt.Application.MainLoop.DispatchPendingEvents();
 
@@ -279,7 +302,7 @@ namespace fcmd
 				Plugin = plugin;
 				Plugin.ReadOnly = !AllowEdit;
 				Plugin.OpenFile(URL, FS);
-				Plugin.ShowToolbar = fcmd.Properties.Settings.Default.VE_ShowToolbar;
+				Plugin.ShowToolbar = Settings.Default.VE_ShowToolbar;
 				Plugin.Stylist = s;
 				mnuFormat.SubMenu = Plugin.FormatMenu;
 
@@ -287,7 +310,7 @@ namespace fcmd
 
 				if (!Plugin.CanEdit && AllowEdit)
 				{
-					Xwt.MessageDialog.ShowWarning(String.Format(Locale.GetString("FCVEpluginro1"), Plugin.Name + " " + Plugin.Version), Locale.GetString("FCVEpluginro2"));
+					MessageDialog.ShowWarning(String.Format(Localizator.GetString("FCVEpluginro1"), Plugin.Name + " " + Plugin.Version), Localizator.GetString("FCVEpluginro2"));
 					Mode = false;
 				}
 
@@ -298,15 +321,15 @@ namespace fcmd
 			}
 			catch (Exception ex)
 			{
-				Xwt.MessageDialog.ShowWarning(ex.Message);
-				if(PluginBody.GetType() == typeof(Xwt.Spinner)) { ProgressDialog.Hide(); this.CanBeShowed = false; return;}
+				MessageDialog.ShowWarning(ex.Message);
+				if(PluginBody.GetType() == typeof(Spinner)) { ProgressDialog.Hide(); CanBeShowed = false; return;}
 			}
 			BuildLayout();
 			ProgressDialog.Hide();
 			
 			PluginBody.KeyReleased += (sender, e) => {
-				if(e.Key == Xwt.Key.Escape) CommandBox.SetFocus();
-				if(e.Key == Xwt.Key.q) this.OnCloseRequested();
+				if(e.Key == Key.Escape) CommandBox.SetFocus();
+				if(e.Key == Key.q) OnCloseRequested();
 			};
 		}
 
@@ -322,19 +345,19 @@ namespace fcmd
 		/// <summary>(Re)builds the "Layout" vbox</summary>
 		public void BuildLayout()
 		{
-			this.Padding = 0;
+			Padding = 0;
 			Layout.Clear();
-			Layout.PackStart(PluginBody, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,0,0,0);
-			Layout.PackStart(CommandBox, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,0,0,-6);
-			if (fcmd.Properties.Settings.Default.ShowKeybrdHelp) Layout.PackStart(KeyBoardHelp, false, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill, 1, 3, 1, 2);
+			Layout.PackStart(PluginBody, true, WidgetPlacement.Fill, WidgetPlacement.Fill,0,0,0,0);
+			Layout.PackStart(CommandBox, false, WidgetPlacement.Fill, WidgetPlacement.Fill,0,0,0,-6);
+			if (Settings.Default.ShowKeybrdHelp) Layout.PackStart(KeyBoardHelp, false, WidgetPlacement.Fill, WidgetPlacement.Fill, 1, 3, 1, 2);
 
-			this.Resizable = true; //fix for some stupid xwt toolkits.
+			Resizable = true; //fix for some stupid xwt toolkits.
 
-			mucss.Selector sel = s.CSS["VE"];
+			Selector sel = s.CSS["VE"];
             try
             {
-                this.Height = (sel.Declarations["height"].Value == "auto" ? fcmd.Properties.Settings.Default.VEWinHeight : Convert.ToDouble(sel.Declarations["height"].Value));
-                this.Width = (sel.Declarations["width"].Value == "auto" ? fcmd.Properties.Settings.Default.VEWinWidth : Convert.ToDouble(sel.Declarations["width"].Value));
+                Height = (sel.Declarations["height"].Value == "auto" ? Settings.Default.VEWinHeight : Convert.ToDouble(sel.Declarations["height"].Value));
+                Width = (sel.Declarations["width"].Value == "auto" ? Settings.Default.VEWinWidth : Convert.ToDouble(sel.Declarations["width"].Value));
             }
             catch { } //a dirty workaround for a Xwt.WPF bug (""-1" не является допустимым значением для свойства "Width"." (System.ArgumentException))
 			if (sel.Declarations["background-color"].Value != "inherit")
@@ -348,29 +371,26 @@ namespace fcmd
 
 
 		/// <summary>Translates the <paramref name="mnu"/> into the current UI language</summary>
-		private void TranslateMenu(Xwt.Menu mnu)
+		private void TranslateMenu(Menu mnu)
 		{
-			try
-			{ //dirty hack...i don't know why, but "if(mnu.Items == null) return;" raises NullReferenceException...
-				foreach (Xwt.MenuItem currentMenuItem in mnu.Items)
+			if (mnu == null) return;
+			foreach (MenuItem currentMenuItem in mnu.Items)
 				{
-					if (currentMenuItem.GetType() != typeof(Xwt.SeparatorMenuItem))
+					if (currentMenuItem.GetType() != typeof(SeparatorMenuItem))
 					{ //skip separators
-						currentMenuItem.Label = Locale.GetString("FCVE_" + currentMenuItem.Tag);
+						currentMenuItem.Label = Localizator.GetString("FCVE_" + currentMenuItem.Tag);
 						TranslateMenu(currentMenuItem.SubMenu);
 					}
 				}
-			}
-			catch { }
 
-			KeyBoardHelp.Visible = Properties.Settings.Default.ShowKeybrdHelp;
-			CommandBox.Visible = Properties.Settings.Default.VE_ShowCmdBar;
+			KeyBoardHelp.Visible = Settings.Default.ShowKeybrdHelp;
+			CommandBox.Visible = Settings.Default.VE_ShowCmdBar;
 		}
 
 		private void Exit()
 		{
 			SendCommand("unload");
-			this.Hide();
+			Hide();
 		}
 
 		/// <summary>
@@ -383,14 +403,14 @@ namespace fcmd
 			//todo: replace this shit-like parameter detection code with more goodly (taking into account the quotes)
 			//	  QUICKER!!!
 			string OrigCmdLine = CmdLine;
-			int RazdelPo = OrigCmdLine.IndexOf(" ");
+			int RazdelPo = OrigCmdLine.IndexOf(" ", StringComparison.Ordinal);
 			string ExeArgs = OrigCmdLine.Substring(RazdelPo + 1).Substring(8); //cut exe filename, "file://" prefix
 			string ExeName = OrigCmdLine.Substring(0, RazdelPo); //cut arguments 
 
-			System.Diagnostics.Process proc = new System.Diagnostics.Process();
-			proc.StartInfo.FileName = ExeName;
-			proc.StartInfo.Arguments = ExeArgs;
-			proc.StartInfo.ErrorDialog = true;
+			System.Diagnostics.Process proc = new System.Diagnostics.Process
+			{
+				StartInfo = {FileName = ExeName, Arguments = ExeArgs, ErrorDialog = true}
+			};
 			proc.Start();
 		}
 

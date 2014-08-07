@@ -1,48 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using fcmd.Properties;
+using Xwt;
 
 namespace fcmd.SettingsWindowTabs
 {
 	class swtMainWindowInfobar : ISettingsWindowTab
 	{
-		Localizator Locale = new Localizator();
-		Xwt.Frame fraInfobar = new Xwt.Frame();
-		Xwt.VBox Layout = new Xwt.VBox();
-		Xwt.TextEntry txtText1 = new Xwt.TextEntry();
-		Xwt.TextEntry txtText2 = new Xwt.TextEntry();
+		private Frame fraInfobar = new Frame();
+		private VBox Layout = new VBox();
+
+		private Label lblInfobarTextNoSel = new Label();
+		private Label lblInfobarTextWithSel = new Label();
+		private Label lblInfobarPatterns = new Label(){ Wrap = WrapMode.Word };
+
+		private TextEntry txtText1 = new TextEntry();
+		private TextEntry txtText2 = new TextEntry();
 
 		public swtMainWindowInfobar()
 		{
-			fraInfobar.Label = Locale.GetString("SWTMWinfobar").Replace("	", "");
+			
 			fraInfobar.Content = Layout;
-			Layout.PackStart(new Xwt.Label(
-				Locale.GetString("SWTMWItext1")
-				));
+			Layout.PackStart(lblInfobarTextNoSel);
 			Layout.PackStart(txtText1);
-			Layout.PackStart(new Xwt.Label(
-				Locale.GetString("SWTMWItext2")
-				));
+			Layout.PackStart(lblInfobarTextWithSel);
 			Layout.PackStart(txtText2);
-			Layout.PackStart(new Xwt.Label(
-				Locale.GetString("SWTMWIhelp")
-				){ Wrap = Xwt.WrapMode.Word }
-				);
+			Layout.PackStart(lblInfobarPatterns);
 
-			txtText1.Text = fcmd.Properties.Settings.Default.InfoBarContent1;
-			txtText2.Text = fcmd.Properties.Settings.Default.InfoBarContent2;
+			txtText1.Text = Settings.Default.InfoBarContent1;
+			txtText2.Text = Settings.Default.InfoBarContent2;
+
+			Localizator.LocalizationChanged += Localizator_LocalizationChanged;
+			Localizator_LocalizationChanged(null, null);
 		}
 
-		public Xwt.Widget Content
+		void Localizator_LocalizationChanged(object sender, System.EventArgs e)
+		{
+			fraInfobar.Label = Localizator.GetString("SWTMWinfobar");
+			lblInfobarTextNoSel.Text = Localizator.GetString("SWTMWItext1");
+			lblInfobarTextWithSel.Text = Localizator.GetString("SWTMWItext2");
+			lblInfobarPatterns.Text = Localizator.GetString("SWTMWIhelp");
+		}
+
+		public Widget Content
 		{
 			get { return fraInfobar; }
 		}
 
 		public bool SaveSettings()
 		{
-			fcmd.Properties.Settings.Default.InfoBarContent1 = txtText1.Text;
-			fcmd.Properties.Settings.Default.InfoBarContent2 = txtText2.Text;
+			Settings.Default.InfoBarContent1 = txtText1.Text;
+			Settings.Default.InfoBarContent2 = txtText2.Text;
 			return true;
 		}
 	}

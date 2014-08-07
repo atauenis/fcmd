@@ -18,7 +18,6 @@ namespace fcmd
 {
 	partial class MainWindow : Xwt.Window
 	{
-		Localizator Locale = new Localizator();
 		Stylist stylist;
 		Xwt.Menu WindowMenu = new Xwt.Menu();
 
@@ -62,7 +61,6 @@ namespace fcmd
 		Xwt.MenuItem mnuNavigateFind = new Xwt.MenuItem { Tag="mnuNavigateFind" };
 		Xwt.MenuItem mnuNavigateHistory = new Xwt.MenuItem { Tag="mnuNavigateHistory" };
 		Xwt.MenuItem mnuNavigateReload = new Xwt.MenuItem { Tag="mnuNavigateReload" };
-		Xwt.MenuItem mnuNavigateFlyTo = new Xwt.MenuItem { Tag="mnuNavigateFlyTo" };
 
 		Xwt.MenuItem mnuTools = new Xwt.MenuItem { Tag="mnuTools" };
 		Xwt.MenuItem mnuToolsOptions = new Xwt.MenuItem { Tag="mnuToolsOptions" };
@@ -88,6 +86,8 @@ namespace fcmd
 
 		FileListPanel p1;
 		FileListPanel p2;
+
+		List<ListView2.CollumnInfo> LVCols = new List<ListView2.CollumnInfo>();
 		
 		/// <summary>The current active panel</summary>
 		FileListPanel ActivePanel;
@@ -214,7 +214,7 @@ namespace fcmd
 						stylist = new Stylist(fcmd.Properties.Settings.Default.UserTheme);
 					else
 					{
-						Xwt.MessageDialog.ShowError(Locale.GetString("ThemeNotFound"), fcmd.Properties.Settings.Default.UserTheme);
+						Xwt.MessageDialog.ShowError(Localizator.GetString("ThemeNotFound"), fcmd.Properties.Settings.Default.UserTheme);
 						Xwt.Application.Exit();
 					}
 				}
@@ -236,31 +236,23 @@ namespace fcmd
 			p1.OpenFile += Panel_OpenFile;
 			p2.OpenFile += Panel_OpenFile;
 
-			List<ListView2.CollumnInfo> LVCols = new List<ListView2.CollumnInfo>();
-			LVCols.Add(new ListView2.CollumnInfo { Title = "", Tag = "Icon", Width = 16, Visible = true });
+			/*LVCols.Add(new ListView2.CollumnInfo { Title = "", Tag = "Icon", Width = 16, Visible = true });
 			LVCols.Add(new ListView2.CollumnInfo { Title = "URL", Tag = "Path", Width = 0, Visible = false });
-			LVCols.Add(new ListView2.CollumnInfo { Title = Locale.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo { Title = Locale.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo { Title = Locale.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
 			LVCols.Add(new ListView2.CollumnInfo { Title = "Directory item info", Tag = "DirItem", Width = 0, Visible = false });
-
+			*/
 			p1.FS = new base_plugins.fs.localFileSystem();
-
-			p1.ListingView.Collumns = LVCols.ToArray();
-
 			p2.FS = new base_plugins.fs.localFileSystem();
-			p2.ListingView.Collumns = LVCols.ToArray();
 
-			p1.GotFocus += (o, ea) => { SwitchPanel(p1); };
-			p2.GotFocus += (o, ea) => { SwitchPanel(p2); };
+			p1.GotFocus += (o, ea) => SwitchPanel(p1);
+			p2.GotFocus += (o, ea) => SwitchPanel(p2);
 
 			//build keyboard help bar
 			for (int i = 1; i < 11; i++)
 			{
-				KeybHelpButtons[i] = new KeyboardHelpButton();
-				KeybHelpButtons[i].FKey = "F" + i;
-				KeybHelpButtons[i].Text = Locale.GetString("FCF" + i);
-				KeybHelpButtons[i].CanGetFocus = false;
+				KeybHelpButtons[i] = new KeyboardHelpButton {CanGetFocus = false};
 				KeyBoardHelp.PackStart(KeybHelpButtons[i],true,Xwt.WidgetPlacement.Fill,Xwt.WidgetPlacement.Fill,0,-6,0,-3);
 			}
 			KeybHelpButtons[1].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this,new Xwt.KeyEventArgs(Xwt.Key.F1,Xwt.ModifierKeys.None,false,0)); };
@@ -274,6 +266,9 @@ namespace fcmd
 			KeybHelpButtons[9].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F9, Xwt.ModifierKeys.None, false, 0)); };
 			KeybHelpButtons[10].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F10, Xwt.ModifierKeys.None, false, 0)); };
 			//todo: replace this shit-code with huge using of KeybHelpButtons[n].Tag property (note that it's difficult to be realized due to c# restrictions)
+
+			Localizator.LocalizationChanged += (o, ea) => Localize();
+			Localize();
 
 			//apply user's settings
 			//milliseconds for double click
@@ -315,16 +310,36 @@ namespace fcmd
 					break;
 			}
 #if DEBUG
-			Console.WriteLine("DEBUG: MainWindow initialization has been completed.");
+			Console.WriteLine(@"DEBUG: MainWindow initialization has been completed.");
 #endif
+		}
+
+		void Localize()
+		{
+			TranslateMenu(this.MainMenu);
+
+			for (int i = 1; i < 11; i++)
+			{
+				KeybHelpButtons[i].FKey = "F" + i;
+				KeybHelpButtons[i].Text = Localizator.GetString("FCF" + i);
+			}
+
+			LVCols.Clear();
+			LVCols.Add(new ListView2.CollumnInfo { Title = "", Tag = "Icon", Width = 16, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = "URL", Tag = "Path", Width = 0, Visible = false });
+			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.CollumnInfo { Title = "Directory item info", Tag = "DirItem", Width = 0, Visible = false });
+			p1.ListingView.Collumns = p2.ListingView.Collumns = LVCols.ToArray();
 		}
 
 		void mnuViewWithFilter_Clicked(object sender, EventArgs e)
 		{
 			string Filter = @"*.*";
 
-			InputBox ibx = new InputBox(Locale.GetString("NameFilterQuestion"), Filter);
-			Xwt.CheckBox chkRegExp = new Xwt.CheckBox(Locale.GetString("NameFilterUseRegExp"));
+			InputBox ibx = new InputBox(Localizator.GetString("NameFilterQuestion"), Filter);
+			Xwt.CheckBox chkRegExp = new Xwt.CheckBox(Localizator.GetString("NameFilterUseRegExp"));
 			ibx.OtherWidgets.Add(chkRegExp, 0, 0);
 			if (!ibx.ShowDialog()) return;
 			Filter = ibx.Result;
@@ -353,11 +368,11 @@ namespace fcmd
 					ActivePanel.CurShortenGB
 					);
 
-				ActivePanel.StatusBar.Text = string.Format(Locale.GetString("NameFilterFound"), Filter, GoodItems.Count);
+				ActivePanel.StatusBar.Text = string.Format(Localizator.GetString("NameFilterFound"), Filter, GoodItems.Count);
 			}
 			catch (Exception ex)
 			{
-				Xwt.MessageDialog.ShowError(Locale.GetString("NameFilterError"), ex.Message);
+				Xwt.MessageDialog.ShowError(Localizator.GetString("NameFilterError"), ex.Message);
 			}
 		}
 
@@ -438,7 +453,7 @@ namespace fcmd
 		{
 			System.Configuration.Configuration conf = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal);
 			string AboutString = string.Format(
-				Locale.GetString("FileCommanderVer"),
+				Localizator.GetString("FileCommanderVer"),
 				"File Commander",
 				Winforms.Application.ProductVersion,
 				"\nhttps://github.com/atauenis/fcmd",
@@ -490,8 +505,8 @@ namespace fcmd
 				case Xwt.Key.NumPadAdd: //[+] gray - add selection
 					string Filter = @"*.*";
 
-					InputBox ibx_qs = new InputBox(Locale.GetString("QuickSelect"), Filter);
-					Xwt.CheckBox chkRegExp = new Xwt.CheckBox(Locale.GetString("NameFilterUseRegExp"));
+					InputBox ibx_qs = new InputBox(Localizator.GetString("QuickSelect"), Filter);
+					Xwt.CheckBox chkRegExp = new Xwt.CheckBox(Localizator.GetString("NameFilterUseRegExp"));
 					ibx_qs.OtherWidgets.Add(chkRegExp, 0, 0);
 					if (!ibx_qs.ShowDialog()) return;
 					Filter = ibx_qs.Result;
@@ -514,19 +529,19 @@ namespace fcmd
 							}
 						}
 
-						ActivePanel.StatusBar.Text = string.Format(Locale.GetString("NameFilterFound"), Filter, Count);
+						ActivePanel.StatusBar.Text = string.Format(Localizator.GetString("NameFilterFound"), Filter, Count);
 					}
 					catch (Exception ex)
 					{
-						Xwt.MessageDialog.ShowError(Locale.GetString("NameFilterError"), ex.Message);
+						Xwt.MessageDialog.ShowError(Localizator.GetString("NameFilterError"), ex.Message);
 					}
 					return;
 
 				case Xwt.Key.NumPadSubtract: //[-] gray - add selection
 					string Filter_qus = @"*.*";
 
-					InputBox ibx_qus = new InputBox(Locale.GetString("QuickUnselect"), Filter_qus);
-					Xwt.CheckBox chkRegExp_qus = new Xwt.CheckBox(Locale.GetString("NameFilterUseRegExp"));
+					InputBox ibx_qus = new InputBox(Localizator.GetString("QuickUnselect"), Filter_qus);
+					Xwt.CheckBox chkRegExp_qus = new Xwt.CheckBox(Localizator.GetString("NameFilterUseRegExp"));
 					ibx_qus.OtherWidgets.Add(chkRegExp_qus, 0, 0);
 					if (!ibx_qus.ShowDialog()) return;
 					Filter_qus = ibx_qus.Result;
@@ -552,7 +567,7 @@ namespace fcmd
 					}
 					catch (Exception ex)
 					{
-						Xwt.MessageDialog.ShowError(Locale.GetString("NameFilterError"), ex.Message);
+						Xwt.MessageDialog.ShowError(Localizator.GetString("NameFilterError"), ex.Message);
 					}
 					return;
 
@@ -563,7 +578,7 @@ namespace fcmd
 
 					if (!FS1.FileExists(URL1))
 					{
-						Xwt.MessageDialog.ShowWarning(string.Format(Locale.GetString("FileNotFound"), ActivePanel.GetValue(ActivePanel.dfDisplayName)));
+						Xwt.MessageDialog.ShowWarning(string.Format(Localizator.GetString("FileNotFound"), ActivePanel.GetValue(ActivePanel.dfDisplayName)));
 						return;
 					}
 
@@ -580,7 +595,7 @@ namespace fcmd
 
 					if (!FS1.FileExists(URL1))
 					{
-						Xwt.MessageDialog.ShowWarning(string.Format(Locale.GetString("FileNotFound"), ActivePanel.GetValue(ActivePanel.dfDisplayName)));
+						Xwt.MessageDialog.ShowWarning(string.Format(Localizator.GetString("FileNotFound"), ActivePanel.GetValue(ActivePanel.dfDisplayName)));
 						return;
 					}
 
@@ -604,7 +619,7 @@ namespace fcmd
 					//todo: handle Ctrl+F6 (Sort by size).
 					return;
 				case Xwt.Key.F7: //F7: New directory.
-					InputBox ibx = new InputBox(Locale.GetString("NewDirURL"), ActivePanel.FS.CurrentDirectory + Locale.GetString("NewDirTemplate"));
+					InputBox ibx = new InputBox(Localizator.GetString("NewDirURL"), ActivePanel.FS.CurrentDirectory + Localizator.GetString("NewDirTemplate"));
 					if (ibx.ShowDialog()) MkDir(ibx.Result);
 					return;
 				case Xwt.Key.F8: //F8: delete
@@ -672,7 +687,7 @@ namespace fcmd
 				{
 					if (currentMenuItem.GetType() != typeof(Xwt.SeparatorMenuItem))
 					{ //skip separators
-						currentMenuItem.Label = Locale.GetString("FC" + currentMenuItem.Tag);
+						currentMenuItem.Label = Localizator.GetString("FC" + currentMenuItem.Tag);
 						TranslateMenu(currentMenuItem.SubMenu);
 					}
 				}

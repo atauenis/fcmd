@@ -10,7 +10,6 @@ namespace fcmd
 {
 	public class ReplaceQuestionDialog : Xwt.Dialog
 	{
-		Localizator Locale = new Localizator();
 		Xwt.Table Layout = new Xwt.Table();
 		Xwt.Label lblAsk = new Xwt.Label();
 		Xwt.Button cmdReplace = new Xwt.Button();
@@ -41,14 +40,14 @@ namespace fcmd
 			Layout.Add(lblAsk,0,0,1,3);
 			this.Buttons.Add(Xwt.Command.Cancel);
 
-			Title = Locale.GetString("ReplaceQDTitle");
-			lblAsk.Text = String.Format(Locale.GetString("ReplaceQDText"), filename);
-			cmdReplace.Label = Locale.GetString("ReplaceQDReplace");
-			cmdReplaceAll.Label = Locale.GetString("ReplaceQDReplaceAll");
-			cmdReplaceOld.Label = Locale.GetString("ReplaceQDReplaceOld");
-			cmdSkip.Label = Locale.GetString("ReplaceQDSkip");
-			cmdSkipAll.Label = Locale.GetString("ReplaceQDSkipAll");
-			cmdCompare.Label = Locale.GetString("ReplaceQDCompare");
+			Title = Localizator.GetString("ReplaceQDTitle");
+			lblAsk.Text = String.Format(Localizator.GetString("ReplaceQDText"), filename);
+			cmdReplace.Label = Localizator.GetString("ReplaceQDReplace");
+			cmdReplaceAll.Label = Localizator.GetString("ReplaceQDReplaceAll");
+			cmdReplaceOld.Label = Localizator.GetString("ReplaceQDReplaceOld");
+			cmdSkip.Label = Localizator.GetString("ReplaceQDSkip");
+			cmdSkipAll.Label = Localizator.GetString("ReplaceQDSkipAll");
+			cmdCompare.Label = Localizator.GetString("ReplaceQDCompare");
 
 			cmdReplace.Clicked += (o,ea) => { Choose(ClickedButton.Replace); };
 			cmdReplaceAll.Clicked += (o,ea) => { Choose(ClickedButton.ReplaceAll); };

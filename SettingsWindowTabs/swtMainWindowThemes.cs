@@ -4,10 +4,8 @@
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+using fcmd.Properties;
 using pluginner.Toolkit;
 using Xwt;
 
@@ -15,8 +13,7 @@ namespace fcmd.SettingsWindowTabs
 {
 	class swtMainWindowThemes : ISettingsWindowTab
 	{
-		Localizator Locale = new Localizator();
-		Stylist s = new Stylist(fcmd.Properties.Settings.Default.UserTheme); //todo: add wysiwyg css editor
+		Stylist s = new Stylist(Settings.Default.UserTheme); //todo: add wysiwyg css editor
 
 		Table layout = new Table();
 		CheckBox chkUseThemes = new CheckBox("yuz kastom temez fo zi pogam's intefeys");
@@ -24,15 +21,14 @@ namespace fcmd.SettingsWindowTabs
 
 		public swtMainWindowThemes()
 		{
-			chkUseThemes.Label = Locale.GetString("SWTMWTusethemes");
-			if (fcmd.Properties.Settings.Default.UserTheme == null)
+			if (Settings.Default.UserTheme == null)
 			{
 				txtThemePath.Text = "";
 				chkUseThemes.State = CheckBoxState.Off;
 			}
 			else
 			{
-				txtThemePath.Text = fcmd.Properties.Settings.Default.UserTheme;
+				txtThemePath.Text = Settings.Default.UserTheme;
 				chkUseThemes.State = CheckBoxState.On;
 			}
 
@@ -42,9 +38,17 @@ namespace fcmd.SettingsWindowTabs
 			layout.Add(txtThemePath,1,0);
 
 			chkUseThemes.Toggled+=(o,ea)=>{ txtThemePath.Sensitive = (chkUseThemes.State == CheckBoxState.On ? true : false); };
+
+			Localizator.LocalizationChanged += Localizator_LocalizationChanged;
+			Localizator_LocalizationChanged(null, null);
 		}
 
-		public Xwt.Widget Content
+		void Localizator_LocalizationChanged(object sender, System.EventArgs e)
+		{
+			chkUseThemes.Label = Localizator.GetString("SWTMWTusethemes");
+		}
+
+		public Widget Content
 		{
 			get { return layout; }
 		}
@@ -52,7 +56,7 @@ namespace fcmd.SettingsWindowTabs
 		public bool SaveSettings()
 		{
 			if (txtThemePath.Text.Length == 0 || chkUseThemes.State == CheckBoxState.Off)
-				fcmd.Properties.Settings.Default.UserTheme = null;
+				Settings.Default.UserTheme = null;
 
 			return true;
 		}

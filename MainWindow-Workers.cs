@@ -87,8 +87,8 @@ namespace fcmd
 			NewFile.Path = DestinationURL;
 
 			if (SourceFile.Path == DestinationURL){
-				string itself = Locale.GetString("CantCopySelf");
-				string toshow = string.Format(Locale.GetString("CantCopy"), SourceFile.Name, itself);
+				string itself = Localizator.GetString("CantCopySelf");
+				string toshow = string.Format(Localizator.GetString("CantCopy"), SourceFile.Name, itself);
 				
 				Xwt.Application.Invoke(delegate { Xwt.MessageDialog.ShowWarning(toshow); });
 				//calling the msgbox in non-main threads causes some UI bugs, so push this call into main thread
@@ -171,7 +171,7 @@ namespace fcmd
 			catch (Exception ex)
 			{
 				if (ex.GetType() != typeof(System.Threading.ThreadAbortException)) { 
-					Utilities.ShowMessage(string.Format(Locale.GetString("CantCopy"),SourceFile.Name,ex.Message));
+					Utilities.ShowMessage(string.Format(Localizator.GetString("CantCopy"),SourceFile.Name,ex.Message));
 					Console.WriteLine("Cannot copy because of {0}({1}) at \n{2}.", ex.GetType(), ex.Message, ex.StackTrace);
 				}
 			}
@@ -236,7 +236,7 @@ namespace fcmd
 			}
 			catch (pluginner.ThisDirCannotBeRemovedException)
 			{
-				new MsgBox(url, string.Format(Locale.GetString("DirCantBeRemoved"), url), MsgBox.MsgBoxType.Warning);
+				new MsgBox(url, string.Format(Localizator.GetString("DirCantBeRemoved"), url), MsgBox.MsgBoxType.Warning);
 			}
 			catch (Exception err)
 			{

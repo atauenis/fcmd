@@ -6,10 +6,8 @@
  * Contributors should place own signs here.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using fcmd.Properties;
+using Xwt;
 
 namespace fcmd.SettingsWindowTabs
 {
@@ -18,40 +16,29 @@ namespace fcmd.SettingsWindowTabs
 	/// </summary>
 	class swtMainWindow : ISettingsWindowTab
 	{
-		Xwt.VBox box = new Xwt.VBox();
-		Localizator Locale = new Localizator();
+		VBox box = new VBox();
 		
-		Xwt.Frame fraMain = new Xwt.Frame();
-		Xwt.VBox fraMainBox = new Xwt.VBox();
-		Xwt.CheckBox chkShowToolBar = new Xwt.CheckBox {Sensitive = false};
-		Xwt.CheckBox chkDiskButtons = new Xwt.CheckBox(); //ok
-		Xwt.CheckBox chkDiskListBox = new Xwt.CheckBox { Sensitive = false };
-		Xwt.CheckBox chkPanelTitle = new Xwt.CheckBox(); //ok
-		Xwt.CheckBox chkTableCollumns = new Xwt.CheckBox();//ok
-		Xwt.CheckBox chkInfoBar = new Xwt.CheckBox();//ok
-		Xwt.CheckBox chkCmdLine = new Xwt.CheckBox { Sensitive = false };
-		Xwt.CheckBox chkKeybHelp = new Xwt.CheckBox();//ok
-		Xwt.Label lblBookmarks = new Xwt.Label();
-		Xwt.TextEntry txtBookmarks = new Xwt.TextEntry();
-		Xwt.Label lblLanguage = new Xwt.Label();
-		Xwt.ComboBox cbxLanguage = new Xwt.ComboBox();
+		Frame fraMain = new Frame();
+		VBox fraMainBox = new VBox();
+		CheckBox chkShowToolBar = new CheckBox {Sensitive = false};
+		CheckBox chkDiskButtons = new CheckBox(); //ok
+		CheckBox chkDiskListBox = new CheckBox { Sensitive = false };
+		CheckBox chkPanelTitle = new CheckBox(); //ok
+		CheckBox chkTableCollumns = new CheckBox();//ok
+		CheckBox chkInfoBar = new CheckBox();//ok
+		CheckBox chkCmdLine = new CheckBox { Sensitive = false };
+		CheckBox chkKeybHelp = new CheckBox();//ok
+		Label lblBookmarks = new Label();
+		TextEntry txtBookmarks = new TextEntry();
+		Label lblLanguage = new Label();
+		ComboBox cbxLanguage = new ComboBox();
 
 		public swtMainWindow()
 		{
+			Localizator.LocalizationChanged += Localizator_LocalizationChanged;
 			box.PackStart(fraMain);
 			fraMain.Content = fraMainBox;
-			fraMain.Label = Locale.GetString("swtMainWindow");
-
-			chkShowToolBar.Label = Locale.GetString("SWTMWtoolbar");
-			chkDiskButtons.Label = Locale.GetString("SWTMWdiskbuttons");
-			chkDiskListBox.Label = Locale.GetString("SWTMWdisklistbox");
-			chkPanelTitle.Label = Locale.GetString("SWTMWpaneltitle");
-			chkTableCollumns.Label = Locale.GetString("SWTMWtablecollumns");
-			chkInfoBar.Label = Locale.GetString("SWTMWinfobar");
-			chkCmdLine.Label = Locale.GetString("SWTMWcmdline");
-			chkKeybHelp.Label = Locale.GetString("SWTMWkeybhelp");
-			lblBookmarks.Text = Locale.GetString("SWTMWbookmars");
-			lblLanguage.Text = Locale.GetString("SWTMWlanguage");
+			Localizator_LocalizationChanged(null,null);
 
 			chkDiskButtons.State = CBSfromBool(Settings.Default.ShowDiskList);
 			chkPanelTitle.State = CBSfromBool(Settings.Default.ShowPanelUrlbox);
@@ -79,6 +66,22 @@ namespace fcmd.SettingsWindowTabs
 			fraMainBox.PackStart(cbxLanguage);
 		}
 
+		void Localizator_LocalizationChanged(object sender, EventArgs e)
+		{
+			fraMain.Label = Localizator.GetString("swtMainWindow");
+
+			chkShowToolBar.Label = Localizator.GetString("SWTMWtoolbar");
+			chkDiskButtons.Label = Localizator.GetString("SWTMWdiskbuttons");
+			chkDiskListBox.Label = Localizator.GetString("SWTMWdisklistbox");
+			chkPanelTitle.Label = Localizator.GetString("SWTMWpaneltitle");
+			chkTableCollumns.Label = Localizator.GetString("SWTMWtablecollumns");
+			chkInfoBar.Label = Localizator.GetString("SWTMWinfobar");
+			chkCmdLine.Label = Localizator.GetString("SWTMWcmdline");
+			chkKeybHelp.Label = Localizator.GetString("SWTMWkeybhelp");
+			lblBookmarks.Text = Localizator.GetString("SWTMWbookmars");
+			lblLanguage.Text = Localizator.GetString("SWTMWlanguage");
+		}
+
 		public bool SaveSettings() {
 			try
 			{
@@ -90,36 +93,36 @@ namespace fcmd.SettingsWindowTabs
 				Settings.Default.BookmarksFile = txtBookmarks.Text;
 				string old_language = Settings.Default.Language, new_language = (string)(cbxLanguage.SelectedItem);
 				Settings.Default.Language = new_language;
-				if (old_language != new_language) {
-					Xwt.MessageDialog.ShowMessage("Application will be closed to apply changes, launch it again!");
-					Xwt.Application.Exit();
+				if (old_language != new_language)
+				{
+					Localizator.LoadLanguage(new_language, false);
 				}
 				return true;
 			}
-			catch(Exception ex) { Xwt.MessageDialog.ShowError(ex.Message) ;  return false; }
+			catch(Exception ex) { MessageDialog.ShowError(ex.Message) ;  return false; }
 		}
 
-		public Xwt.Widget Content
+		public Widget Content
 		{
 			get { return box; }
 		}
 
 		/// <summary>Converts boolean values into Xwt.CheckBoxState</summary>
-		private Xwt.CheckBoxState CBSfromBool (bool Bulevo)
+		private CheckBoxState CBSfromBool (bool Bulevo)
 		{
 			switch (Bulevo){
-				case true: return Xwt.CheckBoxState.On;
-				case false: return Xwt.CheckBoxState.Off;
+				case true: return CheckBoxState.On;
+				case false: return CheckBoxState.Off;
 			}
-			return Xwt.CheckBoxState.Mixed; //fallback
+			return CheckBoxState.Mixed; //fallback
 		}
 
 		/// <summary>Converts Xwt.CheckBox selection status into boolean value</summary>
-		private bool BoolFromCBX(Xwt.CheckBox CBX)
+		private bool BoolFromCBX(CheckBox CBX)
 		{
 			switch (CBX.State){
-				case Xwt.CheckBoxState.On: return true;
-				case Xwt.CheckBoxState.Off: return false;
+				case CheckBoxState.On: return true;
+				case CheckBoxState.Off: return false;
 			}
 			return false; //fallback
 		}

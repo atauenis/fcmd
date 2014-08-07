@@ -5,37 +5,37 @@
  * Contributors should place own signs here.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using pluginner.Toolkit;
 
 namespace fcmd
 {
 	class VEsettings : Xwt.Dialog
 	{
-		Localizator Locale = new Localizator();
-		Stylist s = new Stylist(fcmd.Properties.Settings.Default.UserTheme);
 		Xwt.VBox Layout = new Xwt.VBox();
 		Xwt.CheckBox chkShowToolbar = new Xwt.CheckBox();
 		Xwt.CheckBox chkShowCmdBar = new Xwt.CheckBox();
 		public VEsettings()
 		{
-			this.Title = Locale.GetString("FCVES_Title");
 			this.Content = Layout;
 			this.Buttons.Add(new Xwt.Command("Ok"), new Xwt.Command("Cancel"));
 			this.Buttons[0].Clicked += (o, ea) => { Save(); };
 			this.Buttons[1].Clicked += (o, ea) => { this.Hide(); };
 
-			chkShowToolbar.Label = Locale.GetString("FCVES_ShowToolbar");
 			chkShowToolbar.State = CBSfromBool(Properties.Settings.Default.VE_ShowToolbar);
 
-			chkShowCmdBar.Label = Locale.GetString("FCVES_ShowCmdBar");
 			chkShowCmdBar.State = CBSfromBool(Properties.Settings.Default.VE_ShowCmdBar);
 			
 			Layout.PackStart(chkShowToolbar);
 			Layout.PackStart(chkShowCmdBar);
-			
+
+			Localizator.LocalizationChanged += Localizator_LocalizationChanged;
+			Localizator_LocalizationChanged(null,null);
+		}
+
+		void Localizator_LocalizationChanged(object sender, EventArgs e)
+		{
+			this.Title = Localizator.GetString("FCVES_Title");
+			chkShowToolbar.Label = Localizator.GetString("FCVES_ShowToolbar");
+			chkShowCmdBar.Label = Localizator.GetString("FCVES_ShowCmdBar");
 		}
 
 		private void Save()

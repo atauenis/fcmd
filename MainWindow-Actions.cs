@@ -39,7 +39,7 @@ namespace fcmd
 			if (!fs.FileExists(url))
 			{
 				//MessageBox.Show(string.Format(locale.GetString("FileNotFound"), ActivePanel.list.SelectedItems[0].Text), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-				Xwt.MessageDialog.ShowError(string.Format(Locale.GetString("FileNotFound"),ActivePanel.GetValue(ActivePanel.dfDisplayName)));
+				Xwt.MessageDialog.ShowError(string.Format(Localizator.GetString("FileNotFound"),ActivePanel.GetValue(ActivePanel.dfDisplayName)));
 				return;
 			}
 
@@ -70,7 +70,7 @@ namespace fcmd
 		public void MkDir(string url)
 		{
 			FileProcessDialog fpd = new FileProcessDialog();
-			fpd.lblStatus.Text = string.Format(Locale.GetString("DoingMkdir"), "\n" + url, null);
+			fpd.lblStatus.Text = string.Format(Localizator.GetString("DoingMkdir"), "\n" + url, null);
 			fpd.Show();
 
 			Thread MkDirThread = new Thread(delegate() { ActivePanel.FS.CreateDirectory(url); });
@@ -105,13 +105,13 @@ namespace fcmd
 			if (ActivePanel.GetValue<string>(ActivePanel.dfDisplayName) == "..") { return "Cannot remove .."; }
 
 			if (!Xwt.MessageDialog.Confirm(
-				String.Format(Locale.GetString("FCDelAsk"), url, null),
+				String.Format(Localizator.GetString("FCDelAsk"), url, null),
 				Xwt.Command.Remove,
 				true))
-			{ return Locale.GetString("Canceled"); };
+			{ return Localizator.GetString("Canceled"); };
 
 			FileProcessDialog fpd = new FileProcessDialog();
-			fpd.lblStatus.Text = String.Format(Locale.GetString("DoingRemove"), "\n" + url, null);
+			fpd.lblStatus.Text = String.Format(Localizator.GetString("DoingRemove"), "\n" + url, null);
 			fpd.cmdCancel.Sensitive = false;
 			fpd.Show();
 
@@ -132,7 +132,7 @@ namespace fcmd
 			}
 			if (fsdel.DirectoryExists(curItemDel))
 			{
-				fpd.lblStatus.Text = String.Format(Locale.GetString("DoingRemove"), "\n" + url, "\n[" + Locale.GetString("Directory").ToUpper() + "]");
+				fpd.lblStatus.Text = String.Format(Localizator.GetString("DoingRemove"), "\n" + url, "\n[" + Localizator.GetString("Directory").ToUpper() + "]");
 				fpd.pbrProgress.Fraction = 0.5;
 				Thread RmDirThread = new Thread(delegate() { DoRmDir(curItemDel, fsdel); });
 				RmDirThread.Start();
@@ -168,11 +168,11 @@ namespace fcmd
                 //check for file existing
                 if (SourceFS.FileExists(SourceURL))
                 {
-                    InputBox ibx = new InputBox(String.Format(Locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + PassivePanel.FS.DirSeparator + SourceFile.Name);
+                    InputBox ibx = new InputBox(String.Format(Localizator.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + PassivePanel.FS.DirSeparator + SourceFile.Name);
                     if (ibx.ShowDialog(this))
                     {
                         String DestinationFilePath = ibx.Result;
-                        string StatusMask = Locale.GetString("DoingCopy");
+                        string StatusMask = Localizator.GetString("DoingCopy");
 
                         ReplaceQuestionDialog.ClickedButton dummy = ReplaceQuestionDialog.ClickedButton.Cancel;
                         AsyncCopy AC = new AsyncCopy();
@@ -182,9 +182,9 @@ namespace fcmd
                         FileProcessDialog fpd = new FileProcessDialog();
                         fpd.InitialLocation = Xwt.WindowLocation.CenterParent;
                         fpd.lblStatus.Text = String.Format(StatusMask, ActivePanel.GetValue<string>(ActivePanel.dfURL), ibx.Result, null);
-                        fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
+                        fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(Localizator.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
 
-                        AC.ReportMessage = Locale.GetString("CopyStatus");
+                        AC.ReportMessage = Localizator.GetString("CopyStatus");
                         AC.OnProgress += (msg, proc) =>
                         {
                             Xwt.Application.Invoke(
@@ -217,7 +217,7 @@ namespace fcmd
                 //not a file...maybe directory?
                 if (SourceFS.DirectoryExists(SourceURL))//а вдруг есть такой каталог?
                 {
-                    InputBox ibxd = new InputBox(String.Format(Locale.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + "/" + SourceFile.Name);
+                    InputBox ibxd = new InputBox(String.Format(Localizator.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + "/" + SourceFile.Name);
 
                     if (ibxd.ShowDialog())
                     {
@@ -228,8 +228,8 @@ namespace fcmd
 
                         FileProcessDialog CpDirProgressDialog = new FileProcessDialog();
                         CpDirProgressDialog.InitialLocation = Xwt.WindowLocation.CenterParent;
-                        CpDirProgressDialog.lblStatus.Text = String.Format(Locale.GetString("DoingCopy"), "\n" + ActivePanel.GetValue<string>(ActivePanel.dfURL) + " [" + Locale.GetString("Directory") + "]\n", ibxd.Result, null);
-                        CpDirProgressDialog.cmdCancel.Clicked += (object s, EventArgs e) => { CpDirThread.Abort(); new MsgBox(Locale.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
+                        CpDirProgressDialog.lblStatus.Text = String.Format(Localizator.GetString("DoingCopy"), "\n" + ActivePanel.GetValue<string>(ActivePanel.dfURL) + " [" + Localizator.GetString("Directory") + "]\n", ibxd.Result, null);
+                        CpDirProgressDialog.cmdCancel.Clicked += (object s, EventArgs e) => { CpDirThread.Abort(); new MsgBox(Localizator.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
 
                         CpDirProgressDialog.Show();
                         CpDirThread.Start();
@@ -245,7 +245,7 @@ namespace fcmd
                 }
                 //and, if none of those IF blocks has been entered, say that this isn't a real file nor a directory
                 Xwt.MessageDialog.ShowWarning(
-                    Locale.GetString("FileNotFound"),
+                    Localizator.GetString("FileNotFound"),
                     ActivePanel.GetValue<string>(
                         ActivePanel.dfURL
                     )
@@ -274,7 +274,7 @@ namespace fcmd
 
                 InputBox ibx = new InputBox
                     (
-                    string.Format(Locale.GetString("MoveTo"), SourceName),
+                    string.Format(Localizator.GetString("MoveTo"), SourceName),
                     DestinationPath
                     );
                 if (ibx.ShowDialog())
@@ -297,8 +297,8 @@ namespace fcmd
 
                 if (SourcePath == DestinationPath)
                 {
-                    string itself = Locale.GetString("CantCopySelf");
-                    string toshow = string.Format(Locale.GetString("CantMove"), SourcePath, itself);
+                    string itself = Localizator.GetString("CantCopySelf");
+                    string toshow = string.Format(Localizator.GetString("CantMove"), SourcePath, itself);
 
                     Xwt.Application.Invoke(delegate { Xwt.MessageDialog.ShowWarning(toshow); });
                     //calling the msgbox in non-main threads causes some UI bugs, thus pushing this call into main thread

@@ -15,7 +15,7 @@ namespace fcmd.base_plugins.ve
 	class PlainText : pluginner.IVEPlugin
 	{
 		#region Metadata
-		public string Name { get { return new Localizator().GetString("VEptxtVer"); } }
+		public string Name { get { return Localizator.GetString("VEptxtVer"); } }
 		public string Version { get { return System.Windows.Forms.Application.ProductVersion; } }
 		public string Author { get { return "Alexander Tauenis"; } }
 		public System.Configuration.Configuration FCConfig { set { } } //it can be a placeholder because the PT can use the fcmd.Properties.Settings...

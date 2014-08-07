@@ -49,7 +49,7 @@ namespace fcmd
 			}
 			VEPlugins.Add(
 			@"<?xml ;(internal)PlainXml;XML\n"+
-			".*;(internal)PlainText;" + new Localizator().GetString("FCVViewModeText")); //зырилки по-умолчанию в конец списка
+			".*;(internal)PlainText;" + Localizator.GetString("FCVViewModeText")); //зырилки по-умолчанию в конец списка
 
 		}
 

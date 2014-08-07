@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms.VisualStyles;
 using Xwt;
 using Xwt.Drawing;
 
@@ -447,6 +448,7 @@ namespace pluginner.Widgets
 			set {
 				_Collumns.Clear();
 				CollumnTitles.Clear();
+				CollumnRow.Clear();
 				foreach (CollumnInfo ci in value)
 				{
 					_Collumns.Add(ci);

@@ -10,10 +10,15 @@ using fcmd.Properties;
 
 namespace fcmd
 {
-	class Localizator{
-		public Localizator() {
+	public static class Localizator{
+		static Localizator() {
 			LoadLanguage(Settings.Default.Language);
 		}
+
+		/// <summary>
+		/// Fires when the current localization file is replaced with other language file (from the Settings window)
+		/// </summary>
+		public static event EventHandler LocalizationChanged;
 		
 		static Dictionary<string, string> Localization = new Dictionary<string, string>();
 
@@ -21,8 +26,8 @@ namespace fcmd
 		
 		/// <summary>Get a string that corresponds the key in the dictionary</summary>
 		/// <param name="Key">The string name (see Localizator.cs for the list of they)</param>
-		public string GetString(string Key){
-			if(Localization == null) throw new InvalidOperationException("The Localizator is not fed with a language file!");
+		public static string GetString(string Key){
+			if(Localization == null) throw new InvalidOperationException("No localization file loaded!");
 			try {
 				return Localization[Key];
 			}
@@ -30,11 +35,13 @@ namespace fcmd
 		}
 
 		/// <summary>Load the requested localization file</summary>
-		public void LoadLanguage(string url) {
-			url = url.Trim();
-			if (CurrentDictionary == url) return; //the dictionary is already loaded
-			if (url.StartsWith("(internal)")) {
-				switch(url)
+		/// <param name="URL">The URL of the localization file</param>
+		/// <param name="UseCache">Enable using of cross-instace cache of current localization (set to <value>false</value> if the locale should be reloaded into the cache)</param>
+		public static void LoadLanguage(string URL, bool UseCache = true) {
+			URL = URL.Trim();
+			if (UseCache && CurrentDictionary == URL) return; //the dictionary is already loaded
+			if (URL.StartsWith("(internal)")) {
+				switch(URL)
 				{
 					case "(internal)ru_RU":
 						ParseLangFile(Resources.lang_RusUI.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
@@ -45,9 +52,9 @@ namespace fcmd
 				}
 			}
 			else {
-				ParseLangFile(System.IO.File.ReadAllLines(url));
+				ParseLangFile(System.IO.File.ReadAllLines(URL));
 			}
-			CurrentDictionary = url;
+			CurrentDictionary = URL;
 		}
 
 		/// <summary>Load the strings form the language file body into the memory</summary>
@@ -68,6 +75,8 @@ namespace fcmd
 					Console.WriteLine(@"An error occured when parsing the language file. The invalid string is ""{0}"". It caused an error of type {1}.", UIFRow, ex.Message);
 				}
 			}
+			
+			if(LocalizationChanged != null) LocalizationChanged(null,EventArgs.Empty);
 		}
 	}
 }
