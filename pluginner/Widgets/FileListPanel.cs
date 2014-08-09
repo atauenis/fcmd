@@ -299,18 +299,25 @@ namespace pluginner.Widgets
 			{
 				if (FS.DirectoryExists(url))
 				{//it's directory
-					if (Navigate != null) Navigate(url); //raise event
-					else Console.WriteLine("WARNING: the event FLP.Navigate was not handled by the host");
+					var navigate = Navigate;
+					if (navigate != null) {
+						navigate(url); //raise event
+					} else {
+						Console.WriteLine("WARNING: the event FLP.Navigate was not handled by the host");
+					}
 
 					LoadDir(url);
 					return;
 				}
 				else
 				{//it's file
-					if (OpenFile != null) OpenFile(url); //raise event
-					else Console.WriteLine("WARNING: the event FLP.OpenFile was not handled by the host");
+					var openFile = OpenFile;
+					if (openFile != null) {
+						openFile(url); //raise event
+					} else {
+						Console.WriteLine("WARNING: the event FLP.OpenFile was not handled by the host");
+					}
 				}
-
 			}
 			catch (PleaseSwitchPluginException)
 			{
@@ -451,7 +458,7 @@ namespace pluginner.Widgets
 		
 		}
 
-		void FS_StatusChanged(string data)
+		private void FS_StatusChanged(string data)
 		{
 			if (data.Length == 0)
 				WriteDefaultStatusLabel();
@@ -459,7 +466,7 @@ namespace pluginner.Widgets
 				StatusBar.Text = data;
 		}
 
-		void FS_ProgressChanged(double data)
+		private void FS_ProgressChanged(double data)
 		{
 			if (data > 0 && data <= 1){
 				StatusProgressbar.Visible = true;
@@ -614,7 +621,7 @@ namespace pluginner.Widgets
 				DiskList.PackStart(NewBtn);
 			}
 		}
-		
+
 		/// <summary>Add buttons of mounted medias (*nix)</summary>
 		private void AddLinuxMounts()
 		{
@@ -663,8 +670,5 @@ namespace pluginner.Widgets
 			}
 			return txt;
 		}
-
-
-
 	}
 }

@@ -3,6 +3,7 @@
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * (С) 2014, Zhigunov Andrew (breakneck11@gmail.com)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -26,9 +27,25 @@ namespace fcmd.base_plugins.fs
 		public string Author { get{return "A.T.";} }
 		public System.Configuration.Configuration FCConfig { set {} } //it can be a placeholder because the LFS can use the fcmd.Properties.Settings...
 		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
-		public event pluginner.TypedEvent<String> StatusChanged;
+		public event pluginner.TypedEvent<string> StatusChanged;
 		public event pluginner.TypedEvent<double> ProgressChanged;
 		public event pluginner.TypedEvent<object[]> APICallHost;
+
+		protected void RaiseProgressChanged(double data)
+		{
+			var handler = ProgressChanged;
+			if (handler != null) {
+				handler(data);
+			}
+		}
+
+		protected void RaiseStatusChanged(string data)
+		{
+			var handler = StatusChanged;
+			if (handler != null) {
+				handler(data);
+			}
+		}
 
 		List<pluginner.DirItem> DirContent = new List<pluginner.DirItem>();
 		string CurDir;
@@ -66,7 +83,7 @@ namespace fcmd.base_plugins.fs
 			_CheckProtocol(url);
 			DirContent.Clear();
 			string InternalURL = url.Replace("file://", "");
-			if (StatusChanged != null) StatusChanged(string.Format(Localizator.GetString("DoingListdir"), "", InternalURL));
+			RaiseStatusChanged(string.Format(Localizator.GetString("DoingListdir"), "", InternalURL));
 
 			pluginner.DirItem tmpVar = new pluginner.DirItem();
 
@@ -110,7 +127,7 @@ namespace fcmd.base_plugins.fs
 
 				DirContent.Add(tmpVar);
 				Progress += FileWeight;
-				if (ProgressChanged != null) { ProgressChanged(Progress); }
+				RaiseProgressChanged(Progress);
 				if ((++counter & update_every) == 0) {
 					Xwt.Application.MainLoop.DispatchPendingEvents(); 
 				}
@@ -138,19 +155,17 @@ namespace fcmd.base_plugins.fs
 
 				DirContent.Add(tmpVar);
 				Progress += FileWeight;
-				if (ProgressChanged != null && Progress <= 1) { ProgressChanged(Progress); }
+				if (Progress <= 1) {
+					RaiseProgressChanged(Progress);
+				}
 				if ((++counter & update_every) == 0) {
 					Xwt.Application.MainLoop.DispatchPendingEvents();
 				}
 			}
-			if (ProgressChanged != null) { ProgressChanged(2); }
-			if (StatusChanged != null) { StatusChanged(""); };
+			RaiseProgressChanged(2);
+			RaiseStatusChanged("");
 
-
-			if (CLIpromptChanged != null)
-			{
-				CLIpromptChanged("FC: " + InternalURL + ">");
-			}
+			RaiseCLIpromptChanged("FC: " + InternalURL + ">");
 		}
 
 		public bool CanBeRead(string url){ //проверить файл/папку "URL" на читаемость
@@ -421,14 +436,12 @@ namespace fcmd.base_plugins.fs
 		private void SetFeedback(double Progress = double.MinValue, string Status = null)
 		{
 			if (Progress != double.MinValue){
-				if (ProgressChanged != null) ProgressChanged(Progress);
+				RaiseProgressChanged(Progress);
 			}
 
 			if (Status != null){
-				if (StatusChanged != null) StatusChanged(Status);
+				RaiseStatusChanged(Status);
 			}
 		}
-
 	}
 }
-

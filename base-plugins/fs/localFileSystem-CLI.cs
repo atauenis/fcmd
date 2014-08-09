@@ -2,6 +2,7 @@
  * The command line helper
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -17,6 +18,22 @@ namespace fcmd.base_plugins.fs
 		public event pluginner.TypedEvent<string> CLIstdoutDataReceived;
 		public event pluginner.TypedEvent<string> CLIstderrDataReceived;
 		public event pluginner.TypedEvent<string> CLIpromptChanged;
+
+		protected void RaiseCLIpromptChanged(string data)
+		{
+			var handler = CLIpromptChanged;
+			if (handler != null) {
+				handler(data);
+			}
+		}
+
+		protected void RaiseCLIstderrDataReceived(string data)
+		{
+			var handler = CLIstderrDataReceived;
+			if (handler != null) {
+				handler(data);
+			}
+		}
 
 		Process CLIproc = new Process();
 		Boolean CLIsomethingIsRunning = false;
@@ -44,8 +61,7 @@ namespace fcmd.base_plugins.fs
 					CLIproc = Process.Start(psi);
 					string procname = CLIproc.ProcessName;
 					Console.WriteLine("Started: " + procname);
-					if (CLIpromptChanged != null)
-						CLIpromptChanged("FC: " + procname + ">");
+					RaiseCLIpromptChanged("FC: " + procname + ">");
 					CLIproc.EnableRaisingEvents = true;
 					CLIproc.OutputDataReceived += CLIproc_OutputDataReceived;
 					CLIproc.ErrorDataReceived += CLIproc_ErrorDataReceived;
@@ -55,52 +71,64 @@ namespace fcmd.base_plugins.fs
 					while (!CLIproc.HasExited)
 					{
 						try
-						{ Xwt.Application.MainLoop.DispatchPendingEvents(); }
-						catch { } //for incresing stability on systems with bad RAM
+						{
+							Xwt.Application.MainLoop.DispatchPendingEvents();
+						}
+						catch {
+							//for incresing stability on systems with bad RAM
+						}
 					}
 					CLIsomethingIsRunning = false;
 					Console.WriteLine("Stopped: " + procname);
-					if (CLIpromptChanged != null)
-						CLIpromptChanged("FC: " + CurrentDirectory.Replace("file://","") + ">");
+					RaiseCLIpromptChanged("FC: " + CurrentDirectory.Replace("file://","") + ">");
 				}
 				catch (Exception ex)
 				{
 					CLIsomethingIsRunning = false;
-					if (CLIstderrDataReceived != null)
-					CLIstderrDataReceived(Localizator.GetString("CantRunEXE") + StdIn + "\n" + ex.Message);
+					RaiseCLIstderrDataReceived(Localizator.GetString ("CantRunEXE") + StdIn + "\n" + ex.Message);
 					//todo: add at win32 systems calling "cmd.exe /C" if the program can't start
 				}
 			}
-			else{
+			else {
 				CLIproc.StandardInput.WriteLine(StdIn);
 			}
 		}
 
-		void CLIproc_Exited(object sender, EventArgs e)
+		private void CLIproc_Exited(object sender, EventArgs e)
 		{
 			CLIsomethingIsRunning = false;
 			CLIproc.EnableRaisingEvents = false;//на всякий случай :-)
 		}
-		
-		void CLIproc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+
+		private void CLIproc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
 		{
-			if (CLIproc.HasExited || e.Data == null) return;
-			if (CLIstderrDataReceived != null) CLIstderrDataReceived(e.Data);
-			else
-				Xwt.Application.Invoke(delegate { Xwt.MessageDialog.ShowWarning(CLIproc.ProcessName, e.Data); });
+			if (CLIproc.HasExited || e.Data == null) {
+				return;
+			}
+
+			var _CLIstderrDataReceived = CLIstderrDataReceived;
+			if (_CLIstderrDataReceived != null) {
+				_CLIstderrDataReceived(e.Data);
+				return;
+			}
+
+			Xwt.Application.Invoke(() => Xwt.MessageDialog.ShowWarning(CLIproc.ProcessName, e.Data));
 		}
 
-		void CLIproc_OutputDataReceived(object sender, DataReceivedEventArgs e)
+		private void CLIproc_OutputDataReceived(object sender, DataReceivedEventArgs e)
 		{
-			if (CLIstdoutDataReceived != null) CLIstdoutDataReceived(e.Data);
-			else
-				try
-				{
-					Console.WriteLine("STDOUT of " + CLIproc.ProcessName + ": " + e.Data + "\n");
-				}
-				catch (InvalidOperationException)
-				{ /*do nothing, perhaps the data came later than the process was ended*/
-				}
+			var _CLIstdoutDataReceived = CLIstdoutDataReceived;
+			if (_CLIstdoutDataReceived != null) {
+				_CLIstdoutDataReceived(e.Data);
+				return;
+			}
+
+			try {
+				Console.WriteLine ("STDOUT of " + CLIproc.ProcessName + ": " + e.Data + "\n");
+			}
+			catch (InvalidOperationException) {
+				/*do nothing, perhaps the data came later than the process was ended*/
+			}
 		}
 	}
 }

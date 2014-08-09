@@ -2,6 +2,7 @@
  * Asynchronous file copier
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -15,7 +16,7 @@ namespace fcmd
 	//based on the algorithm from http://krez0n.org.ua/archives/820
 
 	/// <summary>Asynchronous file copy worker</summary>
-	class AsyncCopy
+	internal class AsyncCopy
 	{
 		public delegate void Complete(bool successfull);
 		public delegate void Progress(string message, int percent);
@@ -25,9 +26,16 @@ namespace fcmd
 		/// <summary>Copy progress changed</summary>
 		public event Progress OnProgress;
 
+		protected void RaiseOnComplete (bool successfull)
+		{
+			var handler = OnComplete;
+			if (handler != null) {
+				handler (successfull);
+			}
+		}
+
 		/// <summary>The template of the messages about the process status</summary>
-		public string ReportMessage
-		{ get; set; }
+		public string ReportMessage { get; set; }
 
 		/// <summary>Copy a file asynchronus</summary>
 		/// <param name="sourceStream">The IO Stream containing the source data</param>
@@ -39,7 +47,6 @@ namespace fcmd
 
 			try
 			{
-
 				Byte[] streamBuffer = new Byte[BufferLenght];
 				long totalBytesRead = 0;
 				int numReads = 0;
@@ -76,13 +83,11 @@ namespace fcmd
 					}
 				}
 
-				if (OnComplete != null)
-					OnComplete(true);
+				RaiseOnComplete(true);
 			}
 			catch
 			{
-				if (OnComplete != null)
-					OnComplete(false);
+				RaiseOnComplete(false);
 				throw;
 			}
 		}
@@ -99,10 +104,9 @@ namespace fcmd
 					 sLenght/1024,
 					 (int)(HowMuchDone * 100));
 
-			if (OnProgress != null && !double.IsNaN(HowMuchDone))
-				OnProgress(message, (int)(HowMuchDone * 100));
+			var onProgress = OnProgress;
+			if (onProgress != null && !double.IsNaN(HowMuchDone))
+				onProgress(message, (int)(HowMuchDone * 100));
 		}
-
-
 	}
 }

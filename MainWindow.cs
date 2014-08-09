@@ -38,7 +38,6 @@ namespace fcmd
 		Xwt.MenuItem mnuFileInvertSelection = new Xwt.MenuItem { Tag = "mnuFileInvertSelection" };
 		Xwt.MenuItem mnuFileExit = new Xwt.MenuItem { Tag = "mnuFileExit" };
 
-
 		Xwt.MenuItem mnuView = new Xwt.MenuItem { Tag="mnuView" };
 		Xwt.MenuItem mnuViewShort = new Xwt.MenuItem { Tag="mnuViewShort" };
 		Xwt.MenuItem mnuViewDetails = new Xwt.MenuItem { Tag="mnuViewDetails" };
@@ -54,7 +53,6 @@ namespace fcmd
 		Xwt.MenuItem mnuViewBySize = new Xwt.MenuItem { Tag="mnuViewBySize" };
 		Xwt.MenuItem mnuViewNoFilter = new Xwt.MenuItem { Tag="mnuViewNoFilter" };
 		Xwt.MenuItem mnuViewWithFilter = new Xwt.MenuItem { Tag="mnuViewWithFilter" };
-
 
 		Xwt.MenuItem mnuNavigate = new Xwt.MenuItem { Tag="mnuNav" };
 		Xwt.MenuItem mnuNavigateTree = new Xwt.MenuItem { Tag="mnuNavigateTree" };
@@ -80,7 +78,6 @@ namespace fcmd
 		Xwt.MenuItem mnuHelpDebug = new Xwt.MenuItem { Tag="mnuHelpDebug" };
 		Xwt.MenuItem mnuHelpAbout = new Xwt.MenuItem { Tag = "mnuHelpAbout" };
 
-
 		Xwt.VBox Layout = new Xwt.VBox();
 		Xwt.HPaned PanelLayout = new Xwt.HPaned();
 
@@ -88,7 +85,7 @@ namespace fcmd
 		FileListPanel p2;
 
 		List<ListView2.CollumnInfo> LVCols = new List<ListView2.CollumnInfo>();
-		
+
 		/// <summary>The current active panel</summary>
 		FileListPanel ActivePanel;
 		/// <summary>The current inactive panel</summary>
@@ -96,7 +93,6 @@ namespace fcmd
 
 		Xwt.HBox KeyBoardHelp = new Xwt.HBox();
 		KeyboardHelpButton[] KeybHelpButtons = new KeyboardHelpButton[11];//одна лишняя, которая нумбер [0]
-
 
 		public MainWindow(string[] argv)
 		{
@@ -202,7 +198,7 @@ namespace fcmd
 
 			Layout.PackStart(PanelLayout, true, Xwt.WidgetPlacement.Fill, Xwt.WidgetPlacement.Fill,0,0,0,0);
 			Layout.PackStart(KeyBoardHelp, false,Xwt.WidgetPlacement.End,Xwt.WidgetPlacement.Fill,1,3,1,2);
-						
+
 			this.Content = Layout;
 
 			//check settings
@@ -231,10 +227,11 @@ namespace fcmd
 			PanelLayout.Panel1.Content = new FileListPanel(BookmarksStore, fcmd.Properties.Settings.Default.UserTheme, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2); //Левая, правая где сторона? Улица, улица, ты, брат, пьяна!
 			PanelLayout.Panel2.Content = new FileListPanel(BookmarksStore, fcmd.Properties.Settings.Default.UserTheme, Properties.Settings.Default.InfoBarContent1, Properties.Settings.Default.InfoBarContent2);
 
-			p1 = (PanelLayout.Panel1.Content as FileListPanel);
-			p2 = (PanelLayout.Panel2.Content as FileListPanel);
-			p1.OpenFile += Panel_OpenFile;
-			p2.OpenFile += Panel_OpenFile;
+			p1 = PanelLayout.Panel1.Content as FileListPanel;
+			p2 = PanelLayout.Panel2.Content as FileListPanel;
+			var openFileHandler = new pluginner.TypedEvent<string> (Panel_OpenFile);
+			p1.OpenFile += openFileHandler;
+			p2.OpenFile += openFileHandler;
 
 			/*LVCols.Add(new ListView2.CollumnInfo { Title = "", Tag = "Icon", Width = 16, Visible = true });
 			LVCols.Add(new ListView2.CollumnInfo { Title = "URL", Tag = "Path", Width = 0, Visible = false });
@@ -255,7 +252,7 @@ namespace fcmd
 				KeybHelpButtons[i] = new KeyboardHelpButton {CanGetFocus = false};
 				KeyBoardHelp.PackStart(KeybHelpButtons[i],true,Xwt.WidgetPlacement.Fill,Xwt.WidgetPlacement.Fill,0,-6,0,-3);
 			}
-			KeybHelpButtons[1].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this,new Xwt.KeyEventArgs(Xwt.Key.F1,Xwt.ModifierKeys.None,false,0)); };
+			KeybHelpButtons[1].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F1, Xwt.ModifierKeys.None,false,0)); };
 			KeybHelpButtons[2].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F2, Xwt.ModifierKeys.None, false, 0)); };
 			KeybHelpButtons[3].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F3, Xwt.ModifierKeys.None, false, 0)); };
 			KeybHelpButtons[4].Clicked += (o, ea) => { this.PanelLayout_KeyReleased(this, new Xwt.KeyEventArgs(Xwt.Key.F4, Xwt.ModifierKeys.None, false, 0)); };
@@ -280,15 +277,17 @@ namespace fcmd
 			char[] Policies = fcmd.Properties.Settings.Default.SizeShorteningPolicy.ToCharArray();
 
 			//load last directory or the current directory if the last directory hasn't remembered
-			if (Properties.Settings.Default.Panel1URL.Length != 0)
-				p1.LoadDir(Properties.Settings.Default.Panel1URL, ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
-			else
-				p1.LoadDir("file://" + System.IO.Directory.GetCurrentDirectory(), ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
+			if (Properties.Settings.Default.Panel1URL.Length != 0) {
+				p1.LoadDir (Properties.Settings.Default.Panel1URL, ConvertSDP (Policies [0]), ConvertSDP (Policies [1]), ConvertSDP (Policies [2]));
+			} else {
+				p1.LoadDir ("file://" + System.IO.Directory.GetCurrentDirectory (), ConvertSDP (Policies [0]), ConvertSDP (Policies [1]), ConvertSDP (Policies [2]));
+			}
 
-			if (Properties.Settings.Default.Panel2URL.Length != 0)
-				p2.LoadDir(Properties.Settings.Default.Panel2URL, ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
-			else
-				p2.LoadDir("file://" + System.IO.Directory.GetCurrentDirectory(), ConvertSDP(Policies[0]), ConvertSDP(Policies[1]), ConvertSDP(Policies[2]));
+			if (Properties.Settings.Default.Panel2URL.Length != 0) {
+				p2.LoadDir (Properties.Settings.Default.Panel2URL, ConvertSDP (Policies [0]), ConvertSDP (Policies [1]), ConvertSDP (Policies [2]));
+			} else {
+				p2.LoadDir ("file://" + System.IO.Directory.GetCurrentDirectory (), ConvertSDP (Policies [0]), ConvertSDP (Policies [1]), ConvertSDP (Policies [2]));
+			}
 
 			//default panel
 			switch (fcmd.Properties.Settings.Default.LastActivePanel)
@@ -314,7 +313,7 @@ namespace fcmd
 #endif
 		}
 
-		void Localize()
+		private void Localize()
 		{
 			TranslateMenu(this.MainMenu);
 
@@ -334,7 +333,7 @@ namespace fcmd
 			p1.ListingView.Collumns = p2.ListingView.Collumns = LVCols.ToArray();
 		}
 
-		void mnuViewWithFilter_Clicked(object sender, EventArgs e)
+		private void mnuViewWithFilter_Clicked(object sender, EventArgs e)
 		{
 			string Filter = @"*.*";
 
@@ -376,12 +375,12 @@ namespace fcmd
 			}
 		}
 
-		void mnuNavigateReload_Clicked(object sender, EventArgs e)
+		private void mnuNavigateReload_Clicked(object sender, EventArgs e)
 		{
 			ActivePanel.LoadDir();
 		}
 
-		void Panel_OpenFile(string data)
+		private void Panel_OpenFile(string data)
 		{
 			if (data.StartsWith("file://") && System.IO.File.Exists(data.Replace("file://","")))
 			{
@@ -399,7 +398,7 @@ namespace fcmd
 			}//todo: else {download to HDD and open locally, if modified, upload back after closing the editor}
 		}
 
-		void ShowDebugInfo (object sender, EventArgs e)
+		private void ShowDebugInfo (object sender, EventArgs e)
 		{
 			System.Configuration.Configuration confLR = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal);
 			System.Configuration.Configuration confR = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoaming);
@@ -442,14 +441,14 @@ namespace fcmd
 			return (b == true) ? "YES" : "NO";
 		}
 
-		void mnuToolsOptions_Clicked(object sender, EventArgs e)
+		private void mnuToolsOptions_Clicked(object sender, EventArgs e)
 		{
 			new SettingsWindow().Run();
 			ActivePanel.LoadDir();
 			PassivePanel.LoadDir();
 		}
 
-		void mnuHelpAbout_Clicked(object sender, EventArgs e)
+		private void mnuHelpAbout_Clicked(object sender, EventArgs e)
 		{
 			System.Configuration.Configuration conf = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal);
 			string AboutString = string.Format(
@@ -464,7 +463,7 @@ namespace fcmd
 			Xwt.MessageDialog.ShowMessage(AboutString);
 		}
 
-		void MainWindow_CloseRequested(object sender, Xwt.CloseRequestedEventArgs args)
+		private void MainWindow_CloseRequested(object sender, Xwt.CloseRequestedEventArgs args)
 		{
 			//save settings bcos zi form is closing
 			Properties.Settings.Default.WinHeight = this.Height;
@@ -477,7 +476,7 @@ namespace fcmd
 		}
 
 		/// <summary>The entry form's keyboard keypress handler (except commandbar keypresses)</summary>
-		void PanelLayout_KeyReleased(object sender, Xwt.KeyEventArgs e)
+		private void PanelLayout_KeyReleased(object sender, Xwt.KeyEventArgs e)
 		{
 #if DEBUG
 			FileListPanel p1 = (PanelLayout.Panel1.Content as FileListPanel);

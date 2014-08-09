@@ -75,8 +75,11 @@ namespace fcmd
 					Console.WriteLine(@"An error occured when parsing the language file. The invalid string is ""{0}"". It caused an error of type {1}.", UIFRow, ex.Message);
 				}
 			}
-			
-			if(LocalizationChanged != null) LocalizationChanged(null,EventArgs.Empty);
+
+			var localizationChanged = LocalizationChanged;
+			if (localizationChanged != null) {
+				localizationChanged (null, EventArgs.Empty);
+			}
 		}
 	}
 }

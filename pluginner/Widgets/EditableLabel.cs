@@ -2,6 +2,7 @@
  * "Editable label" widget
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 
@@ -29,6 +30,7 @@ namespace pluginner.Widgets
 			l.ButtonPressed += l_ButtonPressed;
 			t.KeyPressed += t_KeyPressed;
 		}
+
 		public EditableLabel ()
 		{
 			Content = l;
@@ -37,16 +39,18 @@ namespace pluginner.Widgets
 		}
 
 		//todo: doesn't fire every time when Enter (Return) is pressing, thus it's need to be fixed. Possibly, due to XWT peculiarity (input focus doesn't sets as fully as required).
-		void t_KeyPressed(object sender, KeyEventArgs e)
+		private void t_KeyPressed(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Escape)
+			if (e.Key == Key.Escape) {
 				SetEditInput(null);
+			}
 			l.Text = t.Text;
-			if(e.Key == Key.Return)
+			if (e.Key == Key.Return) {
 				SetEditInput(false);
+			}
 		}
 
-		void l_ButtonPressed(object sender, ButtonEventArgs e)
+		private void l_ButtonPressed(object sender, ButtonEventArgs e)
 		{
 			//todo add between-clicks timeout detection, like https://github.com/atauenis/fcmd/pull/16
 			if (e.MultiplePress > 1 && IsEditable)
@@ -123,7 +127,10 @@ namespace pluginner.Widgets
 					return;
 				case false:
 					Content = l;
-					if(EditComplete != null) EditComplete(this);
+					var editComplete = EditComplete;
+					if (editComplete != null) {
+						editComplete (this);
+					}
 					return;
 			}
 		}

@@ -2,6 +2,7 @@
  * Button that to be used to suggest keyboard shortcut in main window
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -44,7 +45,6 @@ namespace fcmd
 			{ base.OnLostFocus(ea); }
 		}*/
 
-
 		HBox hb = new HBox();
 		Label lblF = new Label(); //F key
 		Label lblD = new Label(); //Description
@@ -64,11 +64,15 @@ namespace fcmd
 			s.Stylize(this,Style);
 			s.Stylize(lblF,Style+"F");
 			s.Stylize(lblD,Style+"Descr");
-			
-			lblF.ButtonPressed += (o, ea) => { if (this.Clicked != null) this.Clicked(this, ea); };
-			lblD.ButtonPressed += (o, ea)=>{ if(this.Clicked != null) this.Clicked(this, ea); };
 
-
+			var eventHandler = new EventHandler<ButtonEventArgs> ((o, ea) => {
+				var handler = this.Clicked;
+				if (handler != null) {
+					handler (this, ea);
+				}
+			});
+			lblF.ButtonPressed += eventHandler;
+			lblD.ButtonPressed += eventHandler;
 		}
 
 		/// <summary>The F-key that is associated with this KHB</summary>

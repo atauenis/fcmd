@@ -2,7 +2,8 @@
  * The enhanced ListView widget
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
- * Contributors should place own signs here.
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
+* Contributors should place own signs here.
  */
 
 using System;
@@ -77,7 +78,6 @@ namespace pluginner.Widgets
 			AllowedToPoint.Add(9);*/
 		}
 
-
 		//EVENT HANDLERS
 
 		private void Item_ButtonPressed(object sender, ButtonEventArgs e)
@@ -90,6 +90,7 @@ namespace pluginner.Widgets
 				_SelectItem(lvi);
 				return;
 			}
+
 			if (e.Button == PointerButton.Left)//left click - point & don't touch selection
 			{
 				if (lvi == PointedItem)
@@ -114,7 +115,7 @@ namespace pluginner.Widgets
 			}
 		}
 
-		void Layout_KeyPressed(object sender, KeyEventArgs e)
+		private void Layout_KeyPressed(object sender, KeyEventArgs e)
 		{
 			#if DEBUG
 				//initiated by GH issue #10, but may give a help in the future too...
@@ -152,7 +153,6 @@ namespace pluginner.Widgets
 					return;
 				}
 		}
-
 
 		//SUB-PROGRAMS
 
@@ -213,8 +213,7 @@ namespace pluginner.Widgets
 					_UnselectItem(lvi);
 					break;
 			}
-			if (SelectionChanged != null)
-				SelectionChanged(SelectedItems);
+			RaiseSelectionChanged(SelectedItems);
 		}
 
 		/// <summary>Removes selection of an item</summary>
@@ -226,8 +225,7 @@ namespace pluginner.Widgets
 				lvi.State = ItemStates.Pointed;
 			else
 				lvi.State = ItemStates.Default;
-			if (SelectionChanged != null)
-				SelectionChanged(SelectedItems);
+			RaiseSelectionChanged(SelectedItems);
 		}
 
 		/// <summary>Sets the pointer to an item</summary>
@@ -250,8 +248,10 @@ namespace pluginner.Widgets
 				lvi.State = ItemStates.Pointed;
 			PointedItem = lvi;
 
-			if (PointerMoved != null)
-				PointerMoved(lvi);
+			var pointerMoved = PointerMoved;
+			if (pointerMoved != null) {
+				pointerMoved(lvi);
+			}
 
 			//if need, scroll the view
 			double top = -ScrollerIn.PosY;
@@ -270,7 +270,6 @@ namespace pluginner.Widgets
 
 			//todo: add smooth scrolling
 		}
-
 
 		//PUBLIC MEMBERS
 
@@ -321,7 +320,13 @@ namespace pluginner.Widgets
 			Items.Add(Item);
 			Grid.Add(Item, LastCol, LastRow,1,1,true);
 			Item.ButtonPressed += Item_ButtonPressed;
-			Item.EditComplete+=(sender)=>{ if (EditComplete != null) EditComplete(sender, this); };
+			Item.EditComplete += sender =>
+			{
+				var handler = EditComplete;
+				if (handler != null) {
+					handler(sender, this);
+				}
+			};
 			Item.CanGetFocus = true;
 			if (LastRow == 0) _SetPoint(Item);
 			LastRow++;
@@ -378,8 +383,7 @@ namespace pluginner.Widgets
 				SelectedItems.Remove(Item);
 			}
 
-			if (SelectionChanged != null)
-				SelectionChanged(SelectedItems);
+			RaiseSelectionChanged(SelectedItems);
 		}
 
 		/// <summary>Selects an row</summary>
@@ -402,8 +406,7 @@ namespace pluginner.Widgets
 				SelectedItems.Add(lvi);
 			}
 
-			if (SelectionChanged != null)
-				SelectionChanged(SelectedItems);
+			RaiseSelectionChanged(SelectedItems);
 		}
 
 		/// <summary>Inverts selection of items (like the "[*] gray" key)</summary>
@@ -420,8 +423,7 @@ namespace pluginner.Widgets
 					_SelectItem(lvi);
 				}
 			}
-			if (SelectionChanged != null)
-				SelectionChanged(SelectedItems);
+			RaiseSelectionChanged(SelectedItems);
 		}
 
 		/// <summary>Scrolls the internal scroll view to the specifed row</summary>
@@ -438,6 +440,14 @@ namespace pluginner.Widgets
 		public event TypedEvent<List<ListView2Item>> SelectionChanged;
 		public event TypedEvent<ListView2Item> PointedItemDoubleClicked;
 		public event TypedEvent<EditableLabel, ListView2> EditComplete;
+
+		protected void RaiseSelectionChanged(List<ListView2Item> data)
+		{
+			var handler = SelectionChanged;
+			if (handler != null){
+				handler(data);
+			}
+		}
 
 		//PUBLIC PROPERTIES
 
@@ -488,7 +498,6 @@ namespace pluginner.Widgets
 			}
 		}
 
-
 		//ENUMS & STRUCTS
 
 		/// <summary>
@@ -498,7 +507,6 @@ namespace pluginner.Widgets
 		{
 			SmallIcons, LargeIcons, Details
 		}
-
 
 		/// <summary>
 		/// Enumeration of items' selection statuses

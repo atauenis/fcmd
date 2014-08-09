@@ -2,6 +2,7 @@
  * Background workers
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -81,7 +82,7 @@ namespace fcmd
 		/// <param name='ReplaceAll'>
 		/// The referenced variable will be set to TRUE if user chooses "Replace all"
 		/// </param>
-		void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL, ref ReplaceQuestionDialog.ClickedButton Feedback, AsyncCopy AC)
+		private void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL, ref ReplaceQuestionDialog.ClickedButton Feedback, AsyncCopy AC)
 		{
 			pluginner.File NewFile = SourceFile;
 			NewFile.Path = DestinationURL;
@@ -158,7 +159,7 @@ namespace fcmd
 				if(AC == null) AC = new AsyncCopy();
 				bool CpComplete = false;
 
-				AC.OnComplete+=(rezultat)=>{ CpComplete = true; };
+				AC.OnComplete += result => CpComplete = true;
 
 				//warning: due to some GTK# bugs, buffer sizes lesser than 128KB may cause
 				//an StackOverflowException at UI update code
@@ -211,7 +212,7 @@ namespace fcmd
 		/// </summary>
 		/// <param name="url">url of the file</param>
 		/// <param name="fs">filesystem of the file</param>
-		void DoRmFile(string url, pluginner.IFSPlugin fs)
+		private void DoRmFile(string url, pluginner.IFSPlugin fs)
 		{
 			try
 			{
@@ -228,7 +229,7 @@ namespace fcmd
 		/// </summary>
 		/// <param name="url">url of the file</param>
 		/// <param name="fs">filesystem of the file</param>
-		void DoRmDir(string url, pluginner.IFSPlugin fs)
+		private void DoRmDir(string url, pluginner.IFSPlugin fs)
 		{
 			try
 			{
@@ -243,6 +244,5 @@ namespace fcmd
 				new MsgBox(err.Message, null, MsgBox.MsgBoxType.Error);
 			}
 		}
-
 	}
 }

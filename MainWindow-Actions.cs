@@ -2,6 +2,7 @@
  * File managing operations
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -185,15 +186,14 @@ namespace fcmd
                         fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(Localizator.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
 
                         AC.ReportMessage = Localizator.GetString("CopyStatus");
-                        AC.OnProgress += (msg, proc) =>
+						AC.OnProgress += (message, percent) =>
                         {
-                            Xwt.Application.Invoke(
-                                delegate
+							Xwt.Application.Invoke(() =>
                                 {
                                     try
                                     {
-                                        fpd.pbrProgress.Fraction = (double)((double)proc / (double)100);
-                                        fpd.lblStatus.Text = String.Format(StatusMask, ActivePanel.GetValue<string>(ActivePanel.dfURL), ibx.Result, msg);
+                                        fpd.pbrProgress.Fraction = (double)((double)percent / (double)100);
+                                        fpd.lblStatus.Text = String.Format(StatusMask, ActivePanel.GetValue<string>(ActivePanel.dfURL), ibx.Result, message);
                                     }
                                     catch { }
                                 }
