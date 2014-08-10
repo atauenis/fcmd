@@ -1,7 +1,8 @@
 ﻿/* The File Commander Settings window tabs
- * Tab "Collumns in panels"
+ * Tab "Columns in panels"
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -88,7 +89,7 @@ namespace fcmd.SettingsWindowTabs
 		void Localizator_LocalizationChanged(object sender, EventArgs e)
 		{
 			fraExtensions.Label = Localizator.GetString("SWTMWCFileExtView");
-			fraTabs.Label = Localizator.GetString("SWTMWCCollumns");
+			fraTabs.Label = Localizator.GetString("SWTMWCColumns");
 			optDisplayExtTogether.Label = Localizator.GetString("SWTMWCExtTogether");
 			optDisplayExtFar.Label = Localizator.GetString("SWTMWCExtFar");
 			lblSizeDisplayStyle.Text = Localizator.GetString("SWTMWCSizeDisplay");

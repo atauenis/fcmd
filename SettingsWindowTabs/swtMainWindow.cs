@@ -2,7 +2,8 @@
  * Tab "Main window layout"
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
- * (C) 2014 Zhigunov Andrew (breakneck11@gmail.com)
+ * (C) 2014, Zhigunov Andrew (breakneck11@gmail.com)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -24,7 +25,7 @@ namespace fcmd.SettingsWindowTabs
 		CheckBox chkDiskButtons = new CheckBox(); //ok
 		CheckBox chkDiskListBox = new CheckBox { Sensitive = false };
 		CheckBox chkPanelTitle = new CheckBox(); //ok
-		CheckBox chkTableCollumns = new CheckBox();//ok
+		CheckBox chkTableColumns = new CheckBox();//ok
 		CheckBox chkInfoBar = new CheckBox();//ok
 		CheckBox chkCmdLine = new CheckBox { Sensitive = false };
 		CheckBox chkKeybHelp = new CheckBox();//ok
@@ -42,7 +43,7 @@ namespace fcmd.SettingsWindowTabs
 
 			chkDiskButtons.State = CBSfromBool(Settings.Default.ShowDiskList);
 			chkPanelTitle.State = CBSfromBool(Settings.Default.ShowPanelUrlbox);
-			chkTableCollumns.State = CBSfromBool(Settings.Default.ShowPanelTableCaptions);
+			chkTableColumns.State = CBSfromBool(Settings.Default.ShowPanelTableCaptions);
 			chkInfoBar.State = CBSfromBool(Settings.Default.ShowFileInfo);
 			chkKeybHelp.State = CBSfromBool(Settings.Default.ShowKeybrdHelp);
 			txtBookmarks.Text = Settings.Default.BookmarksFile ?? "";
@@ -56,7 +57,7 @@ namespace fcmd.SettingsWindowTabs
 			fraMainBox.PackStart(chkDiskButtons);
 			fraMainBox.PackStart(chkDiskListBox);
 			fraMainBox.PackStart(chkPanelTitle);
-			fraMainBox.PackStart(chkTableCollumns);
+			fraMainBox.PackStart(chkTableColumns);
 			fraMainBox.PackStart(chkInfoBar);
 			fraMainBox.PackStart(chkCmdLine);
 			fraMainBox.PackStart(chkKeybHelp);
@@ -74,7 +75,7 @@ namespace fcmd.SettingsWindowTabs
 			chkDiskButtons.Label = Localizator.GetString("SWTMWdiskbuttons");
 			chkDiskListBox.Label = Localizator.GetString("SWTMWdisklistbox");
 			chkPanelTitle.Label = Localizator.GetString("SWTMWpaneltitle");
-			chkTableCollumns.Label = Localizator.GetString("SWTMWtablecollumns");
+			chkTableColumns.Label = Localizator.GetString("SWTMWtablecolumns");
 			chkInfoBar.Label = Localizator.GetString("SWTMWinfobar");
 			chkCmdLine.Label = Localizator.GetString("SWTMWcmdline");
 			chkKeybHelp.Label = Localizator.GetString("SWTMWkeybhelp");
@@ -87,7 +88,7 @@ namespace fcmd.SettingsWindowTabs
 			{
 				Settings.Default.ShowDiskList = BoolFromCBX(chkDiskButtons);
 				Settings.Default.ShowPanelUrlbox = BoolFromCBX(chkPanelTitle);
-				Settings.Default.ShowPanelTableCaptions = BoolFromCBX(chkTableCollumns);
+				Settings.Default.ShowPanelTableCaptions = BoolFromCBX(chkTableColumns);
 				Settings.Default.ShowFileInfo = BoolFromCBX(chkInfoBar);
 				Settings.Default.ShowKeybrdHelp = BoolFromCBX(chkKeybHelp);
 				Settings.Default.BookmarksFile = txtBookmarks.Text;

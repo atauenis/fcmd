@@ -2,6 +2,7 @@
  * The ListView2 item widget
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2014, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 
@@ -19,8 +20,8 @@ namespace pluginner.Widgets
 		private Object[] _Values;
 		/// <summary>"Is the Field Editable" data store</summary>
 		private bool[] _Editables;
-		/// <summary>Collumn info store</summary>
-		private ListView2.CollumnInfo[] _Cols;
+		/// <summary>Column info store</summary>
+		private ListView2.ColumnInfo[] _Cols;
 		/// <summary>Selection state</summary>
 		private ListView2.ItemStates _State;
 
@@ -36,7 +37,7 @@ namespace pluginner.Widgets
 		protected override void OnDraw(Context ctx, Rectangle dirtyRect)
 		{
 			base.OnDraw(ctx, dirtyRect);
-			if (_Values.Count() > _Cols.Count()) return; //if the collumn count is less than the count of collumns in the data, НАХУЙ ТАКУЮ РАБОТУ
+			if (_Values.Length > _Cols.Length) return; //if the column count is less than the count of columns in the data, НАХУЙ ТАКУЮ РАБОТУ
 
 			double PosByX = 0;
 			for (int i = 0; i < _Values.Length; i++)
@@ -45,7 +46,7 @@ namespace pluginner.Widgets
 				if (_Cols[i].Visible)
 					Draw(Value, PosByX, ctx, _Cols[i].Width, CurFgColor);
 
-				if (_Cols.Count() > i && i != _Cols.Count() - 1)
+				if (_Cols.Length > i && i != _Cols.Length - 1)
 				{
 					PosByX += _Cols[i].Width;
 				}
@@ -89,11 +90,11 @@ namespace pluginner.Widgets
 
 		/// <summary>Creates a new ListView2Item</summary>
 		/// <param name="RowNumber">Number of owning row</param>
-		/// <param name="ColNumber">Number of owning collumn</param>
+		/// <param name="ColNumber">Number of owning column</param>
 		/// <param name="RowTag">The item's tag</param>
-		/// <param name="Collumns">Array of collumn information</param>
+		/// <param name="Columns">Array of column information</param>
 		/// <param name="Data">The data that should be shown in this LV2I</param>
-		public ListView2Item(int RowNumber, int ColNumber, string RowTag, ListView2.CollumnInfo[] Collumns, List<Object> Data)
+		public ListView2Item(int rowNumber, int colNumber, string rowTag, ListView2.ColumnInfo[] columns, List<Object> data)
 		{
 			MinHeight = 16;
 			HeightRequest = 16;
@@ -101,11 +102,11 @@ namespace pluginner.Widgets
 			ExpandHorizontal = true;
 			ExpandVertical = true;
 
-			_Values = Data.ToArray();
-			_Cols = Collumns;
-			Tag = RowTag;
-			RowNo = RowNumber;
-			ColNo = ColNumber;
+			_Values = data.ToArray();
+			_Cols = columns;
+			Tag = rowTag;
+			RowNo = rowNumber;
+			ColNo = colNumber;
 
 			QueueDraw();
 		}
@@ -187,8 +188,8 @@ namespace pluginner.Widgets
 			get; set;
 		}
 
-		/// <summary>Set collumn list</summary>
-		public ListView2.CollumnInfo[] Collumns
+		/// <summary>Set column list</summary>
+		public ListView2.ColumnInfo[] Columns
 		{
 			set { _Cols = value; QueueDraw(); }
 		}
@@ -251,7 +252,7 @@ namespace pluginner.Widgets
 			get { return _Values.ToList(); }
 			set {
 				if (_Cols == null) {
-					throw new Exception("Please set collumns first!");
+					throw new Exception("Please set columns first!");
 				}
 				_Values = value.ToArray();
 				QueueDraw();

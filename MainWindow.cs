@@ -84,7 +84,7 @@ namespace fcmd
 		FileListPanel p1;
 		FileListPanel p2;
 
-		List<ListView2.CollumnInfo> LVCols = new List<ListView2.CollumnInfo>();
+		List<ListView2.ColumnInfo> LVCols = new List<ListView2.ColumnInfo>();
 
 		/// <summary>The current active panel</summary>
 		FileListPanel ActivePanel;
@@ -233,12 +233,12 @@ namespace fcmd
 			p1.OpenFile += openFileHandler;
 			p2.OpenFile += openFileHandler;
 
-			/*LVCols.Add(new ListView2.CollumnInfo { Title = "", Tag = "Icon", Width = 16, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo { Title = "URL", Tag = "Path", Width = 0, Visible = false });
-			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo { Title = "Directory item info", Tag = "DirItem", Width = 0, Visible = false });
+			/*LVCols.Add(new ListView2.ColumnInfo { Title = "", Tag = "Icon", Width = 16, Visible = true });
+			LVCols.Add(new ListView2.ColumnInfo { Title = "URL", Tag = "Path", Width = 0, Visible = false });
+			LVCols.Add(new ListView2.ColumnInfo { Title = Localizator.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
+			LVCols.Add(new ListView2.ColumnInfo { Title = Localizator.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.ColumnInfo { Title = Localizator.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.ColumnInfo { Title = "Directory item info", Tag = "DirItem", Width = 0, Visible = false });
 			*/
 			p1.FS = new base_plugins.fs.localFileSystem();
 			p2.FS = new base_plugins.fs.localFileSystem();
@@ -295,17 +295,17 @@ namespace fcmd
 				case 1:
 					p1.ListingView.SetFocus();
 					ActivePanel = p1; PassivePanel = p2;
-					if(argv.Count() == 1) p1.LoadDir(argv[0]);
+					if(argv.Length == 1) p1.LoadDir(argv[0]);
 					break;
 				case 2:
 					p2.ListingView.SetFocus();
 					ActivePanel = p2; PassivePanel = p1;
-					if (argv.Count() == 1) p2.LoadDir(argv[0]);
+					if (argv.Length == 1) p2.LoadDir(argv[0]);
 					break;
 				default:
 					p1.ListingView.SetFocus();
 					ActivePanel = p1; PassivePanel = p2;
-					if (argv.Count() == 1) p1.LoadDir(argv[0]);
+				if (argv.Length == 1) p1.LoadDir(argv[0]);
 					break;
 			}
 #if DEBUG
@@ -324,13 +324,14 @@ namespace fcmd
 			}
 
 			LVCols.Clear();
-			LVCols.Add(new ListView2.CollumnInfo { Title = "", Tag = "Icon", Width = 16, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo { Title = "URL", Tag = "Path", Width = 0, Visible = false });
-			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo { Title = Localizator.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
-			LVCols.Add(new ListView2.CollumnInfo { Title = "Directory item info", Tag = "DirItem", Width = 0, Visible = false });
-			p1.ListingView.Collumns = p2.ListingView.Collumns = LVCols.ToArray();
+			LVCols.Add(new ListView2.ColumnInfo { Title = "", Tag = "Icon", Width = 16, Visible = true });
+			LVCols.Add(new ListView2.ColumnInfo { Title = "URL", Tag = "Path", Width = 0, Visible = false });
+			LVCols.Add(new ListView2.ColumnInfo { Title = Localizator.GetString("FName"), Tag = "FName", Width = 100, Visible = true });
+			LVCols.Add(new ListView2.ColumnInfo { Title = Localizator.GetString("FSize"), Tag = "FSize", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.ColumnInfo { Title = Localizator.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
+			LVCols.Add(new ListView2.ColumnInfo { Title = "Directory item info", Tag = "DirItem", Width = 0, Visible = false });
+			p1.ListingView.SetColumns(LVCols);
+			p2.ListingView.SetColumns(LVCols);
 		}
 
 		private void mnuViewWithFilter_Clicked(object sender, EventArgs e)

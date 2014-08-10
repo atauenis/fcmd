@@ -2,6 +2,7 @@
  * The main window of the viewer/editor (VE)
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -68,7 +69,7 @@ namespace fcmd
 		/// </summary>
 		private void Localize()
 		{
-			if(KeybHelpButtons.Count() == 11)
+			if(KeybHelpButtons.Length == 11)
 			for (int i = 1; i < 11; i++)
 			{
 				KeybHelpButtons[i].FKey = "F" + i;

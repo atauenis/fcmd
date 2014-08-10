@@ -3,6 +3,7 @@
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
  * (C) 2014, Zhigunov Andrew (breakneck11@gmail.com)
+ * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
  */
 
@@ -21,7 +22,7 @@ namespace pluginner.Widgets
 	public class FileListPanel : Table
 	{
 		//Data Field Numbers
-		//they aren't const because they may change when the collumns are reordered
+		//they aren't const because they may change when the columns are reordered
 		public int dfIcon = 0;
 		public int dfURL = 1;
 		public int dfDisplayName = 2;
@@ -555,7 +556,7 @@ namespace pluginner.Widgets
 		}
 		
 		/// <summary>
-		/// Gets the selected row's value from the collumn №<paramref name="Field"/>
+		/// Gets the selected row's value from the column №<paramref name="Field"/>
 		/// </summary>
 		/// <typeparam name="T">The type of the data</typeparam>
 		/// <param name="Field">The field number</param>

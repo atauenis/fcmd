@@ -18,16 +18,16 @@ namespace pluginner.Widgets
 	public class ListView2 : Widget
 	{
 		private VBox Layout = new VBox();
-		private HBox CollumnRow = new HBox();
+		private HBox ColumnRow = new HBox();
 		public HeavyScroller ScrollerIn = new HeavyScroller(); //vertical scroller
 		private ScrollView ScrollerOut = new ScrollView(); //horizontal scroller
-		private List<Label> CollumnTitles = new List<Label>();
+		private List<Label> ColumnTitles = new List<Label>();
 		private Table Grid = new Table();
 		private int LastRow;
 		private int LastCol;
 		private Views _View = Views.Details;
 		//todo: int MaxRow (для переноса при режиме Small Icons)
-		private List<CollumnInfo> _Collumns = new List<CollumnInfo>();
+		private List<ColumnInfo> _columns = new List<ColumnInfo>();
 		private int Through10Counter; //для устранения зависания UI при загрузке длинных списков
 		private bool Color2; //для обеспечения чередования цветов строк
 		private DateTime PointedItemLastClickTime = DateTime.Now.AddDays(-1); //for double click detecting
@@ -62,7 +62,7 @@ namespace pluginner.Widgets
 			ScrollerOut.VerticalScrollPolicy = ScrollPolicy.Never;
 			ScrollerIn.Content = Grid;
 			ScrollerIn.CanScrollByX = false;// ScrollPolicy.Never;
-			Layout.PackStart(CollumnRow);
+			Layout.PackStart(ColumnRow);
 			Layout.PackStart(ScrollerIn,true,true);
 
 			Layout.KeyPressed += Layout_KeyPressed;
@@ -290,7 +290,7 @@ namespace pluginner.Widgets
 				LastRow,
 				LastCol,
 				ItemTag,
-				_Collumns.ToArray(),
+				_columns.ToArray(),
 				Data)
 			{
 				Font = Font.SystemSansSerifFont.WithWeight(FontWeight.Heavy),
@@ -451,20 +451,17 @@ namespace pluginner.Widgets
 
 		//PUBLIC PROPERTIES
 
-		/// <summary>Sets collumn configuration</summary>
-		public CollumnInfo[] Collumns
+		/// <summary>Sets column configuration</summary>
+		public void SetColumns(IEnumerable<ColumnInfo> columns)
 		{
-			get { return _Collumns.ToArray(); }
-			set {
-				_Collumns.Clear();
-				CollumnTitles.Clear();
-				CollumnRow.Clear();
-				foreach (CollumnInfo ci in value)
-				{
-					_Collumns.Add(ci);
-					CollumnTitles.Add(new Label(ci.Title) { WidthRequest = ci.Width, Visible = ci.Visible});
-					CollumnRow.PackStart(CollumnTitles[CollumnTitles.Count-1]);
-				}
+			_columns.Clear();
+			ColumnTitles.Clear();
+			ColumnRow.Clear();
+			foreach (ColumnInfo ci in columns)
+			{
+				_columns.Add(ci);
+				ColumnTitles.Add(new Label(ci.Title) { WidthRequest = ci.Width, Visible = ci.Visible});
+				ColumnRow.PackStart(ColumnTitles[ColumnTitles.Count-1]);
 			}
 		}
 
@@ -524,9 +521,9 @@ namespace pluginner.Widgets
 		}
 
 		/// <summary>
-		/// Structure, that contains information about collumns
+		/// Structure, that contains information about columns
 		/// </summary>
-		public struct CollumnInfo
+		public struct ColumnInfo
 		{
 			public string Title;
 			public object Tag;

@@ -70,7 +70,7 @@ FCmnuToolsSysInfo=Сведения о системе
 FCmnuHelpHelpMe=Справка File Commander
 FCmnuHelpDebug=Отладка Файло-Коммандера
 FCmnuHelpAbout=О программе...
-;Main window file listing panel collumn headers
+;Main window file listing panel column headers
 FName=Имя
 FSize=Размер
 FDate=Дата
@@ -167,7 +167,7 @@ SWTMWtoolbar=Панель инструментов
 SWTMWdiskbuttons=Кнопки дисков
 SWTMWdisklistbox=Окно выбора диска
 SWTMWpaneltitle=Заголовок файловой панели (с текущим путём)
-SWTMWtablecollumns=Заголовки столбцов
+SWTMWtablecolumns=Заголовки столбцов
 SWTMWinfobar=Строки состояния
 SWTMWcmdline=Коммандная строка
 SWTMWkeybhelp=Подсказка клавиатуры (клавиш F)
@@ -184,7 +184,7 @@ swtMainWindowColumns=Столбцы панелей
 SWTMWCFileExtView=Показывать типы (расширения) файлов:
 SWTMWCExtTogether=Сразу после имени
 SWTMWCExtFar=Отдельно
-SWTMWCCollumns=Столбцы
+SWTMWCColumns=Столбцы
 SWTMWCExt=Расширение
 SWTMWCSize=Pазмер
 SWTMWCDate=Изменено
