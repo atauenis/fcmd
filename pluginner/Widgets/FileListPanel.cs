@@ -405,6 +405,8 @@ namespace pluginner.Widgets
 				UrlBox.Text = URL;
 				string updir = URL + FS.DirSeparator+"..";
 				string rootdir = FS.GetMetadata(URL).RootDirectory;
+				uint counter = 0;
+				const uint per_number = ~(((~(uint)0) >> 10) << 10);
 
 				foreach (DirItem di in dis)
 				{
@@ -432,6 +434,9 @@ namespace pluginner.Widgets
 					}
 					Data.Add(di);
 					ListingView.AddItem(Data, EditableFileds, di.Path);
+					if ((++counter & per_number) == 0) {
+						Application.MainLoop.DispatchPendingEvents();
+					}
 				}
 				if (goUpDelegate != null) {
 					GoUp.Clicked -= goUpDelegate;

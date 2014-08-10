@@ -28,7 +28,6 @@ namespace pluginner.Widgets
 		private Views _View = Views.Details;
 		//todo: int MaxRow (для переноса при режиме Small Icons)
 		private List<ColumnInfo> _columns = new List<ColumnInfo>();
-		private int Through10Counter; //для устранения зависания UI при загрузке длинных списков
 		private bool Color2; //для обеспечения чередования цветов строк
 		private DateTime PointedItemLastClickTime = DateTime.Now.AddDays(-1); //for double click detecting
 
@@ -330,13 +329,6 @@ namespace pluginner.Widgets
 			Item.CanGetFocus = true;
 			if (LastRow == 0) _SetPoint(Item);
 			LastRow++;
-
-			Through10Counter++;
-			if (Through10Counter == 250)
-			{
-				Application.MainLoop.DispatchPendingEvents();
-				Through10Counter = 0;
-			}
 		}
 
 		/// <summary>Removes the specifed item from the list</summary>
