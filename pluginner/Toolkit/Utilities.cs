@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Xwt;
 using Xwt.Drawing;
+using System.Collections.Generic;
 using Application = System.Windows.Forms.Application;
 using Color = Xwt.Drawing.Color;
 using Image = Xwt.Drawing.Image;
@@ -22,6 +23,15 @@ namespace pluginner.Toolkit
 	public static class Utilities
 	{
 		static string PathToIcons = Application.StartupPath + Path.DirectorySeparatorChar + "icons";
+
+		static Dictionary<string, Image> cached_images = new Dictionary<string, Image>();
+
+		static Image GetLocalIcon(string path) {
+			if (!cached_images.ContainsKey(path)) {
+				cached_images[path] = Image.FromResource(path);
+			}
+			return cached_images[path];
+		}
 
 		//These functions is partially equivalents of the Xwt.MessageDialog ones
 		//but they works at UI thread and in fact are macros.
@@ -137,10 +147,10 @@ namespace pluginner.Toolkit
 		public static Image GetIconForMIME(string MIME)
 		{
 			if (MIME == "x-fcmd/directory")
-				return Image.FromResource("pluginner.Resources.x-fcmd-directory.png");
+				return GetLocalIcon("pluginner.Resources.x-fcmd-directory.png");
 			
 			if (MIME == "x-fcmd/up")
-				return Image.FromResource("pluginner.Resources.x-fcmd-up.png");
+				return GetLocalIcon("pluginner.Resources.x-fcmd-up.png");
 
 			if (CheckForIcon(MIME.Replace("/","-"))){
 				return GetIconFromCache(MIME.Replace("/", "-"));
@@ -269,7 +279,7 @@ namespace pluginner.Toolkit
 			if(MIME != "application/octet-stream")
 			Console.WriteLine("utilities: Can't find an icon for " + MIME);
 #endif
-			return Image.FromResource("pluginner.Resources.application-octet-stream.png");
+			return GetLocalIcon("pluginner.Resources.application-octet-stream.png");
 		}
 
 		/// <summary>Finds a MIME content-type of a file</summary>
