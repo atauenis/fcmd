@@ -304,7 +304,7 @@ namespace pluginner.Widgets
 
 		/// <summary>Add a new ListView2Item into this ListView2</summary>
 		/// <param name="Item">The new ListView2Item</param>
-		public void AddItem(ListView2Item Item)
+		private void AddItem(ListView2Item Item)
 		{
 			if (Color2){
 				Item.NormalBgColor = NormalBgColor2;
