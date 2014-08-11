@@ -395,7 +395,7 @@ namespace pluginner.Widgets
 				return;
 			}
 
-			ListingView.Cursor = CursorType.IBeam;//todo: modify XWT and add hourglass cursor
+			ListingView.Cursor = CursorType.Wait;
 			ListingView.Sensitive = false;
 
 			try
@@ -456,12 +456,11 @@ namespace pluginner.Widgets
 				}else
 				MessageDialog.ShowWarning(ex.Message);
 			}
-			ListingView.Sensitive = true;
-			ListingView.Cursor = CursorType.Arrow;
 			if (ListingView.Items.Count > 0)
 			{ ListingView.SelectedRow = 0; ListingView.ScrollerIn.ScrollTo(0, 0); }
 			ListingView.SetFocus();//one fixed bug may make many other bugs...уточнить необходимость!
-		
+			ListingView.Sensitive = true;
+			ListingView.Cursor = CursorType.Arrow;
 		}
 
 		private void FS_StatusChanged(string data)
