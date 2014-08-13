@@ -44,7 +44,7 @@ namespace fcmd
 				return;
 			}
 
-			pluginner.File SelectedFile = fs.GetFile(url, new int());
+			pluginner.File SelectedFile = fs.GetFile(url);
 			string FileContent = Encoding.ASCII.GetString(fs.GetFileContent(url));
 			fcv.LoadFile(url, ActivePanel.FS, false);
 			fcv.Show();
@@ -160,10 +160,9 @@ namespace fcmd
 
             foreach (ListView2Item selitem in ActivePanel.ListingView.ChoosedRows)
             {
-                int Progress = 0;
                 string SourceURL = selitem.Data[ActivePanel.dfURL].ToString();
                 pluginner.IFSPlugin SourceFS = ActivePanel.FS;
-                pluginner.File SourceFile = SourceFS.GetFile(SourceURL, Progress);
+                pluginner.File SourceFile = SourceFS.GetFile(SourceURL);
 
 
                 //check for file existing

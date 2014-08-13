@@ -16,9 +16,9 @@ namespace pluginner
 	public interface IFSPlugin : IPlugin
 	{
 		/// <summary>
-		/// Gets the list of the directory's subitems.
+		/// Gets list of the directory's items.
 		/// </summary>
-		List<DirItem> DirectoryContent { get; }
+		IEnumerable<DirItem> DirectoryContent { get; }
 
 		/// <summary>
 		/// Gets or sets the current directory.
@@ -66,13 +66,12 @@ namespace pluginner
 		/// <param name='URL'>
 		/// URL of the file.
 		/// </param>
-		/// <param name="Progress">OBDOLETE, WILL BE REMOVED SOON</param>
-		File GetFile(string URL, double Progress);
+		File GetFile(string URL);
 
 		/// <summary>
 		/// Gets the file's attribbutes
 		/// </summary>
-		/// <param name="URL"></param>
+		/// <param name="URL">The file's URL</param>
 		FSEntryMetadata GetMetadata(string URL);
 
 		/// <summary>
@@ -82,40 +81,19 @@ namespace pluginner
 		byte[] GetFileContent(string URL);
 
 		/// <summary>
-		/// Get the file's full content
-		/// </summary>
-		/// <param name="URL">The URL of the file</param>
-		/// <param name="Start">The starting point in the file at which to begin reading</param>
-		/// <param name="Length">The number of bytes to read</param>
-		[Obsolete("Replaced to GetStream().Read()")]
-		byte[] GetFileContent(string URL, Int32 Start, Int32 Length);
-		//in future versions, the Int32 will be replaced with a longer type
-		//(currently, the temporary system.io call is limited to 4GB files)
-
-		/// <summary>
 		/// Gets a Stream that can be used to read and write the file
 		/// </summary>
 		/// <param name="URL">The URL of the file</param>
 		/// <param name="Lock">Because some systems doesn't allow writing to non-locked file streams, set to <value>1</value> if writing to the stream is planned.</param>
 		/// <returns></returns>
-		Stream GetStream(string URL, bool Lock = false);
-
-		/// <summary>Writes a file.</summary>
-		/// <param name='NewFile'>The file</param>
-		/// <param name="Content">The file's content</param>
-		[Obsolete("Replacing to Touch+WriteFileContent (но ПОКА ЧТО много где используется старый вызов)")]
-		void WriteFile(File NewFile, int Progress, byte[] Content);
+		Stream GetFileStream(string URL, bool Lock = false);
 
 		/// <summary>Writes bytes into a file</summary>
 		/// <param name="URL">The URL of the file</param>
 		/// <param name="Start">The starting point at which to begin writing</param>
 		/// <param name="Content">A byte array containing the data to write</param>
-		void WriteFileContent(string URL, Int32 Start, byte[] Content);
-
-		/// <summary>Writes bytes into a file (the file will be fully overwrited)</summary>
-		/// <param name="URL">The URL of the file</param>
-		/// <param name="Content">A byte array containing the data to write</param>
-		void WriteFileContent(string URL, byte[] Content);
+		void WriteFileContent   (string URL, Int32 Start, byte[] Content);
+		//possible overflow; need get around ^^^^^^^^^^^
 
 		/// <summary>Writes metadata of the specifed filesystem item (it's URL is written in the <paramref name="metadata"/>).</summary>
 		/// <param name="metadata">The metadata and URL of the fs item</param>
@@ -150,6 +128,7 @@ namespace pluginner
 		 * каменный цветок, ну а если не выйдет, плагин должен кинуть
 		 * сразу же исключение pluginner.ThisDirCannotBeRemovedException .
 		 */
+		 //todo: переписать, выкинуть исключение (A.T., забудь On Error Resume Next как старый сон)
 
 		/// <summary>
 		/// Creates a new directory
@@ -178,9 +157,9 @@ namespace pluginner
 		event TypedEvent<double> ProgressChanged;
 
 		/// <summary>
-		/// Start a program <paramref name="CommandLine"/> in the environment or write some data into the current program's stdin stream.
+		/// Start a external process in the Command Line or write some data into the current program's STDIN stream.
 		/// </summary>
-		/// <param name="StdIn">The stdin text or the new program name</param>
+		/// <param name="StdIn">The STDIN text or the new program name</param>
 		void CLIstdinWriteLine(string StdIn);
 
 		/// <summary>

@@ -104,7 +104,7 @@ namespace fcmd
                 Xwt.Application.Invoke(
                     delegate
                     {
-	                    rpd = new ReplaceQuestionDialog(DestinationFS.GetFile(DestinationURL, new double()).Name);
+	                    rpd = new ReplaceQuestionDialog(DestinationFS.GetFile(DestinationURL).Name);
 	                    ready = true;
                     }
                 );
@@ -133,7 +133,7 @@ namespace fcmd
 					break;
 				case ReplaceQuestionDialog.ClickedButton.ReplaceOld:
 					Feedback = rpd.ChoosedButton;
-					if(SourceFS.GetMetadata(SourceFile.Path).LastWriteTimeUTC < DestinationFS.GetFile(DestinationURL,new double()).Metadata.LastWriteTimeUTC)
+					if(SourceFS.GetMetadata(SourceFile.Path).LastWriteTimeUTC < DestinationFS.GetFile(DestinationURL).Metadata.LastWriteTimeUTC)
 					{/*continue execution*/}
 					else
 					{return;}
@@ -152,9 +152,9 @@ namespace fcmd
 				pluginner.FSEntryMetadata md = SourceFS.GetMetadata(SourceFile.Path);
 				md.FullURL = NewFile.Path;
 
-				System.IO.Stream SrcStream = SourceFS.GetStream(SourceFile.Path);
+				System.IO.Stream SrcStream = SourceFS.GetFileStream(SourceFile.Path);
 				DestinationFS.Touch(md);
-				System.IO.Stream DestStream = DestinationFS.GetStream(DestinationURL,true);
+				System.IO.Stream DestStream = DestinationFS.GetFileStream(DestinationURL,true);
 
 				if(AC == null) AC = new AsyncCopy();
 				bool CpComplete = false;
@@ -197,7 +197,7 @@ namespace fcmd
 					FSEntryMetadata md1 = fsa.GetMetadata(s1);
 					string s2 = destination + fsb.DirSeparator + md1.Name; //destination url
 
-					DoCp(fsa, fsb, fsa.GetFile(s1, new double()), s2, new AsyncCopy());
+					DoCp(fsa, fsb, fsa.GetFile(s1), s2, new AsyncCopy());
 				}
 				else if (di.IsDirectory)
 				{

@@ -370,7 +370,7 @@ namespace pluginner.Widgets
 		/// <param name="ShortenKB">How kilobyte sizes should be humanized</param>
 		/// <param name="ShortenMB">How megabyte sizes should be humanized</param>
 		/// <param name="ShortenGB">How gigabyte sizes should be humanized</param> //плохой перевод? "так nбайтные размеры должны очеловечиваться"
-		public void LoadDir(string URL, List<DirItem> dis, SizeDisplayPolicy ShortenKB, SizeDisplayPolicy ShortenMB, SizeDisplayPolicy ShortenGB)
+		public void LoadDir(string URL, IEnumerable<DirItem> dis, SizeDisplayPolicy ShortenKB, SizeDisplayPolicy ShortenMB, SizeDisplayPolicy ShortenGB)
 		{
 			if (FS.CurrentDirectory == null){
 				//if this is first call in the session (the FLP is just initialized)

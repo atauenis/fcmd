@@ -26,7 +26,7 @@ namespace fcmd.base_plugins.fs
 		public string Version { get{return "1.0";} }
 		public string Author { get{return "A.T.";} }
 		public System.Configuration.Configuration FCConfig { set {} } //it can be a placeholder because the LFS can use the fcmd.Properties.Settings...
-		public List<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
+		public IEnumerable<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
 		public event pluginner.TypedEvent<string> StatusChanged;
 		public event pluginner.TypedEvent<double> ProgressChanged;
 		public event pluginner.TypedEvent<object[]> APICallHost;
@@ -228,7 +228,7 @@ namespace fcmd.base_plugins.fs
 			Touch(newmd);
 		}
 
-		public System.IO.Stream GetStream(string url, bool Lock = false)
+		public System.IO.Stream GetFileStream(string url, bool Lock = false)
 		{ //запрос потока для файла
 			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://", "");
@@ -238,13 +238,12 @@ namespace fcmd.base_plugins.fs
 			return new FileStream(InternalURL, FileMode.Open, fa);
 		}
 
-		public pluginner.File GetFile(string url, double Progress)
+		public pluginner.File GetFile(string url)
 		{ //чтение файла
 			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://", "");
 
 			pluginner.File fsf = new pluginner.File(); //fsf=filesystem file
-			Progress = 50;
 			fsf.Path = "file://" + InternalURL; //this long method have a correction for possibly damages of letters' cases or changes of slashes
 			fsf.Metadata = GetMetadata(url);
 			fsf.Name = new FileInfo(InternalURL).Name;
@@ -265,43 +264,6 @@ namespace fcmd.base_plugins.fs
 			return bire.ReadBytes(Length);
 		}
 
-		public byte[] GetFileContent(string url, Int32 start, Int32 length)
-		{
-			//код не проверялся!!!
-			//this code wasn't debugged!!!
-			_CheckProtocol(url);
-			string InternalURL = url.Replace("file://", "");
-			FileStream fistr = new FileStream(InternalURL, FileMode.Open,FileAccess.Read,FileShare.Read);
-			BinaryReader bire = new BinaryReader(fistr);
-			byte[] rezultat = new byte[length];
-			bire.Read(rezultat, start, length);
-			return rezultat;
-		}
-
-		public void WriteFile(pluginner.File NewFile, int Progress, byte[] Content)
-		{ //запись файла
-			_CheckProtocol(NewFile.Path);
-			string InternalURL = NewFile.Path.Replace("file://", "");
-
-			try{
-				Progress = 10;
-				pluginner.File f = NewFile;
-				if(!Directory.Exists(InternalURL)) File.WriteAllBytes(InternalURL, Content);
-				Progress = 25;
-				if (!Directory.Exists(InternalURL)) File.SetAttributes(InternalURL, f.Metadata.Attrubutes);
-				Progress = 50;
-				File.SetCreationTime(InternalURL, f.Metadata.CreationTimeUTC);
-				Progress = 75;
-				File.SetLastWriteTime(InternalURL, DateTime.Now);
-				Progress = 100;
-			}
-			catch (Exception ex){
-				//System.Windows.Forms.MessageBox.Show(ex.Message,"LocalFS error",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Stop);
-				new MsgBox(ex.Message, null, MsgBox.MsgBoxType.Error);
-				Console.Write(ex.Message + "\n" + ex.StackTrace + "\n" + "Catched in local fs provider while writing " + InternalURL + "\n");
-			}
-		}
-
 		public void WriteFileContent(string url, Int32 Start, byte[] Content)
 		{
 			_CheckProtocol(url);
@@ -310,11 +272,6 @@ namespace fcmd.base_plugins.fs
 			FileStream fistr = new FileStream(InternalURL, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 			BinaryWriter biwr = new BinaryWriter(fistr);
 			biwr.Write(Content, Start, Content.Length);
-		}
-
-		public void WriteFileContent(string URL, byte[] Content)
-		{
-			WriteFileContent(URL, 0, Content);
 		}
 
 		public void DeleteFile(string url){//удалить файл
