@@ -58,17 +58,6 @@ namespace pluginner
 		bool CanBeRead(string URL);
 
 		/// <summary>
-		/// Reads the file and returns both file content and it's metadata.
-		/// </summary>
-		/// <returns>
-		/// The file.
-		/// </returns>
-		/// <param name='URL'>
-		/// URL of the file.
-		/// </param>
-		File GetFile(string URL);
-
-		/// <summary>
 		/// Gets the file's attribbutes
 		/// </summary>
 		/// <param name="URL">The file's URL</param>
@@ -178,30 +167,6 @@ namespace pluginner
 		event TypedEvent<string> CLIpromptChanged;
 	}
 
-	/// <summary>File info</summary>
-	public struct File
-	{
-		/// <summary>
-		/// The file's or the directory's metadata (date, size, etc).
-		/// </summary>
-		public FSEntryMetadata Metadata;
-
-		/// <summary>
-		/// The file's MIME type.
-		/// </summary>
-		public string MIMEType;
-
-		/// <summary>
-		/// The file's full path.
-		/// </summary>
-		public string Path;
-
-		/// <summary>
-		/// Returns the file's name
-		/// </summary>
-		public string Name;
-	}
-
 	/// <summary>Common directory item info.</summary>
 	public struct DirItem
 	{
@@ -210,9 +175,9 @@ namespace pluginner
 		 * and replace with a one FSEntryMetadata field.
 		 */
 		/// <summary>
-		/// The path of the file.
+		/// The uniform resource locator of the file.
 		/// </summary>
-		public string Path;
+		public string URL;
 
 		/// <summary>
 		/// The text to show in the list.

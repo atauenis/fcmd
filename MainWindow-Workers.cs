@@ -32,64 +32,17 @@ namespace fcmd
 		/// <summary>
 		/// Background file copier
 		/// </summary>
-		/// <param name='SourceFS'>
-		/// Source FS.
-		/// </param>
-		/// <param name='DestinationFS'>
-		/// Destination FS.
-		/// </param>
-		/// <param name='SourceFile'>
-		/// Source file.
-		/// </param>
-		/// <param name='DestinationURL'>
-		/// Destination URL.
-		/// </param>
-		/// <param name="AC">
-		/// Asynchronus copier
-		/// </param>
-		[Obsolete]
-		void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL, AsyncCopy AC)
+		/// <param name='SourceFS'>Source FS.</param>
+		/// <param name='DestinationFS'>Destination FS.</param>
+		/// <param name='SourceURL'>Source file URL.</param>
+		/// <param name='DestinationURL'>Destination URL.</param>
+		/// <param name="Feedback">If at the destination URL a file exists, a ReplaceQuestionDialog will be shown. This argument is the place, where the user's last choose should be saved.</param>
+		/// <param name="AC">The instance of AsyncCopy class that should be used to copy the file.</param>
+		private void DoCp(IFSPlugin SourceFS, IFSPlugin DestinationFS, string SourceURL, string DestinationURL, ref ReplaceQuestionDialog.ClickedButton Feedback, AsyncCopy AC)
 		{
-			ReplaceQuestionDialog.ClickedButton Placeholder = ReplaceQuestionDialog.ClickedButton.Cancel;
-			DoCp(
-				SourceFS,
-				DestinationFS,
-				SourceFile,
-				DestinationURL,
-				ref Placeholder,
-				AC
-			);
-		}
-
-		/// <summary>
-		/// Background file copier
-		/// </summary>
-		/// <param name='SourceFS'>
-		/// Source FS.
-		/// </param>
-		/// <param name='DestinationFS'>
-		/// Destination FS.
-		/// </param>
-		/// <param name='SourceFile'>
-		/// Source file.
-		/// </param>
-		/// <param name='DestinationURL'>
-		/// Destination URL.
-		/// </param>
-		/// <param name='SkipAll'>
-		/// The referenced variable will be set to TRUE if user chooses "Skip all"
-		/// </param>
-		/// <param name='ReplaceAll'>
-		/// The referenced variable will be set to TRUE if user chooses "Replace all"
-		/// </param>
-		private void DoCp(pluginner.IFSPlugin SourceFS, pluginner.IFSPlugin DestinationFS, pluginner.File SourceFile, string DestinationURL, ref ReplaceQuestionDialog.ClickedButton Feedback, AsyncCopy AC)
-		{
-			pluginner.File NewFile = SourceFile;
-			NewFile.Path = DestinationURL;
-
-			if (SourceFile.Path == DestinationURL){
+			if (SourceURL == DestinationURL){
 				string itself = Localizator.GetString("CantCopySelf");
-				string toshow = string.Format(Localizator.GetString("CantCopy"), SourceFile.Name, itself);
+				string toshow = string.Format(Localizator.GetString("CantCopy"), SourceFS.GetMetadata(SourceURL).Name, itself);
 				
 				Xwt.Application.Invoke(delegate { Xwt.MessageDialog.ShowWarning(toshow); });
 				//calling the msgbox in non-main threads causes some UI bugs, so push this call into main thread
@@ -104,7 +57,7 @@ namespace fcmd
                 Xwt.Application.Invoke(
                     delegate
                     {
-	                    rpd = new ReplaceQuestionDialog(DestinationFS.GetFile(DestinationURL).Name);
+	                    rpd = new ReplaceQuestionDialog(DestinationFS.GetMetadata(DestinationURL).Name);
 	                    ready = true;
                     }
                 );
@@ -133,7 +86,7 @@ namespace fcmd
 					break;
 				case ReplaceQuestionDialog.ClickedButton.ReplaceOld:
 					Feedback = rpd.ChoosedButton;
-					if(SourceFS.GetMetadata(SourceFile.Path).LastWriteTimeUTC < DestinationFS.GetFile(DestinationURL).Metadata.LastWriteTimeUTC)
+					if(SourceFS.GetMetadata(SourceURL).LastWriteTimeUTC < DestinationFS.GetMetadata(DestinationURL).LastWriteTimeUTC)
 					{/*continue execution*/}
 					else
 					{return;}
@@ -149,10 +102,10 @@ namespace fcmd
 
 			try
 			{
-				pluginner.FSEntryMetadata md = SourceFS.GetMetadata(SourceFile.Path);
-				md.FullURL = NewFile.Path;
+				pluginner.FSEntryMetadata md = SourceFS.GetMetadata(SourceURL);
+				md.FullURL = DestinationURL;
 
-				System.IO.Stream SrcStream = SourceFS.GetFileStream(SourceFile.Path);
+				System.IO.Stream SrcStream = SourceFS.GetFileStream(SourceURL);
 				DestinationFS.Touch(md);
 				System.IO.Stream DestStream = DestinationFS.GetFileStream(DestinationURL,true);
 
@@ -163,16 +116,14 @@ namespace fcmd
 
 				//warning: due to some GTK# bugs, buffer sizes lesser than 128KB may cause
 				//an StackOverflowException at UI update code
-				AC.CopyFile(SrcStream, DestStream, 131072); //buffer is 1/8 megabyte
+				AC.CopyFile(SrcStream, DestStream, 131072); //buffer is 1/8 megabyte or 128KB
 
-				do{ /*nothing*/	}
-				while(!CpComplete); //don't stop this thread until the copy is finished
-				return;
+				do{ } while(!CpComplete); //don't stop this thread until the copy is finished
 			}
 			catch (Exception ex)
 			{
 				if (ex.GetType() != typeof(System.Threading.ThreadAbortException)) { 
-					Utilities.ShowMessage(string.Format(Localizator.GetString("CantCopy"),SourceFile.Name,ex.Message));
+					Utilities.ShowMessage(string.Format(Localizator.GetString("CantCopy"),SourceURL,ex.Message));
 					Console.WriteLine("Cannot copy because of {0}({1}) at \n{2}.", ex.GetType(), ex.Message, ex.StackTrace);
 				}
 			}
@@ -193,16 +144,17 @@ namespace fcmd
 				else if (!di.IsDirectory)
 				{
 					//it is file
-					string s1 = di.Path; //source url
+					string s1 = di.URL; //source url
 					FSEntryMetadata md1 = fsa.GetMetadata(s1);
 					string s2 = destination + fsb.DirSeparator + md1.Name; //destination url
 
-					DoCp(fsa, fsb, fsa.GetFile(s1), s2, new AsyncCopy());
+					ReplaceQuestionDialog.ClickedButton Placeholder = ReplaceQuestionDialog.ClickedButton.Cancel;
+					DoCp(fsa, fsb, s1, s2, ref Placeholder, new AsyncCopy());
 				}
 				else if (di.IsDirectory)
 				{
 					//it is subdirectory
-					DoCpDir(di.Path, destination + fsb.DirSeparator + di.TextToShow, fsa,fsb);
+					DoCpDir(di.URL, destination + fsb.DirSeparator + di.TextToShow, fsa,fsb);
 				}
 			}
 		}

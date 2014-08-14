@@ -415,13 +415,13 @@ namespace fcmd
 					List<Boolean> EditableFileds = new List<bool>();
 
 					Data.Add(di.IconSmall ?? Image.FromResource("fcmd.Resources.image-missing.png")); EditableFileds.Add(false);
-					Data.Add(di.Path); EditableFileds.Add(false);
+					Data.Add(di.URL); EditableFileds.Add(false);
 					Data.Add(di.TextToShow); EditableFileds.Add(true);
 					if (di.TextToShow == "..")
 					{//parent dir
 						Data.Add("<↑ UP>"); EditableFileds.Add(false); EditableFileds[2] = false;
-						Data.Add(FS.GetMetadata(di.Path).LastWriteTimeUTC.ToLocalTime()); EditableFileds.Add(false);
-						updir = di.Path;
+						Data.Add(FS.GetMetadata(di.URL).LastWriteTimeUTC.ToLocalTime()); EditableFileds.Add(false);
+						updir = di.URL;
 					}
 					else if (di.IsDirectory)
 					{//dir
@@ -434,7 +434,7 @@ namespace fcmd
 						Data.Add(di.Date); EditableFileds.Add(false);
 					}
 					Data.Add(di);
-					ListingView.AddItem(Data, EditableFileds, di.Path);
+					ListingView.AddItem(Data, EditableFileds, di.URL);
 					if ((++counter & per_number) == 0) {
 						Application.MainLoop.DispatchPendingEvents();
 					}

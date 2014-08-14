@@ -1,4 +1,4 @@
-/* The File Commander base plugins - Local filesystem adapter
+﻿/* The File Commander base plugins - Local filesystem adapter
  * The main part of the LocalFS FS plugin
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
@@ -95,7 +95,7 @@ namespace fcmd.base_plugins.fs
 			//элемент "вверх по древу"
 			DirectoryInfo curdir = new DirectoryInfo(InternalURL);
 			if (curdir.Parent != null){
-				tmpVar.Path = "file://" + curdir.Parent.FullName;
+				tmpVar.URL = "file://" + curdir.Parent.FullName;
 				tmpVar.TextToShow = "..";
 				tmpVar.MIMEType = "x-fcmd/up";
 				tmpVar.IconSmall = Utilities.GetIconForMIME("x-fcmd/up");
@@ -114,7 +114,7 @@ namespace fcmd.base_plugins.fs
 				//перебираю каталоги
 				DirectoryInfo di = new DirectoryInfo(curDir);
 				tmpVar.IsDirectory = true;
-				tmpVar.Path = "file://" + curDir;
+				tmpVar.URL = "file://" + curDir;
 				tmpVar.TextToShow = di.Name;
 				tmpVar.Date = di.CreationTime;
 				if (di.Name.StartsWith(".")) {
@@ -136,7 +136,7 @@ namespace fcmd.base_plugins.fs
 			foreach(string curFile in files){
 				FileInfo fi = new FileInfo(curFile);
 				tmpVar.IsDirectory = false;
-				tmpVar.Path = "file://" + curFile;
+				tmpVar.URL = "file://" + curFile;
 				tmpVar.TextToShow = fi.Name;
 				tmpVar.Date = fi.LastWriteTime;
 				tmpVar.Size = fi.Length;
@@ -236,18 +236,6 @@ namespace fcmd.base_plugins.fs
 			FileAccess fa = (Lock ? FileAccess.ReadWrite : FileAccess.Read);
 
 			return new FileStream(InternalURL, FileMode.Open, fa);
-		}
-
-		public pluginner.File GetFile(string url)
-		{ //чтение файла
-			_CheckProtocol(url);
-			string InternalURL = url.Replace("file://", "");
-
-			pluginner.File fsf = new pluginner.File(); //fsf=filesystem file
-			fsf.Path = "file://" + InternalURL; //this long method have a correction for possibly damages of letters' cases or changes of slashes
-			fsf.Metadata = GetMetadata(url);
-			fsf.Name = new FileInfo(InternalURL).Name;
-			return fsf;
 		}
 
 		public byte[] GetFileContent(string url)

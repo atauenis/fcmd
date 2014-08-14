@@ -43,8 +43,6 @@ namespace fcmd
 				Xwt.MessageDialog.ShowError(string.Format(Localizator.GetString("FileNotFound"),ActivePanel.GetValue(ActivePanel.dfDisplayName)));
 				return;
 			}
-
-			pluginner.File SelectedFile = fs.GetFile(url);
 			string FileContent = Encoding.ASCII.GetString(fs.GetFileContent(url));
 			fcv.LoadFile(url, ActivePanel.FS, false);
 			fcv.Show();
@@ -162,13 +160,12 @@ namespace fcmd
             {
                 string SourceURL = selitem.Data[ActivePanel.dfURL].ToString();
                 pluginner.IFSPlugin SourceFS = ActivePanel.FS;
-                pluginner.File SourceFile = SourceFS.GetFile(SourceURL);
-
 
                 //check for file existing
                 if (SourceFS.FileExists(SourceURL))
                 {
-                    InputBox ibx = new InputBox(String.Format(Localizator.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + PassivePanel.FS.DirSeparator + SourceFile.Name);
+	                string SourceName = SourceFS.GetMetadata(SourceURL).Name;
+                    InputBox ibx = new InputBox(String.Format(Localizator.GetString("CopyTo"), SourceName), PassivePanel.FS.CurrentDirectory + PassivePanel.FS.DirSeparator + SourceName);
                     if (ibx.ShowDialog(this))
                     {
                         String DestinationFilePath = ibx.Result;
@@ -177,7 +174,7 @@ namespace fcmd
                         ReplaceQuestionDialog.ClickedButton dummy = ReplaceQuestionDialog.ClickedButton.Cancel;
                         AsyncCopy AC = new AsyncCopy();
 
-                        Thread CpThread = new Thread(delegate() { DoCp(ActivePanel.FS, PassivePanel.FS, SourceFile, DestinationFilePath, ref dummy, AC); });
+                        Thread CpThread = new Thread(delegate() { DoCp(ActivePanel.FS, PassivePanel.FS, SourceURL, DestinationFilePath, ref dummy, AC); });
                         CpThread.TrySetApartmentState(ApartmentState.STA);
                         FileProcessDialog fpd = new FileProcessDialog();
                         fpd.InitialLocation = Xwt.WindowLocation.CenterParent;
@@ -216,7 +213,7 @@ namespace fcmd
                 //not a file...maybe directory?
                 if (SourceFS.DirectoryExists(SourceURL))//а вдруг есть такой каталог?
                 {
-                    InputBox ibxd = new InputBox(String.Format(Localizator.GetString("CopyTo"), SourceFile.Name), PassivePanel.FS.CurrentDirectory + "/" + SourceFile.Name);
+                    InputBox ibxd = new InputBox(String.Format(Localizator.GetString("CopyTo"), SourceFS.GetMetadata(SourceURL).Name), PassivePanel.FS.CurrentDirectory + "/" + SourceFS.GetMetadata(SourceURL).Name);
 
                     if (ibxd.ShowDialog())
                     {
