@@ -98,7 +98,6 @@
   <ItemGroup>
     <Compile Include="Toolkit\BookmarkTools.cs" />
     <Compile Include="Widgets\EditableLabel.cs" />
-    <Compile Include="Widgets\FileListPanel.cs" />
     <Compile Include="Widgets\HeavyScroller.cs" />
     <Compile Include="Toolkit\OSVersionEx.cs" />
     <Compile Include="IFSPlugin.cs" />
@@ -112,7 +111,21 @@
     <Compile Include="Resources\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DefaultBookmarks.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Default.css" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Resources\battery.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\bookmarks.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\application-octet-stream.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\drive-harddisk.png" />
@@ -130,6 +143,9 @@
     <EmbeddedResource Include="Resources\folder.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\history.png" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Resources\image-missing.png" />
   </ItemGroup>
   <ItemGroup>
@@ -145,28 +161,13 @@
     <EmbeddedResource Include="Resources\root-folder.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DefaultBookmarks.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\search.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\application-octet-stream.png" />
     <EmbeddedResource Include="Resources\x-fcmd-directory.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\x-fcmd-up.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Default.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\bookmarks.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\history.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

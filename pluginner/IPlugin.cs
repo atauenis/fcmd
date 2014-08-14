@@ -60,7 +60,7 @@ namespace pluginner{
 		Configuration FCConfig { set; }
 	}
 
-	//todo: IUIPlugin (плагины к интерфейсу File Commander)
+	//todo: IUIPlugin (плагины к интерфейсу File Commander), IArchPlugin (архивные плагины)
 
    
 	#region PleaseSwitchPluginException

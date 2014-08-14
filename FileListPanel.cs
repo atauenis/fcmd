@@ -11,12 +11,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Reflection;
+using pluginner;
 using pluginner.Toolkit;
+using pluginner.Widgets;
 using Xwt;
 using Xwt.Drawing;
 
-namespace pluginner.Widgets
+namespace fcmd
 {
 	/// <summary>Filelist panel</summary>
 	public class FileListPanel : Table
@@ -39,8 +40,8 @@ namespace pluginner.Widgets
 		public Button GoUp = new Button("..");
 		EventHandler goUpDelegate = null;
 		public TextEntry UrlBox = new TextEntry();
-		public MenuButton BookmarksButton = new MenuButton(Image.FromResource("pluginner.Resources.bookmarks.png"));
-		public MenuButton HistoryButton = new MenuButton(Image.FromResource("pluginner.Resources.history.png"));
+		public MenuButton BookmarksButton = new MenuButton(Image.FromResource("fcmd.Resources.bookmarks.png"));
+		public MenuButton HistoryButton = new MenuButton(Image.FromResource("fcmd.Resources.history.png"));
 		public ListView2 ListingView = new ListView2();
 		public HBox QuickSearchBox = new HBox();
 		public TextEntry QuickSearchText = new TextEntry();//по возможность заменить на SearchTextEntry (не раб. на wpf, see xwt bug 330)
@@ -413,7 +414,7 @@ namespace pluginner.Widgets
 					List<Object> Data = new List<Object>();
 					List<Boolean> EditableFileds = new List<bool>();
 
-					Data.Add(di.IconSmall ?? Image.FromResource("pluginner.Resources.image-missing.png")); EditableFileds.Add(false);
+					Data.Add(di.IconSmall ?? Image.FromResource("fcmd.Resources.image-missing.png")); EditableFileds.Add(false);
 					Data.Add(di.Path); EditableFileds.Add(false);
 					Data.Add(di.TextToShow); EditableFileds.Add(true);
 					if (di.TextToShow == "..")
@@ -451,10 +452,16 @@ namespace pluginner.Widgets
 			}
 			catch (Exception ex)
 			{
-				if(ex.Message == "Object reference not set to an instance of an object."){ //говнокод убрать!
+				if (ex is pluginner.PleaseSwitchPluginException)
+				{
+					pluginfinder pf = new pluginfinder();
+					FS = pf.GetFSplugin(URL);
+					LoadDir(URL,dis,ShortenKB,ShortenMB,ShortenGB);
+				}
+				else if(ex is NullReferenceException)
 					MessageDialog.ShowWarning(ex.Message, ex.StackTrace + "\nInner exception: " + ex.InnerException.Message ?? "none");
-				}else
-				MessageDialog.ShowWarning(ex.Message);
+				else
+					MessageDialog.ShowWarning(ex.Message);
 			}
 			if (ListingView.Items.Count > 0)
 			{ ListingView.SelectedRow = 0; ListingView.ScrollerIn.ScrollTo(0, 0); }
@@ -596,31 +603,31 @@ namespace pluginner.Widgets
 				switch (di.DriveType)
 				{
 					case DriveType.Fixed:
-						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.drive-harddisk.png");
+						NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.drive-harddisk.png");
 						break;
 					case DriveType.CDRom:
-						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.drive-optical.png");
+						NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.drive-optical.png");
 						break;
 					case DriveType.Removable:
-						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
+						NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.drive-removable-media.png");
 						break;
 					case DriveType.Network:
-						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.network-server.png");
+						NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.network-server.png");
 						break;
 					case DriveType.Ram:
-						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
+						NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.emblem-system.png");
 						break;
 					case DriveType.Unknown:
-						NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.image-missing.png");
+						NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.image-missing.png");
 						break;
 				}
 
 				//OS-specific icons
-				if (d.StartsWith("A:")) NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
-				if (d.StartsWith("B:")) NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.media-floppy.png");
-				if (d.StartsWith("/dev")) NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.preferences-desktop-peripherals.png");
-				if (d.StartsWith("/proc")) NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.emblem-system.png");
-				if (d == "/") NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.root-folder.png");
+				if (d.StartsWith("A:")) NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.media-floppy.png");
+				if (d.StartsWith("B:")) NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.media-floppy.png");
+				if (d.StartsWith("/dev")) NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.preferences-desktop-peripherals.png");
+				if (d.StartsWith("/proc")) NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.emblem-system.png");
+				if (d == "/") NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.root-folder.png");
 
 				s.Stylize(NewBtn);
 				DiskList.PackStart(NewBtn);
@@ -640,7 +647,7 @@ namespace pluginner.Widgets
 					NewBtn.Style = ButtonStyle.Flat;
 					NewBtn.Margin = -3;
 					NewBtn.Cursor = CursorType.Hand;
-					NewBtn.Image = Image.FromResource(GetType(), "pluginner.Resources.drive-removable-media.png");
+					NewBtn.Image = Image.FromResource(GetType(), "fcmd.Resources.drive-removable-media.png");
 
 					s.Stylize(NewBtn);
 					DiskList.PackStart(NewBtn);
