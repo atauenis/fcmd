@@ -23,7 +23,7 @@ namespace fcmd.base_plugins.fs
 		 * Код должен работать везде!		THE CODE MUST WORK EVERYWHERE!
 		 */
 		public string Name { get { return Localizator.GetString("LocalFSVer"); } }
-		public string Version { get{return "1.0";} }
+		public string Version { get{return System.Windows.Forms.Application.ProductVersion ;} }
 		public string Author { get{return "A.T.";} }
 		public System.Configuration.Configuration FCConfig { set {} } //it can be a placeholder because the LFS can use the fcmd.Properties.Settings...
 		public IEnumerable<pluginner.DirItem> DirectoryContent {get{return DirContent;}} //возврат директории в FC
@@ -365,7 +365,7 @@ namespace fcmd.base_plugins.fs
 		{
 			get
 			{
-				int[] fapiver = { 0, 1, 0, 0, 1, 0 };
+				int[] fapiver = { 0, 1, 0,  0, 1, 0 };
 				return fapiver;
 			}
 		}

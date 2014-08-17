@@ -360,13 +360,19 @@ namespace fcmd
 						GoodItems.Add(di);
 				}
 
-				ActivePanel.LoadDir(
+				/*ActivePanel.LoadDir(
 					ActivePanel.FS.CurrentDirectory,
 					GoodItems,
 					ActivePanel.CurShortenKB,
 					ActivePanel.CurShortenMB,
 					ActivePanel.CurShortenGB
-					);
+					);*/
+				ActivePanel.LoadDir(
+					ActivePanel.FS.CurrentDirectory,
+					ActivePanel.CurShortenKB,
+					ActivePanel.CurShortenMB,
+					ActivePanel.CurShortenGB
+					);	//undone!
 
 				ActivePanel.StatusBar.Text = string.Format(Localizator.GetString("NameFilterFound"), Filter, GoodItems.Count);
 			}

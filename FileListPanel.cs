@@ -337,9 +337,9 @@ namespace fcmd
 		}
 
 		/// <summary>
-		/// Load the directory into the panel and set view options
+		/// Load the specifed directory with specifed content into the panel and set view options
 		/// </summary>
-		/// <param name="URL">Full path of the directory</param>
+		/// <param name="URL">The full URL of the directory (for reference needs)</param>
 		/// <param name="ShortenKB">How kilobyte sizes should be humanized</param>
 		/// <param name="ShortenMB">How megabyte sizes should be humanized</param>
 		/// <param name="ShortenGB">How gigabyte sizes should be humanized</param> //плохой перевод? "так nбайтные размеры должны очеловечиваться"
@@ -351,28 +351,9 @@ namespace fcmd
 
 			//неспешное TODO:придумать, куда лучше закорячить; не забываем, что во время работы FS может меняться полностью
 			FS.CLIstdoutDataReceived += FS_CLIstdoutDataReceived;
-			FS.CLIstderrDataReceived+=(stderr)=>{ CLIoutput.Text += "\n" + stderr; Utilities.ShowWarning(stderr); };
+			FS.CLIstderrDataReceived += (stderr) => { CLIoutput.Text += "\n" + stderr; Utilities.ShowWarning(stderr); };
 			FS.CLIpromptChanged += FS_CLIpromptChanged;
 
-			LoadDir(
-				URL,
-				FS.DirectoryContent,
-				ShortenKB,
-				ShortenMB,
-				ShortenGB
-				);
-		}
-
-		/// <summary>
-		/// Load the specifed directory with specifed content into the panel and set view options
-		/// </summary>
-		/// <param name="URL">The full URL of the directory (for reference needs)</param>
-		/// <param name="dis">Directory item list</param>
-		/// <param name="ShortenKB">How kilobyte sizes should be humanized</param>
-		/// <param name="ShortenMB">How megabyte sizes should be humanized</param>
-		/// <param name="ShortenGB">How gigabyte sizes should be humanized</param> //плохой перевод? "так nбайтные размеры должны очеловечиваться"
-		public void LoadDir(string URL, IEnumerable<DirItem> dis, SizeDisplayPolicy ShortenKB, SizeDisplayPolicy ShortenMB, SizeDisplayPolicy ShortenGB)
-		{
 			if (FS.CurrentDirectory == null){
 				//if this is first call in the session (the FLP is just initialized)
 				using (Menu hm = HistoryButton.Menu) { 
@@ -388,7 +369,6 @@ namespace fcmd
 			if (URL == "." && FS.CurrentDirectory == null){
 				LoadDir(
 					"file://"+Directory.GetCurrentDirectory(),
-					dis,
 					ShortenKB,
 					ShortenMB,
 					ShortenGB
@@ -408,7 +388,7 @@ namespace fcmd
 				string rootdir = FS.GetMetadata(URL).RootDirectory;
 				uint counter = 0;
 				const uint per_number = ~(((~(uint)0) >> 10) << 10);
-
+				IEnumerable<DirItem> dis = FS.DirectoryContent;
 				foreach (DirItem di in dis)
 				{
 					List<Object> Data = new List<Object>();
@@ -456,7 +436,7 @@ namespace fcmd
 				{
 					pluginfinder pf = new pluginfinder();
 					FS = pf.GetFSplugin(URL);
-					LoadDir(URL,dis,ShortenKB,ShortenMB,ShortenGB);
+					LoadDir(URL,ShortenKB,ShortenMB,ShortenGB);
 				}
 				else if(ex is NullReferenceException)
 					MessageDialog.ShowWarning(ex.Message, ex.StackTrace + "\nInner exception: " + ex.InnerException.Message ?? "none");
