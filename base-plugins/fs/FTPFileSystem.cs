@@ -16,19 +16,23 @@ using pluginner.Toolkit;
 
 namespace fcmd.base_plugins.fs
 {
-	class FTPFileSystem : IFSPlugin
+	public class FTPFileSystem : IFSPlugin
 	{
 		private FTPClient ftp;
 		private string currentDirectory = "";
 		private List<DirItem> directoryContent = new List<DirItem>();
+		private string hostname;
 
-		public static Regex FtpListDirectoryDetailsRegex = new Regex(@".*(?<month>(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\s*(?<day>[0-9]*)\s*(?<yearTime>([0-9]|:)*)\s*(?<fileName>.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase); //undone: add style switching (windows, unix, etc)
-		private byte[] Buffer = new byte[512];
-
+		private static Regex FtpListDirectoryDetailsRegex = new Regex(@".*(?<month>(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\s*(?<day>[0-9]*)\s*(?<yearTime>([0-9]|:)*)\s*(?<fileName>.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase); //undone: add style switching (windows, unix, etc)
 
 		private void _CheckProtocol(string url)
-		{ //проверка на то, чтобы нечаянно через ftpfs не попытались зайти в локальную ФС, webdav, реестр и т.п. :-)
-			if (!url.ToLowerInvariant().StartsWith("ftp:")) throw new pluginner.PleaseSwitchPluginException();
+		{
+			if (url == null) throw new ArgumentNullException("url");
+			//проверка на то, чтобы нечаянно через ftpfs не попытались зайти в локальную ФС, webdav, реестр и т.п. :-)
+			if (!url.ToLowerInvariant().StartsWith("ftp:")) throw new PleaseSwitchPluginException();
+
+			Uri URI = new Uri(url);
+			if (URI.Host != hostname) Connect(url);
 		}
 
 		private void LoadDir(string url)
@@ -44,8 +48,7 @@ namespace fcmd.base_plugins.fs
 // ReSharper disable once PossibleNullReferenceException, because Connect(url) would initialize it or would crash this constructor
 			Socket sck = ftp.GetDataSocket();//possible ftpexception, todo add try...catch
 			string ListResult;
-			string dummy = "";
-			ftp.SendCommand("CWD " + URI.PathAndQuery,out dummy,250);
+			ftp.SendCommand("CWD " + URI.PathAndQuery);
 			ftp.SendCommand("TYPE A");
 			ftp.SendCommand("LIST", out ListResult);
 
@@ -53,22 +56,51 @@ namespace fcmd.base_plugins.fs
 
 			StreamReader sr = new StreamReader(new NetworkStream(sck));
 			directoryContent.Clear();
+
+			//todo: элемент "вверх по древу"
+			/*
+			if (URI.PathAndQuery != "/")
+			{
+				string upDirUrl = "ftp://" + URI.Host + ":" + URI.Port + URI.PathAndQuery;
+				upDirUrl = URI.AbsolutePath.Substring(0, URI.AbsolutePath.LastIndexOf('/',0,1));
+				DirItem updir = new DirItem();
+				updir.URL = upDirUrl;
+				updir.TextToShow = "..";
+				updir.MIMEType = "x-fcmd/up";
+				updir.IconSmall = Utilities.GetIconForMIME("x-fcmd/up");
+				directoryContent.Add(updir);
+			}*/
+
 			while (!sr.EndOfStream)
 			{
 				string CurItem = sr.ReadLine();
+				if (CurItem == null) continue;
 				directoryListing += CurItem+"\n";
 
-// ReSharper disable PossibleNullReferenceException
 				DirItem di = new DirItem();
 				Match m = FtpListDirectoryDetailsRegex.Match(CurItem);
+				string filename = m.Groups["fileName"].Value;
 
 				di.IsDirectory = CurItem.StartsWith("d");
-				if (di.IsDirectory) di.IconSmall = Utilities.GetIconForMIME("x-fcmd/directory");
-				di.TextToShow = m.Groups["fileName"].Value;
-				di.Date = DateTime.Now;
-				di.URL = "ftp://" + URI.Host + ":" + URI.Port + URI.PathAndQuery + m.Groups["fileName"].Value + "/";
+				if (di.IsDirectory)
+				{
+					di.IconSmall = Utilities.GetIconForMIME("x-fcmd/directory");
+				}
+				else
+				{
+					di.MIMEType = filename.LastIndexOf('.') > 0
+						? Utilities.GetContentType(filename.Substring(filename.LastIndexOf('.') + 1))
+						: "application/octet-stream";
+					di.IconSmall = Utilities.GetIconForMIME(di.MIMEType);
+				}
+				di.TextToShow = filename;
+				try
+				{ di.Date = DateTime.Parse(m.Groups["month"].Value + " " + m.Groups["day"].Value + " " + m.Groups["yearTime"].Value); }
+				// ReSharper disable once EmptyGeneralCatchClause
+				catch { } //to prevent crash if date is received in an invalid format
+				di.URL = "ftp://" + URI.Host + ":" + URI.Port + URI.PathAndQuery + filename;
+				if (di.IsDirectory && !di.URL.EndsWith("/")) di.URL += "/";
 				directoryContent.Add(di);
-// ReSharper restore PossibleNullReferenceException
 			}
 			ftp.ReadResponse();
 		}
@@ -82,6 +114,7 @@ namespace fcmd.base_plugins.fs
 				"anonymous",
 				@"test@test.ru"
 			);
+			hostname = adr.Host;
 		}
 
 		public IEnumerable<DirItem> DirectoryContent
@@ -121,7 +154,7 @@ namespace fcmd.base_plugins.fs
 			throw new NotImplementedException();
 		}
 
-		public System.IO.Stream GetFileStream(string URL, bool Lock = false)
+		public Stream GetFileStream(string URL, bool Lock = false)
 		{
 			throw new NotImplementedException();
 		}

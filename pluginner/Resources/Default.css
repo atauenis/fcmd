@@ -10,6 +10,7 @@ VE, VE:hover, VE:active, VE:focus{
 	background-color: inherit;
 	color: inherit;
 	font-family: inherit;
+	/* ReSharper disable InvalidValue */
 	display: normal;
 
 	height: auto;

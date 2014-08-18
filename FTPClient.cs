@@ -6,9 +6,6 @@
  * Contributors should place own signs here.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -25,7 +22,7 @@ namespace fcmd
 		/// </summary>
 		public class FtpException : Exception
 		{
-			public FtpException(string Message, int Code, string Command) : base("Got non-good FTP response " + Code + ": " + Message) { }
+			public FtpException(string Message, int Code, string Command) : base("\"" + Command + "\": " + Code + "  " + Message) { }
 			public FtpException(string Message, Exception InnerException) : base(Message, InnerException) { }
 		}
 
@@ -38,8 +35,9 @@ namespace fcmd
 		public FTPClient(string Server, int Port = 21, string Username = "anonymous", string Password = @"anonymous@filecommander.org")
 		{
 			PasvMode = true;
-
+			#if DEBUG
 			Console.WriteLine(@"FTP: Connecting to {0}...",Server);
+			#endif
 
 			IPAddress addr;
 
@@ -56,7 +54,9 @@ namespace fcmd
 				throw new FtpException("Couldn't connect to remote server", ex);
 			}
 
+			#if DEBUG
 			Console.WriteLine(@"FTP: TCP connection estabilished " + Server);
+			#endif
 			ReadResponse();
 
 			if (ResponseCode != 220)
@@ -65,7 +65,9 @@ namespace fcmd
 				throw new FtpException(Response.Substring(4),ResponseCode,"connnect");
 			}
 
-			Console.WriteLine(@"FTP: Authorizing...");
+			#if DEBUG
+			Console.WriteLine(@"FTP: Authorizing as {0}, {1}", Username, Password);
+			#endif
 
 			SendCommand("USER " + Username);
 
@@ -86,7 +88,9 @@ namespace fcmd
 				}
 			}
 
+			#if DEBUG
 			Console.WriteLine(@"FTP: FTP connection estabilished " + Server);
+			#endif
 		}
 
 		/// <summary>
@@ -142,21 +146,28 @@ namespace fcmd
 
 				Socket socket = null;
 
+#if DEBUG
+				Console.WriteLine(@"FTP: Opening passive data connection to {0}:{1}", ipAddress, port);
+#endif
+
 				try
 				{
-					Console.WriteLine(@"FTP: Opening passive data connection to {0}:{1}",ipAddress,port);
 					socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 					IPEndPoint ep = new IPEndPoint(Dns.GetHostEntry(ipAddress).AddressList[0], port);
 					socket.Connect(ep);
 				}
 				catch (Exception ex)
 				{
+#if DEBUG
 					Console.WriteLine(@"FTP: Unable to open data connection: " + ex.Message);
+#endif
 					if (socket != null && socket.Connected) socket.Close();
 
 					throw new FtpException("Can't connect to remote server", ex);
 				}
+#if DEBUG
 				Console.WriteLine(@"FTP: ready to exchange data with {0}:{1}", ipAddress, port);
+#endif
 				return socket;
 			}
 			else
@@ -195,14 +206,18 @@ namespace fcmd
 				if (Response.Contains("\n"))
 				{ //server sent many responses in the packet, store only last
 					string[] responces = Response.Split('\n');
-					Response = responces[responces.Length - 2];
+					Response = responces[responces.Length - 2].Trim();
 					ResponseCode = int.Parse(Response.Substring(0, 3));
-					Console.WriteLine(@"FTP: < {0}", Response);
+					#if DEBUG
+					Console.WriteLine(@"FTP: < {0}", Response.Trim());
+					#endif
 				}
 				else
 				{
 					ResponseCode = int.Parse(Response.Substring(0, 3));
+					#if DEBUG
 					Console.WriteLine(@"FTP: < {0} [SINGLE]", Response);
+					#endif
 				}
 			}
 			else throw new Exception("Command socket has been closed");
@@ -213,10 +228,13 @@ namespace fcmd
 		/// </summary>
 		/// <param name="Command">The command with arguments (no line endigng)</param>
 		/// <param name="Wait">Wait for response begin received</param>
+		/// <param name="FailOnError">Should the method throw an FtpException if the server returns an error</param>
 		/// <returns>The server response code</returns>
-		public int SendCommand(string Command, bool Wait = true)
+		public int SendCommand(string Command, bool Wait = true, bool FailOnError = true)
 		{
+			#if DEBUG
 			Console.WriteLine(@"FTP: > {0}", Command);
+			#endif
 			Byte[] cmdBytes = Encoding.ASCII.GetBytes((Command + "\r\n").ToCharArray());
 			try
 			{
@@ -224,13 +242,21 @@ namespace fcmd
 			}
 			catch (Exception ex)
 			{
-				throw new FtpException("Network error: " + ex.Message,ex);
+				#if DEBUG
+				// ReSharper disable once LocalizableElement
+				Console.WriteLine("Cannot send FTP command: {0}\n{1}",Command,ex.StackTrace);
+				#endif
+				throw;
 			}
 
 			if (Wait)
 			{
 				ReadResponse();
-				return ResponseCode;
+
+				if (FailOnError && (ResponseCode >= 400))
+					throw new FtpException(Response.Substring(4), ResponseCode, Command);
+				else
+					return ResponseCode;
 			}
 			else return -1;
 		}
@@ -240,10 +266,11 @@ namespace fcmd
 		/// </summary>
 		/// <param name="Command">The command with arguments (no line endigng)</param>
 		/// <param name="Result">The server's response (from command socket)</param>
+		/// <param name="Wait">Wait for response begin received</param>
 		/// <returns>The server response code</returns>
-		public int SendCommand(string Command, out string Result)
+		private int SendCommand(string Command, out string Result, bool Wait = true)
 		{
-			SendCommand(Command);
+			SendCommand(Command, Wait);
 			Result = Response;
 			return ResponseCode;
 		}
@@ -253,28 +280,20 @@ namespace fcmd
 		/// </summary>
 		/// <param name="Command">The command with arguments (no line endigng)</param>
 		/// <param name="Result">The server's response (from command socket)</param>
-		/// <param name="GoodCodes">List (array) of response codes that should be interpretted as "all okay", others will cause throwing of an FtpException</param>
+		/// <param name="Wait">Wait for response begin received</param>
+		/// <param name="FailOnError">Should the method throw an FtpException if the server returns an error</param>
 		/// <returns>The server response code</returns>
-		public int SendCommand(string Command, out string Result, IEnumerable<int> GoodCodes)
+		public int SendCommand(string Command, out string Result, bool Wait = true, bool FailOnError = true)
 		{
-			int result = SendCommand(Command, out Result);
-			if (GoodCodes.Any(i => result == i))
-				return result;
-			throw new FtpException(Response,ResponseCode,Command);
-		}
-		/// <summary>
-		/// Sends a FTP command and returns its response
-		/// </summary>
-		/// <param name="Command">The command with arguments (no line endigng)</param>
-		/// <param name="Result">The server's response (from command socket)</param>
-		/// <param name="GoodCode">The response codes that should be interpretted as "all okay", others will cause throwing of an FtpException</param>
-		/// <returns>The server response code</returns>
+			SendCommand(Command, out Result, Wait);
+			
+			if (Wait == false) return -1;
 
-		public int SendCommand(string Command, out string Result, int GoodCode)
-		{
-			return SendCommand(Command, out Result, new int[] {GoodCode});
+			if (FailOnError && (ResponseCode >= 400))
+				throw new FtpException(Response.Substring(4), ResponseCode, Command);
+			else
+				return ResponseCode;
 		}
-
 
 		~FTPClient()
 		{

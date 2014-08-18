@@ -379,9 +379,12 @@ namespace fcmd
 			ListingView.Cursor = CursorType.Wait;
 			ListingView.Sensitive = false;
 
+			string oldCurDir = FS.CurrentDirectory;
+
 			try
 			{
 				FS.CurrentDirectory = URL;
+				UrlBox.Text = URL;
 				ListingView.Clear();
 				UrlBox.Text = URL;
 				string updir = URL + FS.DirSeparator+"..";
@@ -438,10 +441,16 @@ namespace fcmd
 					FS = pf.GetFSplugin(URL);
 					LoadDir(URL,ShortenKB,ShortenMB,ShortenGB);
 				}
-				else if(ex is NullReferenceException)
+				else if (ex is NullReferenceException)
+				{
 					MessageDialog.ShowWarning(ex.Message, ex.StackTrace + "\nInner exception: " + ex.InnerException.Message ?? "none");
+					LoadDir(oldCurDir, ShortenKB, ShortenMB, ShortenGB);
+				}
 				else
+				{
 					MessageDialog.ShowWarning(ex.Message);
+					LoadDir(oldCurDir, ShortenKB, ShortenMB, ShortenGB);
+				}
 			}
 			if (ListingView.Items.Count > 0)
 			{ ListingView.SelectedRow = 0; ListingView.ScrollerIn.ScrollTo(0, 0); }
