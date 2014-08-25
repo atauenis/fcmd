@@ -73,9 +73,9 @@ namespace pluginner
 		/// Gets a Stream that can be used to read and write the file
 		/// </summary>
 		/// <param name="URL">The URL of the file</param>
-		/// <param name="Lock">Because some systems doesn't allow writing to non-locked file streams, set to <value>1</value> if writing to the stream is planned.</param>
-		/// <returns></returns>
-		Stream GetFileStream(string URL, bool Lock = false);
+		/// <param name="Write">Due to limitations on some filesystems, the usage mode (read-only or write-only) must be set before any file operations</param>
+		/// <returns>The .NET Framework I/O stream</returns>
+		Stream GetFileStream(string URL, bool Write = false);
 
 		/// <summary>Writes bytes into a file</summary>
 		/// <param name="URL">The URL of the file</param>

@@ -107,6 +107,7 @@ namespace fcmd.base_plugins.fs
 
 		private void Connect(string url)
 		{
+			_CheckProtocol(url);
 			Uri adr = new Uri(url);
 			ftp = new FTPClient(
 				adr.Host,
@@ -130,7 +131,7 @@ namespace fcmd.base_plugins.fs
 
 		public bool FileExists(string URL)
 		{
-			throw new NotImplementedException();
+			return directoryContent.Any(di => di.URL == URL);
 		}
 
 		public bool DirectoryExists(string URL)
@@ -154,9 +155,22 @@ namespace fcmd.base_plugins.fs
 			throw new NotImplementedException();
 		}
 
-		public Stream GetFileStream(string URL, bool Lock = false)
+		public Stream GetFileStream(string URL, bool Write = false)
 		{
-			throw new NotImplementedException();
+			Uri URI = new Uri(URL);
+			if (Write)
+			{
+				//write mode
+				NetworkStream ns = new NetworkStream(ftp.GetDataSocket(),FileAccess.ReadWrite);
+				return ns;
+			}
+			else
+			{
+				//read-only mode
+				NetworkStream ns = new NetworkStream(ftp.GetDataSocket(), FileAccess.Read);
+				ftp.SendCommand("RETR " + URI.PathAndQuery);
+				return ns;
+			}
 		}
 
 		public void WriteFileContent(string URL, int Start, byte[] Content)
@@ -176,7 +190,8 @@ namespace fcmd.base_plugins.fs
 
 		public void DeleteFile(string URL)
 		{
-			throw new NotImplementedException();
+			Uri URI = new Uri(URL);
+			ftp.SendCommand("DELE " + URI.AbsolutePath);
 		}
 
 		public void MoveFile(string oldURL, string newURL)
@@ -186,12 +201,14 @@ namespace fcmd.base_plugins.fs
 
 		public void DeleteDirectory(string URL, bool TrySafe)
 		{
-			throw new NotImplementedException();
+			Uri URI = new Uri(URL);
+			ftp.SendCommand("RMD " + URI.AbsolutePath);
 		}
 
 		public void CreateDirectory(string URL)
 		{
-			throw new NotImplementedException();
+			Uri URI = new Uri(URL);
+			ftp.SendCommand("MKD " + URI.AbsolutePath);
 		}
 
 		public void MoveDirectory(string OldURL, string NewURL)
@@ -227,7 +244,7 @@ namespace fcmd.base_plugins.fs
 		{
 			get
 			{
-				int[] fapiver = { 0, 1, 0, 0, 1, 0 };
+				int[] fapiver = { 0, 1, 0,  0, 1, 0 };
 				return fapiver;
 			}
 		}

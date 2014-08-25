@@ -6,6 +6,8 @@
  * Contributors should place own signs here.
  */
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -24,6 +26,42 @@ namespace fcmd
 		{
 			public FtpException(string Message, int Code, string Command) : base("\"" + Command + "\": " + Code + "  " + Message) { }
 			public FtpException(string Message, Exception InnerException) : base(Message, InnerException) { }
+		}
+
+		public class FtpStream : NetworkStream
+		{
+		//переписать!!!
+			private bool receive;
+			private FTPClient ftp;
+			private List<Byte> buf = new List<Byte>(); 
+
+			public FtpStream(FTPClient FtpClient, string Command, bool Receive) : base(FtpClient.GetDataSocket())
+			{
+				ftp = FtpClient;
+				receive = Receive;
+			}
+
+			public override void Write(byte[] buffer, int offset, int size)
+			{
+				if (!receive)
+					buf.AddRange(buffer);
+				else
+					base.Write(buffer, offset, size);
+			}
+
+			public override void Close()
+			{
+				if (!receive)
+				{
+					base.Write(buf.ToArray(), 0, buf.Count);
+				}
+				base.Close();
+			}
+
+			~FtpStream()
+			{
+				Close();
+			}
 		}
 
 		private Socket CommandSocket;
