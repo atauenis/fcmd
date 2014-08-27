@@ -286,12 +286,12 @@ namespace fcmd
 		/// <param name="AllowEdit">Mode of VE: true=editor, false=viewer</param>
 		public void LoadFile(string URL, IFSPlugin FS, bool AllowEdit)
 		{
-			byte[] ContentBytes = FS.GetFileContent(URL);
-			string content = (ContentBytes != null && ContentBytes.Length > 0) ? Encoding.UTF8.GetString(ContentBytes) : "";
-			pluginfinder pf = new pluginfinder();
-
 			try
 			{
+				byte[] ContentBytes = FS.GetFileContent(URL);
+				string content = (ContentBytes != null && ContentBytes.Length > 0) ? Encoding.UTF8.GetString(ContentBytes) : "";
+				pluginfinder pf = new pluginfinder();
+
 				string GottenHeaders;
 				if (content.Length >= 20) GottenHeaders = content.Substring(0, 20);
 				else GottenHeaders = content;

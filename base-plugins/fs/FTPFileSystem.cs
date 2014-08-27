@@ -106,9 +106,10 @@ namespace fcmd.base_plugins.fs
 		}
 
 		private void Connect(string url)
-		{
+		{	Uri adr = new Uri(url);
+			hostname = adr.Host;
 			_CheckProtocol(url);
-			Uri adr = new Uri(url);
+			
 			ftp = new FTPClient(
 				adr.Host,
 				adr.Port,
