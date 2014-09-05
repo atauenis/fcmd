@@ -4,11 +4,15 @@
 		<AutoBookmarks type="System.IO.DriveInfo.GetDrives"/>
   </SpeedDial>
 	<SpeedDial type="BookmarksMenu">
-		<Bookmark title="Windows directory" url="file://C:/WINDOWS" />
-		<Bookmark title="Program files (32 bit)" url="file://C:/PROGRA~1" />
-		<Bookmark title="Program files (64 bit)" url="file://C:/Program Files" />
-		<Bookmark title="Documents and settings" url="file://C:/DOCUME~1" />
-		<Bookmark title="User files" url="file://C:/Users" />
+		<Bookmark title="Windows folders">
+			<Bookmark title="Windows directory" url="file://C:/WINDOWS" />
+			<Bookmark title="Program files">
+				<Bookmark title="Program files (32 bit)" url="file://C:/PROGRA~1" />
+				<Bookmark title="Program files (64 bit)" url="file://C:/Program Files" />
+			</Bookmark>
+		</Bookmark>
+		<Bookmark title="Documents and settings (Windows 2000-like only)" url="file://C:/DOCUME~1" />
+		<Bookmark title="User files (Windows Vista-like only)" url="file://C:/Users" />
 	</SpeedDial>
 </Bookmarks>
 
@@ -17,16 +21,16 @@ Bookmarks: корневой элемент списка закладок
   Без параметров.
 SpeedDial: меню быстрого вызова (закладок)
   type=тип меню, одно из значений:
-	QuickAccessBar-панель дисков
-	BookmarksMenu-меню закладок
-	UserMenu-пользовательское меню по F2 (на 23/01/2014 не реализовано)
-Bookmark: закладка в меню
-  url: адрес, куда закладка указывает
+		QuickAccessBar-панель дисков
+		BookmarksMenu-меню закладок
+		UserMenu-пользовательское меню по F2 (на 23/01/2014 не реализовано)
+Bookmark: закладка в меню или закладочная папка
+  url: адрес, куда закладка указывает (для папок не обязательно)
   title: надпись закладки
-  icon: иконка закладки (на 23/01/2014 не реализовано)
+  icon: иконка закладки (не обязательно)
 AutoBookmarks: автоматическая закладка (несколько закладок), выводится в зависимости от условий
   type: что должно быть на её месте, одно из значений:
-	System.IO.DriveInfo.GetDrives: список дисков из одноимённой функции .NET, неадекватный вывод под Mono
-	LinuxMounts: список дисков в системах Linux (по каталогу /mnt)
-	LinuxSystemDirs: системные каталоги Linux: / /var/ /etc/ /tmp/ /bin/ и т.д. (на 23/01/2014 не реализовано)
+		System.IO.DriveInfo.GetDrives: список дисков из одноимённой функции .NET, неадекватный вывод под Mono
+		LinuxMounts: список дисков в системах Linux (по каталогу /mnt)
+		LinuxSystemDirs: системные каталоги Linux: / /var/ /etc/ /tmp/ /bin/ и т.д. (на 23/01/2014 не реализовано)
 -->

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Xwt;
-using Xwt.Drawing;
+using Image = Xwt.Drawing.Image;
 
 namespace pluginner.Toolkit
 {
@@ -61,24 +61,48 @@ namespace pluginner.Toolkit
 							}
 							else if (xc.Name == "Bookmark") //простая закладка
 							{
-								try
-								{
-									Bookmark bm = new Bookmark();
-									bm.title = xc.Attributes.GetNamedItem("title").Value;
-									bm.url = xc.Attributes.GetNamedItem("url").Value;
-									if (xc.OuterXml.IndexOf("icon=", StringComparison.Ordinal) > 0)
-										bm.Icon = xc.Attributes.GetNamedItem("icon").Value;
-									bookmarks.Add(bm);
-								}
-								catch
-								{
-									Console.WriteLine("WARNING: Invalid bookmark declaration: " + xc.OuterXml);
-								}
+								ParseBookmarkNode(xc);
 							}
 						}
 						//todo: bookmark folders
 					}
 				}
+			}
+		}
+
+		private void ParseBookmarkNode(XmlNode XN, Bookmark UpperBookmark = null)
+		{
+			try
+			{
+				//overall
+				Bookmark bm = new Bookmark();
+				bm.title = XN.Attributes.GetNamedItem("title").Value;
+				if (XN.OuterXml.IndexOf("icon=", StringComparison.Ordinal) > 0)
+					bm.Icon = XN.Attributes.GetNamedItem("icon").Value;
+
+				//if the bookmark is container
+				if (XN.HasChildNodes)
+				{
+					bm.SubMenu = new List<Bookmark>();
+					foreach (XmlNode SubXN in XN.ChildNodes)
+					{
+						ParseBookmarkNode(SubXN, bm);
+					}
+				}
+				//if it is not a container
+				else
+				{
+					bm.url = XN.Attributes.GetNamedItem("url").Value;
+				}
+
+				if(UpperBookmark == null)
+				bookmarks.Add(bm);
+				else
+				UpperBookmark.SubMenu.Add(bm);
+			}
+			catch
+			{
+				Console.WriteLine("WARNING: Invalid bookmark declaration: " + XN.OuterXml);
 			}
 		}
 
@@ -93,8 +117,14 @@ namespace pluginner.Toolkit
 			foreach (Bookmark b in bookmarks)
 			{
 				string url = b.url;
-				Button NewBtn = new Button(null, b.title);
-				NewBtn.Clicked += (o, ea) => { OnClick(url); };
+				MenuButton NewBtn = new MenuButton(null, b.title);
+				if (b.SubMenu != null)
+				{
+					NewBtn.Type = ButtonType.DropDown;
+					NewBtn.Menu = GetBookmarkSubmenu(b, OnClick);
+				}
+				else
+					{ NewBtn.Clicked += (o, ea) => OnClick(url); }
 				NewBtn.CanGetFocus = false;
 				NewBtn.Style = ButtonStyle.Flat;
 				NewBtn.Margin = -3;
@@ -116,12 +146,42 @@ namespace pluginner.Toolkit
 			{
 				string url = b.url;
 				MenuItem mi = new MenuItem();
-				mi.Clicked += (o, ea) => { OnClick(url); };
+				mi.Clicked += (o, ea) => OnClick(url);
 				mi.Label = b.title;
 				mi.Image = b.GetIcon();
+				if (b.SubMenu != null) mi.SubMenu = GetBookmarkSubmenu(b, OnClick);
 				mnu.Items.Add(mi);
 			}
 		}
+
+		private Menu GetBookmarkSubmenu(Bookmark bookmark, Action<string> OnClick)
+		{
+			Menu mnu = new Menu();
+			if (bookmark.SubMenu == null) throw new ArgumentException("The bookmark should have a submenu", "bookmark");
+
+			List<Bookmark> lbm = bookmark.SubMenu;
+			foreach (Bookmark b in lbm)
+			{
+				MenuItem mi = new MenuItem();
+				mi.Label = b.title;
+				mi.Image = b.GetIcon();
+
+				if (b.SubMenu == null)
+				{
+					string url = b.url;
+					mi.Clicked += (o, ea) => OnClick(url);
+
+				}
+				else
+				{
+					mi.SubMenu = GetBookmarkSubmenu(b, OnClick);
+				}
+				mnu.Items.Add(mi);
+			}
+
+			return mnu;
+		}
+
 
 		/// <summary>Add bookmarks of mounted medias (*nix)</summary>
 		private List<Bookmark> AddLinuxMounts()
@@ -197,13 +257,22 @@ namespace pluginner.Toolkit
 	public class Bookmark
 	{
 		private Image i = Image.FromResource("pluginner.Resources.folder.png");
+		private bool imageIsSet;
 
 		/// <summary>The URL of the bookmark</summary>
 		public string url { get;set;}
 		/// <summary>The label (caption, title, mark) of the bookmark</summary>
 		public string title { get;set;}
+
 		/// <summary>Get the icon of the bookmark (or default icon if the bookmark hasn't an icon)</summary>
-		public Image GetIcon() { return i; }
+		public Image GetIcon()
+		{
+			if (!imageIsSet)
+			{
+				return SubMenu == null ? i : Image.FromResource("pluginner.Resources.bookmarkMenu.png"); //todo: replace the Firefox icon with a free!
+			}
+			return i;
+		}
 		/// <summary>Set the icon of the bookmark</summary>
 		public string Icon{
 			set{
@@ -214,6 +283,8 @@ namespace pluginner.Toolkit
 						i = Image.FromResource(value.Replace("(internal)","pluginner.Resources."));
 					else
 						i = Image.FromFile(value);
+
+					imageIsSet = true;
 				}
 				catch (Exception ex)
 				{
@@ -223,7 +294,8 @@ namespace pluginner.Toolkit
 			}
 		}
 
-		//todo: public SpeedDial SubMenu;
+		public List<Bookmark> SubMenu;
+
 		//todo: public string Description;
 	}
 }

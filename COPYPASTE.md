@@ -11,3 +11,4 @@ Icons are copied of made on base from Tango Icon Theme: http://tango.freedesktop
 Some icons are copied from other free icon sets. The exceptions are:
 
 * pluginner\Resources\history.png = 16x16\actions\document-open-recent.png from gnome-icon-theme-3.12.0
+* pluginner\Resources\bookmarkMenu.png = Mozilla Firefox 31\browser\omni.ja\chrome\browser\skin\classic\browser\places\allBookmarks.png (stolen temporary)

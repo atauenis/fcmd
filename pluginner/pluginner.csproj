@@ -169,5 +169,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\x-fcmd-up.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\bookmarkMenu.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
