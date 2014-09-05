@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using pluginner.Toolkit;
 
 namespace fcmd.base_plugins.fs
 {
@@ -85,8 +86,19 @@ namespace fcmd.base_plugins.fs
 				catch (Exception ex)
 				{
 					CLIsomethingIsRunning = false;
+					bool inCmd = false;
+					try
+					{
+						//if the OS is Windows NT, try to run the command in CMD.EXE
+						if (OSVersionEx.Platform == PlatformID.Win32NT){
+							new Process {StartInfo = new ProcessStartInfo("cmd.exe", "/C \"" + StdIn + " && pause\"")}.Start();
+							inCmd = true;
+						}
+					}
+					catch
+					{ RaiseCLIstderrDataReceived(Localizator.GetString("CantRunEXE") + "cmd.exe /C \"" + StdIn + " && pause\"" + "\n" + ex.Message); }
+					if(!inCmd)
 					RaiseCLIstderrDataReceived(Localizator.GetString ("CantRunEXE") + StdIn + "\n" + ex.Message);
-					//todo: add at win32 systems calling "cmd.exe /C" if the program can't start
 				}
 			}
 			else {

@@ -41,6 +41,11 @@ namespace pluginner.Widgets
 		public Color PointedFgColor = Colors.Black;
 		public Color SelectedBgColor = Colors.White;
 		public Color SelectedFgColor = Colors.Red;
+
+		//For virtual mode
+		int VisibleItemsByY = -1;
+		int VisibleItemsByX = -1;
+
 		/// <summary>List of items. Please do not edit directly! Please use the AddItem and RemoveItem functions.</summary>
 		public List<ListView2Item> Items = new List<ListView2Item>();
 		/// <summary>The pointed item</summary>
@@ -68,6 +73,8 @@ namespace pluginner.Widgets
 			CanGetFocus = true;
 			KeyPressed += Layout_KeyPressed;
 
+			BoundsChanged += ListView2_BoundsChanged;
+
 			ScrollerIn.BackgroundColor = Colors.White;
 
 			//tests for custom pointing edge setup
@@ -77,6 +84,30 @@ namespace pluginner.Widgets
 		}
 
 		//EVENT HANDLERS
+
+		void ListView2_BoundsChanged(object sender, EventArgs e)
+		{
+			//if the calculation is possible
+			if (Items != null && Items.Count > 0)
+			{
+				Size mySize = Size;
+				Size oneItemSize = Items[0].Size;
+
+				if (_View == Views.Details)
+				{
+					//table mode
+					double visibleHeight = mySize.Height;
+					double itemHeight = oneItemSize.Height;
+
+					for (double i = 0; i < visibleHeight; i += itemHeight)
+					{
+						VisibleItemsByY++;
+					}
+
+					VisibleItemsByX = 0;
+				}
+			}
+		}
 
 		private void Item_ButtonPressed(object sender, ButtonEventArgs e)
 		{

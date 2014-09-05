@@ -56,7 +56,7 @@ namespace pluginner.Toolkit
 									case "LinuxMounts":
 										bookmarks.AddRange(AddLinuxMounts());
 										break;
-										//todo: LinuxSystemDirs (/), LinuxUserMounts
+										//todo: LinuxSystemDirs (/), LinuxUserMounts, MacMounts
 								}
 							}
 							else if (xc.Name == "Bookmark") //простая закладка
