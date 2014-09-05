@@ -170,10 +170,6 @@ namespace pluginner
 	/// <summary>Common directory item info.</summary>
 	public struct DirItem
 	{
-		/* TODO: pluginner.DirItem sometimes duplicates pluginner.File, it's need to do something to DRY.
-		 * The one of ways is to remove most of the Size,Date,Rules(Permissions),Mimetype and other obsolete fields
-		 * and replace with a one FSEntryMetadata field.
-		 */
 		/// <summary>
 		/// The uniform resource locator of the file.
 		/// </summary>

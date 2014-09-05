@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms.VisualStyles;
 using Xwt;
 using Xwt.Drawing;
 
@@ -197,16 +196,16 @@ namespace pluginner.Widgets
 		/// <param name="lvi">The requested ListView2Item</param>
 		private void _SelectItem(ListView2Item lvi)
 		{
-			SelectedItems.Add(lvi);
 			switch (lvi.State)
 			{
 				case ItemStates.Default:
 					lvi.State = ItemStates.Selected;
+					SelectedItems.Add(lvi);
 					break;
 				case ItemStates.Pointed:
 					lvi.State = ItemStates.PointedAndSelected;
+					SelectedItems.Add(lvi);
 					break;
-
 				case ItemStates.Selected:
 				case ItemStates.PointedAndSelected:
 					_UnselectItem(lvi);
