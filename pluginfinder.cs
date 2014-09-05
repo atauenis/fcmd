@@ -30,22 +30,22 @@ namespace fcmd
 				foreach (string fsp in fsplist)
 				{
 					rowCounter++;
-					if (fsp.Split(";".ToCharArray()).Length != 2) { Console.WriteLine("Ошибка в файле fsplugins.conf на строке " + rowCounter); break; }
+					if (fsp.Split(";".ToCharArray()).Length != 3) { Console.WriteLine("Ошибка в файле fsplugins.conf на строке " + rowCounter); break; }
 					FSPlugins.Add(fsp);
 				}
 			}
-			FSPlugins.Add("ftp;(internal)FTPFS");
-			FSPlugins.Add("file;(internal)LocalFS");
+			FSPlugins.Add("ftp;(internal)FTPFS;FTP");
+			FSPlugins.Add("file;(internal)LocalFS;" + Localizator.GetString("LocalFSVer"));
 
 			//load the list of VE plugins
-			if (File.Exists(Application.StartupPath + "/fcveplugins.conf"))
+			if (File.Exists(Application.StartupPath + "/veplugins.conf"))
 			{
-				string[] vplist = File.ReadAllLines(Application.StartupPath + "/fcveplugins.conf");
+				string[] vplist = File.ReadAllLines(Application.StartupPath + "/veplugins.conf");
 				int rowCounter = 0;
 				foreach (string vp in vplist)
 				{
 					rowCounter++;
-					if (vp.Split(";".ToCharArray()).Length != 3) { Console.WriteLine("Error in fcveplugins.conf at row " + rowCounter); break; }
+					if (vp.Split(";".ToCharArray()).Length != 3) { Console.WriteLine("Error in veplugins.conf at row " + rowCounter); break; }
 					VEPlugins.Add(vp);
 				}
 			}
@@ -154,7 +154,7 @@ namespace fcmd
 					 * a markdown viewer based on Xwt.MarkdownView (readonly)
 					 * a HEXadecimal editor (maybe integrated into PlainText as editor)
 					 * a csv table viewer/editor
-					 * a html viewer (based on modificated xwt's webview)
+					 * a html viewer (based on xwt's webview)
 					 */
 				}
 			}
