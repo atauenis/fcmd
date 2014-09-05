@@ -89,11 +89,11 @@ namespace pluginner.Widgets
 		}
 
 		/// <summary>Creates a new ListView2Item</summary>
-		/// <param name="RowNumber">Number of owning row</param>
-		/// <param name="ColNumber">Number of owning column</param>
-		/// <param name="RowTag">The item's tag</param>
-		/// <param name="Columns">Array of column information</param>
-		/// <param name="Data">The data that should be shown in this LV2I</param>
+		/// <param name="rowNumber">Number of owning row</param>
+		/// <param name="colNumber">Number of owning column</param>
+		/// <param name="rowTag">The item's tag</param>
+		/// <param name="columns">Array of column information</param>
+		/// <param name="data">The data that should be shown in this LV2I</param>
 		public ListView2Item(int rowNumber, int colNumber, string rowTag, ListView2.ColumnInfo[] columns, List<Object> data)
 		{
 			MinHeight = 16;
@@ -152,8 +152,9 @@ namespace pluginner.Widgets
 			set
 			{
 				PointFgColor = value;
-				if ((int)State == 1){
-//undone
+				if ((int)State == 1)
+				{
+					this.BackgroundColor = value;
 				}
 			}
 		}
@@ -176,8 +177,9 @@ namespace pluginner.Widgets
 			set
 			{
 				SelFgColor = value;
-				if ((int)State >= 2){
-//undone
+				if ((int)State >= 2)
+				{
+					BackgroundColor = value;
 				}
 			}
 		}
