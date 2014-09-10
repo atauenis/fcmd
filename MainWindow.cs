@@ -268,8 +268,6 @@ namespace fcmd
 			Localize();
 
 			//apply user's settings
-			//milliseconds for double click
-			ListView2.MillisecondsForDoubleClick = Winforms.SystemInformation.DoubleClickTime; //buggy! see https://github.com/atauenis/fcmd/issues/8#issuecomment-51187241
 			//window size
 			this.Width = fcmd.Properties.Settings.Default.WinWidth;
 			this.Height = fcmd.Properties.Settings.Default.WinHeight;

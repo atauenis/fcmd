@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using pluginner.Toolkit;
 using Xwt;
 using Xwt.Drawing;
 
@@ -30,7 +31,7 @@ namespace pluginner.Widgets
 		private bool Color2; //для обеспечения чередования цветов строк
 		private DateTime PointedItemLastClickTime = DateTime.Now.AddDays(-1); //for double click detecting
 
-		public static double MillisecondsForDoubleClick = 1000; //Depends on user settings
+		public static double MillisecondsForDoubleClick = SysInfo.DoubleClickTime; //Depends on user settings
 
 		//Color sheme
 		public Color NormalBgColor1 = Colors.White;

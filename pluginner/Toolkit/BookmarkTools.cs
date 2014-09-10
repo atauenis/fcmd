@@ -64,7 +64,6 @@ namespace pluginner.Toolkit
 								ParseBookmarkNode(xc);
 							}
 						}
-						//todo: bookmark folders
 					}
 				}
 			}
