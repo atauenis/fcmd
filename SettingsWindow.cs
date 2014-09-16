@@ -42,6 +42,7 @@ namespace fcmd
 			TabList.Items.Add(new swtMainWindowInfobar(), Localizator.GetString("SWTMWinfobar"));
 			TabList.Items.Add(new swtMainWindowThemes(), Localizator.GetString("swtMainWindowThemes"));
 			TabList.Items.Add(new swtViewerEditor(), Localizator.GetString("swtViewerEditor"));
+			TabList.Items.Add(new swtMainWindowFonts() , Localizator.GetString("swtFonts"));
 
 			TabList.SelectionChanged += TabList_SelectionChanged;
 			TabList.SelectRow(0); //wpf hack (row №0 isn't automatical selected)
@@ -63,7 +64,7 @@ namespace fcmd
 		void TabList_SelectionChanged(object sender, EventArgs e)
 		{
 			if(TabList.SelectedRow > -1)
-			Layout.Panel2.Content = ((ISettingsWindowTab) TabList.SelectedItem).Content;
+				Layout.Panel2.Content = ((ISettingsWindowTab) TabList.SelectedItem).Content;
 		}
 	}
 }
