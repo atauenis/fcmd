@@ -351,17 +351,26 @@ namespace fcmd.Properties {
                 this["UserTheme"] = value;
             }
         }
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("")]
-		public string UserFileListFontFamily {
-			get {
-				return ((string)(this["UserFileListFontFamily"]));
-			}
-			set {
-				this["UserFileListFontFamily"] = value;
-			}
-		}
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UserFileListFontFamily {
+            get {
+                return ((string)(this["UserFileListFontFamily"]));
+            }
+            set {
+                this["UserFileListFontFamily"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AsyncLocalFileLoading {
+            get {
+                return ((bool)(this["AsyncLocalFileLoading"]));
+            }
+        }
     }
 }

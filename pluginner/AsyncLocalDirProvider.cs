@@ -164,12 +164,19 @@ namespace pluginner
 			cancel_maker.Cancel();
 		}
 
+		/// <summary>
+		/// Close and free some internal resources
+		/// </summary>
 		public void Dispose() {
 			if (IsStillLoading) {
 				Stop();
 			}
 			loaded_content.Clear();
 			cancel_maker.Dispose();
+		}
+
+		public override string ToString() {
+			return Path;
 		}
 	}
 }

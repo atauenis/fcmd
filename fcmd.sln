@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fcmd", "fcmd.csproj", "{7D93F45C-E782-4E8B-ABFF-49C5E92B0E13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pluginner", "pluginner\pluginner.csproj", "{88785B26-D617-4BE9-B449-F7CE77444794}"
@@ -40,6 +42,12 @@ Global
 		{88785B26-D617-4BE9-B449-F7CE77444794}.Release|x86.ActiveCfg = Release|x86
 		{88785B26-D617-4BE9-B449-F7CE77444794}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = fcmd.csproj
 		Policies = $0
@@ -59,8 +67,5 @@ Global
 		$2.inheritsSet = Mono
 		$2.inheritsScope = text/x-csharp
 		$2.scope = text/x-csharp
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

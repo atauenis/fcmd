@@ -92,7 +92,10 @@ namespace fcmd
 						switch (Parts[1])
 						{
 							case "(internal)LocalFS":
-								return new fcmd.base_plugins.fs.localFileSystem { FCConfig = conf };
+								if (Properties.Settings.Default.AsyncLocalFileLoading) {
+									return new fcmd.base_plugins.fs.asyncLocalFileSystem() { FCConfig = conf };
+								}
+								return new fcmd.base_plugins.fs.localFileSystem() { FCConfig = conf };
 							case "(internal)FTPFS":
 								return new FTPFileSystem {FCConfig = conf};
 							default:

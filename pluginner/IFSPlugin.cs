@@ -146,7 +146,8 @@ namespace pluginner
 		event TypedEvent<double> ProgressChanged;
 
 		/// <summary>
-		/// Start a external process in the Command Line or write some data into the current program's STDIN stream.
+		/// Start an external process in the Command Line if it hasn't been started yet
+		/// or write some data into it's STDIN stream otherwise.
 		/// </summary>
 		/// <param name="StdIn">The STDIN text or the new program name</param>
 		void CLIstdinWriteLine(string StdIn);
