@@ -1,4 +1,10 @@
-﻿using pluginner.Toolkit;
+﻿/* The File Commander base plugins - Local filesystem adapter
+ * The main part of the LocalFS FS plugin
+ * (C) The File Commander Team - https://github.com/atauenis/fcmd
+ * (С) 2014, Zhigunov Andrew (breakneck11@gmail.com)
+ * Contributors should place own signs here.
+ */
+using pluginner.Toolkit;
 using System;
 using System.Collections.Generic;
 using System.IO;

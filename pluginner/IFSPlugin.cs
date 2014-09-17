@@ -2,6 +2,7 @@
  * Filesystem plugins' interface
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Zhigunov Andrew (breakneck11@gmail.com)
  * Contributors should place own signs here.
  */
 using System;
