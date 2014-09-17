@@ -29,8 +29,13 @@ namespace fcmd.SettingsWindowTabs
 			foreach (string ffamily in Font.AvailableFontFamilies.OrderBy(x => x)) {
 				cmbRegisteredFonts.Items.Add(ffamily);
 			}
+			cmbRegisteredFonts.SelectionChanged += cmbRegisteredFonts_SelectionChanged;
 			cmbRegisteredFonts.SelectedItem = String.IsNullOrWhiteSpace(Settings.Default.UserFileListFontFamily) ?
 				Font.SystemFont.Family : Font.FromName(Settings.Default.UserFileListFontFamily).Family;
+		}
+
+		void cmbRegisteredFonts_SelectionChanged(object sender, EventArgs e) {
+			cmbRegisteredFonts.Font = Font.FromName(cmbRegisteredFonts.SelectedItem.ToString());
 		}
 
 #region ISettingsWindowTab implementation
