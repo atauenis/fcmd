@@ -43,6 +43,8 @@ namespace pluginner.Widgets
 		public Color SelectedBgColor = Colors.White;
 		public Color SelectedFgColor = Colors.Red;
 
+		public Font FontForFileNames = Font.SystemFont;
+
 		//For virtual mode
 		int VisibleItemsByY = -1;
 		int VisibleItemsByX = -1;
@@ -321,7 +323,8 @@ namespace pluginner.Widgets
 				LastCol,
 				ItemTag,
 				_columns.ToArray(),
-				Data)
+				Data,
+				FontForFileNames)
 			{
 				Font = Font.SystemSansSerifFont.WithWeight(FontWeight.Heavy),
 				PointerBgColor = PointedBgColor,
