@@ -26,11 +26,21 @@ namespace pluginner.Toolkit
 
 		static Dictionary<string, Image> cached_images = new Dictionary<string, Image>();
 
-		static Image GetLocalIcon(string path) {
-			if (!cached_images.ContainsKey(path)) {
-				cached_images[path] = Image.FromResource(path);
+		static readonly object locker_cached_images = new object();
+
+		public static void ClearImageCache() {
+			lock (locker_cached_images) {
+				cached_images.Clear();
 			}
-			return cached_images[path];
+		}
+
+		static Image GetLocalIcon(string path) {
+			lock (locker_cached_images) {
+				if (!cached_images.ContainsKey(path)) {
+					cached_images[path] = Image.FromResource(path);
+				}
+				return cached_images[path]; 
+			}
 		}
 
 		//These functions is partially equivalents of the Xwt.MessageDialog ones
