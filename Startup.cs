@@ -6,6 +6,7 @@
  * Contributors should place own signs here.
  */
 using System;
+using fcmd.vm;
 using Xwt;
 using WinForms = System.Windows.Forms;
 using pluginner.Toolkit;
@@ -66,7 +67,8 @@ namespace fcmd
 #if !DEBUG
 			try{
 #endif
-			new MainWindow(Commands).Show();
+			new vmtest().Show();
+			//new MainWindow(Commands).Show();
 			//todo: add splash screen
 			Application.Run();
 #if !DEBUG
