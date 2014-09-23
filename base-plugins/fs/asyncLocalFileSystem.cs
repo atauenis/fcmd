@@ -279,19 +279,23 @@ namespace fcmd.base_plugins.fs
 
 		public int[] APICompatibility
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				int[] fapiver = { 0, 1, 0,  0, 1, 0 };
+				return fapiver;
+			}
 		}
 
 		public object APICallPlugin(string call, params object[] arguments)
 		{
-			throw new NotImplementedException();
+			return null;
 		}
 
 		public event TypedEvent<object[]> APICallHost;
 
 		public System.Configuration.Configuration FCConfig
 		{
-			set { /* do nothing, just log */ }
+			set { /* do nothing, just log if necessary */ }
 		}
 
 		[Obsolete("Due to technical restrictions is never risen.")]
