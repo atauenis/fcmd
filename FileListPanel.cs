@@ -395,8 +395,8 @@ namespace fcmd
 				string rootdir = FS.GetMetadata(URL).RootDirectory;
 				uint counter = 0;
 				const uint per_number = ~(((~(uint)0) >> 10) << 10);
-				IEnumerable<DirItem> dis = FS.DirectoryContent;
-				foreach (DirItem di in dis.Select(dc => { dc.IconSmall = Utilities.GetIconForMIME(dc.MIMEType); return dc; }))
+				IEnumerable<DirItem> dis = FS.DirectoryContent.Select(dc => { dc.IconSmall = Utilities.GetIconForMIME(dc.MIMEType); return dc; });
+				foreach (DirItem di in dis)
 				{
 					List<Object> Data = new List<Object>();
 					List<Boolean> EditableFileds = new List<bool>();

@@ -57,7 +57,6 @@ namespace pluginner
 					URL = "file://" + curdir.Parent.FullName,
 					TextToShow = "..",
 					MIMEType = "x-fcmd/up",
-					IconSmall = Utilities.GetIconForMIME("x-fcmd/up")
 				});
 			}
 			uint counter = 0;
@@ -77,9 +76,8 @@ namespace pluginner
 					Date = dir_info.CreationTime,
 					Hidden = dir_info.Name.StartsWith("."),
 					MIMEType = "x-fcmd/directory",
-					IconSmall = Utilities.GetIconForMIME("x-fcmd/directory")
 				};
-				//Must be added one by one, not with AddRange, as this can interfere with Count property.
+				//Must be added one by one, without AddRange method, as this can interfere with Count property.
 				loaded_content.Add(next);
 			}
 			foreach (string file_name in Directory.EnumerateFiles(Path)) {
@@ -99,8 +97,8 @@ namespace pluginner
 					Size = file_inf.Length,
 					Hidden = file_inf.Name.StartsWith("."),
 					MIMEType = mime_value,
-					IconSmall = Utilities.GetIconForMIME(mime_value)
 				};
+				// Must be added one by one, without AddRange method, as this can interfere with Count property.
 				loaded_content.Add(next);
 			}
 			IsStillLoading = false;

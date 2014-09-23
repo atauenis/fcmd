@@ -81,16 +81,9 @@ namespace pluginner.Widgets
 				On.SetColor (TextColor);
 				On.DrawTextLayout(tl, Where + 4, 0);
 			}
-			if (What is Image)
-			{
-				On.DrawImage(CloneImage(What as Image), Where + 2, 0);
+			if (What is Image) {
+				On.DrawImage(What as Image, Where + 2, 0);
 			}
-		}
-
-		private Image CloneImage(Image original) {
-			ImageBuilder ib = new ImageBuilder(original.Width, original.Height);
-			ib.Context.DrawImage(original, new Point(0.0, 0.0));
-			return ib.ToBitmap();
 		}
 
 		public void OnDblClick()
