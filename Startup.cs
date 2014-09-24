@@ -58,7 +58,7 @@ namespace fcmd
 			catch (Exception ex) {
 				WinForms.MessageBox.Show(
 				"The XWT could not be loaded:\n" + ex.InnerException.Message,
-				"The File Commander " + Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Startup Failure"
+				"The File Commander " + WinForms.Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Startup Failure"
 				);
 				return;
 			}
@@ -81,7 +81,7 @@ namespace fcmd
 
 				System.Windows.Forms.MessageBox.Show(
 					msg,
-					"The File Commander " + Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Crash"
+					"The File Commander " + WinForms.Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Crash"
 				);
 				return;
 			}
