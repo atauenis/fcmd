@@ -7,7 +7,7 @@
  */
 using System;
 using Xwt;
-using WinForms = System.Windows.Forms;
+using System.Reflection;
 using pluginner.Toolkit;
 
 namespace fcmd
@@ -18,7 +18,8 @@ namespace fcmd
 		static void Main(string[] Commands)
 		{
 // ReSharper disable LocalizableElement
-			Console.WriteLine("The File Commander, version " + WinForms.Application.ProductVersion + "\n(C) 2013-14, the File Commander development team (https://github.com/atauenis/fcmd).\nThe FC is licensed \"as is,\" with  no  warranties regarding product performance or non-infringement of third party intellectual property rights; the software may be modified without restrictions");
+			string product_version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			Console.WriteLine("The File Commander, version " + product_version + "\n(C) 2013-14, the File Commander development team (https://github.com/atauenis/fcmd).\nThe FC is licensed \"as is,\" with  no  warranties regarding product performance or non-infringement of third party intellectual property rights; the software may be modified without restrictions");
 #if DEBUG
 			try 
 			{
@@ -44,21 +45,25 @@ namespace fcmd
 					errmsg+="\n"+ex.InnerException.InnerException.Message;
 				}
 
-				System.Windows.Forms.MessageBox.Show(
-						errmsg,
-					"The File Commander " + WinForms.Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + "-DEBUG) Startup Failure"
+				Xwt.MessageDialog.ShowError(
+						errmsg + Environment.NewLine +
+					"The File Commander " + product_version + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + "-DEBUG) Startup Failure"
 				);
 				return;
 			}
 #else
 			try
 			{
-				Application.Initialize(OSVersionEx.GetToolkitType());
+				var toolkitType = OSVersionEx.GetToolkitType();
+				if (toolkitType == ToolkitType.Gtk) {
+					toolkitType = ToolkitType.Gtk3;
+				}
+				Application.Initialize(toolkitType);
 			}
 			catch (Exception ex) {
-				WinForms.MessageBox.Show(
-				"The XWT could not be loaded:\n" + ex.InnerException.Message,
-				"The File Commander " + WinForms.Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Startup Failure"
+				Xwt.MessageDialog.ShowError(
+				"The XWT could not be loaded:\n" + ex.InnerException.Message + Environment.NewLine + 
+				"The File Commander " + product_version + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Startup Failure"
 				);
 				return;
 			}
@@ -80,8 +85,8 @@ namespace fcmd
 				msg+=inex;
 
 				System.Windows.Forms.MessageBox.Show(
-					msg,
-					"The File Commander " + WinForms.Application.ProductVersion + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Crash"
+					msg + Environment.NewLine + 
+					"The File Commander " + product_version + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Crash"
 				);
 				return;
 			}
