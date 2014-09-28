@@ -12,7 +12,6 @@ using System.Xml;
 using pluginner;
 using pluginner.Toolkit;
 using Xwt;
-using Winforms=System.Windows.Forms;
 
 namespace fcmd.base_plugins.ve
 {
@@ -26,7 +25,7 @@ namespace fcmd.base_plugins.ve
 
 		public string Version
 		{
-			get { return Winforms.Application.ProductVersion; }
+			get { return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
 		}
 
 		public string Author

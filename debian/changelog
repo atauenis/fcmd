@@ -1,3 +1,14 @@
+fcmd (0.1.0-alpha-201409b24-2) trusty; urgency=medium
+
+  * FC now uses GTK# 3.0 as a GUI backend on Linux systems
+  * Add dependency for gtk-sharp3
+  * Fixed some bugs
+  * Added font changing
+  * Added support for hierarchical bookmark tree
+  * Fixed some OSX issues
+
+ -- A.T. <atauenis@yandex.ru>  Wed, 24 Sep 2014 17:01:33 +0400
+
 fcmd (0.0.0-alpha-201406b18-2) trusty; urgency=medium
 
   * Removed dh_makeclilibs
