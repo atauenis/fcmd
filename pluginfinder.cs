@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Windows.Forms;
 using System.Reflection;
 using fcmd.base_plugins;
 using fcmd.base_plugins.fs;
@@ -23,9 +22,9 @@ namespace fcmd
 		public pluginfinder()
 		{//конструктор
 			//загрузка списка плагинов ФС из файла
-			if (File.Exists(Application.StartupPath + "/fsplugins.conf"))
+			if (File.Exists(Environment.CurrentDirectory + "/fsplugins.conf"))
 			{
-				string[] fsplist = File.ReadAllLines(Application.StartupPath + "/fsplugins.conf");
+				string[] fsplist = File.ReadAllLines(Environment.CurrentDirectory + "/fsplugins.conf");
 				int rowCounter = 0;
 				foreach (string fsp in fsplist)
 				{
@@ -38,9 +37,9 @@ namespace fcmd
 			FSPlugins.Add("file;(internal)LocalFS;" + Localizator.GetString("LocalFSVer"));
 
 			//load the list of VE plugins
-			if (File.Exists(Application.StartupPath + "/veplugins.conf"))
+			if (File.Exists(Environment.CurrentDirectory + "/veplugins.conf"))
 			{
-				string[] vplist = File.ReadAllLines(Application.StartupPath + "/veplugins.conf");
+				string[] vplist = File.ReadAllLines(Environment.CurrentDirectory + "/veplugins.conf");
 				int rowCounter = 0;
 				foreach (string vp in vplist)
 				{

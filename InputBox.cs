@@ -82,7 +82,7 @@ namespace fcmd{
 			this.Content = box;
 			this.ShowInTaskbar = false;
 			this.Resizable = false;
-			this.Title = System.Windows.Forms.Application.ProductName;
+			this.Title = System.Reflection.Assembly.GetExecutingAssembly().GetName().ToString();
 			this.CloseRequested += (o, ea) => { this.Hide(); };
 			foreach (Xwt.DialogButton dbtn in this.Buttons)
 			{
