@@ -84,7 +84,7 @@ namespace fcmd
 				if(ex.InnerException != null) inex = "\n Inner exception" + ex.InnerException.Message + "\n" + ex.StackTrace;
 				msg+=inex;
 
-				System.Windows.Forms.MessageBox.Show(
+				Xwt.MessageDialog.ShowError(
 					msg + Environment.NewLine + 
 					"The File Commander " + product_version + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Crash"
 				);

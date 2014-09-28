@@ -67,12 +67,7 @@ namespace fcmd{
 					Xwt.MessageDialog.ShowError(text, title);
 					break;
 				case MsgBoxType.Simple:
-					//this is windows only
-#if Win
-					System.Windows.Forms.MessageBox.Show(text, title);
-#else
 					Xwt.MessageDialog.ShowMessage(text, title);
-#endif
 					break;
 			}
 		}

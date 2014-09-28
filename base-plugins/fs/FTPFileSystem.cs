@@ -238,7 +238,7 @@ namespace fcmd.base_plugins.fs
 		public event TypedEvent<string> CLIpromptChanged;
 
 		public string Name { get { return "File Transfer Protocol"; } }
-		public string Version { get { return System.Windows.Forms.Application.ProductVersion; } }
+		public string Version { get { return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(); } }
 		public string Author { get { return "A.T."; } }
 
 		public int[] APICompatibility
