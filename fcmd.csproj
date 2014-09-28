@@ -101,7 +101,6 @@
     <Compile Include="MainWindow-Actions.cs" />
     <Compile Include="MainWindow-Workers.cs" />
     <Compile Include="MainWindow.cs" />
-    <Compile Include="MsgBox.cs" />
     <Compile Include="pluginfinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="base-plugins\fs\localFileSystem.cs" />
