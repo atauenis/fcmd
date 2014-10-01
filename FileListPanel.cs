@@ -83,6 +83,9 @@ namespace fcmd
 			DefaultColumnSpacing = 0;
 			DefaultRowSpacing = 0;
 
+			string fontFamily = fcmd.Properties.Settings.Default.UserFileListFontFamily;
+			ListingView.FontForFileNames = String.IsNullOrWhiteSpace(fontFamily) ? Font.SystemFont : Font.FromName(fontFamily);
+
 			Add(DiskBox,0,0, 1,1,true,false,WidgetPlacement.Fill);
 			Add(GoRoot,1,0 ,1,1,false,false,WidgetPlacement.Fill);
 			Add(GoUp,2,0 ,1,1,false,false,WidgetPlacement.Fill);

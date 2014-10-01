@@ -22,7 +22,7 @@ namespace pluginner.Toolkit
 				case PlatformID.Win32NT:
 					return ToolkitType.Wpf;
 				case PlatformID.Unix:
-					return ToolkitType.Gtk;
+					return ToolkitType.Gtk3;
 				case PlatformID.MacOSX:
 					return ToolkitType.Cocoa;
 				default:

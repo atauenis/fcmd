@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using pluginner.Widgets;
+using Xwt;
 
 namespace fcmd
 {
@@ -179,7 +180,7 @@ namespace fcmd
                         FileProcessDialog fpd = new FileProcessDialog();
                         fpd.InitialLocation = Xwt.WindowLocation.CenterParent;
                         fpd.lblStatus.Text = String.Format(StatusMask, ActivePanel.GetValue<string>(ActivePanel.dfURL), ibx.Result, null);
-                        fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); new MsgBox(Localizator.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
+						fpd.cmdCancel.Clicked += (object s, EventArgs e) => { CpThread.Abort(); MessageDialog.ShowWarning(Localizator.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL)); };
 
                         AC.ReportMessage = Localizator.GetString("CopyStatus");
 						AC.OnProgress += (message, percent) =>
@@ -225,7 +226,7 @@ namespace fcmd
                         FileProcessDialog CpDirProgressDialog = new FileProcessDialog();
                         CpDirProgressDialog.InitialLocation = Xwt.WindowLocation.CenterParent;
                         CpDirProgressDialog.lblStatus.Text = String.Format(Localizator.GetString("DoingCopy"), "\n" + ActivePanel.GetValue<string>(ActivePanel.dfURL) + " [" + Localizator.GetString("Directory") + "]\n", ibxd.Result, null);
-                        CpDirProgressDialog.cmdCancel.Clicked += (object s, EventArgs e) => { CpDirThread.Abort(); new MsgBox(Localizator.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL), MsgBox.MsgBoxType.Warning); };
+						CpDirProgressDialog.cmdCancel.Clicked += (object s, EventArgs e) => { CpDirThread.Abort(); MessageDialog.ShowWarning(Localizator.GetString("Canceled"), ActivePanel.GetValue<string>(ActivePanel.dfURL)); };
 
                         CpDirProgressDialog.Show();
                         CpDirThread.Start();

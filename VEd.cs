@@ -14,7 +14,6 @@ using mucss;
 using pluginner;
 using pluginner.Toolkit;
 using Xwt;
-using Application = System.Windows.Forms.Application;
 using KeyEventArgs = Xwt.KeyEventArgs;
 using Menu = Xwt.Menu;
 using MenuItem = Xwt.MenuItem;
@@ -245,7 +244,8 @@ namespace fcmd
 
 		void mnuHelpAbout_Clicked(object sender, EventArgs e)
 		{
-			string AboutString1 = String.Format(Localizator.GetString("FCVEVer1"), Application.ProductVersion);
+			string AboutString1 = String.Format(Localizator.GetString("FCVEVer1"),
+			                                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 			string AboutString2 = string.Format(Localizator.GetString("FCVEVer2"), Plugin.Name, Plugin.Version,"\n", Plugin.Author);
 			MessageDialog.ShowMessage(AboutString1,AboutString2);
 		}

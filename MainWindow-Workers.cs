@@ -189,11 +189,11 @@ namespace fcmd
 			}
 			catch (pluginner.ThisDirCannotBeRemovedException)
 			{
-				new MsgBox(url, string.Format(Localizator.GetString("DirCantBeRemoved"), url), MsgBox.MsgBoxType.Warning);
+				Utilities.ShowWarning(string.Format(Localizator.GetString("DirCantBeRemoved")),url);
 			}
 			catch (Exception err)
 			{
-				new MsgBox(err.Message, null, MsgBox.MsgBoxType.Error);
+				Utilities.ShowError(err.Message);
 			}
 		}
 	}

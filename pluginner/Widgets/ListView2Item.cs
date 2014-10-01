@@ -25,6 +25,9 @@ namespace pluginner.Widgets
 		/// <summary>Selection state</summary>
 		private ListView2.ItemStates _State;
 
+		/// <summary>Font the values will be written in</summary>
+		private Font _FontToDraw;
+
 		private Color DefBgColor;
 		private Color DefFgColor;
 		private Color PointBgColor;
@@ -44,7 +47,7 @@ namespace pluginner.Widgets
 			{
 				var Value = _Values[i];
 				if (_Cols[i].Visible)
-					Draw(Value, PosByX, ctx, _Cols[i].Width, CurFgColor);
+					Draw(Value, PosByX, ctx, _Cols[i].Width, CurFgColor, _FontToDraw);
 
 				if (_Cols.Length > i && i != _Cols.Length - 1)
 				{
@@ -61,7 +64,8 @@ namespace pluginner.Widgets
 		/// <param name="On">On what Drawing.Context the information should be drawed</param>
 		/// <param name="MaxWidth">The limit of the picture's width</param>
 		/// <param name="TextColor">The text foreground color</param>
-		private void Draw(object What, double Where, Context On, double MaxWidth, Color TextColor)
+		/// <param name="WhatFont">Which font is used to draw the onject</param>
+		private void Draw(object What, double Where, Context On, double MaxWidth, Color TextColor, Font WhatFont)
 		{
 			if (What.GetType() != typeof (Image)
 				&&
@@ -70,7 +74,7 @@ namespace pluginner.Widgets
 				TextLayout tl = new TextLayout(this)
 				{
 					Text = What.ToString(),
-					Font = Font,
+					Font = WhatFont,
 					Width = MaxWidth,
 					Trimming = TextTrimming.WordElipsis
 				};
@@ -94,7 +98,8 @@ namespace pluginner.Widgets
 		/// <param name="rowTag">The item's tag</param>
 		/// <param name="columns">Array of column information</param>
 		/// <param name="data">The data that should be shown in this LV2I</param>
-		public ListView2Item(int rowNumber, int colNumber, string rowTag, ListView2.ColumnInfo[] columns, List<Object> data)
+		/// <param name="font">Which font should be used</param>
+		public ListView2Item(int rowNumber, int colNumber, string rowTag, ListView2.ColumnInfo[] columns, List<Object> data, Font font)
 		{
 			MinHeight = 16;
 			HeightRequest = 16;
@@ -104,6 +109,7 @@ namespace pluginner.Widgets
 
 			_Values = data.ToArray();
 			_Cols = columns;
+			_FontToDraw = font;
 			Tag = rowTag;
 			RowNo = rowNumber;
 			ColNo = colNumber;

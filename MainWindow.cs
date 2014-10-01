@@ -8,16 +8,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.IO;
 using pluginner.Toolkit;
 using pluginner.Widgets;
-using Winforms = System.Windows.Forms;
 
 namespace fcmd
 {
 	partial class MainWindow : Xwt.Window
 	{
+		static string ProductVersion {
+			get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
+		}
+
 		Stylist stylist;
 		Xwt.Menu WindowMenu = new Xwt.Menu();
 
@@ -413,24 +417,24 @@ namespace fcmd
 			Fcdbg.Buttons.Add(Xwt.Command.Close);
 			Fcdbg.Buttons[0].Clicked += (o, ea) => {Fcdbg.Hide();};
 			Fcdbg.Title="FC debug output";
-			string txt = ""+
-				"===THE FILE COMMANDER, VERSION " + Winforms.Application.ProductVersion + (Environment.Is64BitProcess ? " 64-BIT" : " 32-BIT") + "===\n"+
+			string txt = "" +
+				"===THE FILE COMMANDER, VERSION " + ProductVersion + (Environment.Is64BitProcess ? " 64-BIT" : " 32-BIT") + "===\n" +
 				Environment.CommandLine + " @ .NET fw " + Environment.Version + (Environment.Is64BitOperatingSystem ? " 64-bit" : " 32-bit") + " on " + Environment.MachineName + "-" + Environment.OSVersion + " (" + OSVersionEx.Platform + " v" + Environment.OSVersion.Version.Major + "." + Environment.OSVersion.Version.Minor + ")\n" +
-				"The current drawing toolkit is " + Xwt.Toolkit.CurrentEngine.GetSafeBackend (this) + "\n" +
-				"\nCONFIGuration files:\n---------\n"+
-				"Local: "+confLR.FilePath + " (exists? " + b2s(confLR.HasFile) +")\n"+
+				"The current drawing toolkit is " + Xwt.Toolkit.CurrentEngine.GetSafeBackend(this) + "\n" +
+				"\nCONFIGuration files:\n---------\n" +
+				"Local: " + confLR.FilePath + " (exists? " + b2s(confLR.HasFile) + ")\n" +
 				"Roaming: " + confR.FilePath + " (exists? " + b2s(confR.HasFile) + ")\n" +
 				"Overall: " + confEXE.FilePath + " (exists? " + b2s(confEXE.HasFile) + ")\n" +
-				"\nPanel debug:\n---------\n"+
+				"\nPanel debug:\n---------\n" +
 				"The active panel is: " + ((ActivePanel == p1) ? "LEFT\n" : "RIGHT\n") +
-				"The passive panel is: " + ((ActivePanel == p2) ? "LEFT\n" : "RIGHT\n")+
-				"They are different? "+ b2s(ActivePanel != PassivePanel) + " (should be yes)\n"+
-				"The LEFT filesystem: " + p1.FS + " at \"" + p1.FS.CurrentDirectory + "\"\n"+
-				"The RIGHT filesystem: " + p2.FS + " at \"" + p2.FS.CurrentDirectory + "\"\n"+
-				"Filesystems are same by type? " + b2s(p1.FS.GetType()==p2.FS.GetType()) + ".\n"+
-				"Filesystems are identically? " + b2s(p1.FS==p2.FS) + " (should be no).\n"+
-				"\nTheme debug:\n---------\n"+
-				"Using external theme? " + b2s(!string.IsNullOrEmpty(fcmd.Properties.Settings.Default.UserTheme))+"\n"+
+				"The passive panel is: " + ((ActivePanel == p2) ? "LEFT\n" : "RIGHT\n") +
+				"They are different? " + b2s(ActivePanel != PassivePanel) + " (should be yes)\n" +
+				"The LEFT filesystem: " + p1.FS + " at \"" + p1.FS.CurrentDirectory + "\"\n" +
+				"The RIGHT filesystem: " + p2.FS + " at \"" + p2.FS.CurrentDirectory + "\"\n" +
+				"Filesystems are same by type? " + b2s(p1.FS.GetType() == p2.FS.GetType()) + ".\n" +
+				"Filesystems are identically? " + b2s(p1.FS == p2.FS) + " (should be no).\n" +
+				"\nTheme debug:\n---------\n" +
+				"Using external theme? " + b2s(!string.IsNullOrEmpty(fcmd.Properties.Settings.Default.UserTheme)) + "\n" +
 				"Theme's cascade style sheet file: \"" + fcmd.Properties.Settings.Default.UserTheme + "\"\n\nIf you having some troubles, please report this to https://github.com/atauenis/fcmd bug tracker or http://atauenis.ru/phpBB3/viewtopic.php?f=4&t=211 topic. \nThe End.";
 			Xwt.RichTextView rtv = new Xwt.RichTextView();
 			rtv.LoadText(txt, new Xwt.Formats.PlainTextFormat());
@@ -459,7 +463,7 @@ namespace fcmd
 			string AboutString = string.Format(
 				Localizator.GetString("FileCommanderVer"),
 				"File Commander",
-				Winforms.Application.ProductVersion,
+				ProductVersion,
 				"\nhttps://github.com/atauenis/fcmd",
 				conf.FilePath,
 				Environment.OSVersion,
@@ -655,10 +659,10 @@ namespace fcmd
 			string PanelName = (NewPanel == p1) ? "LEFT" : "RIGHT";
 			Console.WriteLine("FOCUS DEBUG: The " + PanelName + " panel (" + NewPanel.FS.CurrentDirectory + ") got focus");
 #endif
+			AssemblyName an = Assembly.GetExecutingAssembly().GetName();
 			this.Title = string.Format(
-				"{0} {1} - {2}",
-				Winforms.Application.ProductName,
-				Winforms.Application.ProductVersion,
+				"{0} - {1}",
+				"FC",//System.Reflection.Assembly.GetExecutingAssembly().GetName().Name, //todo: add the ProductName w/o WinForms usage
 				ActivePanel.FS.CurrentDirectory
 			);
 
