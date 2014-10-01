@@ -13,7 +13,7 @@ namespace fcmd.vm
 	{
 // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
 		private vmlist vml;
-		private Label[] values = new Label[16];
+		private Label[] values = new Label[65535];
 
 		public vmtest()
 		{

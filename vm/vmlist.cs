@@ -49,6 +49,11 @@ namespace fcmd.vm
 			vscroll.UpperValue = 0;
 			vscroll.StepIncrement = 1;
 			vscroll.ValueChanged += vscroll_ValueChanged;
+
+			hscroll.LowerValue = 0;
+			hscroll.UpperValue = 0;
+			hscroll.StepIncrement = 1;
+			hscroll.ValueChanged += hscroll_ValueChanged;
 		}
 
 		/// <summary>
@@ -76,6 +81,8 @@ namespace fcmd.vm
 			{
 				double visibleHeight = mySize.Height;
 				double itemHeight = oneItemSize.Height;
+				double visibleWidth = mySize.Width;
+				double itemWidth = oneItemSize.Width;
 
 				#if DEBUG
 				if (oneItemSize.IsZero){ throw new Exception("Something is wrong! Possibly, FillIn() has been called when GUI isn't ready.");}
@@ -88,7 +95,13 @@ namespace fcmd.vm
 					VisibleItemsByY++;
 				}
 
+				for (double i = 0; i < visibleWidth; i += itemWidth)
+				{
+					VisibleItemsByX++;
+				}
+
 				vscroll.UpperValue = itemCount - VisibleItemsByY;
+				hscroll.UpperValue = visibleWidth - itemWidth; //buggy
 			}
 
 			if (VisibleItemsByY != -1)
@@ -110,6 +123,26 @@ namespace fcmd.vm
 				canvasina.AddChild(w, 0, YOffset);
 				YOffset += w.Size.Height;
 				if (YOffset >= Size.Height) break;
+			}
+
+			foreach (Widget w in canvasina.Children)
+			{
+				Rectangle r = canvasina.GetChildBounds(w);
+				r.Left = -hscroll.Value;
+				canvasina.SetChildBounds(w, r);
+			}
+		}
+
+		void hscroll_ValueChanged(object sender, EventArgs e)
+		{
+			if (_View == ListView2.Views.Details)
+			{
+				foreach (Widget w in canvasina.Children)
+				{
+					Rectangle r = canvasina.GetChildBounds(w);
+					r.Left = -hscroll.Value;
+					canvasina.SetChildBounds(w, r);
+				}
 			}
 		}
 	}
