@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.IO;
 using pluginner.Toolkit;
@@ -18,7 +19,7 @@ namespace fcmd
 	partial class MainWindow : Xwt.Window
 	{
 		static string ProductVersion {
-			get { return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
+			get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
 		}
 
 		Stylist stylist;
@@ -658,10 +659,10 @@ namespace fcmd
 			string PanelName = (NewPanel == p1) ? "LEFT" : "RIGHT";
 			Console.WriteLine("FOCUS DEBUG: The " + PanelName + " panel (" + NewPanel.FS.CurrentDirectory + ") got focus");
 #endif
+			AssemblyName an = Assembly.GetExecutingAssembly().GetName();
 			this.Title = string.Format(
-				"{0} {1} - {2}",
-				System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
-				ProductVersion,
+				"{0} - {1}",
+				"FC",//System.Reflection.Assembly.GetExecutingAssembly().GetName().Name, //todo: add the ProductName w/o WinForms usage
 				ActivePanel.FS.CurrentDirectory
 			);
 
