@@ -30,7 +30,12 @@ namespace pluginner
 		protected AsyncLocalDirProvider(string path) {
 			Path = path;
 			IsStillLoading = true;
-			loading = Task.Factory.StartNew(Load, cancel_maker.Token);
+			loading = Task.Factory.StartNew(Load, cancel_maker.Token).ContinueWith((continuation) => {
+				var handler = LoadingFinished;
+				if (handler != null) {
+					handler(this, EventArgs.Empty);
+				}
+			});
 		}
 
 		/// <summary>
@@ -148,16 +153,7 @@ namespace pluginner
 		/// Show if loading is complete
 		/// </summary>
 		public bool IsStillLoading {
-			protected set {
-				if (!_isStillLoading && value) {
-					_isStillLoading = value;
-					var handler = LoadingFinished;
-					if (handler != null) {
-						handler(this, EventArgs.Empty);
-					}
-				}
-				_isStillLoading = value;
-			}
+			protected set { _isStillLoading = value; }
 			get { return _isStillLoading; }
 		}
 
