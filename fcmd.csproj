@@ -125,7 +125,6 @@
     <Compile Include="VEd.cs" />
     <Compile Include="VEsettings.cs" />
     <Compile Include="ReplaceQuestionDialog.cs" />
-    <Compile Include="vm\vmlist.cs" />
     <Compile Include="vm\vmtest.cs" />
     <Compile Include="XmlDisplay.cs" />
     <Compile Include="SettingsWindowTabs\swtMainWindowFonts.cs" />

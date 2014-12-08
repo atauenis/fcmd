@@ -113,6 +113,7 @@
     <Compile Include="Toolkit\Utilities.cs" />
     <Compile Include="Widgets\LightScroller.cs" />
     <Compile Include="Resources\AssemblyInfo.cs" />
+    <Compile Include="Widgets\VirtualListView.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DefaultBookmarks.xml">

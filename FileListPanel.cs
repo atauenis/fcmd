@@ -42,7 +42,7 @@ namespace fcmd
 		public TextEntry UrlBox = new TextEntry();
 		public MenuButton BookmarksButton = new MenuButton(Image.FromResource("fcmd.Resources.bookmarks.png"));
 		public MenuButton HistoryButton = new MenuButton(Image.FromResource("fcmd.Resources.history.png"));
-		public ListView2 ListingView = new ListView2();
+		public VirtualListView ListingView = new VirtualListView(null);
 		public HBox QuickSearchBox = new HBox();
 		public TextEntry QuickSearchText = new TextEntry();//по возможность заменить на SearchTextEntry (не раб. на wpf, see xwt bug 330)
 		public Label StatusBar = new Label("Information bar");

@@ -12,12 +12,12 @@ namespace fcmd.vm
 	class vmtest : Window
 	{
 // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-		private vmlist vml;
+		private pluginner.Widgets.VirtualListView vml;
 		private Label[] values = new Label[65535];
 
 		public vmtest()
 		{
-			vml = new vmlist(GetWidgets){ItemCount = values.Length};
+			vml = new pluginner.Widgets.VirtualListView(GetWidgets) { ItemCount = values.Length };
 			for (int i = 0; i < values.Length; i++)
 			{
 				values[i] = new Label("Label " + i);
