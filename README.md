@@ -1,3 +1,5 @@
+*Due to deficit of the project's author's free time, the development of FC slows until, at least, the summer of 2015. The project doesn't dead.*
+
 The File Commander
 ====
 
