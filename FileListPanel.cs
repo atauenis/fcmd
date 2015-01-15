@@ -1,7 +1,7 @@
-﻿/* The File Commander - plugin API
+﻿/* The File Commander
  * The file list widget
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
- * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-15, Alexander Tauenis (atauenis@yandex.ru)
  * (C) 2014, Zhigunov Andrew (breakneck11@gmail.com)
  * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.

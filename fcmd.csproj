@@ -93,6 +93,7 @@
     <Compile Include="base-plugins\ve\PlainXml.cs" />
     <Compile Include="FileListPanel.cs" />
     <Compile Include="FileProcessDialog.cs" />
+    <Compile Include="FLPDataSource.cs" />
     <Compile Include="FTPClient.cs" />
     <Compile Include="InputBox.cs" />
     <Compile Include="KeyboardHelpButton.cs" />
