@@ -2,6 +2,7 @@
  * Filesystem plugins' interface
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2014, Zhigunov Andrew (breakneck11@gmail.com)
  * Contributors should place own signs here.
  */
 using System;
@@ -146,7 +147,8 @@ namespace pluginner
 		event TypedEvent<double> ProgressChanged;
 
 		/// <summary>
-		/// Start a external process in the Command Line or write some data into the current program's STDIN stream.
+		/// Start an external process in the Command Line if it hasn't been started yet
+		/// or write some data into it's STDIN stream otherwise.
 		/// </summary>
 		/// <param name="StdIn">The STDIN text or the new program name</param>
 		void CLIstdinWriteLine(string StdIn);

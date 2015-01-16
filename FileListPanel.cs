@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Linq;
 using pluginner;
 using pluginner.Toolkit;
 using pluginner.Widgets;
@@ -394,7 +395,7 @@ namespace fcmd
 				string rootdir = FS.GetMetadata(URL).RootDirectory;
 				uint counter = 0;
 				const uint per_number = ~(((~(uint)0) >> 10) << 10);
-				IEnumerable<DirItem> dis = FS.DirectoryContent;
+				IEnumerable<DirItem> dis = FS.DirectoryContent.Select(dc => { dc.IconSmall = Utilities.GetIconForMIME(dc.MIMEType); return dc; });
 				foreach (DirItem di in dis)
 				{
 					List<Object> Data = new List<Object>();

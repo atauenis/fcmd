@@ -81,8 +81,7 @@ namespace pluginner.Widgets
 				On.SetColor (TextColor);
 				On.DrawTextLayout(tl, Where + 4, 0);
 			}
-			if (What is Image)
-			{
+			if (What is Image) {
 				On.DrawImage(What as Image, Where + 2, 0);
 			}
 		}

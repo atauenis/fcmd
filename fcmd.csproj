@@ -87,6 +87,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="AsyncCopy.cs" />
+    <Compile Include="base-plugins\fs\asyncLocalFileSystem.cs" />
     <Compile Include="base-plugins\fs\FTPFileSystem.cs" />
     <Compile Include="base-plugins\fs\localFileSystem-CLI.cs" />
     <Compile Include="base-plugins\ve\PlainText.cs" />

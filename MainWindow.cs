@@ -244,8 +244,13 @@ namespace fcmd
 			LVCols.Add(new ListView2.ColumnInfo { Title = Localizator.GetString("FDate"), Tag = "FDate", Width = 50, Visible = true });
 			LVCols.Add(new ListView2.ColumnInfo { Title = "Directory item info", Tag = "DirItem", Width = 0, Visible = false });
 			*/
-			p1.FS = new base_plugins.fs.localFileSystem();
-			p2.FS = new base_plugins.fs.localFileSystem();
+			if (Properties.Settings.Default.AsyncLocalFileLoading) {
+				p1.FS = new base_plugins.fs.asyncLocalFileSystem();
+				p2.FS = new base_plugins.fs.asyncLocalFileSystem();
+			} else {
+				p1.FS = new base_plugins.fs.localFileSystem();
+				p2.FS = new base_plugins.fs.localFileSystem();
+			}
 
 			p1.GotFocus += (o, ea) => SwitchPanel(p1);
 			p2.GotFocus += (o, ea) => SwitchPanel(p2);

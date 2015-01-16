@@ -59,7 +59,7 @@ namespace fcmd.base_plugins.fs
 			}
 		}
 
-		private void _CheckProtocol(string url){ //проверка на то, чтобы нечаянно через localfs не попытались зайти в ftp, webdav, реестр и т.п. :-)
+		private static void _CheckProtocol(string url){ //проверка на то, чтобы нечаянно через localfs не попытались зайти в ftp, webdav, реестр и т.п. :-)
 			if(!url.StartsWith("file:")) throw new pluginner.PleaseSwitchPluginException();
 		}
 
@@ -191,33 +191,31 @@ namespace fcmd.base_plugins.fs
 			}
 		}
 
-		public void Touch(pluginner.FSEntryMetadata Metadata)
-		{
+		internal static void _Touch(pluginner.FSEntryMetadata Metadata) {
 			string url = Metadata.FullURL;
 			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://", "");
 
-			if (!Directory.Exists(InternalURL) && !File.Exists(InternalURL))
-			{
+			if (!Directory.Exists(InternalURL) && !File.Exists(InternalURL)) {
 				StreamWriter sw = File.CreateText(InternalURL);
 				sw.Close();
 				sw.Dispose();
 			}
 
-			try
-			{
+			try {
 				File.SetAttributes(InternalURL, Metadata.Attrubutes);
 				File.SetCreationTime(InternalURL, Metadata.CreationTimeUTC);
 				File.SetLastWriteTime(InternalURL, DateTime.Now);
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				Console.WriteLine(ex.Message);
 			}
 		}
 
-		public void Touch(string URL)
-		{
+		public void Touch(pluginner.FSEntryMetadata Metadata) {
+			localFileSystem._Touch(Metadata);
+		}
+
+		internal static void _Touch(string URL) {
 			_CheckProtocol(URL);
 			string InternalURL = URL.Replace("file://", "");
 
@@ -225,7 +223,11 @@ namespace fcmd.base_plugins.fs
 			newmd.FullURL = InternalURL;
 			newmd.CreationTimeUTC = DateTime.UtcNow;
 			newmd.LastWriteTimeUTC = DateTime.UtcNow;
-			Touch(newmd);
+			_Touch(newmd);
+		}
+
+		public void Touch(string URL) {
+			_Touch(URL);
 		}
 
 		public System.IO.Stream GetFileStream(string url, bool Lock = false)
@@ -338,8 +340,7 @@ namespace fcmd.base_plugins.fs
 			Directory.Move(internalSource, internalDestination);
 		}
 
-		public pluginner.FSEntryMetadata GetMetadata(string url)
-		{
+		internal static pluginner.FSEntryMetadata _GetMetadata(string url) {
 			_CheckProtocol(url);
 			string InternalURL = url.Replace("file://", "");
 			pluginner.FSEntryMetadata lego = new pluginner.FSEntryMetadata();
@@ -347,18 +348,22 @@ namespace fcmd.base_plugins.fs
 
 			lego.Name = metadatasource.Name;
 			lego.FullURL = url;
-			try{
-			lego.UpperDirectory = "file://" + metadatasource.DirectoryName;
-			lego.RootDirectory = "file://" + metadatasource.Directory.Root.FullName;
-			lego.Attrubutes = metadatasource.Attributes;
-			lego.CreationTimeUTC = metadatasource.CreationTimeUtc;
-			lego.IsReadOnly = metadatasource.IsReadOnly;
-			lego.LastAccessTimeUTC = metadatasource.LastAccessTimeUtc;
-			lego.LastWriteTimeUTC = metadatasource.LastWriteTimeUtc;
-			if(!Directory.Exists(InternalURL)) lego.Lenght = metadatasource.Length;
-			}catch(Exception ex){Console.WriteLine("WARNING: can't build metadata lego for " + url + ": " + ex.Message + ex.StackTrace);}
+			try {
+				lego.UpperDirectory = "file://" + metadatasource.DirectoryName;
+				lego.RootDirectory = "file://" + metadatasource.Directory.Root.FullName;
+				lego.Attrubutes = metadatasource.Attributes;
+				lego.CreationTimeUTC = metadatasource.CreationTimeUtc;
+				lego.IsReadOnly = metadatasource.IsReadOnly;
+				lego.LastAccessTimeUTC = metadatasource.LastAccessTimeUtc;
+				lego.LastWriteTimeUTC = metadatasource.LastWriteTimeUtc;
+				if (!Directory.Exists(InternalURL)) lego.Lenght = metadatasource.Length;
+			} catch (Exception ex) { Console.WriteLine("WARNING: can't build metadata lego for " + url + ": " + ex.Message + ex.StackTrace); }
 
 			return lego;
+		}
+
+		public pluginner.FSEntryMetadata GetMetadata(string url) {
+			return localFileSystem._GetMetadata(url);
 		}
 
 		public int[] APICompatibility

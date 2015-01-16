@@ -98,6 +98,8 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncLocalDirProvider.cs" />
+    <Compile Include="IAsyncLoadingCollection.cs" />
     <Compile Include="Toolkit\BookmarkTools.cs" />
     <Compile Include="Toolkit\OSAbstraction.cs" />
     <Compile Include="Toolkit\SysInfo.cs" />
