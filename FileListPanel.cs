@@ -1,4 +1,4 @@
-﻿/* The File Commander
+﻿/* The File Commander - plugin API
  * The file list widget
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
  * (C) 2013-15, Alexander Tauenis (atauenis@yandex.ru)
@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 using pluginner;
 using pluginner.Toolkit;
 using pluginner.Widgets;
@@ -42,7 +43,7 @@ namespace fcmd
 		public TextEntry UrlBox = new TextEntry();
 		public MenuButton BookmarksButton = new MenuButton(Image.FromResource("fcmd.Resources.bookmarks.png"));
 		public MenuButton HistoryButton = new MenuButton(Image.FromResource("fcmd.Resources.history.png"));
-		public VirtualListView ListingView = new VirtualListView(null);
+		public ListView2 ListingView = new ListView2();
 		public HBox QuickSearchBox = new HBox();
 		public TextEntry QuickSearchText = new TextEntry();//по возможность заменить на SearchTextEntry (не раб. на wpf, see xwt bug 330)
 		public Label StatusBar = new Label("Information bar");
@@ -65,7 +66,7 @@ namespace fcmd
 		/// <param name="CSS">The user theme (or null if it's need to use internal theme)</param>
 		/// <param name="InfobarText1">The mask for infobar text when a file is selected</param>
 		/// <param name="InfobarText2">The mask for infobar text when no files are selected</param>
-		public FileListPanel(string BookmarkXML = null, string CSS=null, string InfobarText1 = "{Name}", string InfobarText2 = "F: {FileS}, D: {DirS}")
+		public FileListPanel(string BookmarkXML = null, string CSS = null, string InfobarText1 = "{Name}", string InfobarText2 = "F: {FileS}, D: {DirS}")
 		{
 			s = new Stylist(CSS);
 			SBtext1 = InfobarText1;
@@ -86,18 +87,18 @@ namespace fcmd
 			string fontFamily = fcmd.Properties.Settings.Default.UserFileListFontFamily;
 			ListingView.FontForFileNames = String.IsNullOrWhiteSpace(fontFamily) ? Font.SystemFont : Font.FromName(fontFamily);
 
-			Add(DiskBox,0,0, 1,1,true,false,WidgetPlacement.Fill);
-			Add(GoRoot,1,0 ,1,1,false,false,WidgetPlacement.Fill);
-			Add(GoUp,2,0 ,1,1,false,false,WidgetPlacement.Fill);
-			Add(UrlBox,0,1, 1,1,true,false,WidgetPlacement.Fill);
-			Add(BookmarksButton,1,1 ,1,1,false,false,WidgetPlacement.Start);
-			Add(HistoryButton,2,1 ,1,1,false,false,WidgetPlacement.Start);
-			Add(ListingView,0,2 ,1,3,false,true); //hexpand will be = 'true' without seeing to this 'false'
-			Add(QuickSearchBox,0,3 ,1,3);
-			Add(StatusBar,0,4,1,3);
-			Add(StatusProgressbar,0,5,1,3);
-			Add(CLIoutput,0,6 ,1,3);
-			Add(CLIprompt,0,7 ,1,3);
+			Add(DiskBox, 0, 0, 1, 1, true, false, WidgetPlacement.Fill);
+			Add(GoRoot, 1, 0, 1, 1, false, false, WidgetPlacement.Fill);
+			Add(GoUp, 2, 0, 1, 1, false, false, WidgetPlacement.Fill);
+			Add(UrlBox, 0, 1, 1, 1, true, false, WidgetPlacement.Fill);
+			Add(BookmarksButton, 1, 1, 1, 1, false, false, WidgetPlacement.Start);
+			Add(HistoryButton, 2, 1, 1, 1, false, false, WidgetPlacement.Start);
+			Add(ListingView, 0, 2, 1, 3, false, true); //hexpand will be = 'true' without seeing to this 'false'
+			Add(QuickSearchBox, 0, 3, 1, 3);
+			Add(StatusBar, 0, 4, 1, 3);
+			Add(StatusProgressbar, 0, 5, 1, 3);
+			Add(CLIoutput, 0, 6, 1, 3);
+			Add(CLIprompt, 0, 7, 1, 3);
 
 			WriteDefaultStatusLabel();
 
@@ -124,17 +125,19 @@ namespace fcmd
 			ListingView.AllowedToPoint.Clear();
 			foreach (ListView2Item lvi in ListingView.Items)
 			{
-				if(lvi.Data[1].ToString().StartsWith(QuickSearchText.Text)){
+				if (lvi.Data[1].ToString().StartsWith(QuickSearchText.Text))
+				{
 					ListingView.AllowedToPoint.Add(lvi.RowNo);
 				}
 			}
 			ListingView.Sensitive = true;
 
 			//set pointer to the first good item (if need)
-			if (ListingView.AllowedToPoint.Count > 0){
+			if (ListingView.AllowedToPoint.Count > 0)
+			{
 				if (ListingView.SelectedRow < ListingView.AllowedToPoint[0]
 					||
-					ListingView.SelectedRow > ListingView.AllowedToPoint[ListingView.AllowedToPoint.Count-1]
+					ListingView.SelectedRow > ListingView.AllowedToPoint[ListingView.AllowedToPoint.Count - 1]
 					)
 				{
 					ListingView.SelectedRow = ListingView.AllowedToPoint[0];
@@ -145,7 +148,8 @@ namespace fcmd
 
 		void CLIprompt_KeyReleased(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Return){
+			if (e.Key == Key.Return)
+			{
 				if (Regex.Match(CLIprompt.Text, "cd|chdir|md|rd|del|deltree|move|copy|cls").Success)
 				{
 					CLIprompt.Text = "";
@@ -183,7 +187,7 @@ namespace fcmd
 			UrlBox.GotFocus += (o, ea) => { OnGotFocus(ea); };
 			UrlBox.KeyReleased += UrlBox_KeyReleased;
 
-			BookmarkTools bmt = new BookmarkTools(BookmarkXML,"QuickAccessBar");
+			BookmarkTools bmt = new BookmarkTools(BookmarkXML, "QuickAccessBar");
 			bmt.DisplayBookmarks(
 				DiskList,
 				(url => NavigateTo(url)),
@@ -205,12 +209,12 @@ namespace fcmd
 			s.Stylize(UrlBox);
 			s.Stylize(ListingView);
 			s.Stylize(QuickSearchBox);
-			s.Stylize(CLIoutput,"TerminalOutput");
-			s.Stylize(CLIprompt,"TerminalPrompt");
+			s.Stylize(CLIoutput, "TerminalOutput");
+			s.Stylize(CLIprompt, "TerminalPrompt");
 			s.Stylize(StatusTable);
 
 			ListingView.KeyReleased += ListingView_KeyReleased;
-			ListingView.GotFocus += (o, ea) =>{ OnGotFocus(ea); };
+			ListingView.GotFocus += (o, ea) => { OnGotFocus(ea); };
 			ListingView.PointerMoved += ListingView_PointerMoved;
 			ListingView.SelectionChanged += ListingView_SelectionChanged;
 			ListingView.PointedItemDoubleClicked += pointed_item => { OpenPointedItem(); };
@@ -222,14 +226,16 @@ namespace fcmd
 		{
 			string Url1 = FS.CurrentDirectory + FS.DirSeparator + ListingView.PointedItem.Data[dfDisplayName];
 			string Url2 = FS.CurrentDirectory + FS.DirSeparator + el.Text;
-			try { 
-				if(FS.DirectoryExists(Url1))
+			try
+			{
+				if (FS.DirectoryExists(Url1))
 					FS.MoveDirectory(Url1, Url2);
 				else
 					FS.MoveFile(Url1, Url2);
 				StatusBar.Text = ListingView.PointedItem.Data[dfDisplayName] + " → " + el.Text;
 			}
-			catch(Exception ex) {
+			catch (Exception ex)
+			{
 				MessageDialog.ShowWarning(ex.Message);
 				el.Text = ListingView.PointedItem.Data[dfDisplayName].ToString();
 			}
@@ -267,35 +273,38 @@ namespace fcmd
 				QuickSearchText.SetFocus();
 				return;
 			}
-			if(Utilities.GetXwtBackendName() == "WPF")
-			ListingView.OnKeyPressed(e);
+			if (Utilities.GetXwtBackendName() == "WPF")
+				ListingView.OnKeyPressed(e);
 		}
 
 		void OpenPointedItem()
 		{
 			NavigateTo(ListingView.PointedItem.Data[dfURL].ToString());
 		}
-		
+
 		/// <summary>Open the FS item at <paramref name="url"/> (if it's file, load; if it's directory, go to)</summary>
 		/// <param name="url">The URL of the filesystem entry</param>
 		/// <param name="ClearHistory">The number of the history entrie after that all entries should be removed</param>
 		private void NavigateTo(string url, int? ClearHistory = null)
 		{
-			if (!url.Contains("://")){
+			if (!url.Contains("://"))
+			{
 				//the path is relative
 				NavigateTo(FS.CurrentDirectory + FS.DirSeparator + url);
 			}
 
 			Menu hm = HistoryButton.Menu;
 
-			if (ClearHistory == null){
+			if (ClearHistory == null)
+			{
 				//register current directory in history
 				MenuItem hmi = new MenuItem(url);
-				hmi.Clicked+=(o,ea)=>{ NavigateTo(url,(int)hmi.Tag); };
+				hmi.Clicked += (o, ea) => { NavigateTo(url, (int)hmi.Tag); };
 				hmi.Tag = hm.Items.Count;
 				hm.Items.Add(hmi);
 			}
-			if (ClearHistory != null){
+			if (ClearHistory != null)
+			{
 				//loading from history menu, thus don't making duplicates.
 			}
 
@@ -305,9 +314,12 @@ namespace fcmd
 				if (FS.DirectoryExists(url))
 				{//it's directory
 					var navigate = Navigate;
-					if (navigate != null) {
+					if (navigate != null)
+					{
 						navigate(url); //raise event
-					} else {
+					}
+					else
+					{
 						Console.WriteLine("WARNING: the event FLP.Navigate was not handled by the host");
 					}
 
@@ -317,9 +329,12 @@ namespace fcmd
 				else
 				{//it's file
 					var openFile = OpenFile;
-					if (openFile != null) {
+					if (openFile != null)
+					{
 						openFile(url); //raise event
-					} else {
+					}
+					else
+					{
 						Console.WriteLine("WARNING: the event FLP.OpenFile was not handled by the host");
 					}
 				}
@@ -357,9 +372,11 @@ namespace fcmd
 			FS.CLIstderrDataReceived += (stderr) => { CLIoutput.Text += "\n" + stderr; Utilities.ShowWarning(stderr); };
 			FS.CLIpromptChanged += FS_CLIpromptChanged;
 
-			if (FS.CurrentDirectory == null){
+			if (FS.CurrentDirectory == null)
+			{
 				//if this is first call in the session (the FLP is just initialized)
-				using (Menu hm = HistoryButton.Menu) { 
+				using (Menu hm = HistoryButton.Menu)
+				{
 					MenuItem hmi = new MenuItem(URL);
 					hmi.Clicked += (o, ea) => { NavigateTo(URL, (int)hmi.Tag); };
 					hmi.Tag = hm.Items.Count;
@@ -369,9 +386,10 @@ namespace fcmd
 				FS.ProgressChanged += FS_ProgressChanged;
 			}
 
-			if (URL == "." && FS.CurrentDirectory == null){
+			if (URL == "." && FS.CurrentDirectory == null)
+			{
 				LoadDir(
-					"file://"+Directory.GetCurrentDirectory(),
+					"file://" + Directory.GetCurrentDirectory(),
 					ShortenKB,
 					ShortenMB,
 					ShortenGB
@@ -390,16 +408,19 @@ namespace fcmd
 				UrlBox.Text = URL;
 				ListingView.Clear();
 				UrlBox.Text = URL;
-				string updir = URL + FS.DirSeparator+"..";
+				string updir = URL + FS.DirSeparator + "..";
 				string rootdir = FS.GetMetadata(URL).RootDirectory;
 				uint counter = 0;
 				const uint per_number = ~(((~(uint)0) >> 10) << 10);
-				IEnumerable<DirItem> dis = FS.DirectoryContent;
+				List<DirItem> dis = new List<DirItem>();
+				//dis = FS.DirectoryContent;
+				Thread DirLoadingThread = new Thread(delegate() { FS.GetDirectoryContent(ref dis, new FileSystemOperationStatus()); });
+				DirLoadingThread.Start();
+				do {} while (DirLoadingThread.ThreadState == ThreadState.Running);
 				foreach (DirItem di in dis)
 				{
 					List<Object> Data = new List<Object>();
 					List<Boolean> EditableFileds = new List<bool>();
-
 					Data.Add(di.IconSmall ?? Image.FromResource("fcmd.Resources.image-missing.png")); EditableFileds.Add(false);
 					Data.Add(di.URL); EditableFileds.Add(false);
 					Data.Add(di.TextToShow); EditableFileds.Add(true);
@@ -421,19 +442,22 @@ namespace fcmd
 					}
 					Data.Add(di);
 					ListingView.AddItem(Data, EditableFileds, di.URL);
-					if ((++counter & per_number) == 0) {
+					if ((++counter & per_number) == 0)
+					{
 						Application.MainLoop.DispatchPendingEvents();
 					}
 				}
-				if (goUpDelegate != null) {
+				if (goUpDelegate != null)
+				{
 					GoUp.Clicked -= goUpDelegate;
 				}
-				goUpDelegate = (o,ea)=>{ LoadDir(updir); };
+				goUpDelegate = (o, ea) => { LoadDir(updir); };
 				GoUp.Clicked += goUpDelegate;
-				if (goRootDelegate != null) {
+				if (goRootDelegate != null)
+				{
 					GoRoot.Clicked -= goRootDelegate;
 				}
-				goRootDelegate = (o,ea)=>{ LoadDir(rootdir); };
+				goRootDelegate = (o, ea) => { LoadDir(rootdir); };
 				GoRoot.Clicked += goRootDelegate;
 			}
 			catch (Exception ex)
@@ -442,7 +466,7 @@ namespace fcmd
 				{
 					pluginfinder pf = new pluginfinder();
 					FS = pf.GetFSplugin(URL);
-					LoadDir(URL,ShortenKB,ShortenMB,ShortenGB);
+					LoadDir(URL, ShortenKB, ShortenMB, ShortenGB);
 				}
 				else if (ex is NullReferenceException)
 				{
@@ -464,22 +488,30 @@ namespace fcmd
 
 		private void FS_StatusChanged(string data)
 		{
-			if (data.Length == 0)
-				WriteDefaultStatusLabel();
-			else
-				StatusBar.Text = data;
+			Xwt.Application.Invoke(delegate()
+			{
+				if (data.Length == 0)
+					WriteDefaultStatusLabel();
+				else
+					StatusBar.Text = data;
+			}
+			);
 		}
 
 		private void FS_ProgressChanged(double data)
 		{
-			if (data > 0 && data <= 1){
-				StatusProgressbar.Visible = true;
-				StatusProgressbar.Fraction = data;
-			}
-			else
+		Xwt.Application.Invoke(delegate()
 			{
-				StatusProgressbar.Visible = false;
-			}
+				if (data > 0 && data <= 1)
+				{
+					StatusProgressbar.Visible = true;
+					StatusProgressbar.Fraction = data;
+				}
+				else
+				{
+					StatusProgressbar.Visible = false;
+				}
+			});
 		}
 
 		/// <summary>
@@ -554,21 +586,23 @@ namespace fcmd
 		/// <summary>Defines the size shortening policy</summary>
 		public enum SizeDisplayPolicy
 		{
-			DontShorten=0, OneNumeral=1, TwoNumeral=2
+			DontShorten = 0, OneNumeral = 1, TwoNumeral = 2
 			//2048 B, 2 KB, 2.0 KB
 		}
-		
+
 		/// <summary>
 		/// Gets the selected row's value from the column №<paramref name="Field"/>
 		/// </summary>
 		/// <typeparam name="T">The type of the data</typeparam>
 		/// <param name="Field">The field number</param>
 		/// <returns>The value</returns>
-		public T GetValue<T>(int Field){
+		public T GetValue<T>(int Field)
+		{
 			return (T)ListingView.PointedItem.Data[Field];
 		}
 
-		public string GetValue(int Field){
+		public string GetValue(int Field)
+		{
 			return (string)ListingView.PointedItem.Data[Field];
 		}
 
@@ -633,7 +667,7 @@ namespace fcmd
 			{
 				foreach (string dir in Directory.GetDirectories(@"/mnt/"))
 				{
-					Button NewBtn = new Button(null, dir.Replace("/mnt/",""));
+					Button NewBtn = new Button(null, dir.Replace("/mnt/", ""));
 					NewBtn.Clicked += (o, ea) => { NavigateTo("file://" + dir); };
 					NewBtn.CanGetFocus = false;
 					NewBtn.Style = ButtonStyle.Flat;
@@ -654,19 +688,20 @@ namespace fcmd
 		private void WriteDefaultStatusLabel()
 		{
 			StatusProgressbar.Visible = false;
-			if(ListingView.SelectedItems.Count<1)
-			StatusBar.Text = MakeStatusbarText(SBtext1);
+			if (ListingView.SelectedItems.Count < 1)
+				StatusBar.Text = MakeStatusbarText(SBtext1);
 			else
-			StatusBar.Text = MakeStatusbarText(SBtext2);
+				StatusBar.Text = MakeStatusbarText(SBtext2);
 		}
 
 		private string MakeStatusbarText(string Template)
 		{
 			string txt = Template;
-			if (ListingView.PointedItem != null) { 
+			if (ListingView.PointedItem != null)
+			{
 				DirItem di = (DirItem)ListingView.PointedItem.Data[dfDirItem];
 				txt = txt.Replace("{FullName}", di.TextToShow);
-				txt = txt.Replace("{AutoSize}", KiloMegaGigabyteConvert(di.Size,CurShortenKB,CurShortenMB,CurShortenMB));
+				txt = txt.Replace("{AutoSize}", KiloMegaGigabyteConvert(di.Size, CurShortenKB, CurShortenMB, CurShortenMB));
 				txt = txt.Replace("{Date}", di.Date.ToShortDateString());
 				txt = txt.Replace("{Time}", di.Date.ToLocalTime().ToShortTimeString());
 				txt = txt.Replace("{SelectedItems}", ListingView.SelectedItems.Count.ToString());

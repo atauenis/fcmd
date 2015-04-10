@@ -1,7 +1,7 @@
 ﻿/* The File Commander base plugins - Local filesystem adapter
  * The main part of the LocalFS FS plugin
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
- * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-15, Alexander Tauenis (atauenis@yandex.ru)
  * (С) 2014, Zhigunov Andrew (breakneck11@gmail.com)
  * (C) 2014, Evgeny Akhtimirov (wilbit@me.com)
  * Contributors should place own signs here.
@@ -9,7 +9,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using pluginner;
 using pluginner.Toolkit;
+using Xwt;
 
 namespace fcmd.base_plugins.fs
 {
@@ -33,29 +35,141 @@ namespace fcmd.base_plugins.fs
 
 		protected void RaiseProgressChanged(double data)
 		{
-			var handler = ProgressChanged;
-			if (handler != null) {
-				handler(data);
-			}
+			Application.Invoke(delegate()
+			{
+				var handler = ProgressChanged;
+				if (handler != null) {
+					handler(data);
+				}
+			});
 		}
 
 		protected void RaiseStatusChanged(string data)
 		{
-			var handler = StatusChanged;
-			if (handler != null) {
-				handler(data);
-			}
+			Application.Invoke(delegate()
+			{
+				var handler = StatusChanged;
+				if (handler != null) {
+					handler(data);
+				}
+			});
 		}
 
 		List<pluginner.DirItem> DirContent = new List<pluginner.DirItem>();
 		string CurDir;
+
+		public void GetDirectoryContent(ref List<pluginner.DirItem> output, FileSystemOperationStatus FSOS)
+		{
+			#if DEBUG
+			Console.WriteLine("DEBUG: {0} Loading the {1} has been started", DateTime.Now.ToLongTimeString(), CurDir);
+			#endif
+			DirContent.Clear();
+			string InternalURL = CurDir.Replace("file://", "");
+			FSOS.StatusMessage = string.Format(Localizator.GetString("DoingListdir"), "", InternalURL);
+
+			pluginner.DirItem tmpVar = new pluginner.DirItem();
+
+			string[] files = System.IO.Directory.GetFiles(InternalURL);
+			string[] dirs = System.IO.Directory.GetDirectories(InternalURL);
+			float FileWeight = 1 / ((float)files.Length + (float)dirs.Length);
+			float Progress = 0;
+
+			//элемент "вверх по древу"
+			DirectoryInfo curdir = new DirectoryInfo(InternalURL);
+			if (curdir.Parent != null)
+			{
+				tmpVar.URL = "file://" + curdir.Parent.FullName;
+				tmpVar.TextToShow = "..";
+				tmpVar.MIMEType = "x-fcmd/up";
+				tmpVar.IconSmall = Utilities.GetIconForMIME("x-fcmd/up");
+				output.Add(tmpVar);
+			}
+
+			uint counter = 0;
+			// 2 ** 10 ~= 1000 (is about 1000)
+			// so dispatching will be done every time 1000 files will have been looked throught
+			// update_every == 00...0011...11 in binary format and count of '1' is 10
+			// so (++counter & update_every) == 0 will be true after every 2 ** 10 ~= 1000
+			// passed files
+			const uint update_every = ~(((~(uint)0) >> 10) << 10);
+
+			foreach (string curDir in dirs)
+			{
+				//перебираю каталоги
+				DirectoryInfo di = new DirectoryInfo(curDir);
+				tmpVar.IsDirectory = true;
+				tmpVar.URL = "file://" + curDir;
+				tmpVar.TextToShow = di.Name;
+				tmpVar.Date = di.CreationTime;
+				if (di.Name.StartsWith("."))
+				{
+					tmpVar.Hidden = true;
+				}
+				else
+				{
+					tmpVar.Hidden = false;
+				}
+				tmpVar.MIMEType = "x-fcmd/directory";
+				tmpVar.IconSmall = Utilities.GetIconForMIME("x-fcmd/directory");
+
+				output.Add(tmpVar);
+				Progress += FileWeight;
+				FSOS.CompletePercents = (int)Progress*100;
+				/*if ((++counter & update_every) == 0)
+				{
+					Xwt.Application.MainLoop.DispatchPendingEvents();
+				}*/
+			}
+
+			foreach (string curFile in files)
+			{
+				FileInfo fi = new FileInfo(curFile);
+				tmpVar.IsDirectory = false;
+				tmpVar.URL = "file://" + curFile;
+				tmpVar.TextToShow = fi.Name;
+				tmpVar.Date = fi.LastWriteTime;
+				tmpVar.Size = fi.Length;
+				if (fi.Name.StartsWith("."))
+				{
+					tmpVar.Hidden = true;
+				}
+				else
+				{
+					tmpVar.Hidden = false;
+				}
+
+				if (curFile.LastIndexOf('.') > 0)
+					tmpVar.MIMEType = Utilities.GetContentType(curFile.Substring(curFile.LastIndexOf('.') + 1));
+				else
+					tmpVar.MIMEType = "application/octet-stream";
+
+				tmpVar.IconSmall = Utilities.GetIconForMIME(tmpVar.MIMEType);
+
+				output.Add(tmpVar);
+				Progress += FileWeight;
+				if (Progress <= 1)
+				{
+					FSOS.CompletePercents = (int)Progress*100;
+				}
+				/*if ((++counter & update_every) == 0)
+				{
+					//Xwt.Application.MainLoop.DispatchPendingEvents();
+				}*/
+			}
+			
+
+			RaiseCLIpromptChanged("FC: " + InternalURL + ">");
+			#if DEBUG
+			Console.WriteLine("DEBUG: {0} Loading the {1} has been completed", DateTime.Now.ToLongTimeString(), InternalURL);
+			#endif
+		}
 
 		public string CurrentDirectory
 		{
 			get { return CurDir; }
 			set {
 				CurDir = value;
-				ReadDirectory(value);
+				//ReadDirectory(value);
 			}
 		}
 
@@ -79,6 +193,7 @@ namespace fcmd.base_plugins.fs
 			return false; //та ничого нэма! [не забываем, что return xxx прекращает выполнение подпрограммы]
 		}
 
+		[Obsolete("Replaced with GetDirectoryContent")]
 		public void ReadDirectory(string url){//прочитать каталог и загнать в DirectoryContent
 			_CheckProtocol(url);
 			DirContent.Clear();

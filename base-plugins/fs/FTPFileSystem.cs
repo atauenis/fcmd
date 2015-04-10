@@ -45,7 +45,7 @@ namespace fcmd.base_plugins.fs
 			if (ftp == null)
 				Connect(url);
 
-// ReSharper disable once PossibleNullReferenceException, because Connect(url) would initialize it or would crash this constructor
+// ReSharper disable once PossibleNullReferenceException, because Connect(url) would initialize this FTPClient or would crash this constructor
 			Socket sck = ftp.GetDataSocket();//possible ftpexception, todo add try...catch
 			string ListResult;
 			ftp.SendCommand("CWD " + URI.PathAndQuery);
@@ -122,6 +122,11 @@ namespace fcmd.base_plugins.fs
 		public IEnumerable<DirItem> DirectoryContent
 		{
 			get { return directoryContent; }
+		}
+
+		public void GetDirectoryContent(ref List<pluginner.DirItem> output, FileSystemOperationStatus FSOS)
+		{
+			output = directoryContent;
 		}
 
 		public string CurrentDirectory

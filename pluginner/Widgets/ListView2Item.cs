@@ -83,7 +83,7 @@ namespace pluginner.Widgets
 			}
 			if (What is Image)
 			{
-				On.DrawImage(What as Image, Where + 2, 0);
+				//On.DrawImage(What as Image, Where + 2, 0); //undone: need to fix thread violation (presumably, WPF doesn't like that the image is 'assigned' to non-UI thread, and because of this sabotages drawing process)
 			}
 		}
 

@@ -20,7 +20,7 @@ namespace fcmd
 		{
 // ReSharper disable LocalizableElement
 			string product_version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-			Console.WriteLine("The File Commander, version " + product_version + "\n(C) 2013-14, the File Commander development team (https://github.com/atauenis/fcmd).\nThe FC is licensed \"as is,\" with  no  warranties regarding product performance or non-infringement of third party intellectual property rights; the software may be modified without restrictions");
+			Console.WriteLine("The File Commander, version " + product_version + "\n(C) 2013-15, the File Commander development team (https://github.com/atauenis/fcmd).\nThe FC is licensed \"as is,\" with  no  warranties regarding product performance or non-infringement of third party intellectual property rights; the software may be modified without restrictions");
 #if DEBUG
 			try 
 			{

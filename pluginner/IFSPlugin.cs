@@ -1,7 +1,7 @@
 ﻿/* The File Commander - plugin API
  * Filesystem plugins' interface
  * (C) The File Commander Team - https://github.com/atauenis/fcmd
- * (C) 2013-14, Alexander Tauenis (atauenis@yandex.ru)
+ * (C) 2013-15, Alexander Tauenis (atauenis@yandex.ru)
  * Contributors should place own signs here.
  */
 using System;
@@ -19,6 +19,13 @@ namespace pluginner
 		/// Gets list of the directory's items.
 		/// </summary>
 		IEnumerable<DirItem> DirectoryContent { get; }
+
+		/// <summary>
+		/// Gets the list of the current directory's items
+		/// </summary>
+		/// <param name="output">The List that should be filled with directory content</param>
+		/// <param name="FSOS">Operation status</param>
+		void GetDirectoryContent(ref List<DirItem> output, FileSystemOperationStatus FSOS);
 
 		/// <summary>
 		/// Gets or sets the current directory.
@@ -138,11 +145,13 @@ namespace pluginner
 		/// <summary>
 		/// Raises when the plugin want to change text in the panel's status bar
 		/// </summary>
+		[Obsolete("Смысл события теперь не уведомалять о прогрессе операций, а уведомлять о событиях устройства/сетевого подключения вроде потери связи или необходимости срочной проверки ФС")]
 		event TypedEvent<string> StatusChanged;
 
 		/// <summary>
 		/// Raises when the plugin want to show a progressbar in the panel status bar; the argument is a number in range of 0...1; if the eventarg is 0, the progress bar will hide
 		/// </summary>
+		[Obsolete]
 		event TypedEvent<double> ProgressChanged;
 
 		/// <summary>
@@ -264,6 +273,35 @@ namespace pluginner
 		/// <summary>Returns uniform resource locator of the file</summary>
 		public override string ToString()
 		{ return FullURL; }
+	}
+
+	/// <summary>
+	/// Filesystem operation status
+	/// </summary>
+	public class FileSystemOperationStatus
+	{
+		/// <summary>
+		/// Current status message
+		/// </summary>
+		public string StatusMessage = "";
+		/// <summary>
+		/// How much of the current operation has been done (0...100 percents; less than 0 if an error occured; or larger than 100 if even prepairing tasks are not completed)
+		/// </summary>
+		public int CompletePercents = 0;
+
+		/// <summary>
+		/// How much of the current operation has been done (in bytes)
+		/// </summary>
+		public int ProgressCompleted = 0;
+		/// <summary>
+		/// How much of the current operation should be processed (in bytes)
+		/// </summary>
+		public int ProgressToDo = 0;
+
+		/// <summary>
+		/// Fires when an text should be saved into log
+		/// </summary>
+		public TypedEvent<string> AddToLog;
 	}
 
 	/* Исключение выскакивает в случае установления невозможности удаления каталога

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using Xwt;
 using pluginner.Toolkit;
 
 namespace fcmd.base_plugins.fs
@@ -22,18 +23,24 @@ namespace fcmd.base_plugins.fs
 
 		protected void RaiseCLIpromptChanged(string data)
 		{
-			var handler = CLIpromptChanged;
-			if (handler != null) {
-				handler(data);
-			}
+			Application.Invoke(delegate()
+			{
+				var handler = CLIpromptChanged;
+				if (handler != null) {
+					handler(data);
+				}
+			});
 		}
 
 		protected void RaiseCLIstderrDataReceived(string data)
 		{
-			var handler = CLIstderrDataReceived;
-			if (handler != null) {
-				handler(data);
-			}
+			Application.Invoke(delegate()
+			{
+				var handler = CLIstderrDataReceived;
+				if (handler != null) {
+					handler(data);
+				}
+			});
 		}
 
 		Process CLIproc = new Process();

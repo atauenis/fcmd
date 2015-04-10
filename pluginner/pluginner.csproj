@@ -101,6 +101,7 @@
     <Compile Include="Toolkit\BookmarkTools.cs" />
     <Compile Include="Toolkit\OSAbstraction.cs" />
     <Compile Include="Toolkit\SysInfo.cs" />
+    <Compile Include="Toolkit\VLVDataSource.cs" />
     <Compile Include="Widgets\EditableLabel.cs" />
     <Compile Include="Widgets\HeavyScroller.cs" />
     <Compile Include="Toolkit\OSVersionEx.cs" />
