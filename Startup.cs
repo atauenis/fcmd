@@ -6,10 +6,10 @@
  * Contributors should place own signs here.
  */
 using System;
-using fcmd.vm;
 using Xwt;
 using System.Reflection;
 using pluginner.Toolkit;
+using Application = Xwt.Application;
 
 namespace fcmd
 {
@@ -43,13 +43,21 @@ namespace fcmd
 				string errmsg = "The XWT could not be loaded:\n" + ex.InnerException.Message;
 
 				if(ex.InnerException.InnerException != null){
-					errmsg+="\n"+ex.InnerException.InnerException.Message;
+					errmsg+="\n\n"+ex.InnerException.InnerException.Message;
+				}else errmsg+="\n\nNo inner exception(s).";
+				try
+				{
+					System.Windows.Forms.MessageBox.Show(
+						errmsg,
+						"The File Commander " + product_version + " (" + (Environment.Is64BitProcess ? "x64" : "x86") +
+						"-DEBUG) Startup Failure",
+						System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Error
+						);
 				}
-
-				Xwt.MessageDialog.ShowError(
-						errmsg + Environment.NewLine +
-					"The File Commander " + product_version + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + "-DEBUG) Startup Failure"
-				);
+				catch (Exception e)
+				{
+					Console.WriteLine("/!\\ STARTUP ERROR\n" + errmsg + "\n/!\\ Graphical error message could not be shown because an error occurred:\n" + e.Message + "\n" + e.StackTrace);
+				}
 				return;
 			}
 #else
@@ -62,18 +70,26 @@ namespace fcmd
 				Application.Initialize(toolkitType);
 			}
 			catch (Exception ex) {
-				Xwt.MessageDialog.ShowError(
-				"The XWT could not be loaded:\n" + ex.InnerException.Message + Environment.NewLine + 
-				"The File Commander " + product_version + " (" + (Environment.Is64BitProcess ? "x64" : "x86") + ") Startup Failure"
-				);
+				string errmsg = "The XWT could not be loaded:\n" + ex.InnerException.Message;
+
+				if(ex.InnerException.InnerException != null){
+					errmsg+="\n"+ex.InnerException.InnerException.Message;
+				}
+				System.Windows.Forms.MessageBox.Show(
+					errmsg,
+					"The File Commander " + product_version + " (" + (Environment.Is64BitProcess ? "x64)" : "x86)") +
+					" Startup Failure",
+					System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Error
+					);
 				return;
+
 			}
 #endif
 #if !DEBUG
 			try{
 #endif
-			//new vmtest().Show();
-			new MainWindow(Commands).Show();
+			new Class1().Show();
+			//new MainWindow(Commands).Show();
 			//todo: add splash screen
 			Application.Run();
 #if !DEBUG

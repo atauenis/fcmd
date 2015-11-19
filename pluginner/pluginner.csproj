@@ -102,7 +102,12 @@
     <Compile Include="Toolkit\OSAbstraction.cs" />
     <Compile Include="Toolkit\SysInfo.cs" />
     <Compile Include="Toolkit\VLVDataSource.cs" />
+    <Compile Include="Widgets\AutoCanvas.cs" />
     <Compile Include="Widgets\EditableLabel.cs" />
+    <Compile Include="Widgets\FListView\DirItemRenderer.cs" />
+    <Compile Include="Widgets\FListView\FListView.cs" />
+    <Compile Include="Widgets\FListView\IItemRenderer.cs" />
+    <Compile Include="Widgets\FListView\Structs.cs" />
     <Compile Include="Widgets\HeavyScroller.cs" />
     <Compile Include="Toolkit\OSVersionEx.cs" />
     <Compile Include="IFSPlugin.cs" />
@@ -178,5 +183,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\bookmarkMenu.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

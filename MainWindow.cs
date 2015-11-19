@@ -463,7 +463,7 @@ namespace fcmd
 			string AboutString = string.Format(
 				Localizator.GetString("FileCommanderVer"),
 				"File Commander",
-				ProductVersion+"-virtualmode",
+				ProductVersion+" (fcmd2016)",
 				"\nhttps://github.com/atauenis/fcmd",
 				conf.FilePath,
 				Environment.OSVersion,
